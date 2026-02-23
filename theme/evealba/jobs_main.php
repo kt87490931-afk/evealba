@@ -209,154 +209,19 @@ if (!defined('_GNUBOARD_')) exit;
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
-      <div class="premium-grid">
-        <div class="premium-card">
-          <div class="premium-banner g1"><span>비상구<br>[서울 강남구]</span></div>
-          <div class="premium-body">
-            <div class="premium-name">강남 역삼 선중 ★ ...</div>
-            <div class="premium-area">기타 · 91회 2880일</div>
-            <div class="premium-wage">500,000원</div>
-          </div>
-        </div>
-        <div class="premium-card">
-          <div class="premium-banner g10"><span>★ 별 ★<br>[경기]</span></div>
-          <div class="premium-body">
-            <div class="premium-name">❤ 송파24시 #테...</div>
-            <div class="premium-area">노래주점 · 38회 2910일</div>
-            <div class="premium-wage">면접 후 협의</div>
-          </div>
-        </div>
-        <div class="premium-card">
-          <div class="premium-banner g2"><span>민비신<br>[광주 서구]</span></div>
-          <div class="premium-body">
-            <div class="premium-name">하루보장 160만원!!</div>
-            <div class="premium-area">노래주점 · 1회 30일</div>
-            <div class="premium-wage">12,000,000원</div>
-          </div>
-        </div>
-        <div class="premium-card">
-          <div class="premium-banner g8"><span>모범 MODERN<br>[서울 관악구]</span></div>
-          <div class="premium-body">
-            <div class="premium-name">♥20,30대 환영 ♥...</div>
-            <div class="premium-area">노래주점 · 6회 180일</div>
-            <div class="premium-wage">60,000원</div>
-          </div>
-        </div>
-        <div class="premium-card">
-          <div class="premium-banner g12"><span>GUCCI<br>[경기 안산시]</span></div>
-          <div class="premium-body">
-            <div class="premium-name">CHEGO 중에 CHEGO 남양...</div>
-            <div class="premium-area">노래주점 · 3회 210일</div>
-            <div class="premium-wage">500,000원</div>
-          </div>
-        </div>
-        <div class="premium-card">
-          <div class="premium-banner g6"><span>하이퍼블릭<br>[경기 성남시]</span></div>
-          <div class="premium-body">
-            <div class="premium-name">하이퍼블릭 60분 TC17...</div>
-            <div class="premium-area">룸싸롱 · 20회 1200일</div>
-            <div class="premium-wage">150,000원</div>
-          </div>
-        </div>
-        <div class="premium-card">
-          <div class="premium-banner g3"><span>강남 VIP룸<br>[경기]</span></div>
-          <div class="premium-body">
-            <div class="premium-name">★★★ 정중 하이점...</div>
-            <div class="premium-area">노래주점 · 59회 1770일</div>
-            <div class="premium-wage">면접 후 협의</div>
-          </div>
-        </div>
-        <div class="premium-card">
-          <div class="premium-banner g5"><span>개구리 뒷다리<br>[전남 목포시]</span></div>
-          <div class="premium-body">
-            <div class="premium-name">●목포 ●보도환영...</div>
-            <div class="premium-area">노래주점 · 1회 30일</div>
-            <div class="premium-wage">면접 후 협의</div>
-          </div>
-        </div>
-        <div class="premium-card">
-          <div class="premium-banner g11"><span>썸데이 도파민<br>마동석</span></div>
-          <div class="premium-body">
-            <div class="premium-name">썸데이 도파인 마동...</div>
-            <div class="premium-area">룸싸롱 · 16회 1350일</div>
-            <div class="premium-wage">100,000원</div>
-          </div>
-        </div>
-        <div class="premium-card">
-          <div class="premium-banner g7"><span>박프로<br>[서울 노원구]</span></div>
-          <div class="premium-body">
-            <div class="premium-name">강북구 청등 최고...</div>
-            <div class="premium-area">룸싸롱 · 1회 90일</div>
-            <div class="premium-wage">180,000원</div>
-          </div>
-        </div>
-      </div>
+      <?php include_once dirname(__FILE__).'/inc/ads_premium.php'; ?>
     </div>
 
     <!-- 스페셜 채용정보 -->
     <div class="section-wrap">
       <div class="section-header">
-        <h2 class="section-title">⭐ SPECIAL 채용정보</h2>
+        <h2 class="section-title">⭐ 스페셜채용정보</h2>
         <div class="section-actions">
           <a href="#" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
-      <div class="special-grid">
-        <div class="special-card" style="grid-column:span 2;">
-          <div style="display:flex;gap:0;height:100%;">
-            <div style="width:130px;flex-shrink:0;background:linear-gradient(135deg,#FF1B6B,#8338EC);display:flex;align-items:center;justify-content:center;padding:12px;font-size:14px;font-weight:900;color:#fff;text-align:center;line-height:1.4;">카지노<br><span style="font-size:11px;font-weight:400;opacity:.85">서울 강남구</span></div>
-            <div style="flex:1;padding:12px 14px;background:#fff;">
-              <div style="font-size:12px;color:#888;margin-bottom:4px;">기타 &nbsp;|&nbsp; 서울 강남구</div>
-              <div style="font-size:14px;font-weight:700;color:#222;margin-bottom:4px;">❤카지노❤ 무식이...</div>
-              <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;">
-                <span class="list-tag tag-urgent">급구</span>
-                <span class="list-tag tag-init">초보환영</span>
-                <span class="list-tag tag-bonus">당일지급</span>
-              </div>
-              <div style="font-size:16px;font-weight:900;color:var(--hot-pink);">600,000원</div>
-              <div style="font-size:11px;color:#aaa;margin-top:2px;">🔥 88회 2640일</div>
-            </div>
-          </div>
-        </div>
-        <div class="special-card" style="grid-column:span 3;">
-          <div style="display:flex;gap:0;height:100%;">
-            <div style="width:130px;flex-shrink:0;background:linear-gradient(135deg,#4A0E8F,#A855F7);display:flex;align-items:center;justify-content:center;padding:12px;font-size:13px;font-weight:900;color:#fff;text-align:center;line-height:1.4;">비상구<br><span style="font-size:10px;font-weight:400;opacity:.8">서울 강남구</span></div>
-            <div style="flex:1;padding:12px 14px;background:#fff;">
-              <div style="font-size:12px;color:#888;margin-bottom:4px;">기타 &nbsp;|&nbsp; 서울 강남구</div>
-              <div style="font-size:14px;font-weight:700;color:#222;margin-bottom:4px;">친절업소★매니저넘 환경 최고!...</div>
-              <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;">
-                <span class="list-tag tag-pink">순번확실</span>
-                <span class="list-tag tag-bonus">선불가능</span>
-                <span class="list-tag tag-init">원룸제공</span>
-              </div>
-              <div style="font-size:16px;font-weight:900;color:var(--hot-pink);">600,000원</div>
-              <div style="font-size:11px;color:#aaa;margin-top:2px;">🔥 96회 2850일</div>
-            </div>
-          </div>
-        </div>
-        <div class="special-card" style="grid-column:span 5;">
-          <div style="display:flex;gap:0;height:100%;">
-            <div style="width:130px;flex-shrink:0;background:linear-gradient(135deg,#FF6B35,#FF1B6B);display:flex;align-items:center;justify-content:center;padding:12px;font-size:14px;font-weight:900;color:#fff;text-align:center;">챔믹스<br><span style="font-size:10px;font-weight:400;opacity:.8">서울</span></div>
-            <div style="flex:1;padding:12px 14px;background:#fff;display:flex;align-items:center;justify-content:space-between;">
-              <div>
-                <div style="font-size:12px;color:#888;margin-bottom:3px;">기타 &nbsp;|&nbsp; 서울</div>
-                <div style="font-size:14px;font-weight:700;color:#222;">◎고페이1등◎챔믹스◎</div>
-                <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;">
-                  <span class="list-tag tag-urgent">급구</span>
-                  <span class="list-tag tag-pay">인센티브</span>
-                  <span class="list-tag tag-bonus">갯수보장</span>
-                  <span class="list-tag tag-init">초보환영</span>
-                </div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:18px;font-weight:900;color:var(--hot-pink);">500,000원</div>
-                <div style="font-size:11px;color:#aaa;margin-top:2px;">🔥 106회 3180일</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <?php include_once dirname(__FILE__).'/inc/ads_special.php'; ?>
     </div>
 
     <!-- 급구 + 추천 -->

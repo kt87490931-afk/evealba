@@ -936,7 +936,7 @@ nav::before {
 /* PREMIUM CARDS */
 .premium-grid {
   display:grid;
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(6,1fr);
   gap:9px; margin-bottom:0;
 }
 .premium-card {
@@ -1042,7 +1042,7 @@ nav::before {
 /* SPECIAL */
 .special-grid {
   display:grid;
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(6,1fr);
   gap:9px;
 }
 .special-card {
@@ -1292,7 +1292,7 @@ footer {
   .premium-banner { height:58px; font-size:11px; }
   .premium-name { font-size:11px; }
   .premium-wage { font-size:11px; }
-  .special-grid { grid-template-columns:repeat(2,1fr); gap:8px; }
+  .special-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
   .community-resume-row { gap:12px; }
   .tab-btn { font-size:11px; padding:9px 4px; }
   .resume-table thead th:nth-child(2),

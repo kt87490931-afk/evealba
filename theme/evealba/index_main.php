@@ -200,48 +200,7 @@ if (!defined('_GNUBOARD_')) exit;
     <h2 class="section-title">프리미엄채용정보</h2>
     <a href="#" class="section-more">더보기 →</a>
   </div>
-  <div class="premium-grid">
-    <div class="premium-card">
-      <div class="premium-banner g11">강남짬오❤이태곤대표</div>
-      <div class="premium-body">
-        <div class="premium-name">강남짬오 이태곤대표</div>
-        <div class="premium-area">서울 강남구 · 룸싸롱</div>
-        <div class="premium-wage">면접 후 협의</div>
-      </div>
-    </div>
-    <div class="premium-card">
-      <div class="premium-banner g12">구구단 신제니</div>
-      <div class="premium-body">
-        <div class="premium-name">구구단 신제니</div>
-        <div class="premium-area">서울 · 룸싸롱</div>
-        <div class="premium-wage">150,000원</div>
-      </div>
-    </div>
-    <div class="premium-card">
-      <div class="premium-banner g1">세이렌K팀 재롤대표</div>
-      <div class="premium-body">
-        <div class="premium-name">세이렌K팀 재롤대표</div>
-        <div class="premium-area">서울 · 룸싸롱</div>
-        <div class="premium-wage">150,000원</div>
-      </div>
-    </div>
-    <div class="premium-card">
-      <div class="premium-banner g2">슈퍼맨</div>
-      <div class="premium-body">
-        <div class="premium-name">슈퍼맨</div>
-        <div class="premium-area">경기 화성시 · 노래주점</div>
-        <div class="premium-wage">150,000원</div>
-      </div>
-    </div>
-    <div class="premium-card">
-      <div class="premium-banner g6">골드문</div>
-      <div class="premium-body">
-        <div class="premium-name">골드문</div>
-        <div class="premium-area">인천 미추홀구</div>
-        <div class="premium-wage">75,000원</div>
-      </div>
-    </div>
-  </div>
+  <?php include_once dirname(__FILE__).'/inc/ads_premium.php'; ?>
 </div>
 
 <!-- 커뮤니티 + 인재정보 -->
@@ -334,48 +293,7 @@ if (!defined('_GNUBOARD_')) exit;
     <h2 class="section-title">스페셜채용정보</h2>
     <a href="#" class="section-more">더보기 →</a>
   </div>
-  <div class="special-grid">
-    <div class="special-card">
-      <div class="premium-banner g9">구구단 신제니</div>
-      <div class="premium-body">
-        <div class="premium-name">구구단 신제니</div>
-        <div class="premium-area">서울 · 룸싸롱</div>
-        <div class="premium-wage">150,000원</div>
-      </div>
-    </div>
-    <div class="special-card">
-      <div class="premium-banner g10">비상구</div>
-      <div class="premium-body">
-        <div class="premium-name">비상구</div>
-        <div class="premium-area">서울 강남구 · 기타</div>
-        <div class="premium-wage">500,000원</div>
-      </div>
-    </div>
-    <div class="special-card">
-      <div class="premium-banner g3">일산 1등 하이퍼블릭</div>
-      <div class="premium-body">
-        <div class="premium-name">일산 1등 하이퍼블릭</div>
-        <div class="premium-area">경기 고양시 · 노래주점</div>
-        <div class="premium-wage">170,000원</div>
-      </div>
-    </div>
-    <div class="special-card">
-      <div class="premium-banner g5">아우라 하이퍼블릭</div>
-      <div class="premium-body">
-        <div class="premium-name">아우라 하이퍼블릭</div>
-        <div class="premium-area">경기 · 노래주점</div>
-        <div class="premium-wage">면접 후 협의</div>
-      </div>
-    </div>
-    <div class="special-card">
-      <div class="premium-banner g7">강남미션</div>
-      <div class="premium-body">
-        <div class="premium-name">♡강남 미션♡</div>
-        <div class="premium-area">서울 강남구 · 룸싸롱</div>
-        <div class="premium-wage">130,000원</div>
-      </div>
-    </div>
-  </div>
+  <?php include_once dirname(__FILE__).'/inc/ads_special.php'; ?>
 </div>
 
 <!-- 급구채용 + 추천채용 -->
