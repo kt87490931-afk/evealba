@@ -395,6 +395,7 @@ nav::before {
   box-shadow:0 2px 10px rgba(0,0,0,.06);
   margin-bottom:22px;
 }
+.list-section .list-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
 .list-section-header {
   background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
   padding:11px 16px;
@@ -438,11 +439,11 @@ nav::before {
 }
 .list-job-title:hover { color:var(--hot-pink); }
 .list-title-bottom {
-  display:flex; justify-content:space-between; align-items:flex-end;
-  gap:8px; margin-top:6px; flex-wrap:wrap;
+  display:flex; flex-direction:column; align-items:flex-end;
+  gap:4px; margin-top:6px;
 }
-.list-title-bottom .benefit-tags { margin-left:auto; }
-.list-title-bottom .list-tags { margin-top:0; }
+.list-title-bottom .list-tags,
+.list-title-bottom .benefit-tags { margin-top:0; justify-content:flex-end; }
 .list-tags {
   display:flex; gap:4px; flex-wrap:wrap; margin-top:3px;
 }
@@ -1230,11 +1231,14 @@ footer {
   .filter-row { gap:7px; }
   .filter-label { width:44px; font-size:11px; }
   .filter-select { font-size:12px; padding:5px 7px; }
-  /* 채용정보 테이블: 성별·업소명만 숨김 (채용제목은 표시) */
+  /* 채용정보 테이블: 성별만 숨김, 업소명 표시, 가로스크롤 */
   .list-table thead th:nth-child(3),
-  .list-table tbody td:nth-child(3),
+  .list-table tbody td:nth-child(3) { display:none; }
   .list-table thead th:nth-child(5),
-  .list-table tbody td:nth-child(5) { display:none; }
+  .list-table tbody td:nth-child(5) { display:table-cell !important; }
+  .list-table .col-benefits { display:table-cell !important; }
+  .list-table { min-width:480px; }
+  .list-section .list-table-wrap { margin:0 -12px; padding:0 12px; }
   .special-card { grid-column: span 2 !important; }
   .hero-main { height:150px; padding:20px; border-radius:12px; }
   .hero-text h2 { font-size:20px; }
