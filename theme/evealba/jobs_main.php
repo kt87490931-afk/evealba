@@ -5,6 +5,8 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 ?>
+    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+
     <!-- 검색 필터 박스 -->
     <div class="filter-box">
       <div class="filter-title">채용정보 검색하기 &nbsp;<small style="font-size:11px;font-weight:500;color:#aaa">조건 하나만 선택해도 검색이 가능합니다!</small></div>

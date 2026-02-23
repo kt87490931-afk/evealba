@@ -5,16 +5,7 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 ?>
-<!-- 히어로 배너 -->
-<div class="hero-section">
-  <div class="hero-main">
-    <div class="hero-text">
-      <h2>강남 <span>룸 80개</span><br>1등 대일팀!</h2>
-      <p>🔥 하이퍼블릭 밀빵OK · 5인1조 픽업OK!!</p>
-    </div>
-    <div class="hero-badge">✨ HOT</div>
-  </div>
-</div>
+<?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
 
 <!-- 빠른 통계 -->
 <div class="quick-stats">
