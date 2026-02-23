@@ -4,6 +4,8 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 ?>
+    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+
     <!-- 업직종 탭 카운터 -->
     <div class="type-tab-bar">
       <div class="type-tab-card" onclick="setTab(this,'all')">

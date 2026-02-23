@@ -4,6 +4,8 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 ?>
+    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+
     <!-- 상단 2열: 베스트글 + 밤문화이야기 -->
     <div class="community-main-grid">
       <!-- 베스트글 -->
