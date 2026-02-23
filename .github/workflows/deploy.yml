@@ -1,0 +1,30 @@
+# 이브알바 자동 배포
+# main 브랜치에 push 시 서버에 자동 배포
+#
+# 필수 설정: GitHub 저장소 → Settings → Secrets and variables → Actions
+#   - EVEALBA_SSH_KEY: 서버 SSH 비밀키 전체 내용 (-----BEGIN...-----END-----)
+
+name: Deploy to Server
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # 수동 실행 가능
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 서버에 배포 (git pull + migration)
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 188.166.179.115
+          username: root
+          key: ${{ secrets.EVEALBA_SSH_KEY }}
+          script: |
+            set -e
+            cd /var/www/evealba
+            git fetch origin
+            git reset --hard origin/main
+            php run_migration.php 2>/dev/null || true
+            echo "Deploy OK: $(date -Iseconds)"
