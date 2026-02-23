@@ -49,8 +49,8 @@ $nav_active = isset($nav_active) ? $nav_active : '';
   <div class="nav-scroll">
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="nav-item<?php echo ($nav_active==='jobs') ? ' active' : ''; ?>"><span class="nav-icon">📋</span>채용정보</a>
     <a href="#" class="nav-item"><span class="nav-icon">📍</span>지역별채용</a>
-    <a href="#" class="nav-item"><span class="nav-icon">👑</span>인재정보</a>
-    <a href="#" class="nav-item"><span class="nav-icon">💬</span>이브수다방</a>
+    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/talent.php' : '/talent.php'; ?>" class="nav-item<?php echo ($nav_active==='talent') ? ' active' : ''; ?>"><span class="nav-icon">👑</span>인재정보</a>
+    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/sudabang.php' : '/sudabang.php'; ?>" class="nav-item<?php echo ($nav_active==='sudabang') ? ' active' : ''; ?>"><span class="nav-icon">💬</span>이브수다방</a>
     <a href="#" class="nav-item"><span class="nav-icon">🏪</span>중고거래</a>
     <a href="#" class="nav-item"><span class="nav-icon">🎀</span>고객센터</a>
   </div>
@@ -58,9 +58,29 @@ $nav_active = isset($nav_active) ? $nav_active : '';
 
 <!-- TICKER -->
 <div class="ticker-wrap">
-  <span class="ticker-label">🔥 급구</span>
+  <span class="ticker-label"><?php echo ($nav_active==='talent') ? '🌸 신규' : (($nav_active==='sudabang') ? '💬 HOT' : '🔥 급구'); ?></span>
   <div class="ticker-track">
     <div class="ticker-inner">
+<?php if ($nav_active==='talent') { ?>
+      <span><b>마○○</b> 여 26세 · 룸싸롱 · 강남 구해요 N</span>
+      <span><b>짜○○</b> 여 27세 · 서울 경기 인천 쉬어 야간 구해요 N</span>
+      <span><b>넬○○</b> 여 33세 · 160 66kg 일종 둘론 일자리 구합니다 N</span>
+      <span><b>수○○</b> 여 22세 · 일구해요 N</span>
+      <span><b>cnjzi○○</b> 여 27세 · 20대 77 여자 일 구해요 N</span>
+      <span><b>마○○</b> 여 26세 · 룸싸롱 · 강남 구해요 N</span>
+      <span><b>짜○○</b> 여 27세 · 서울 경기 인천 쉬어 야간 구해요 N</span>
+      <span><b>수○○</b> 여 22세 · 일구해요 N</span>
+      <span><b>cnjzi○○</b> 여 27세 · 20대 77 여자 일 구해요 N</span>
+<?php } elseif ($nav_active==='sudabang') { ?>
+      <span><b>[베스트]</b> 3부 강한 하퍼 어디예요 💬24</span>
+      <span><b>[밤문화]</b> 하퍼 담당분들은 잘 안... 💬17</span>
+      <span><b>[단짝찾기]</b> 현재 회원님의 헝볼로 같이 일할 단짝찾기 💬8</span>
+      <span><b>[법률자문]</b> 마이킹 관련 · 비밀글 💬3</span>
+      <span><b>[중고거래]</b> 전략 분리리 세로패딩 · 비밀글 💬5</span>
+      <span><b>[베스트]</b> 3부 강한 하퍼 어디예요 💬24</span>
+      <span><b>[밤문화]</b> 하퍼 담당분들은 잘 안... 💬17</span>
+      <span><b>[단짝찾기]</b> 현재 회원님의 헝볼로 같이 일할 단짝찾기 💬8</span>
+<?php } else { ?>
       <span><b>[강남] 클럽마샤</b> 일급 150만원 · 밀빵OK · 당일면접</span>
       <span><b>[홍대] 하이퍼블릭 이브</b> 시급 15만원 · 초보환영</span>
       <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
@@ -71,6 +91,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
       <span><b>[이태원] 이브VIP</b> 하루 100만원 보장</span>
       <span><b>[압구정] 헤라클럽</b> 시급 20만원 · 2시간 40만원</span>
+<?php } ?>
     </div>
   </div>
 </div>

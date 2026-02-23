@@ -86,6 +86,20 @@ document.querySelectorAll('.tab-btn').forEach(function(btn) {
   if (closeBtn) closeBtn.addEventListener('click', closeChat);
   if (overlay) overlay.addEventListener('click', closeChat);
 })();
+/* 인재정보: 업직종 탭 전환 */
+function setTab(el, type) {
+  var cards = document.querySelectorAll('.type-tab-card');
+  if (cards) cards.forEach(function(c){ c.classList.remove('active'); });
+  if (el) el.classList.add('active');
+}
+/* 이브수다방: 사이드 커뮤니티 메뉴 active */
+document.querySelectorAll('.side-comm-item').forEach(function(el){
+  el.addEventListener('click', function(e){
+    e.preventDefault();
+    document.querySelectorAll('.side-comm-item').forEach(function(i){ i.classList.remove('active'); });
+    el.classList.add('active');
+  });
+});
 </script>
 
 <?php if ($config['cf_analytics']) { echo $config['cf_analytics']; } ?>

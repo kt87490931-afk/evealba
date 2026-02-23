@@ -1317,3 +1317,180 @@ footer {
   .stat-label { font-size:9px; }
   .stat-value { font-size:13px; }
 }
+
+/* ===========================
+   인재정보 페이지 (eve_alba_talent.html)
+=========================== */
+.type-tab-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
+.type-tab-card {
+  background:#fff; border-radius:11px; padding:14px 12px;
+  display:flex; align-items:center; justify-content:space-between;
+  border:2px solid #f0e0e8; cursor:pointer; transition:all .2s;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+.type-tab-card:hover,.type-tab-card.active { border-color:var(--hot-pink); background:linear-gradient(135deg,#fff5f8,#ffeef4); box-shadow:0 4px 14px rgba(255,27,107,.15); }
+.type-tab-card.active .ttc-name { color:var(--hot-pink); }
+.type-tab-card.active .ttc-count { background:var(--hot-pink); color:#fff; }
+.ttc-left { display:flex; align-items:center; gap:8px; }
+.ttc-icon { font-size:22px; }
+.ttc-name { font-size:13px; font-weight:700; color:#333; }
+.ttc-count { font-size:13px; font-weight:900; background:var(--pale-pink); color:var(--hot-pink); padding:3px 10px; border-radius:20px; transition:all .2s; }
+.ai-match-banner {
+  background:linear-gradient(135deg,#2D0020,#8B00FF); border-radius:11px; padding:13px 16px;
+  display:flex; align-items:center; gap:12px; margin-bottom:16px; cursor:pointer; transition:opacity .2s; color:#fff;
+  position:relative; overflow:hidden;
+}
+.ai-match-banner::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 80% 50%,rgba(168,85,247,.4),transparent 60%); pointer-events:none; }
+.ai-match-banner:hover { opacity:.92; }
+.amb-icon { font-size:26px; flex-shrink:0; }
+.amb-text h3 { font-size:14px; font-weight:900; margin-bottom:2px; }
+.amb-text p { font-size:11px; opacity:.85; }
+.amb-badge { margin-left:auto; flex-shrink:0; background:var(--gold); color:var(--dark); font-size:11px; font-weight:900; padding:5px 13px; border-radius:18px; white-space:nowrap; }
+.view-ticket-banner {
+  background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink)); border-radius:11px; padding:14px 18px;
+  display:flex; align-items:center; gap:14px; margin-bottom:16px; cursor:pointer; transition:opacity .2s; color:#fff;
+}
+.view-ticket-banner:hover { opacity:.92; }
+.vtb-icon { font-size:28px; flex-shrink:0; }
+.vtb-text h3 { font-size:15px; font-weight:900; margin-bottom:3px; }
+.vtb-text p { font-size:12px; opacity:.9; }
+.vtb-btn { margin-left:auto; flex-shrink:0; background:#fff; color:var(--hot-pink); font-size:12px; font-weight:900; padding:7px 16px; border-radius:20px; white-space:nowrap; }
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.section-title::before { content:''; display:block; width:5px; height:20px; background:linear-gradient(180deg,var(--hot-pink),var(--deep-pink)); border-radius:3px; }
+.result-count { font-size:13px; color:#888; }
+.result-count strong { color:var(--hot-pink); font-weight:900; }
+.talent-table-wrap { background:#fff; border-radius:13px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,.06); margin-bottom:18px; }
+.talent-table { width:100%; border-collapse:collapse; }
+.talent-table thead th { background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink)); color:#fff; padding:11px 12px; font-size:12px; font-weight:700; text-align:center; white-space:nowrap; }
+.talent-table thead th:nth-child(3) { text-align:left; }
+.talent-table tbody tr { border-bottom:1px solid #fae8f0; transition:background .15s; cursor:pointer; }
+.talent-table tbody tr:last-child { border-bottom:none; }
+.talent-table tbody tr:hover { background:#fff8fb; }
+.talent-table tbody td { padding:12px 12px; font-size:12px; vertical-align:middle; color:#555; text-align:center; }
+.td-name { font-size:14px; font-weight:900; color:#222; text-align:center !important; }
+.td-name .name-private { font-size:11px; color:#aaa; font-weight:400; display:block; }
+.td-gender { white-space:nowrap; }
+.gender-badge { display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:700; padding:3px 8px; border-radius:20px; }
+.gender-f { background:#FFE4F0; color:#FF1B6B; }
+.age-text { font-size:13px; font-weight:700; color:#555; }
+.td-title { text-align:left !important; min-width:240px; }
+.talent-title { font-size:13px; font-weight:700; color:#222; display:block; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:320px; }
+.talent-title:hover { color:var(--hot-pink); }
+.talent-region { font-size:11px; color:#aaa; }
+.talent-region strong { color:#666; font-weight:600; }
+.badge-new-inline { display:inline-block; font-size:9px; font-weight:900; padding:1px 5px; border-radius:4px; background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink)); color:#fff; vertical-align:middle; margin-left:4px; }
+.badge-hot-inline { display:inline-block; font-size:9px; font-weight:900; padding:1px 5px; border-radius:4px; background:linear-gradient(135deg,#FF6B35,#FF1B6B); color:#fff; vertical-align:middle; margin-left:4px; }
+.td-job-type { white-space:nowrap; }
+.job-type-badge { display:inline-block; font-size:11px; font-weight:700; padding:3px 8px; border-radius:14px; background:#f5e8f0; color:var(--hot-pink); }
+.td-wage { white-space:nowrap; }
+.wage-amount { font-size:13px; font-weight:900; color:var(--hot-pink); }
+.wage-badge { display:inline-block; padding:1px 6px; border-radius:5px; font-size:10px; font-weight:700; margin-bottom:2px; }
+.wb-ilbul { background:#E8F5E9; color:#2E7D32; }
+.wb-sigan { background:#FFF3E0; color:#E65100; }
+.wb-wolbul { background:#F3E5F5; color:#6A1B9A; }
+.wb-geondang { background:#FFF8E1; color:#F57F17; }
+.wb-hyup { background:#F5F5F5; color:#555; }
+.td-date { font-size:11px; color:#aaa; white-space:nowrap; }
+.lock-row td { opacity:.55; }
+.bottom-search { background:#fff; border-radius:13px; border:2px solid var(--pale-pink); padding:14px 16px; margin-bottom:22px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.btn-bottom-search { padding:8px 20px; background:var(--hot-pink); color:#fff; border:none; border-radius:18px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.btn-bottom-search:hover { background:var(--deep-pink); }
+
+/* ===========================
+   이브수다방 페이지 (eve_alba_sudabang_1.html)
+=========================== */
+.side-comm-list { display:flex; flex-direction:column; gap:3px; }
+.side-comm-item { display:flex; justify-content:space-between; align-items:center; padding:8px 9px; background:#f8f0f5; border-radius:7px; font-size:12px; font-weight:600; color:#555; transition:all .2s; cursor:pointer; border:1.5px solid transparent; }
+.side-comm-item:hover,.side-comm-item.active { background:var(--pale-pink); color:var(--hot-pink); border-color:var(--light-pink); }
+.side-comm-count { font-size:10px; font-weight:700; color:#fff; background:var(--hot-pink); padding:1px 6px; border-radius:10px; }
+.cs-widget { background:linear-gradient(135deg,#fff5f8,#ffeef4); border-radius:9px; padding:11px; text-align:center; }
+.cs-title { font-size:12px; font-weight:700; color:var(--hot-pink); margin-bottom:6px; }
+.cs-phone { font-size:18px; font-weight:900; color:var(--dark); letter-spacing:-.5px; }
+.cs-hours { font-size:10px; color:#888; margin-top:4px; line-height:1.6; }
+.cs-kakao { display:inline-flex; align-items:center; gap:5px; margin-top:8px; padding:5px 12px; background:#FEE500; border-radius:14px; font-size:11px; font-weight:700; color:#333; }
+.community-main-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px; }
+.community-bottom-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px; }
+.board-card { background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,.06); border:2px solid transparent; transition:border-color .2s, box-shadow .2s; }
+.board-card:hover { border-color:var(--pale-pink); box-shadow:0 6px 20px rgba(255,27,107,.1); }
+.board-card-wide { background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,.06); border:2px solid transparent; transition:border-color .2s; margin-bottom:14px; }
+.board-card-wide:hover { border-color:var(--pale-pink); }
+.board-card-header { padding:12px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--pale-pink); }
+.board-title-row { display:flex; align-items:center; gap:8px; }
+.board-icon { font-size:20px; }
+.board-name { font-size:15px; font-weight:900; color:var(--dark); }
+.board-desc { font-size:11px; color:#aaa; margin-top:1px; }
+.board-more { font-size:11px; color:var(--gray); padding:4px 10px; border:1px solid #ddd; border-radius:10px; transition:all .2s; white-space:nowrap; text-decoration:none; }
+.board-more:hover { border-color:var(--hot-pink); color:var(--hot-pink); }
+.board-write-btn { font-size:11px; font-weight:700; color:#fff; background:var(--hot-pink); padding:4px 10px; border-radius:10px; margin-left:6px; transition:opacity .2s; white-space:nowrap; text-decoration:none; display:inline-block; }
+.board-write-btn:hover { opacity:.85; }
+.board-post-list { padding:0; }
+.board-post-item { display:flex; align-items:center; gap:8px; padding:9px 16px; border-bottom:1px solid #fae8f0; cursor:pointer; transition:background .15s; }
+.board-post-item:last-child { border-bottom:none; }
+.board-post-item:hover { background:#fff8fb; }
+.post-badge { font-size:9px; font-weight:900; padding:2px 6px; border-radius:5px; white-space:nowrap; flex-shrink:0; }
+.pb-best { background:var(--hot-pink); color:#fff; }
+.pb-new { background:#E8F5E9; color:#2E7D32; }
+.pb-hot { background:linear-gradient(135deg,#FF6B35,#FF1B6B); color:#fff; }
+.pb-notice { background:var(--dark2); color:var(--gold); }
+.pb-free { background:#f0f0f0; color:#666; }
+.pb-secret { background:#f5e8f0; color:var(--hot-pink); }
+.pb-legal { background:#E3F2FD; color:#1565C0; }
+.pb-trade { background:#FFF8E1; color:#F57F17; }
+.post-title { flex:1; font-size:13px; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color .2s; text-decoration:none; color:inherit; }
+.board-post-item:hover .post-title { color:var(--hot-pink); }
+.post-title .title-lock { font-size:11px; color:#bbb; }
+.post-comment { font-size:11px; font-weight:700; color:var(--hot-pink); margin-left:3px; }
+.bh-best .board-card-header { background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink)); }
+.bh-best .board-name,.bh-best .board-desc { color:#fff; }
+.bh-best .board-more { border-color:rgba(255,255,255,.4); color:#fff; }
+.bh-best .board-more:hover { background:rgba(255,255,255,.2); border-color:#fff; }
+.bh-night .board-card-header { background:linear-gradient(135deg,var(--dark2),#5C0040); }
+.bh-night .board-name,.bh-night .board-desc { color:#fff; }
+.bh-night .board-more { border-color:rgba(255,255,255,.3); color:rgba(255,255,255,.8); }
+.bh-legal .board-card-header { background:linear-gradient(135deg,#1565C0,#0D47A1); }
+.bh-legal .board-name,.bh-legal .board-desc { color:#fff; }
+.bh-legal .board-more { border-color:rgba(255,255,255,.3); color:rgba(255,255,255,.8); }
+.bh-trade .board-card-header { background:linear-gradient(135deg,#F57F17,#E65100); }
+.bh-trade .board-name,.bh-trade .board-desc { color:#fff; }
+.best-post-item { display:flex; align-items:flex-start; gap:10px; padding:11px 16px; border-bottom:1px solid #fae8f0; cursor:pointer; transition:background .15s; }
+.best-post-item:last-child { border-bottom:none; }
+.best-post-item:hover { background:#fff8fb; }
+.best-rank { width:22px; height:22px; border-radius:50%; background:var(--pale-pink); color:var(--hot-pink); font-size:11px; font-weight:900; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.best-rank.r1 { background:var(--gold); color:var(--dark); }
+.best-rank.r2 { background:var(--silver); color:#333; }
+.best-rank.r3 { background:var(--bronze); color:#fff; }
+.best-info { flex:1; min-width:0; }
+.best-title { font-size:13px; font-weight:700; color:#222; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color .2s; }
+.best-post-item:hover .best-title { color:var(--hot-pink); }
+.best-sub { font-size:11px; color:#aaa; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.best-meta { font-size:10px; color:#bbb; white-space:nowrap; flex-shrink:0; margin-top:2px; }
+.best-stats { display:flex; gap:6px; font-size:10px; color:#bbb; margin-top:3px; }
+.best-stats span { display:flex; align-items:center; gap:2px; }
+.best-stats .hot { color:var(--hot-pink); font-weight:700; }
+.used-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:12px 16px 14px; }
+.used-item { border-radius:10px; overflow:hidden; border:1.5px solid #f0e0e8; cursor:pointer; transition:all .2s; }
+.used-item:hover { border-color:var(--hot-pink); transform:translateY(-2px); box-shadow:0 4px 12px rgba(255,27,107,.15); }
+.used-thumb { height:70px; display:flex; align-items:center; justify-content:center; font-size:26px; }
+.used-body { padding:6px 8px; background:#fff; }
+.used-title { font-size:11px; font-weight:700; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.used-price { font-size:12px; font-weight:900; color:var(--hot-pink); margin-top:2px; }
+.used-meta { font-size:10px; color:#bbb; margin-top:1px; }
+
+@media (max-width:900px) {
+  .type-tab-bar { grid-template-columns:repeat(2,1fr); }
+  .community-main-grid,.community-bottom-grid { grid-template-columns:1fr; }
+  .used-grid { grid-template-columns:repeat(4,1fr); }
+  .talent-table thead th:nth-child(5),.talent-table tbody td:nth-child(5),.talent-table thead th:nth-child(7),.talent-table tbody td:nth-child(7) { display:none; }
+}
+@media (max-width:600px) {
+  .type-tab-bar { grid-template-columns:repeat(2,1fr); gap:6px; }
+  .ttc-icon { font-size:18px; }
+  .ttc-name { font-size:12px; }
+  .ttc-count { font-size:11px; padding:2px 7px; }
+  .view-ticket-banner { flex-wrap:wrap; }
+  .vtb-btn { margin-left:0; width:100%; text-align:center; margin-top:6px; }
+  .talent-table thead th:nth-child(4),.talent-table tbody td:nth-child(4),.talent-table thead th:nth-child(5),.talent-table tbody td:nth-child(5),.talent-table thead th:nth-child(7),.talent-table tbody td:nth-child(7) { display:none; }
+  .talent-table thead th,.talent-table tbody td { padding:9px 7px; }
+  .talent-title { max-width:180px; font-size:12px; }
+  .used-grid { grid-template-columns:repeat(2,1fr); }
+}
