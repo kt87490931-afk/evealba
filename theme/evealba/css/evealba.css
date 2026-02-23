@@ -219,7 +219,325 @@ nav::before {
   transition:width .2s;
 }
 .nav-item:hover::after { width:60%; }
+.nav-item.active { background:rgba(0,0,0,.2); }
+.nav-item:hover::after,
+.nav-item.active::after { width:60%; }
 .nav-icon { font-size:20px; }
+
+/* BREADCRUMB (채용정보) */
+.breadcrumb-bar {
+  background:#fff;
+  border-bottom:1px solid #f5e8f0;
+  padding:7px 0;
+}
+.breadcrumb-inner {
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 14px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:#888;
+}
+.breadcrumb-inner a { color:#888; transition:color .2s; }
+.breadcrumb-inner a:hover { color:var(--hot-pink); }
+.breadcrumb-inner span { color:#ccc; }
+.breadcrumb-inner .current { color:var(--hot-pink); font-weight:700; }
+
+/* FILTER BOX (채용정보) */
+.filter-box {
+  background:#fff;
+  border-radius:13px;
+  border:2px solid var(--pale-pink);
+  padding:16px 18px;
+  margin-bottom:16px;
+  box-shadow:0 2px 10px rgba(255,27,107,.06);
+}
+.filter-title {
+  font-size:13px; font-weight:900;
+  color:var(--hot-pink);
+  margin-bottom:12px;
+  display:flex; align-items:center; gap:7px;
+}
+.filter-title::before {
+  content:'🔍';
+  font-size:14px;
+}
+.list-section-title {
+  font-size:14px; font-weight:900;
+  display:flex; align-items:center; gap:6px;
+}
+.filter-rows { display:flex; flex-direction:column; gap:10px; }
+.filter-row {
+  display:flex; align-items:center; gap:10px;
+  flex-wrap:wrap;
+}
+.filter-label {
+  font-size:12px; font-weight:700;
+  color:#555; width:56px; flex-shrink:0;
+}
+.filter-select {
+  padding:6px 10px;
+  border:1.5px solid #f0e0e8;
+  border-radius:8px;
+  font-size:13px;
+  color:#333;
+  background:#fff;
+  outline:none;
+  cursor:pointer;
+  font-family:inherit;
+  transition:border-color .2s;
+}
+.filter-select:focus { border-color:var(--hot-pink); }
+.filter-input {
+  flex:1; min-width:160px;
+  padding:6px 12px;
+  border:1.5px solid #f0e0e8;
+  border-radius:8px;
+  font-size:13px;
+  background:#fff;
+  outline:none;
+  font-family:inherit;
+  transition:border-color .2s;
+}
+.filter-input:focus { border-color:var(--hot-pink); }
+.filter-actions {
+  display:flex; justify-content:center;
+  gap:10px; margin-top:14px;
+}
+.btn-search {
+  padding:9px 32px;
+  background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
+  color:#fff; border:none;
+  border-radius:22px;
+  font-size:14px; font-weight:700;
+  cursor:pointer; transition:opacity .2s;
+  font-family:inherit;
+  box-shadow:0 4px 14px rgba(255,27,107,.3);
+}
+.btn-search:hover { opacity:.9; }
+.btn-reset {
+  padding:9px 20px;
+  background:#f5f5f5;
+  color:#888; border:none;
+  border-radius:22px;
+  font-size:13px; font-weight:600;
+  cursor:pointer; transition:all .2s;
+  font-family:inherit;
+}
+.btn-reset:hover { background:#f0e0e8; color:var(--hot-pink); }
+
+/* SECTION ACTIONS */
+.section-actions {
+  display:flex; gap:8px; align-items:center;
+}
+.btn-post-ad {
+  padding:5px 13px;
+  background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
+  color:#fff; border:none;
+  border-radius:14px;
+  font-size:12px; font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+  transition:opacity .2s;
+}
+.btn-post-ad:hover { opacity:.9; }
+
+/* JOB TYPE / EMPLOY (사이드바) */
+.job-type-list { display:flex; flex-direction:column; gap:4px; }
+.job-type-item {
+  display:flex; justify-content:space-between;
+  padding:6px 8px;
+  background:#f8f0f5;
+  border-radius:6px;
+  font-size:12px; color:#555;
+  transition:all .2s; cursor:pointer;
+  text-decoration:none;
+}
+.job-type-item:hover { background:var(--pale-pink); color:var(--hot-pink); }
+.job-type-count { font-weight:700; color:var(--hot-pink); }
+.employ-list { display:flex; flex-direction:column; gap:4px; }
+.employ-item {
+  display:flex; align-items:center; gap:6px;
+  padding:5px 8px;
+  background:#f8f0f5;
+  border-radius:6px;
+  font-size:12px; color:#555;
+  transition:all .2s; cursor:pointer;
+  text-decoration:none;
+}
+.employ-item:hover { background:var(--pale-pink); color:var(--hot-pink); }
+.side-section-links { display:flex; flex-direction:column; gap:3px; }
+.side-section-link {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:7px 9px;
+  background:#fff5f8;
+  border-radius:7px;
+  font-size:12px; color:#555;
+  transition:all .2s; cursor:pointer;
+  border:1.5px solid transparent;
+  text-decoration:none;
+}
+.side-section-link:hover { border-color:var(--light-pink); color:var(--hot-pink); }
+.side-section-link .badge-ad {
+  font-size:10px; font-weight:700;
+  color:var(--hot-pink);
+  background:var(--pale-pink);
+  padding:1px 6px; border-radius:5px;
+}
+
+/* LIST SECTION / TABLE */
+.list-section {
+  background:#fff;
+  border-radius:13px;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+  margin-bottom:22px;
+}
+.list-section-header {
+  background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
+  padding:11px 16px;
+  display:flex; align-items:center; gap:8px;
+  color:#fff;
+}
+.list-table { width:100%; border-collapse:collapse; }
+.list-table thead th {
+  background:#fff5f8;
+  color:#555;
+  padding:9px 10px;
+  font-size:12px; font-weight:700;
+  border-bottom:2px solid var(--pale-pink);
+  white-space:nowrap;
+}
+.list-table thead th:first-child { width:90px; }
+.list-table thead th:nth-child(2) { width:90px; }
+.list-table thead th:nth-child(3) { width:70px; }
+.list-table tbody tr {
+  border-bottom:1px solid #fae8f0;
+  transition:background .15s;
+  cursor:pointer;
+}
+.list-table tbody tr:hover { background:#fff5f8; }
+.list-table tbody td {
+  padding:10px 10px;
+  font-size:12px;
+  vertical-align:middle;
+  color:#555;
+}
+.td-region { font-size:11px; color:#888; white-space:nowrap; }
+.td-type { font-size:11px; color:#888; white-space:nowrap; }
+.td-gender { white-space:nowrap; font-size:11px; text-align:center; }
+.list-title-cell { min-width:200px; }
+.list-job-title {
+  font-size:13px; font-weight:700; color:#222;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  max-width:360px;
+  display:block;
+  text-decoration:none;
+}
+.list-job-title:hover { color:var(--hot-pink); }
+.list-tags {
+  display:flex; gap:4px; flex-wrap:wrap; margin-top:3px;
+}
+.list-tag {
+  font-size:10px; font-weight:700;
+  padding:1px 6px; border-radius:5px;
+}
+.tag-urgent { background:#FFF0F0; color:#E53935; }
+.tag-init { background:#E8F5E9; color:#388E3C; }
+.tag-bonus { background:#FFF8E1; color:#F57F17; }
+.tag-pay { background:#F3E5F5; color:#7B1FA2; }
+.tag-pink { background:var(--pale-pink); color:var(--hot-pink); }
+.td-shop { white-space:nowrap; }
+.shop-name { font-size:12px; font-weight:700; color:#333; }
+.shop-jump {
+  display:inline-flex; align-items:center; gap:2px;
+  font-size:10px; font-weight:700;
+  background:var(--pale-pink); color:var(--hot-pink);
+  padding:1px 5px; border-radius:4px; margin-top:2px;
+}
+.shop-mini-banner {
+  width:70px; height:26px;
+  border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:900;
+  color:#fff; margin-top:3px;
+  overflow:hidden;
+}
+.td-wage { white-space:nowrap; }
+.wage-amount { font-size:13px; font-weight:900; color:var(--hot-pink); }
+.wage-type { font-size:10px; color:#888; display:block; margin-top:1px; }
+.wage-badge {
+  display:inline-block; padding:1px 6px;
+  border-radius:5px; font-size:10px; font-weight:700;
+}
+.wb-sigan { background:#FFF3E0; color:#E65100; }
+.wb-ilbul { background:#E8F5E9; color:#2E7D32; }
+.wb-jubul { background:#E3F2FD; color:#1565C0; }
+.wb-wolbul { background:#F3E5F5; color:#6A1B9A; }
+.wb-hyup { background:#F5F5F5; color:#555; }
+.wb-geondang { background:#FFF8E1; color:#F57F17; }
+.td-benefits { max-width:130px; }
+.benefit-tags { display:flex; flex-wrap:wrap; gap:3px; }
+.benefit-tag {
+  font-size:10px;
+  padding:1px 5px;
+  border-radius:4px;
+  background:#f0f0f0; color:#666;
+}
+.benefit-tag.b-hot { background:var(--pale-pink); color:var(--hot-pink); }
+.td-stats { white-space:nowrap; font-size:11px; color:#888; text-align:center; }
+.td-stats .stat-line { display:flex; align-items:center; gap:3px; justify-content:center; }
+.jump-icon { color:var(--hot-pink); }
+
+/* PAGINATION */
+.pagination {
+  display:flex; justify-content:center;
+  align-items:center; gap:5px;
+  margin:18px 0;
+  flex-wrap:wrap;
+}
+.page-btn {
+  min-width:34px; height:34px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:8px;
+  font-size:13px; font-weight:700;
+  color:#888;
+  background:#fff;
+  border:1.5px solid #f0e0e8;
+  cursor:pointer; transition:all .2s;
+  text-decoration:none;
+}
+.page-btn:hover { border-color:var(--hot-pink); color:var(--hot-pink); }
+.page-btn.active {
+  background:var(--hot-pink); color:#fff;
+  border-color:var(--hot-pink);
+}
+.page-btn.prev-next { font-size:11px; padding:0 10px; }
+
+/* BOTTOM SEARCH */
+.bottom-search {
+  background:#fff;
+  border-radius:13px;
+  border:2px solid var(--pale-pink);
+  padding:16px 18px;
+  margin-bottom:22px;
+  display:flex; align-items:center;
+  gap:10px; flex-wrap:wrap;
+}
+.bottom-search .filter-select { flex:none; }
+.bottom-search .filter-input { flex:1; min-width:120px; }
+.btn-bottom-search {
+  padding:8px 20px;
+  background:var(--hot-pink);
+  color:#fff; border:none;
+  border-radius:18px;
+  font-size:13px; font-weight:700;
+  cursor:pointer; font-family:inherit;
+  white-space:nowrap;
+}
+.btn-bottom-search:hover { background:var(--deep-pink); }
 
 /* TICKER */
 .ticker-wrap {
@@ -878,6 +1196,12 @@ footer {
   .kakao-btn { display:none; }
   .nav-scroll { padding:0; justify-content:flex-start; }
   .nav-item { flex:0 0 auto; }
+  /* 채용정보 테이블: 성별·업소명 숨김 */
+  .col-gender,.col-benefits { display:none; }
+  .list-table thead th:nth-child(3),
+  .list-table tbody td:nth-child(3),
+  .list-table thead th:nth-child(5),
+  .list-table tbody td:nth-child(5) { display:none; }
 }
 
 /* RESPONSIVE — MOBILE (≤600px) */
@@ -897,6 +1221,18 @@ footer {
   .nav-item { flex:0 0 auto; padding:11px 14px; font-size:13px; min-width:70px; }
   .ticker-wrap { padding:8px 12px; gap:10px; }
   .ticker-inner span { font-size:12px; }
+  .filter-box { padding:12px; }
+  .filter-row { gap:7px; }
+  .filter-label { width:44px; font-size:11px; }
+  .filter-select { font-size:12px; padding:5px 7px; }
+  /* 채용정보 테이블: 성별·채용제목·업소명 숨김 */
+  .list-table thead th:nth-child(3),
+  .list-table tbody td:nth-child(3),
+  .list-table thead th:nth-child(4),
+  .list-table tbody td:nth-child(4),
+  .list-table thead th:nth-child(5),
+  .list-table tbody td:nth-child(5) { display:none; }
+  .special-card { grid-column: span 2 !important; }
   .hero-main { height:150px; padding:20px; border-radius:12px; }
   .hero-text h2 { font-size:20px; }
   .hero-text h2 span { font-size:24px; }
