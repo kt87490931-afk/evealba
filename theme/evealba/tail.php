@@ -13,6 +13,7 @@ if(G5_COMMUNITY_USE === false) {
 ?>
 
   </div><!-- /main-area -->
+  <?php include G5_THEME_PATH.'/inc/ads_recommend.php'; ?>
 </div><!-- /page-layout -->
 
 <!-- FOOTER -->

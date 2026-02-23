@@ -581,18 +581,19 @@ nav::before {
   100%{transform:translateX(-50%)}
 }
 
-/* PAGE LAYOUT */
+/* PAGE LAYOUT [로그인][메인배너][추천업소] 3컬럼 */
 .page-layout {
   max-width:1200px;
   margin:14px auto 0;
   padding:0 14px;
   display:grid;
-  grid-template-columns:200px 1fr;
+  grid-template-columns:200px 1fr 220px;
   gap:14px;
   align-items:start;
 }
 .left-sidebar { display:flex; flex-direction:column; gap:12px; }
 .main-area { min-width:0; }
+.right-sidebar { display:flex; flex-direction:column; gap:12px; min-width:0; }
 
 /* SIDEBAR WIDGETS */
 .sidebar-widget {
@@ -1193,6 +1194,7 @@ footer {
     padding:0 12px;
   }
   .left-sidebar { display:none; }
+  .right-sidebar { display:none; }
   .mobile-recommend { display:block; }
   .featured-grid { grid-template-columns:repeat(2,1fr); }
   .premium-grid { grid-template-columns:repeat(3,1fr); }
