@@ -25,7 +25,7 @@ if(G5_COMMUNITY_USE === false) {
       <a href="#">청소년보호정책</a>
       <a href="#">광고/제휴 문의</a>
       <a href="#">사이트맵</a>
-      <a href="#">고객센터</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/cs.php' : '/cs.php'; ?>">고객센터</a>
     </div>
     <div class="footer-text">
       상호명: (주)이브알바 | 대표이사: 홍길동 | 사업자등록번호: 000-00-00000<br>
@@ -97,6 +97,20 @@ document.querySelectorAll('.side-comm-item').forEach(function(el){
   el.addEventListener('click', function(e){
     e.preventDefault();
     document.querySelectorAll('.side-comm-item').forEach(function(i){ i.classList.remove('active'); });
+    el.classList.add('active');
+  });
+});
+/* 고객센터: FAQ 아코디언 */
+function toggleFaq(el) {
+  var item = el.parentElement;
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
+/* 고객센터: 사이드 CS 메뉴 active */
+document.querySelectorAll('.side-cs-item').forEach(function(el){
+  el.addEventListener('click', function(){
+    document.querySelectorAll('.side-cs-item').forEach(function(i){ i.classList.remove('active'); });
     el.classList.add('active');
   });
 });

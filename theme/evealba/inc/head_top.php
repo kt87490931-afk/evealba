@@ -16,7 +16,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
     <a href="<?php echo G5_BBS_URL ?>/login.php">로그인</a>
     <a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a>
     <?php if ($is_admin) { ?><a href="<?php echo G5_ADMIN_URL ?>">관리자</a><?php } ?>
-    <a href="#">고객센터</a>
+    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/cs.php' : '/cs.php'; ?>">고객센터</a>
   </div>
 </div>
 
@@ -32,7 +32,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <form method="get" action="<?php echo G5_BBS_URL ?>/search.php">
         <input type="hidden" name="sfl" value="wr_subject||wr_content">
         <input type="hidden" name="sop" value="and">
-        <input type="text" name="stx" placeholder="업소명, 지역명으로 검색하세요">
+        <input type="text" name="stx" placeholder="<?php echo ($nav_active==='cs') ? '궁금하신 내용을 검색하세요' : '업소명, 지역명으로 검색하세요'; ?>">
         <button type="submit">🔍</button>
       </form>
     </div>
@@ -52,13 +52,13 @@ $nav_active = isset($nav_active) ? $nav_active : '';
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/talent.php' : '/talent.php'; ?>" class="nav-item<?php echo ($nav_active==='talent') ? ' active' : ''; ?>"><span class="nav-icon">👑</span>인재정보</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/sudabang.php' : '/sudabang.php'; ?>" class="nav-item<?php echo ($nav_active==='sudabang') ? ' active' : ''; ?>"><span class="nav-icon">💬</span>이브수다방</a>
     <a href="#" class="nav-item"><span class="nav-icon">🏪</span>중고거래</a>
-    <a href="#" class="nav-item"><span class="nav-icon">🎀</span>고객센터</a>
+    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/cs.php' : '/cs.php'; ?>" class="nav-item<?php echo ($nav_active==='cs') ? ' active' : ''; ?>"><span class="nav-icon">🎀</span>고객센터</a>
   </div>
 </nav>
 
 <!-- TICKER -->
 <div class="ticker-wrap">
-  <span class="ticker-label"><?php echo ($nav_active==='talent') ? '🌸 신규' : (($nav_active==='sudabang') ? '💬 HOT' : '🔥 급구'); ?></span>
+  <span class="ticker-label"><?php echo ($nav_active==='talent') ? '🌸 신규' : (($nav_active==='sudabang') ? '💬 HOT' : (($nav_active==='cs') ? '🎀 고객센터' : '🔥 급구')); ?></span>
   <div class="ticker-track">
     <div class="ticker-inner">
 <?php if ($nav_active==='talent') { ?>
@@ -71,6 +71,15 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <span><b>짜○○</b> 여 27세 · 서울 경기 인천 쉬어 야간 구해요 N</span>
       <span><b>수○○</b> 여 22세 · 일구해요 N</span>
       <span><b>cnjzi○○</b> 여 27세 · 20대 77 여자 일 구해요 N</span>
+<?php } elseif ($nav_active==='cs') { ?>
+      <span><b>[공지]</b> 2026 설연휴 휴무 안내</span>
+      <span><b>[FAQ]</b> 개명 했을 경우 어떻게 해야할까요?</span>
+      <span><b>[문의]</b> 광고문의 · 답변완료</span>
+      <span><b>[디자인]</b> 상세이미지 수정 모청드립니다</span>
+      <span><b>[공지]</b> 2026 설연휴 휴무 안내</span>
+      <span><b>[FAQ]</b> 개명 했을 경우 어떻게 해야할까요?</span>
+      <span><b>[문의]</b> 광고문의 · 답변완료</span>
+      <span><b>[디자인]</b> 상세이미지 수정 모청드립니다</span>
 <?php } elseif ($nav_active==='sudabang') { ?>
       <span><b>[베스트]</b> 3부 강한 하퍼 어디예요 💬24</span>
       <span><b>[밤문화]</b> 하퍼 담당분들은 잘 안... 💬17</span>
