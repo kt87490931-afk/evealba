@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit;
 
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/head.php');
@@ -20,205 +20,155 @@ include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 ?>
 
-<!-- 상단 시작 { -->
-<div id="hd">
-    <h1 id="hd_h1"><?php echo $g5['title'] ?></h1>
-    <div id="skip_to_container"><a href="#container">본문 바로가기</a></div>
+<?php if(defined('_INDEX_')) { include G5_BBS_PATH.'/newwin.inc.php'; } ?>
 
-    <?php
-    if(defined('_INDEX_')) { // index에서만 실행
-        include G5_BBS_PATH.'/newwin.inc.php'; // 팝업레이어
-    }
-    ?>
-    <div id="tnb">
-    	<div class="inner">
-            <?php if(G5_COMMUNITY_USE) { ?>
-    		<ul id="hd_define">
-    			<li class="active"><a href="<?php echo G5_URL ?>/">커뮤니티</a></li>
-                <?php if (defined('G5_USE_SHOP') && G5_USE_SHOP) { ?>
-    			<li><a href="<?php echo G5_SHOP_URL ?>/">쇼핑몰</a></li>
-                <?php } ?>
-    		</ul>
-            <?php } ?>
-			<ul id="hd_qnb">
-	            <li><a href="<?php echo G5_BBS_URL ?>/faq.php">FAQ</a></li>
-	            <li><a href="<?php echo G5_BBS_URL ?>/qalist.php">Q&A</a></li>
-	            <li><a href="<?php echo G5_BBS_URL ?>/new.php">새글</a></li>
-	            <li><a href="<?php echo G5_BBS_URL ?>/current_connect.php" class="visit">접속자<strong class="visit-num"><?php echo connect('theme/basic'); // 현재 접속자수, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정  ?></strong></a></li>
-	        </ul>
-		</div>
-    </div>
-    <div id="hd_wrapper">
-
-        <div id="logo">
-            <a href="<?php echo G5_URL ?>"><img src="<?php echo G5_IMG_URL ?>/logo.png" alt="<?php echo $config['cf_title']; ?>"></a>
-        </div>
-    
-        <div class="hd_sch_wr">
-            <fieldset id="hd_sch">
-                <legend>사이트 내 전체검색</legend>
-                <form name="fsearchbox" method="get" action="<?php echo G5_BBS_URL ?>/search.php" onsubmit="return fsearchbox_submit(this);">
-                <input type="hidden" name="sfl" value="wr_subject||wr_content">
-                <input type="hidden" name="sop" value="and">
-                <label for="sch_stx" class="sound_only">검색어 필수</label>
-                <input type="text" name="stx" id="sch_stx" maxlength="20" placeholder="검색어를 입력해주세요">
-                <button type="submit" id="sch_submit" value="검색"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">검색</span></button>
-                </form>
-
-                <script>
-                function fsearchbox_submit(f)
-                {
-                    var stx = f.stx.value.trim();
-                    if (stx.length < 2) {
-                        alert("검색어는 두글자 이상 입력하십시오.");
-                        f.stx.select();
-                        f.stx.focus();
-                        return false;
-                    }
-
-                    // 검색에 많은 부하가 걸리는 경우 이 주석을 제거하세요.
-                    var cnt = 0;
-                    for (var i = 0; i < stx.length; i++) {
-                        if (stx.charAt(i) == ' ')
-                            cnt++;
-                    }
-
-                    if (cnt > 1) {
-                        alert("빠른 검색을 위하여 검색어에 공백은 한개만 입력할 수 있습니다.");
-                        f.stx.select();
-                        f.stx.focus();
-                        return false;
-                    }
-                    f.stx.value = stx;
-
-                    return true;
-                }
-                </script>
-
-            </fieldset>
-                
-            <?php echo popular('theme/basic'); // 인기검색어, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정  ?>
-        </div>
-        <ul class="hd_login">        
-            <?php if ($is_member) {  ?>
-            <li><a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=<?php echo G5_BBS_URL ?>/register_form.php">정보수정</a></li>
-            <li><a href="<?php echo G5_BBS_URL ?>/logout.php">로그아웃</a></li>
-            <?php if ($is_admin) {  ?>
-            <li class="tnb_admin"><a href="<?php echo correct_goto_url(G5_ADMIN_URL); ?>">관리자</a></li>
-            <?php }  ?>
-            <?php } else {  ?>
-            <li><a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a></li>
-            <li><a href="<?php echo G5_BBS_URL ?>/login.php">로그인</a></li>
-            <?php }  ?>
-
-        </ul>
-    </div>
-    
-    <nav id="gnb">
-        <h2>메인메뉴</h2>
-        <div class="gnb_wrap">
-            <ul id="gnb_1dul">
-                <li class="gnb_1dli gnb_mnal"><button type="button" class="gnb_menu_btn" title="전체메뉴"><i class="fa fa-bars" aria-hidden="true"></i><span class="sound_only">전체메뉴열기</span></button></li>
-                <?php
-				$menu_datas = get_menu_db(0, true);
-				$gnb_zindex = 999; // gnb_1dli z-index 값 설정용
-                $i = 0;
-                foreach( $menu_datas as $row ){
-                    if( empty($row) ) continue;
-                    $add_class = (isset($row['sub']) && $row['sub']) ? 'gnb_al_li_plus' : '';
-                ?>
-                <li class="gnb_1dli <?php echo $add_class; ?>" style="z-index:<?php echo $gnb_zindex--; ?>">
-                    <a href="<?php echo $row['me_link']; ?>" target="_<?php echo $row['me_target']; ?>" class="gnb_1da"><?php echo $row['me_name'] ?></a>
-                    <?php
-                    $k = 0;
-                    foreach( (array) $row['sub'] as $row2 ){
-
-                        if( empty($row2) ) continue; 
-
-                        if($k == 0)
-                            echo '<span class="bg">하위분류</span><div class="gnb_2dul"><ul class="gnb_2dul_box">'.PHP_EOL;
-                    ?>
-                        <li class="gnb_2dli"><a href="<?php echo $row2['me_link']; ?>" target="_<?php echo $row2['me_target']; ?>" class="gnb_2da"><?php echo $row2['me_name'] ?></a></li>
-                    <?php
-                    $k++;
-                    }   //end foreach $row2
-
-                    if($k > 0)
-                        echo '</ul></div>'.PHP_EOL;
-                    ?>
-                </li>
-                <?php
-                $i++;
-                }   //end foreach $row
-
-                if ($i == 0) {  ?>
-                    <li class="gnb_empty">메뉴 준비 중입니다.<?php if ($is_admin) { ?> <a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">관리자모드 &gt; 환경설정 &gt; 메뉴설정</a>에서 설정하실 수 있습니다.<?php } ?></li>
-                <?php } ?>
-            </ul>
-            <div id="gnb_all">
-                <h2>전체메뉴</h2>
-                <ul class="gnb_al_ul">
-                    <?php
-                    
-                    $i = 0;
-                    foreach( $menu_datas as $row ){
-                    ?>
-                    <li class="gnb_al_li">
-                        <a href="<?php echo $row['me_link']; ?>" target="_<?php echo $row['me_target']; ?>" class="gnb_al_a"><?php echo $row['me_name'] ?></a>
-                        <?php
-                        $k = 0;
-                        foreach( (array) $row['sub'] as $row2 ){
-                            if($k == 0)
-                                echo '<ul>'.PHP_EOL;
-                        ?>
-                            <li><a href="<?php echo $row2['me_link']; ?>" target="_<?php echo $row2['me_target']; ?>"><?php echo $row2['me_name'] ?></a></li>
-                        <?php
-                        $k++;
-                        }   //end foreach $row2
-
-                        if($k > 0)
-                            echo '</ul>'.PHP_EOL;
-                        ?>
-                    </li>
-                    <?php
-                    $i++;
-                    }   //end foreach $row
-
-                    if ($i == 0) {  ?>
-                        <li class="gnb_empty">메뉴 준비 중입니다.<?php if ($is_admin) { ?> <br><a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">관리자모드 &gt; 환경설정 &gt; 메뉴설정</a>에서 설정하실 수 있습니다.<?php } ?></li>
-                    <?php } ?>
-                </ul>
-                <button type="button" class="gnb_close_btn"><i class="fa fa-times" aria-hidden="true"></i></button>
-            </div>
-            <div id="gnb_all_bg"></div>
-        </div>
-    </nav>
-    <script>
-    
-    $(function(){
-        $(".gnb_menu_btn").click(function(){
-            $("#gnb_all, #gnb_all_bg").show();
-        });
-        $(".gnb_close_btn, #gnb_all_bg").click(function(){
-            $("#gnb_all, #gnb_all_bg").hide();
-        });
-    });
-
-    </script>
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <span>🌸 이브알바에 오신 것을 환영합니다!</span>
+    고객센터: 1588-0000 (평일 09:00~18:00)
+  </div>
+  <div>
+    <a href="<?php echo G5_BBS_URL ?>/login.php">로그인</a>
+    <a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a>
+    <?php if ($is_admin) { ?><a href="<?php echo G5_ADMIN_URL ?>">관리자</a><?php } ?>
+    <a href="#">고객센터</a>
+  </div>
 </div>
-<!-- } 상단 끝 -->
 
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="<?php echo G5_URL ?>" class="logo">
+      <span class="logo-eve">eve</span>
+      <span class="logo-dot"></span>
+      <span class="logo-alba">알바</span>
+    </a>
+    <div class="search-box">
+      <form method="get" action="<?php echo G5_BBS_URL ?>/search.php">
+        <input type="hidden" name="sfl" value="wr_subject||wr_content">
+        <input type="hidden" name="sop" value="and">
+        <input type="text" name="stx" placeholder="업소명, 지역명으로 검색하세요">
+        <button type="submit">🔍</button>
+      </form>
+    </div>
+    <div class="header-actions">
+      <div class="kakao-btn">카카오톡<br><b>EvéAlba</b></div>
+      <a href="#">채용공고 등록</a>
+      <a href="<?php echo G5_BBS_URL ?>/register.php" class="btn-register">이력서 등록</a>
+    </div>
+  </div>
+</header>
 
-<hr>
+<!-- NAV -->
+<nav>
+  <div class="nav-scroll">
+    <a href="#" class="nav-item"><span class="nav-icon">📋</span>채용정보</a>
+    <a href="#" class="nav-item"><span class="nav-icon">📍</span>지역별채용</a>
+    <a href="#" class="nav-item"><span class="nav-icon">👑</span>인재정보</a>
+    <a href="#" class="nav-item"><span class="nav-icon">💬</span>이브수다방</a>
+    <a href="#" class="nav-item"><span class="nav-icon">🏪</span>중고거래</a>
+    <a href="#" class="nav-item"><span class="nav-icon">🎀</span>고객센터</a>
+  </div>
+</nav>
 
-<!-- 콘텐츠 시작 { -->
-<div id="wrapper" class="ev-layout">
-    <div id="container_wr" class="ev-container-wr">
-    <?php
-    $leftSidebarFile = defined('G5_THEME_PATH') ? G5_THEME_PATH.'/inc/left_sidebar.php' : '';
-    if ($leftSidebarFile && is_file($leftSidebarFile)) {
-        include $leftSidebarFile;
-    }
-    ?>
-    <div id="container" class="ev-main">
-        <?php if (!defined("_INDEX_")) { ?><h2 id="container_title"><span title="<?php echo get_text($g5['title']); ?>"><?php echo get_head_title($g5['title']); ?></span></h2><?php }
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <span class="ticker-label">🔥 급구</span>
+  <div class="ticker-track">
+    <div class="ticker-inner">
+      <span><b>[강남] 클럽마샤</b> 일급 150만원 · 밀빵OK · 당일면접</span>
+      <span><b>[홍대] 하이퍼블릭 이브</b> 시급 15만원 · 초보환영</span>
+      <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
+      <span><b>[이태원] 이브VIP</b> 하루 100만원 보장</span>
+      <span><b>[압구정] 헤라클럽</b> 시급 20만원 · 2시간 40만원</span>
+      <span><b>[강남] 클럽마샤</b> 일급 150만원 · 밀빵OK · 당일면접</span>
+      <span><b>[홍대] 하이퍼블릭 이브</b> 시급 15만원 · 초보환영</span>
+      <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
+      <span><b>[이태원] 이브VIP</b> 하루 100만원 보장</span>
+      <span><b>[압구정] 헤라클럽</b> 시급 20만원 · 2시간 40만원</span>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE LAYOUT -->
+<div class="page-layout">
+
+  <!-- 좌측 사이드바 -->
+  <aside class="left-sidebar">
+    <div class="sidebar-widget">
+      <div class="widget-title">🌸 로그인</div>
+      <div class="login-visitor">오늘 방문 <strong>24,153</strong>명</div>
+      <div class="widget-body">
+        <div class="login-form">
+          <input type="text" placeholder="아이디">
+          <input type="password" placeholder="비밀번호">
+          <button>로그인</button>
+        </div>
+        <div class="login-links">
+          <a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a><span class="sep">|</span>
+          <a href="<?php echo G5_BBS_URL ?>/password_lost.php">아이디 찾기</a><span class="sep">|</span>
+          <a href="<?php echo G5_BBS_URL ?>/password_lost.php">비밀번호</a>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="widget-title">⚡ 빠른 메뉴</div>
+      <div class="widget-body">
+        <div class="quick-links">
+          <a href="#" class="quick-link-btn"><span class="ql-icon">📋</span>채용공고 등록</a>
+          <a href="#" class="quick-link-btn"><span class="ql-icon">👩</span>이력서 등록</a>
+          <a href="#" class="quick-link-btn"><span class="ql-icon">📍</span>지역별 채용</a>
+          <a href="#" class="quick-link-btn"><span class="ql-icon">💬</span>수다방</a>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="widget-title">📍 지역별 검색</div>
+      <div class="widget-body">
+        <div class="region-grid">
+          <a href="#" class="region-btn">서울</a>
+          <a href="#" class="region-btn">경기</a>
+          <a href="#" class="region-btn">인천</a>
+          <a href="#" class="region-btn">부산</a>
+          <a href="#" class="region-btn">대구</a>
+          <a href="#" class="region-btn">광주</a>
+          <a href="#" class="region-btn">대전</a>
+          <a href="#" class="region-btn">울산</a>
+          <a href="#" class="region-btn">강원</a>
+          <a href="#" class="region-btn">충청</a>
+          <a href="#" class="region-btn">전라</a>
+          <a href="#" class="region-btn">경상</a>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-widget">
+      <div class="widget-title">💎 추천업소</div>
+      <div class="widget-body">
+        <div class="side-ad-card">
+          <div class="side-ad-banner g12">동탄스카이 아이퍼블릭<br><b style="font-size:15px">60분 TC12만원</b></div>
+          <div class="side-ad-info">
+            <div class="side-ad-name">동탄스카이 아이퍼블릭</div>
+            <div class="side-ad-wage">자유복장 · TC12만원</div>
+          </div>
+        </div>
+        <div class="side-ad-card">
+          <div class="side-ad-banner g1">일프로 &amp; 텐카페<br><b>300만 보상</b></div>
+          <div class="side-ad-info">
+            <div class="side-ad-name">일프로 · 텐카페</div>
+            <div class="side-ad-wage">300만원 보장</div>
+          </div>
+        </div>
+        <div class="side-ad-card">
+          <div class="side-ad-banner" style="background:linear-gradient(135deg,#1A0010,#FF1B6B);font-size:18px;font-weight:900">당일<br>백만<br>UP</div>
+          <div class="side-ad-info">
+            <div class="side-ad-name">당일 백만원 UP 이벤트</div>
+            <div class="side-ad-wage">기간 한정 특별 혜택</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 메인 영역 (index.php에서 채움) -->
+  <div class="main-area">

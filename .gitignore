@@ -17,8 +17,10 @@ naver*.html
 initests01/
 SIRsoft000/
 config.php
+dbconfig.php
 pma/
 
+*.bak
 # 이브알바 추가
 .env
 .env.local

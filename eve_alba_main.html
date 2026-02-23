@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이브알바 - EVE ALBA</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===========================
+   VARIABLES & RESET
+=========================== */
+:root {
+  --hot-pink: #FF1B6B;
+  --deep-pink: #C90050;
+  --light-pink: #FF6BA8;
+  --pale-pink: #FFD6E7;
+  --dark: #1A0010;
+  --dark2: #2D0020;
+  --gold: #FFD700;
+  --silver: #C0C0C0;
+  --bronze: #CD7F32;
+  --gray: #888;
+  --text-dark: #222;
+  --bg: #FFF0F5;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Noto Sans KR',sans-serif;
+  background:var(--bg);
+  color:var(--text-dark);
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+a { text-decoration:none; }
+img { max-width:100%; }
+
+/* ===========================
+   GRADIENTS
+=========================== */
+.g1{background:linear-gradient(135deg,#FF1B6B,#C90050)}
+.g2{background:linear-gradient(135deg,#8B00FF,#5500AA)}
+.g3{background:linear-gradient(135deg,#FF6B35,#FF1B6B)}
+.g4{background:linear-gradient(135deg,#00B4D8,#0077B6)}
+.g5{background:linear-gradient(135deg,#2D6A4F,#1B4332)}
+.g6{background:linear-gradient(135deg,#E63946,#9D0208)}
+.g7{background:linear-gradient(135deg,#F4A261,#E76F51)}
+.g8{background:linear-gradient(135deg,#457B9D,#1D3557)}
+.g9{background:linear-gradient(135deg,#6D6875,#B5838D)}
+.g10{background:linear-gradient(135deg,#2B2D42,#EF233C)}
+.g11{background:linear-gradient(135deg,#4A0E8F,#A855F7)}
+.g12{background:linear-gradient(135deg,#FF006E,#8338EC)}
+
+/* ===========================
+   TOP BAR
+=========================== */
+.top-bar {
+  background:#fafafa;
+  border-bottom:1px solid #f0f0f0;
+  font-size:12px;
+  padding:6px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#888;
+}
+.top-bar a { color:#888; margin-left:10px; transition:color .2s; }
+.top-bar a:hover { color:var(--hot-pink); }
+.top-bar-left span { color:var(--hot-pink); margin-right:8px; }
+
+/* ===========================
+   HEADER
+=========================== */
+header {
+  background:#fff;
+  position:sticky;
+  top:0;
+  z-index:200;
+  border-bottom:3px solid var(--hot-pink);
+  box-shadow:0 2px 16px rgba(255,27,107,.1);
+  padding:0 16px;
+}
+.header-inner {
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:12px 0;
+}
+/* LOGO */
+.logo {
+  font-family:'Outfit',sans-serif;
+  font-size:30px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:0;
+  flex-shrink:0;
+}
+.logo-eve { color:#111; font-style:italic; }
+.logo-dot {
+  width:7px; height:7px;
+  background:var(--hot-pink);
+  border-radius:50%;
+  margin:0 2px 12px;
+  flex-shrink:0;
+  display:inline-block;
+}
+.logo-alba { color:var(--hot-pink); }
+/* SEARCH */
+.search-box { flex:1; display:flex; max-width:460px; }
+.search-box input {
+  flex:1; padding:9px 14px;
+  border:2px solid #eee;
+  border-right:none;
+  border-radius:24px 0 0 24px;
+  font-size:14px;
+  background:#f9f9f9;
+  color:#333;
+  outline:none;
+  transition:border-color .2s;
+  font-family:inherit;
+}
+.search-box input:focus { border-color:var(--hot-pink); background:#fff; }
+.search-box input::placeholder { color:#aaa; }
+.search-box button {
+  padding:9px 18px;
+  background:var(--hot-pink);
+  border:none;
+  border-radius:0 24px 24px 0;
+  color:#fff;
+  cursor:pointer;
+  font-size:16px;
+  transition:background .2s;
+}
+.search-box button:hover { background:var(--deep-pink); }
+/* HEADER ACTIONS */
+.header-actions {
+  display:flex;
+  gap:6px;
+  flex-shrink:0;
+  align-items:center;
+}
+.header-actions a {
+  color:#555;
+  font-size:13px;
+  padding:6px 10px;
+  border-radius:4px;
+  transition:color .2s;
+  white-space:nowrap;
+}
+.header-actions a:hover { color:var(--hot-pink); }
+.btn-register {
+  background:var(--hot-pink) !important;
+  color:#fff !important;
+  border-radius:20px !important;
+  font-weight:700 !important;
+  padding:8px 14px !important;
+  animation:pulse-glow 2s infinite;
+}
+@keyframes pulse-glow {
+  0%,100%{box-shadow:0 0 8px rgba(255,27,107,.5)}
+  50%{box-shadow:0 0 18px rgba(255,27,107,.9)}
+}
+.kakao-btn {
+  background:#FEE500;
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12px;
+  font-weight:700;
+  color:#333;
+  text-align:center;
+  white-space:nowrap;
+}
+
+/* ===========================
+   NAV (터치 스크롤)
+=========================== */
+nav {
+  background:var(--hot-pink);
+  position:relative;
+  overflow:hidden;
+}
+nav::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,var(--deep-pink),var(--hot-pink),var(--light-pink),var(--hot-pink),var(--deep-pink));
+  background-size:200% 100%;
+  animation:shimmer 4s linear infinite;
+}
+@keyframes shimmer {
+  0%{background-position:-200% 0}
+  100%{background-position:200% 0}
+}
+.nav-scroll {
+  display:flex;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  position:relative;
+  z-index:1;
+  /* page-layout과 동일: max-width 1200px, padding 0 14px */
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 14px;
+  /* PC에서 아이템들을 균등 분배 */
+  justify-content:space-between;
+}
+.nav-scroll::-webkit-scrollbar { display:none; }
+.nav-item {
+  /* PC에서 flex:1 로 균등 너비 */
+  flex:1;
+  flex-shrink:0;
+  text-align:center;
+  padding:14px 10px;
+  color:#fff;
+  font-size:14px;
+  font-weight:700;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  transition:background .2s;
+  position:relative;
+  white-space:nowrap;
+  min-width:80px;
+}
+.nav-item:hover { background:rgba(255,255,255,.2); }
+.nav-item::after {
+  content:'';
+  position:absolute;
+  bottom:0; left:50%;
+  transform:translateX(-50%);
+  width:0; height:3px;
+  background:var(--gold);
+  transition:width .2s;
+}
+.nav-item:hover::after { width:60%; }
+.nav-icon { font-size:20px; }
+
+/* ===========================
+   TICKER
+=========================== */
+.ticker-wrap {
+  background:linear-gradient(135deg,var(--dark2),#3D0028);
+  padding:9px 16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  overflow:hidden;
+}
+.ticker-label {
+  background:var(--hot-pink);
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+  padding:3px 10px;
+  border-radius:12px;
+  flex-shrink:0;
+}
+.ticker-track { flex:1; overflow:hidden; }
+.ticker-inner {
+  display:flex;
+  gap:36px;
+  white-space:nowrap;
+  animation:ticker 30s linear infinite;
+}
+.ticker-inner span { color:rgba(255,255,255,.85); font-size:13px; }
+.ticker-inner span b { color:var(--gold); font-weight:900; }
+@keyframes ticker {
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
+/* ===========================
+   PAGE LAYOUT
+=========================== */
+.page-layout {
+  max-width:1200px;
+  margin:14px auto 0;
+  padding:0 14px;
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:14px;
+  align-items:start;
+}
+.left-sidebar { display:flex; flex-direction:column; gap:12px; }
+.main-area { min-width:0; }
+
+/* ===========================
+   SIDEBAR WIDGETS
+=========================== */
+.sidebar-widget {
+  background:#fff;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);
+}
+.widget-title {
+  background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
+  color:#fff;
+  padding:9px 13px;
+  font-size:13px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.widget-body { padding:11px; }
+/* Login */
+.login-visitor {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:7px 12px;
+  background:linear-gradient(135deg,#fff5f8,#ffeef4);
+  border-bottom:1px solid #f5e0e8;
+  font-size:12px;
+  color:var(--gray);
+}
+.login-visitor strong { color:var(--hot-pink); font-weight:900; }
+.login-form input {
+  width:100%; padding:8px 11px;
+  border:1.5px solid #f0e0e8;
+  border-radius:8px;
+  font-size:13px;
+  margin-bottom:7px;
+  outline:none;
+  transition:border-color .2s;
+  font-family:inherit;
+}
+.login-form input:focus { border-color:var(--hot-pink); }
+.login-form button {
+  width:100%; padding:9px;
+  background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
+  color:#fff; border:none;
+  border-radius:8px;
+  font-size:14px; font-weight:700;
+  cursor:pointer; transition:opacity .2s;
+  font-family:inherit;
+}
+.login-form button:hover { opacity:.9; }
+.login-links {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:9px;
+}
+.login-links a { font-size:11px; color:var(--gray); transition:color .2s; }
+.login-links a:hover { color:var(--hot-pink); }
+.login-links .sep { color:#ddd; }
+/* Quick links */
+.quick-links {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:7px;
+}
+.quick-link-btn {
+  display:flex; flex-direction:column;
+  align-items:center; gap:4px;
+  padding:11px 6px;
+  background:#fff5f8;
+  border-radius:9px;
+  color:var(--text-dark);
+  transition:all .2s;
+  font-size:11px; font-weight:700;
+  text-align:center;
+}
+.quick-link-btn:hover { background:var(--pale-pink); color:var(--hot-pink); }
+.ql-icon { font-size:20px; }
+/* Region */
+.region-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+}
+.region-btn {
+  padding:7px 4px;
+  text-align:center;
+  background:#f8f0f5;
+  border-radius:7px;
+  font-size:12px; font-weight:600;
+  color:#555;
+  display:block;
+  transition:all .2s;
+}
+.region-btn:hover { background:var(--hot-pink); color:#fff; }
+/* Side ads */
+.side-ad-card {
+  border-radius:9px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .2s;
+  margin-bottom:9px;
+}
+.side-ad-card:last-child { margin-bottom:0; }
+.side-ad-card:hover { transform:scale(1.02); }
+.side-ad-banner {
+  height:75px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:900;
+  color:#fff; text-align:center; padding:8px;
+}
+.side-ad-info { background:#f8f0f5; padding:7px 9px; }
+.side-ad-name { font-size:11px; font-weight:700; }
+.side-ad-wage { font-size:12px; font-weight:900; color:var(--hot-pink); }
+
+/* ===========================
+   HERO BANNER
+=========================== */
+.hero-section { margin-bottom:14px; }
+.hero-main {
+  position:relative;
+  border-radius:14px; overflow:hidden;
+  height:190px;
+  background:linear-gradient(135deg,var(--dark2),#5C0040,var(--hot-pink));
+  display:flex; align-items:center; padding:28px;
+  cursor:pointer;
+}
+.hero-main::before {
+  content:'';
+  position:absolute;
+  top:-50%; right:-10%;
+  width:60%; height:200%;
+  background:radial-gradient(ellipse,rgba(255,27,107,.4),transparent 70%);
+  animation:float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+.hero-text h2 {
+  font-size:30px; font-weight:900; color:#fff;
+  line-height:1.2; text-shadow:0 2px 10px rgba(0,0,0,.5);
+  white-space:nowrap;
+}
+.hero-text h2 span { color:var(--gold); font-size:36px; }
+.hero-text p {
+  color:rgba(255,255,255,.9);
+  margin-top:7px; font-size:14px; font-weight:500;
+  white-space:nowrap;
+}
+.hero-badge {
+  position:absolute; top:14px; right:14px;
+  background:var(--gold); color:var(--dark);
+  font-weight:900; font-size:12px;
+  padding:5px 12px; border-radius:18px;
+  animation:bounce 1s ease infinite;
+}
+@keyframes bounce {
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
+}
+
+/* ===========================
+   QUICK STATS
+=========================== */
+.quick-stats {
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:9px; margin-bottom:14px;
+}
+.stat-card {
+  background:#fff; border-radius:11px;
+  padding:12px 8px; text-align:center;
+  border:2px solid transparent;
+  transition:all .2s; cursor:pointer;
+  position:relative; overflow:hidden;
+}
+.stat-card::before {
+  content:''; position:absolute;
+  bottom:0; left:0; right:0; height:3px;
+  background:var(--hot-pink);
+  transform:scaleX(0); transition:transform .2s;
+}
+.stat-card:hover { border-color:var(--pale-pink); box-shadow:0 4px 14px rgba(255,27,107,.15); }
+.stat-card:hover::before { transform:scaleX(1); }
+.stat-icon { font-size:22px; margin-bottom:4px; }
+.stat-label { font-size:11px; color:var(--gray); }
+.stat-value { font-size:16px; font-weight:900; color:var(--hot-pink); margin-top:2px; }
+
+/* ===========================
+   모바일 추천업소 (공지~우대채용 사이)
+=========================== */
+.mobile-recommend {
+  display:none;
+  margin-bottom:18px;
+}
+.mobile-recommend-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.mobile-rec-card {
+  background:#fff; border-radius:13px;
+  overflow:hidden; border:2px solid #FFB3D1;
+  cursor:pointer; transition:all .25s;
+  box-shadow:0 2px 10px rgba(255,27,107,.1);
+}
+.mobile-rec-card:hover {
+  transform:translateY(-3px);
+  box-shadow:0 8px 22px rgba(255,27,107,.25);
+  border-color:var(--hot-pink);
+}
+.mobile-rec-banner {
+  height:90px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:900;
+  color:#fff; text-align:center;
+  padding:10px; line-height:1.4;
+  position:relative;
+}
+.mobile-rec-banner::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.1) 0%,transparent 50%,rgba(0,0,0,.1) 100%);
+}
+.mobile-rec-banner b { font-size:17px; display:block; margin-top:2px; }
+.mobile-rec-info {
+  background:#fff8fb; padding:9px 10px;
+  border-top:1px solid #f5e0e8;
+}
+.mobile-rec-name {
+  font-size:12px; font-weight:700; color:#333;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.mobile-rec-wage {
+  font-size:13px; font-weight:900;
+  color:var(--hot-pink); margin-top:2px;
+}
+
+/* ===========================
+   NOTICE BAR
+=========================== */
+.notice-bar {
+  background:#fff;
+  border-left:4px solid var(--hot-pink);
+  padding:9px 14px;
+  display:flex; align-items:center; gap:10px;
+  border-radius:0 8px 8px 0;
+  margin-bottom:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.notice-label {
+  background:var(--hot-pink); color:#fff;
+  font-size:11px; font-weight:900;
+  padding:3px 9px; border-radius:9px;
+  flex-shrink:0;
+}
+.notice-text {
+  font-size:13px; color:#555;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.notice-text a { color:#333; }
+.notice-text a:hover { color:var(--hot-pink); }
+
+/* ===========================
+   SECTION HEADER
+=========================== */
+.section-wrap { margin-bottom:26px; }
+.section-header {
+  display:flex; align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+.section-title {
+  font-size:18px; font-weight:900; color:var(--dark);
+  display:flex; align-items:center; gap:7px;
+}
+.section-title::before {
+  content:''; display:block;
+  width:5px; height:20px;
+  background:linear-gradient(180deg,var(--hot-pink),var(--deep-pink));
+  border-radius:3px;
+}
+.section-more {
+  font-size:12px; color:var(--gray);
+  padding:4px 10px;
+  border:1px solid #ddd; border-radius:11px;
+  transition:all .2s; white-space:nowrap;
+}
+.section-more:hover { border-color:var(--hot-pink); color:var(--hot-pink); }
+
+/* ===========================
+   JOB CARDS — 우대채용 (4col → 2col mobile)
+=========================== */
+.featured-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:11px; margin-bottom:0;
+}
+.job-card {
+  background:#fff; border-radius:13px;
+  overflow:hidden; border:1.5px solid #f0e0e8;
+  transition:all .25s; cursor:pointer;
+  position:relative;
+}
+.job-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 10px 28px rgba(255,27,107,.2);
+  border-color:var(--light-pink);
+}
+.job-card-banner {
+  height:85px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:900;
+  color:#fff; text-align:center; padding:8px;
+  position:relative; overflow:hidden;
+}
+.job-card-banner::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.1) 0%,transparent 50%,rgba(0,0,0,.1) 100%);
+}
+.job-card-body { padding:9px 11px; }
+.job-card-location { font-size:11px; color:var(--gray); margin-bottom:3px; }
+.job-loc-badge {
+  display:inline-block;
+  background:#f5e8f0; color:var(--hot-pink);
+  font-size:10px; font-weight:700;
+  padding:2px 5px; border-radius:4px; margin-right:3px;
+}
+.job-desc {
+  font-size:12px; color:#555;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  margin-bottom:7px; font-weight:500;
+}
+.job-card-footer {
+  display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid #f0e0e8; padding-top:7px; gap:4px;
+}
+.job-wage { font-size:13px; font-weight:900; color:var(--hot-pink); }
+.job-badge { display:flex; align-items:center; gap:3px; font-size:10px; font-weight:700; color:var(--gray); }
+.crown-gold{color:var(--gold)} .crown-silver{color:var(--silver)} .crown-bronze{color:var(--bronze)}
+.hot-badge {
+  position:absolute; top:7px; right:7px;
+  background:linear-gradient(135deg,var(--hot-pink),var(--gold));
+  color:#fff; font-size:10px; font-weight:900;
+  padding:2px 7px; border-radius:9px; z-index:10;
+}
+.new-badge {
+  position:absolute; top:7px; right:7px;
+  background:linear-gradient(135deg,#00B4D8,#0077B6);
+  color:#fff; font-size:10px; font-weight:900;
+  padding:2px 7px; border-radius:9px; z-index:10;
+}
+
+/* ===========================
+   PREMIUM CARDS — 프리미엄채용 (5col → 2col mobile)
+=========================== */
+.premium-grid {
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:9px; margin-bottom:0;
+}
+.premium-card {
+  background:#fff; border-radius:11px;
+  overflow:hidden; border:2px solid #FFB3D1;
+  transition:all .25s; cursor:pointer;
+}
+.premium-card:hover {
+  transform:translateY(-3px);
+  box-shadow:0 8px 22px rgba(255,27,107,.25);
+  border-color:var(--hot-pink);
+}
+.premium-banner {
+  height:68px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:900;
+  color:#fff; text-align:center; padding:6px;
+}
+.premium-body { padding:7px 9px; }
+.premium-name { font-size:12px; font-weight:700; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.premium-area { font-size:10px; color:var(--gray); }
+.premium-wage { font-size:12px; font-weight:900; color:var(--hot-pink); margin-top:3px; }
+
+/* ===========================
+   COMMUNITY TABS
+=========================== */
+.community-resume-row {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px; margin-bottom:22px;
+}
+.tab-section {
+  background:#fff; border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+.tab-header {
+  display:flex; background:#f8f0f5;
+  border-bottom:2px solid var(--pale-pink);
+}
+.tab-btn {
+  flex:1; padding:11px 6px;
+  text-align:center; font-size:12px; font-weight:700;
+  color:var(--gray); cursor:pointer;
+  border:none; background:transparent;
+  transition:all .2s; position:relative;
+  font-family:inherit; white-space:nowrap;
+}
+.tab-btn.active { color:var(--hot-pink); background:#fff; }
+.tab-btn.active::after {
+  content:''; position:absolute;
+  bottom:-2px; left:0; right:0; height:2px;
+  background:var(--hot-pink);
+}
+.tab-content { padding:14px; }
+.community-item {
+  display:flex; align-items:center;
+  padding:8px 0; border-bottom:1px solid #f5e8f0;
+  gap:8px; cursor:pointer;
+}
+.community-item:last-child { border-bottom:none; }
+.community-item:hover .comm-title { color:var(--hot-pink); }
+.comm-badge {
+  font-size:10px; font-weight:700;
+  padding:2px 7px; border-radius:9px; flex-shrink:0;
+}
+.badge-best{background:var(--hot-pink);color:#fff}
+.badge-new{background:#e8f5e9;color:#2E7D32}
+.badge-night{background:var(--dark);color:var(--light-pink)}
+.comm-title {
+  font-size:12px; color:#333; flex:1;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  transition:color .2s;
+}
+.comm-time { font-size:11px; color:#bbb; flex-shrink:0; }
+
+/* ===========================
+   RESUME TABLE
+=========================== */
+.resume-table {
+  background:#fff; border-radius:13px;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+.resume-table table { width:100%; border-collapse:collapse; }
+.resume-table thead th {
+  background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
+  color:#fff; padding:11px 8px;
+  font-size:12px; font-weight:700; text-align:center;
+}
+.resume-table tbody tr {
+  border-bottom:1px solid #f5e8f0;
+  transition:background .2s; cursor:pointer;
+}
+.resume-table tbody tr:hover { background:#fff5f8; }
+.resume-table tbody td {
+  padding:9px 8px; font-size:12px;
+  text-align:center; color:#555;
+}
+.resume-name { font-weight:700; color:#333; }
+.resume-title { text-align:left !important; color:#444; }
+.resume-title a:hover { color:var(--hot-pink); }
+.wage-tag { display:inline-block; padding:2px 7px; border-radius:9px; font-size:11px; font-weight:700; }
+.wage-neg{background:#f0f0f0;color:#666}
+.wage-fixed{background:#ffeef6;color:var(--hot-pink)}
+
+/* ===========================
+   SPECIAL / 스페셜채용
+=========================== */
+.special-grid {
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:9px;
+}
+.special-card {
+  background:#fff; border-radius:11px;
+  overflow:hidden; border:2px solid #FFD700;
+  transition:all .25s; cursor:pointer;
+}
+.special-card:hover {
+  transform:translateY(-3px);
+  box-shadow:0 8px 22px rgba(255,215,0,.3);
+  border-color:#FFA500;
+}
+
+/* ===========================
+   급구 + 추천 ROW
+=========================== */
+.urgency-recommend-row {
+  display:grid;
+  grid-template-columns:1fr 2fr;
+  gap:14px; margin-bottom:22px;
+}
+.urgency-list { display:flex; flex-direction:column; gap:7px; }
+.urgency-card {
+  background:#fff; border-radius:11px;
+  padding:11px; border:1.5px solid #f0e0e8;
+  cursor:pointer; transition:border-color .2s;
+}
+.urgency-card:hover { border-color:var(--hot-pink); }
+.urgency-name { font-size:13px; font-weight:700; color:var(--hot-pink); }
+.urgency-area { font-size:11px; color:#888; margin:2px 0; }
+.urgency-desc { font-size:12px; color:#555; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.urgency-wage { font-size:13px; font-weight:900; color:var(--hot-pink); margin-top:3px; }
+.urgency-wage span { font-size:10px; color:#888; font-weight:400; }
+
+.recommend-list { display:flex; flex-direction:column; gap:7px; }
+.recommend-card {
+  background:#fff; border-radius:11px;
+  padding:11px 14px; border:1.5px solid #FFB3D1;
+  cursor:pointer; display:flex;
+  justify-content:space-between; align-items:center;
+  gap:8px; transition:border-color .2s;
+}
+.recommend-card:hover { border-color:var(--hot-pink); }
+.rec-name { font-size:13px; font-weight:700; color:var(--hot-pink); }
+.rec-area { font-size:11px; color:#888; font-weight:400; }
+.rec-desc { font-size:12px; color:#555; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rec-right { text-align:right; flex-shrink:0; }
+.rec-wage { font-size:13px; font-weight:900; color:var(--hot-pink); }
+.rec-meta { font-size:11px; color:#888; }
+
+/* ===========================
+   ANIMATIONS
+=========================== */
+.job-card,.premium-card,.special-card {
+  animation:fadeUp .4s ease both;
+}
+@keyframes fadeUp {
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.job-card:nth-child(2){animation-delay:.05s}
+.job-card:nth-child(3){animation-delay:.1s}
+.job-card:nth-child(4){animation-delay:.15s}
+.job-card:nth-child(5){animation-delay:.2s}
+.job-card:nth-child(6){animation-delay:.25s}
+.job-card:nth-child(7){animation-delay:.3s}
+.job-card:nth-child(8){animation-delay:.35s}
+
+/* ===========================
+   CHAT PANEL
+=========================== */
+.chat-panel-overlay {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.3);
+  z-index:1098; opacity:0; visibility:hidden;
+  transition:opacity .3s,visibility .3s;
+}
+.chat-panel-overlay.is-open{opacity:1;visibility:visible}
+.chat-panel {
+  position:fixed; top:0; right:0;
+  width:340px; max-width:90vw; height:100%;
+  background:#fff; z-index:1099;
+  box-shadow:-4px 0 24px rgba(0,0,0,.15);
+  transform:translateX(100%); transition:transform .3s ease;
+  display:flex; flex-direction:column;
+}
+.chat-panel.is-open{transform:translateX(0)}
+.chat-panel-header {
+  background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
+  color:#fff; padding:13px 15px;
+  display:flex; align-items:center;
+  justify-content:space-between; flex-shrink:0;
+}
+.chat-panel-header h3{font-size:15px;font-weight:900}
+.chat-panel-close {
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.2);border:none;
+  color:#fff;cursor:pointer;font-size:17px;
+  display:flex;align-items:center;justify-content:center;
+}
+.chat-panel-close:hover{background:rgba(255,255,255,.3)}
+.chat-panel-body{flex:1;overflow-y:auto;padding:14px;background:#fafafa}
+.chat-placeholder{text-align:center;padding:36px 18px;color:var(--gray);font-size:13px;line-height:1.6}
+.chat-placeholder .icon{font-size:44px;margin-bottom:10px;display:block}
+
+/* ===========================
+   FLOATING CTA
+=========================== */
+.floating-cta {
+  position:fixed; bottom:24px; right:20px;
+  z-index:999; display:flex; flex-direction:column; gap:9px;
+}
+.float-btn {
+  width:50px;height:50px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.2);
+  transition:transform .2s; text-decoration:none;
+}
+.float-btn:hover{transform:scale(1.1)}
+.float-kakao{background:#FEE500}
+.float-chat{background:var(--hot-pink);color:#fff;font-size:16px;border:none}
+.float-top{background:var(--dark2);font-size:15px;color:#fff}
+
+/* ===========================
+   FOOTER
+=========================== */
+footer {
+  background:var(--dark); color:#888;
+  margin-top:36px; padding:26px 16px 18px;
+}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-logo {
+  font-family:'Outfit',sans-serif;
+  font-size:22px;font-weight:900;color:#fff;
+  margin-bottom:10px;letter-spacing:-1px;
+  font-style:italic;
+}
+.footer-logo span{color:var(--hot-pink);font-style:normal}
+.footer-links {
+  display:flex;flex-wrap:wrap;
+  gap:10px;margin-bottom:13px;
+}
+.footer-links a{color:#888;font-size:12px;transition:color .2s}
+.footer-links a:hover{color:var(--hot-pink)}
+.footer-text{font-size:11px;line-height:1.8}
+.footer-text span{color:var(--light-pink)}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#f1f1f1}
+::-webkit-scrollbar-thumb{background:var(--light-pink);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--hot-pink)}
+
+/* ===========================
+   ★ RESPONSIVE — TABLET (≤900px)
+=========================== */
+@media (max-width:900px) {
+  /* 사이드바 숨기고 1컬럼 */
+  .page-layout {
+    grid-template-columns:1fr;
+    padding:0 12px;
+  }
+  .left-sidebar { display:none; }
+
+  /* 모바일 추천업소 표시 */
+  .mobile-recommend { display:block; }
+
+  /* 우대채용 2col */
+  .featured-grid { grid-template-columns:repeat(2,1fr); }
+
+  /* 프리미엄 3col */
+  .premium-grid { grid-template-columns:repeat(3,1fr); }
+
+  /* 스페셜 3col */
+  .special-grid { grid-template-columns:repeat(3,1fr); }
+
+  /* stats 3col */
+  .quick-stats { grid-template-columns:repeat(3,1fr); }
+
+  /* community + resume 1col */
+  .community-resume-row { grid-template-columns:1fr; }
+
+  /* 급구 + 추천 1col */
+  .urgency-recommend-row { grid-template-columns:1fr; }
+
+  /* hero */
+  .hero-text h2{font-size:26px}
+  .hero-text h2 span{font-size:30px}
+
+  /* top-bar: hide left on small */
+  .top-bar-left { display:none; }
+
+  /* header actions: hide kakao */
+  .kakao-btn { display:none; }
+
+  /* 태블릿 네비: 터치 스크롤 복원 */
+  .nav-scroll { padding:0; justify-content:flex-start; }
+  .nav-item { flex:0 0 auto; }
+}
+
+/* ===========================
+   ★ RESPONSIVE — MOBILE (≤600px)
+=========================== */
+@media (max-width:600px) {
+  /* TOP BAR */
+  .top-bar { font-size:11px; padding:5px 12px; }
+
+  /* HEADER */
+  header { padding:0 12px; }
+  .header-inner { gap:10px; padding:10px 0; }
+  .logo { font-size:26px; }
+  .logo-dot { width:6px;height:6px;margin-bottom:10px; }
+  .search-box { max-width:none; }
+  .search-box input { font-size:13px; padding:8px 12px; }
+  .search-box button { padding:8px 14px; font-size:14px; }
+  /* 헤더 액션: 이력서 등록만 표시 */
+  .header-actions a:not(.btn-register) { display:none; }
+  .btn-register { font-size:12px !important; padding:7px 12px !important; }
+
+  /* NAV — 아이콘 없이 텍스트만, 좌우 스크롤 */
+  .nav-icon { display:none; }
+  /* 모바일에서 flex:1 해제 → 터치 스크롤 복원 */
+  .nav-scroll { padding:0; justify-content:flex-start; }
+  .nav-item { flex:0 0 auto; padding:11px 14px; font-size:13px; min-width:70px; }
+
+  /* TICKER */
+  .ticker-wrap { padding:8px 12px; gap:10px; }
+  .ticker-inner span { font-size:12px; }
+
+  /* HERO */
+  .hero-main { height:150px; padding:20px; border-radius:12px; }
+  .hero-text h2 { font-size:20px; }
+  .hero-text h2 span { font-size:24px; }
+  .hero-text p { font-size:13px; }
+  .hero-badge { font-size:11px; padding:4px 10px; }
+
+  /* STATS — 3col 유지, 아이콘 작게 */
+  .quick-stats { gap:7px; }
+  .stat-icon { font-size:18px; margin-bottom:2px; }
+  .stat-label { font-size:10px; }
+  .stat-value { font-size:14px; }
+
+  /* 우대채용 → 모바일 2col */
+  .featured-grid { grid-template-columns:repeat(2,1fr); gap:9px; }
+  .job-card-banner { height:72px; font-size:12px; }
+  .job-wage { font-size:12px; }
+  .job-badge { font-size:10px; }
+
+  /* 프리미엄 → 모바일 2col */
+  .premium-grid { grid-template-columns:repeat(2,1fr); gap:8px; }
+  .premium-banner { height:58px; font-size:11px; }
+  .premium-name { font-size:11px; }
+  .premium-wage { font-size:11px; }
+
+  /* 스페셜 → 모바일 2col */
+  .special-grid { grid-template-columns:repeat(2,1fr); gap:8px; }
+
+  /* COMMUNITY / RESUME */
+  .community-resume-row { gap:12px; }
+  .tab-btn { font-size:11px; padding:9px 4px; }
+
+  /* 인재정보 표: 일부 컬럼 숨김 */
+  .resume-table thead th:nth-child(2),
+  .resume-table tbody td:nth-child(2),
+  .resume-table thead th:nth-child(4),
+  .resume-table tbody td:nth-child(4) { display:none; }
+
+  /* 급구/추천 */
+  .urgency-recommend-row { gap:12px; }
+  .rec-desc { display:none; }
+
+  /* SECTION TITLE */
+  .section-title { font-size:16px; }
+
+  /* NOTICE */
+  .notice-bar { padding:8px 12px; }
+  .notice-text { font-size:12px; }
+
+  /* FLOATING */
+  .floating-cta { bottom:20px; right:14px; }
+  .float-btn { width:46px;height:46px;font-size:18px; }
+
+  /* FOOTER */
+  footer { padding:20px 14px 14px; }
+  .footer-links { gap:8px; }
+}
+
+/* ===========================
+   ★ RESPONSIVE — SMALL (≤380px)
+=========================== */
+@media (max-width:380px) {
+  .quick-stats { grid-template-columns:repeat(3,1fr); }
+  .stat-card { padding:9px 4px; }
+  .stat-label { font-size:9px; }
+  .stat-value { font-size:13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <span>🌸 이브알바에 오신 것을 환영합니다!</span>
+    고객센터: 1588-0000 (평일 09:00~18:00)
+  </div>
+  <div>
+    <a href="#">로그인</a>
+    <a href="#">회원가입</a>
+    <a href="#">관리자</a>
+    <a href="#">고객센터</a>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <span class="logo-eve">eve</span>
+      <span class="logo-dot"></span>
+      <span class="logo-alba">알바</span>
+    </a>
+    <div class="search-box">
+      <input type="text" placeholder="업소명, 지역명으로 검색하세요">
+      <button>🔍</button>
+    </div>
+    <div class="header-actions">
+      <div class="kakao-btn">카카오톡<br><b>EvéAlba</b></div>
+      <a href="#">채용공고 등록</a>
+      <a href="#" class="btn-register">이력서 등록</a>
+    </div>
+  </div>
+</header>
+
+<!-- NAV — 좌우 터치 스크롤 -->
+<nav>
+  <div class="nav-scroll">
+    <a href="#" class="nav-item"><span class="nav-icon">📋</span>채용정보</a>
+    <a href="#" class="nav-item"><span class="nav-icon">📍</span>지역별채용</a>
+    <a href="#" class="nav-item"><span class="nav-icon">👑</span>인재정보</a>
+    <a href="#" class="nav-item"><span class="nav-icon">💬</span>이브수다방</a>
+    <a href="#" class="nav-item"><span class="nav-icon">🏪</span>중고거래</a>
+    <a href="#" class="nav-item"><span class="nav-icon">🎀</span>고객센터</a>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <span class="ticker-label">🔥 급구</span>
+  <div class="ticker-track">
+    <div class="ticker-inner">
+      <span><b>[강남] 클럽마샤</b> 일급 150만원 · 밀빵OK · 당일면접</span>
+      <span><b>[홍대] 하이퍼블릭 이브</b> 시급 15만원 · 초보환영</span>
+      <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
+      <span><b>[이태원] 이브VIP</b> 하루 100만원 보장</span>
+      <span><b>[압구정] 헤라클럽</b> 시급 20만원 · 2시간 40만원</span>
+      <span><b>[강남] 클럽마샤</b> 일급 150만원 · 밀빵OK · 당일면접</span>
+      <span><b>[홍대] 하이퍼블릭 이브</b> 시급 15만원 · 초보환영</span>
+      <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
+      <span><b>[이태원] 이브VIP</b> 하루 100만원 보장</span>
+      <span><b>[압구정] 헤라클럽</b> 시급 20만원 · 2시간 40만원</span>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE LAYOUT -->
+<div class="page-layout">
+
+  <!-- ★ 좌측 사이드바 -->
+  <aside class="left-sidebar">
+
+    <!-- 로그인 -->
+    <div class="sidebar-widget">
+      <div class="widget-title">🌸 로그인</div>
+      <div class="login-visitor">오늘 방문 <strong>24,153</strong>명</div>
+      <div class="widget-body">
+        <div class="login-form">
+          <input type="text" placeholder="아이디">
+          <input type="password" placeholder="비밀번호">
+          <button>로그인</button>
+        </div>
+        <div class="login-links">
+          <a href="#">회원가입</a><span class="sep">|</span>
+          <a href="#">아이디 찾기</a><span class="sep">|</span>
+          <a href="#">비밀번호</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 빠른 메뉴 -->
+    <div class="sidebar-widget">
+      <div class="widget-title">⚡ 빠른 메뉴</div>
+      <div class="widget-body">
+        <div class="quick-links">
+          <a href="#" class="quick-link-btn"><span class="ql-icon">📋</span>채용공고 등록</a>
+          <a href="#" class="quick-link-btn"><span class="ql-icon">👩</span>이력서 등록</a>
+          <a href="#" class="quick-link-btn"><span class="ql-icon">📍</span>지역별 채용</a>
+          <a href="#" class="quick-link-btn"><span class="ql-icon">💬</span>수다방</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 지역별 검색 -->
+    <div class="sidebar-widget">
+      <div class="widget-title">📍 지역별 검색</div>
+      <div class="widget-body">
+        <div class="region-grid">
+          <a href="#" class="region-btn">서울</a>
+          <a href="#" class="region-btn">경기</a>
+          <a href="#" class="region-btn">인천</a>
+          <a href="#" class="region-btn">부산</a>
+          <a href="#" class="region-btn">대구</a>
+          <a href="#" class="region-btn">광주</a>
+          <a href="#" class="region-btn">대전</a>
+          <a href="#" class="region-btn">울산</a>
+          <a href="#" class="region-btn">강원</a>
+          <a href="#" class="region-btn">충청</a>
+          <a href="#" class="region-btn">전라</a>
+          <a href="#" class="region-btn">경상</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 추천업소 배너 -->
+    <div class="sidebar-widget">
+      <div class="widget-title">💎 추천업소</div>
+      <div class="widget-body">
+        <div class="side-ad-card">
+          <div class="side-ad-banner g12">동탄스카이 아이퍼블릭<br><b style="font-size:15px">60분 TC12만원</b></div>
+          <div class="side-ad-info">
+            <div class="side-ad-name">동탄스카이 아이퍼블릭</div>
+            <div class="side-ad-wage">자유복장 · TC12만원</div>
+          </div>
+        </div>
+        <div class="side-ad-card">
+          <div class="side-ad-banner g1">일프로 &amp; 텐카페<br><b>300만 보상</b></div>
+          <div class="side-ad-info">
+            <div class="side-ad-name">일프로 · 텐카페</div>
+            <div class="side-ad-wage">300만원 보장</div>
+          </div>
+        </div>
+        <div class="side-ad-card">
+          <div class="side-ad-banner" style="background:linear-gradient(135deg,#1A0010,#FF1B6B);font-size:18px;font-weight:900">당일<br>백만<br>UP</div>
+          <div class="side-ad-info">
+            <div class="side-ad-name">당일 백만원 UP 이벤트</div>
+            <div class="side-ad-wage">기간 한정 특별 혜택</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+  <!-- /좌측 사이드바 -->
+
+  <!-- ★ 메인 영역 -->
+  <div class="main-area">
+
+    <!-- 히어로 배너 -->
+    <div class="hero-section">
+      <div class="hero-main">
+        <div class="hero-text">
+          <h2>강남 <span>룸 80개</span><br>1등 대일팀!</h2>
+          <p>🔥 하이퍼블릭 밀빵OK · 5인1조 픽업OK!!</p>
+        </div>
+        <div class="hero-badge">✨ HOT</div>
+      </div>
+    </div>
+
+    <!-- 빠른 통계 -->
+    <div class="quick-stats">
+      <div class="stat-card">
+        <div class="stat-icon">💼</div>
+        <div class="stat-label">오늘 채용공고</div>
+        <div class="stat-value">3,427</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📄</div>
+        <div class="stat-label">등록 이력서</div>
+        <div class="stat-value">12,841</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏢</div>
+        <div class="stat-label">가입 업소</div>
+        <div class="stat-value">8,920</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👩</div>
+        <div class="stat-label">오늘 접속자</div>
+        <div class="stat-value">24,153</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-label">오늘 매칭</div>
+        <div class="stat-value">1,203</div>
+      </div>
+    </div>
+
+    <!-- 공지 -->
+    <div class="notice-bar">
+      <span class="notice-label">📢 공지</span>
+      <div class="notice-text">
+        <a href="#">[공지] 이브알바 신규 서비스 오픈 이벤트 안내 · 채용공고 등록 시 프리미엄 무료 업그레이드 혜택!</a>
+      </div>
+    </div>
+
+    <!-- ★ 모바일 전용 추천업소 (공지 ~ 우대채용 사이, PC에서는 숨김) -->
+    <div class="mobile-recommend">
+      <div class="section-header">
+        <h2 class="section-title">💎 추천업소</h2>
+      </div>
+      <div class="mobile-recommend-grid">
+        <div class="mobile-rec-card">
+          <div class="mobile-rec-banner g12">동탄스카이<br>아이퍼블릭<b>60분 TC12만원</b></div>
+          <div class="mobile-rec-info">
+            <div class="mobile-rec-name">동탄스카이 아이퍼블릭</div>
+            <div class="mobile-rec-wage">자유복장 · TC12만원</div>
+          </div>
+        </div>
+        <div class="mobile-rec-card">
+          <div class="mobile-rec-banner g1">일프로 &amp; 텐카페<b>300만원 보장</b></div>
+          <div class="mobile-rec-info">
+            <div class="mobile-rec-name">일프로 · 텐카페</div>
+            <div class="mobile-rec-wage">300만원 보장</div>
+          </div>
+        </div>
+        <div class="mobile-rec-card">
+          <div class="mobile-rec-banner" style="background:linear-gradient(135deg,#1A0010,#FF1B6B)">당일<b>백만 UP</b></div>
+          <div class="mobile-rec-info">
+            <div class="mobile-rec-name">당일 백만원 UP 이벤트</div>
+            <div class="mobile-rec-wage">기간 한정 특별 혜택</div>
+          </div>
+        </div>
+        <div class="mobile-rec-card">
+          <div class="mobile-rec-banner g11">강남 VIP<b>순수테이블 2H</b></div>
+          <div class="mobile-rec-info">
+            <div class="mobile-rec-name">강남짬오 이태곤대표</div>
+            <div class="mobile-rec-wage">면접 후 협의</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ★ 우대채용정보 (PC 4col → 모바일 2col) -->
+    <div class="section-wrap">
+      <div class="section-header">
+        <h2 class="section-title">우대채용정보</h2>
+        <a href="#" class="section-more">더보기 →</a>
+      </div>
+      <div class="featured-grid">
+        <div class="job-card">
+          <div class="job-card-banner g1"><span>👑 강남 하이퍼블릭<br>아우라</span></div>
+          <div class="hot-badge">HOT</div>
+          <div class="job-card-body">
+            <div class="job-card-location"><span class="job-loc-badge">경기</span>안양시 룸싸롱</div>
+            <div class="job-desc">♥안양하이퍼TC16♥안양1등 이.</div>
+            <div class="job-card-footer">
+              <span class="job-wage">160,000원</span>
+              <span class="job-badge"><span class="crown-gold">👑</span>24회 1170일</span>
+            </div>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-banner g2"><span>💜 부천 하이퍼블릭<br>메쎄</span></div>
+          <div class="hot-badge">HOT</div>
+          <div class="job-card-body">
+            <div class="job-card-location"><span class="job-loc-badge">경기</span>부천시 룸싸롱</div>
+            <div class="job-desc">1등·패츠X최고조건·손님많고객.</div>
+            <div class="job-card-footer">
+              <span class="job-wage">150,000원</span>
+              <span class="job-badge"><span class="crown-gold">👑</span>17회 1290일</span>
+            </div>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-banner g3"><span>❤ 파주최고TC<br>REINA</span></div>
+          <div class="hot-badge">HOT</div>
+          <div class="job-card-body">
+            <div class="job-card-location"><span class="job-loc-badge">경기</span>파주시 노래주점</div>
+            <div class="job-desc">●●● 퍼블릭 1시간 10만원 ●●●</div>
+            <div class="job-card-footer">
+              <span class="job-wage">100,000원</span>
+              <span class="job-badge"><span class="crown-silver">🥈</span>1회 30일</span>
+            </div>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-banner g4"><span>💎 화류지옥<br>서울</span></div>
+          <div class="new-badge">NEW</div>
+          <div class="job-card-body">
+            <div class="job-card-location"><span class="job-loc-badge">서울</span>기타</div>
+            <div class="job-desc">♥최고패이♥화류지옥♥</div>
+            <div class="job-card-footer">
+              <span class="job-wage">500,000원</span>
+              <span class="job-badge"><span class="crown-gold">👑</span>114회 3420일</span>
+            </div>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-banner g5"><span>🌟 웨이브<br>대전</span></div>
+          <div class="job-card-body">
+            <div class="job-card-location"><span class="job-loc-badge">대전</span>유성구 룸싸롱</div>
+            <div class="job-desc">▶2시간26 ◀ ▶물방 약속.</div>
+            <div class="job-card-footer">
+              <span class="job-wage">130,000원</span>
+              <span class="job-badge"><span class="crown-silver">🥈</span>6회 540일</span>
+            </div>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-banner g6"><span>🔥 동탄위너<br>경기</span></div>
+          <div class="hot-badge">HOT</div>
+          <div class="job-card-body">
+            <div class="job-card-location"><span class="job-loc-badge">경기</span>화성시 노래주점</div>
+            <div class="job-desc">동탄1등 위너타 가모노 하이퍼블릭.</div>
+            <div class="job-card-footer">
+              <span class="job-wage">150,000원</span>
+              <span class="job-badge"><span class="crown-bronze">🥉</span>3회 90일</span>
+            </div>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-banner g7"><span>✨ 분당 이대표<br>경기 성남</span></div>
+          <div class="job-card-body">
+            <div class="job-card-location"><span class="job-loc-badge">경기</span>성남시 룸싸롱</div>
+            <div class="job-desc">♥로얄퍼블릭 1시간 T.C25만원이.</div>
+            <div class="job-card-footer">
+              <span class="job-wage">200,000원</span>
+              <span class="job-badge"><span class="crown-gold">👑</span>9회 270일</span>
+            </div>
+          </div>
+        </div>
+        <div class="job-card">
+          <div class="job-card-banner g8"><span>💫 강남 VIP룸<br>경기</span></div>
+          <div class="new-badge">NEW</div>
+          <div class="job-card-body">
+            <div class="job-card-location"><span class="job-loc-badge">경기</span>강남 VIP룸</div>
+            <div class="job-desc">★★★ 정통 하이캠오 ★</div>
+            <div class="job-card-footer">
+              <span class="job-wage">65,000원</span>
+              <span class="job-badge"><span class="crown-bronze">🥉</span>59회 1770일</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ★ 프리미엄채용정보 (PC 5col → 모바일 2col) -->
+    <div class="section-wrap">
+      <div class="section-header">
+        <h2 class="section-title">프리미엄채용정보</h2>
+        <a href="#" class="section-more">더보기 →</a>
+      </div>
+      <div class="premium-grid">
+        <div class="premium-card">
+          <div class="premium-banner g11">강남짬오❤이태곤대표</div>
+          <div class="premium-body">
+            <div class="premium-name">강남짬오 이태곤대표</div>
+            <div class="premium-area">서울 강남구 · 룸싸롱</div>
+            <div class="premium-wage">면접 후 협의</div>
+          </div>
+        </div>
+        <div class="premium-card">
+          <div class="premium-banner g12">구구단 신제니</div>
+          <div class="premium-body">
+            <div class="premium-name">구구단 신제니</div>
+            <div class="premium-area">서울 · 룸싸롱</div>
+            <div class="premium-wage">150,000원</div>
+          </div>
+        </div>
+        <div class="premium-card">
+          <div class="premium-banner g1">세이렌K팀 재롤대표</div>
+          <div class="premium-body">
+            <div class="premium-name">세이렌K팀 재롤대표</div>
+            <div class="premium-area">서울 · 룸싸롱</div>
+            <div class="premium-wage">150,000원</div>
+          </div>
+        </div>
+        <div class="premium-card">
+          <div class="premium-banner g2">슈퍼맨</div>
+          <div class="premium-body">
+            <div class="premium-name">슈퍼맨</div>
+            <div class="premium-area">경기 화성시 · 노래주점</div>
+            <div class="premium-wage">150,000원</div>
+          </div>
+        </div>
+        <div class="premium-card">
+          <div class="premium-banner g6">골드문</div>
+          <div class="premium-body">
+            <div class="premium-name">골드문</div>
+            <div class="premium-area">인천 미추홀구</div>
+            <div class="premium-wage">75,000원</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 커뮤니티 + 인재정보 -->
+    <div class="community-resume-row">
+      <div class="tab-section">
+        <div class="tab-header">
+          <button class="tab-btn active">베스트글</button>
+          <button class="tab-btn">밤문화이야기</button>
+          <button class="tab-btn">단짝찾기</button>
+          <button class="tab-btn">법률상담</button>
+        </div>
+        <div class="tab-content">
+          <div class="community-item">
+            <span class="comm-badge badge-best">BEST</span>
+            <span class="comm-title">3부 강한 하이퍼 어디에요?</span>
+            <span class="comm-time">방금</span>
+          </div>
+          <div class="community-item">
+            <span class="comm-badge badge-new">NEW</span>
+            <span class="comm-title">근데 일하면서 느낀게... 오히려 짠따언니들 많은거같아요</span>
+            <span class="comm-time">3분</span>
+          </div>
+          <div class="community-item">
+            <span class="comm-badge badge-best">BEST</span>
+            <span class="comm-title">신림 퇴근차 해줘요? 아니면 차비?</span>
+            <span class="comm-time">15분</span>
+          </div>
+          <div class="community-item">
+            <span class="comm-badge badge-night">🌙</span>
+            <span class="comm-title">미래고민 - 서울외곽 노도해서 달에 적금만 300씩</span>
+            <span class="comm-time">30분</span>
+          </div>
+          <div class="community-item">
+            <span class="comm-badge badge-new">NEW</span>
+            <span class="comm-title">손님으로만났는데 알고보니 선배언니였어요</span>
+            <span class="comm-time">1시간</span>
+          </div>
+        </div>
+      </div>
+      <div class="resume-table">
+        <table>
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>나이/성별</th>
+              <th>제목</th>
+              <th>희망급여</th>
+              <th>등록일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="resume-name">수○○</td><td>22/여</td>
+              <td class="resume-title"><a href="#">일구해요 🆕</a></td>
+              <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-22</td>
+            </tr>
+            <tr>
+              <td class="resume-name">힘○○</td><td>27/여</td>
+              <td class="resume-title"><a href="#">77사이즈 구해요 🆕</a></td>
+              <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-22</td>
+            </tr>
+            <tr>
+              <td class="resume-name">고○○</td><td>27/여</td>
+              <td class="resume-title"><a href="#">165 68kg 20대후반 일자리 구해요 🆕</a></td>
+              <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-21</td>
+            </tr>
+            <tr>
+              <td class="resume-name">잔○○</td><td>35/여</td>
+              <td class="resume-title"><a href="#">ㅇㅍ구해요 🆕</a></td>
+              <td><span class="wage-tag wage-fixed">400만원</span></td><td>02-21</td>
+            </tr>
+            <tr>
+              <td class="resume-name">ㅇ○○</td><td>23/여</td>
+              <td class="resume-title"><a href="#">일 구해봐용 ㅎㅎ 🆕</a></td>
+              <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-21</td>
+            </tr>
+            <tr>
+              <td class="resume-name">보○○</td><td>33/여</td>
+              <td class="resume-title"><a href="#">기타구해요 🆕</a></td>
+              <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-21</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 스페셜채용정보 -->
+    <div class="section-wrap">
+      <div class="section-header">
+        <h2 class="section-title">스페셜채용정보</h2>
+        <a href="#" class="section-more">더보기 →</a>
+      </div>
+      <div class="special-grid">
+        <div class="special-card">
+          <div class="premium-banner g9">구구단 신제니</div>
+          <div class="premium-body">
+            <div class="premium-name">구구단 신제니</div>
+            <div class="premium-area">서울 · 룸싸롱</div>
+            <div class="premium-wage">150,000원</div>
+          </div>
+        </div>
+        <div class="special-card">
+          <div class="premium-banner g10">비상구</div>
+          <div class="premium-body">
+            <div class="premium-name">비상구</div>
+            <div class="premium-area">서울 강남구 · 기타</div>
+            <div class="premium-wage">500,000원</div>
+          </div>
+        </div>
+        <div class="special-card">
+          <div class="premium-banner g3">일산 1등 하이퍼블릭</div>
+          <div class="premium-body">
+            <div class="premium-name">일산 1등 하이퍼블릭</div>
+            <div class="premium-area">경기 고양시 · 노래주점</div>
+            <div class="premium-wage">170,000원</div>
+          </div>
+        </div>
+        <div class="special-card">
+          <div class="premium-banner g5">아우라 하이퍼블릭</div>
+          <div class="premium-body">
+            <div class="premium-name">아우라 하이퍼블릭</div>
+            <div class="premium-area">경기 · 노래주점</div>
+            <div class="premium-wage">면접 후 협의</div>
+          </div>
+        </div>
+        <div class="special-card">
+          <div class="premium-banner g7">강남미션</div>
+          <div class="premium-body">
+            <div class="premium-name">♡강남 미션♡</div>
+            <div class="premium-area">서울 강남구 · 룸싸롱</div>
+            <div class="premium-wage">130,000원</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 급구채용 + 추천채용 -->
+    <div class="urgency-recommend-row">
+      <!-- 급구 -->
+      <div>
+        <div class="section-header">
+          <h2 class="section-title" style="font-size:16px">급구채용</h2>
+        </div>
+        <div class="urgency-list">
+          <div class="urgency-card">
+            <div class="urgency-name">♥화류지옥♥</div>
+            <div class="urgency-area">서울</div>
+            <div class="urgency-desc">♥최고패이♥화류지옥♥</div>
+            <div class="urgency-wage">500,000원 <span>· 114회 3420일</span></div>
+          </div>
+          <div class="urgency-card">
+            <div class="urgency-name">강남짬오❤이태곤대표</div>
+            <div class="urgency-area">서울 강남구</div>
+            <div class="urgency-desc">♥순수테이블♥ 2시간40분!</div>
+            <div class="urgency-wage">면접 후 협의 <span>· 42회 1260일</span></div>
+          </div>
+          <div class="urgency-card">
+            <div class="urgency-name">타임</div>
+            <div class="urgency-area">경기 광명시 · 노래주점</div>
+            <div class="urgency-desc">♥철산1등 타가게/고정/반고정.</div>
+            <div class="urgency-wage">130,000원 <span>· 1회 60일</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 추천 -->
+      <div>
+        <div class="section-header">
+          <h2 class="section-title" style="font-size:16px">추천채용</h2>
+        </div>
+        <div class="recommend-list">
+          <div class="recommend-card">
+            <div>
+              <div class="rec-name">♥파주최고TC♥ <span class="rec-area">경기 파주시</span></div>
+              <div class="rec-desc">●●● 퍼블릭 1시간 10만원 ●●● 파주 최고TC</div>
+            </div>
+            <div class="rec-right">
+              <div class="rec-wage">100,000원</div>
+              <div class="rec-meta">노래주점 · 1회 30일</div>
+            </div>
+          </div>
+          <div class="recommend-card">
+            <div>
+              <div class="rec-name">구구단 신제니 <span class="rec-area">서울</span></div>
+              <div class="rec-desc">구구단 신제니 ♡ 정동 여자 마담 ♡ 하이퍼캠오!</div>
+            </div>
+            <div class="rec-right">
+              <div class="rec-wage">150,000원</div>
+              <div class="rec-meta">룸싸롱 · 1회 90일</div>
+            </div>
+          </div>
+          <div class="recommend-card">
+            <div>
+              <div class="rec-name">동탄하퍼대표 <span class="rec-area">경기</span></div>
+              <div class="rec-desc">자유복장하이퍼♥TC12♥60분♥당일지급</div>
+            </div>
+            <div class="rec-right">
+              <div class="rec-wage">3,000,000원</div>
+              <div class="rec-meta">룸싸롱 · 51회 1530일</div>
+            </div>
+          </div>
+          <div class="recommend-card">
+            <div>
+              <div class="rec-name">아우라 하이퍼블릭 <span class="rec-area">경기</span></div>
+              <div class="rec-desc">♥수원1번하이퍼블릭♥ 아우라 대표가 환영합.</div>
+            </div>
+            <div class="rec-right">
+              <div class="rec-wage">면접 후 협의</div>
+              <div class="rec-meta">노래주점 · 3회 540일</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+</div><!-- /page-layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo"><em>eve</em>·<span>알바</span></div>
+    <div class="footer-links">
+      <a href="#">이용약관</a>
+      <a href="#">개인정보처리방침</a>
+      <a href="#">청소년보호정책</a>
+      <a href="#">광고/제휴 문의</a>
+      <a href="#">사이트맵</a>
+      <a href="#">고객센터</a>
+    </div>
+    <div class="footer-text">
+      상호명: (주)이브알바 | 대표이사: 홍길동 | 사업자등록번호: 000-00-00000<br>
+      통신판매업 신고번호: 제0000-서울강남-0000호 | 고객센터: 1588-0000<br>
+      주소: 서울특별시 강남구 테헤란로 00길 00, 00층<br>
+      <span>본 사이트는 성인 유흥알바 구인구직 정보 사이트로, 만 18세 미만은 이용하실 수 없습니다.</span><br>
+      © 2026 이브알바(EVE ALBA) All Rights Reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- CHAT PANEL -->
+<div class="chat-panel-overlay" id="chatOverlay"></div>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-panel-header">
+    <h3>💬 실시간 채팅</h3>
+    <button class="chat-panel-close" id="chatClose">×</button>
+  </div>
+  <div class="chat-panel-body">
+    <div class="chat-placeholder">
+      <span class="icon">💭</span>
+      <p>이브알바 실시간 채팅방입니다.<br>로그인 후 이용해 주세요.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FLOATING CTA -->
+<div class="floating-cta">
+  <a href="#" class="float-btn float-kakao" title="카카오톡 문의">💬</a>
+  <button class="float-btn float-chat" id="chatOpen" title="채팅">💭</button>
+  <a href="#" class="float-btn float-top" title="맨 위로" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">▲</a>
+</div>
+
+<script>
+// 탭 전환
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.closest('.tab-header').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+// 채팅 패널
+(function(){
+  var overlay = document.getElementById('chatOverlay');
+  var panel   = document.getElementById('chatPanel');
+  var openBtn = document.getElementById('chatOpen');
+  var closeBtn= document.getElementById('chatClose');
+  function open()  { overlay.classList.add('is-open'); panel.classList.add('is-open'); }
+  function close() { overlay.classList.remove('is-open'); panel.classList.remove('is-open'); }
+  if(openBtn)  openBtn.addEventListener('click', function(e){ e.preventDefault(); open(); });
+  if(closeBtn) closeBtn.addEventListener('click', close);
+  if(overlay)  overlay.addEventListener('click', close);
+})();
+</script>
+</body>
+</html>

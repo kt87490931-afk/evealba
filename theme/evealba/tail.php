@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit;
 
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/tail.php');
@@ -12,83 +12,87 @@ if(G5_COMMUNITY_USE === false) {
 }
 ?>
 
+  </div><!-- /main-area -->
+</div><!-- /page-layout -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo"><em>eve</em>·<span>알바</span></div>
+    <div class="footer-links">
+      <a href="<?php echo get_pretty_url('content', 'provision'); ?>">이용약관</a>
+      <a href="<?php echo get_pretty_url('content', 'privacy'); ?>">개인정보처리방침</a>
+      <a href="#">청소년보호정책</a>
+      <a href="#">광고/제휴 문의</a>
+      <a href="#">사이트맵</a>
+      <a href="#">고객센터</a>
     </div>
+    <div class="footer-text">
+      상호명: (주)이브알바 | 대표이사: 홍길동 | 사업자등록번호: 000-00-00000<br>
+      통신판매업 신고번호: 제0000-서울강남-0000호 | 고객센터: 1588-0000<br>
+      주소: 서울특별시 강남구 테헤란로 00길 00, 00층<br>
+      <span>본 사이트는 성인 유흥알바 구인구직 정보 사이트로, 만 18세 미만은 이용하실 수 없습니다.</span><br>
+      © 2026 이브알바(EVE ALBA) All Rights Reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- CHAT PANEL -->
+<div class="chat-panel-overlay" id="chatOverlay"></div>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-panel-header">
+    <h3>💬 실시간 채팅</h3>
+    <button type="button" class="chat-panel-close" id="chatClose">×</button>
+  </div>
+  <div class="chat-panel-body">
+    <div class="chat-placeholder">
+      <span class="icon">💭</span>
+      <p>이브알바 실시간 채팅방입니다.<br>로그인 후 이용해 주세요.</p>
+    </div>
+  </div>
 </div>
 
+<!-- FLOATING CTA -->
+<div class="floating-cta">
+  <a href="#" class="float-btn float-kakao" title="카카오톡 문의">💬</a>
+  <button type="button" class="float-btn float-chat" id="chatOpen" title="채팅">💭</button>
+  <a href="#" class="float-btn float-top" title="맨 위로" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">▲</a>
 </div>
-<!-- } 콘텐츠 끝 -->
-
-<hr>
-
-<!-- 하단 시작 { -->
-<div id="ft">
-
-    <div id="ft_wr">
-        <div id="ft_link" class="ft_cnt">
-            <a href="<?php echo get_pretty_url('content', 'company'); ?>">회사소개</a>
-            <a href="<?php echo get_pretty_url('content', 'privacy'); ?>">개인정보처리방침</a>
-            <a href="<?php echo get_pretty_url('content', 'provision'); ?>">서비스이용약관</a>
-            <a href="<?php echo get_device_change_url(); ?>">모바일버전</a>
-        </div>
-        <div id="ft_company" class="ft_cnt">
-        	<h2>사이트 정보</h2>
-	        <p class="ft_info">
-	        	회사명 : 회사명 / 대표 : 대표자명<br>
-				주소  : OO도 OO시 OO구 OO동 123-45<br>
-				사업자 등록번호  : 123-45-67890<br>
-				전화 :  02-123-4567  팩스  : 02-123-4568<br>
-				통신판매업신고번호 :  제 OO구 - 123호<br>
-				개인정보관리책임자 :  정보책임자명<br>
-			</p>
-	    </div>
-        <?php
-        //공지사항
-        // 이 함수가 바로 최신글을 추출하는 역할을 합니다.
-        // 사용방법 : latest(스킨, 게시판아이디, 출력라인, 글자수);
-        // 테마의 스킨을 사용하려면 theme/basic 과 같이 지정
-        echo latest('theme/notice', 'notice', 4, 13);
-        ?>
-        
-		<?php echo visit('theme/basic'); // 접속자집계, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정 ?>
-	</div>      
-        <!-- <div id="ft_catch"><img src="<?php echo G5_IMG_URL; ?>/ft_logo.png" alt="<?php echo G5_VERSION ?>"></div> -->
-        <div id="ft_copy">Copyright &copy; <b>소유하신 도메인.</b> All rights reserved.</div>
-    
-    
-    <button type="button" id="top_btn">
-    	<i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only">상단으로</span>
-    </button>
-    <script>
-    $(function() {
-        $("#top_btn").on("click", function() {
-            $("html, body").animate({scrollTop:0}, '500');
-            return false;
-        });
-    });
-    </script>
-</div>
-
-<?php
-if(G5_DEVICE_BUTTON_DISPLAY && !G5_IS_MOBILE) { ?>
-<?php
-}
-
-if ($config['cf_analytics']) {
-    echo $config['cf_analytics'];
-}
-?>
-
-<!-- } 하단 끝 -->
 
 <script>
-$(function() {
-    // 폰트 리사이즈 쿠키있으면 실행
-    font_resize("container", get_cookie("ck_font_resize_rmv_class"), get_cookie("ck_font_resize_add_class"));
+document.querySelectorAll('.tab-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var header = this.closest('.tab-header');
+    if (header) {
+      header.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+    }
+  });
 });
+(function(){
+  var overlay = document.getElementById('chatOverlay');
+  var panel = document.getElementById('chatPanel');
+  var openBtn = document.getElementById('chatOpen');
+  var closeBtn = document.getElementById('chatClose');
+  function openChat() {
+    if (overlay) overlay.classList.add('is-open');
+    if (panel) panel.classList.add('is-open');
+  }
+  function closeChat() {
+    if (overlay) overlay.classList.remove('is-open');
+    if (panel) panel.classList.remove('is-open');
+  }
+  if (openBtn) openBtn.addEventListener('click', function(e) { e.preventDefault(); openChat(); });
+  if (closeBtn) closeBtn.addEventListener('click', closeChat);
+  if (overlay) overlay.addEventListener('click', closeChat);
+})();
 </script>
+
+<?php if ($config['cf_analytics']) { echo $config['cf_analytics']; } ?>
 
 <?php
 if (is_file(G5_THEME_PATH.'/js/sp_user_menu_common.js')) {
     echo '<script src="'.G5_THEME_URL.'/js/sp_user_menu_common.js?v='.@filemtime(G5_THEME_PATH.'/js/sp_user_menu_common.js').'"></script>';
 }
 include_once(G5_THEME_PATH."/tail.sub.php");
+?>

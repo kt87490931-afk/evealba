@@ -1,0 +1,455 @@
+<?php
+/**
+ * 이브알바 메인 영역 (eve_alba_responsive_1.html 기준 100% 동일)
+ * - 디자인/레이아웃만 구현, 기능 연동은 추후 진행
+ */
+if (!defined('_GNUBOARD_')) exit;
+?>
+<!-- 히어로 배너 -->
+<div class="hero-section">
+  <div class="hero-main">
+    <div class="hero-text">
+      <h2>강남 <span>룸 80개</span><br>1등 대일팀!</h2>
+      <p>🔥 하이퍼블릭 밀빵OK · 5인1조 픽업OK!!</p>
+    </div>
+    <div class="hero-badge">✨ HOT</div>
+  </div>
+</div>
+
+<!-- 빠른 통계 -->
+<div class="quick-stats">
+  <div class="stat-card">
+    <div class="stat-icon">💼</div>
+    <div class="stat-label">오늘 채용공고</div>
+    <div class="stat-value">3,427</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📄</div>
+    <div class="stat-label">등록 이력서</div>
+    <div class="stat-value">12,841</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🏢</div>
+    <div class="stat-label">가입 업소</div>
+    <div class="stat-value">8,920</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">👩</div>
+    <div class="stat-label">오늘 접속자</div>
+    <div class="stat-value">24,153</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">✅</div>
+    <div class="stat-label">오늘 매칭</div>
+    <div class="stat-value">1,203</div>
+  </div>
+</div>
+
+<!-- 공지 -->
+<div class="notice-bar">
+  <span class="notice-label">📢 공지</span>
+  <div class="notice-text">
+    <a href="#">[공지] 이브알바 신규 서비스 오픈 이벤트 안내 · 채용공고 등록 시 프리미엄 무료 업그레이드 혜택!</a>
+  </div>
+</div>
+
+<!-- 모바일 전용 추천업소 (PC에서는 숨김, 태블릿 이하에서 표시) -->
+<div class="mobile-recommend">
+  <div class="section-header">
+    <h2 class="section-title">💎 추천업소</h2>
+  </div>
+  <div class="mobile-recommend-grid">
+    <div class="mobile-rec-card">
+      <div class="mobile-rec-banner g12">동탄스카이<br>아이퍼블릭<b>60분 TC12만원</b></div>
+      <div class="mobile-rec-info">
+        <div class="mobile-rec-name">동탄스카이 아이퍼블릭</div>
+        <div class="mobile-rec-wage">자유복장 · TC12만원</div>
+      </div>
+    </div>
+    <div class="mobile-rec-card">
+      <div class="mobile-rec-banner g1">일프로 &amp; 텐카페<b>300만원 보장</b></div>
+      <div class="mobile-rec-info">
+        <div class="mobile-rec-name">일프로 · 텐카페</div>
+        <div class="mobile-rec-wage">300만원 보장</div>
+      </div>
+    </div>
+    <div class="mobile-rec-card">
+      <div class="mobile-rec-banner" style="background:linear-gradient(135deg,#1A0010,#FF1B6B)">당일<b>백만 UP</b></div>
+      <div class="mobile-rec-info">
+        <div class="mobile-rec-name">당일 백만원 UP 이벤트</div>
+        <div class="mobile-rec-wage">기간 한정 특별 혜택</div>
+      </div>
+    </div>
+    <div class="mobile-rec-card">
+      <div class="mobile-rec-banner g11">강남 VIP<b>순수테이블 2H</b></div>
+      <div class="mobile-rec-info">
+        <div class="mobile-rec-name">강남짬오 이태곤대표</div>
+        <div class="mobile-rec-wage">면접 후 협의</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 우대채용정보 -->
+<div class="section-wrap">
+  <div class="section-header">
+    <h2 class="section-title">우대채용정보</h2>
+    <a href="#" class="section-more">더보기 →</a>
+  </div>
+  <div class="featured-grid">
+    <div class="job-card">
+      <div class="job-card-banner g1"><span>👑 강남 하이퍼블릭<br>아우라</span></div>
+      <div class="hot-badge">HOT</div>
+      <div class="job-card-body">
+        <div class="job-card-location"><span class="job-loc-badge">경기</span>안양시 룸싸롱</div>
+        <div class="job-desc">♥안양하이퍼TC16♥안양1등 이.</div>
+        <div class="job-card-footer">
+          <span class="job-wage">160,000원</span>
+          <span class="job-badge"><span class="crown-gold">👑</span>24회 1170일</span>
+        </div>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="job-card-banner g2"><span>💜 부천 하이퍼블릭<br>메쎄</span></div>
+      <div class="hot-badge">HOT</div>
+      <div class="job-card-body">
+        <div class="job-card-location"><span class="job-loc-badge">경기</span>부천시 룸싸롱</div>
+        <div class="job-desc">1등·패츠X최고조건·손님많고객.</div>
+        <div class="job-card-footer">
+          <span class="job-wage">150,000원</span>
+          <span class="job-badge"><span class="crown-gold">👑</span>17회 1290일</span>
+        </div>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="job-card-banner g3"><span>❤ 파주최고TC<br>REINA</span></div>
+      <div class="hot-badge">HOT</div>
+      <div class="job-card-body">
+        <div class="job-card-location"><span class="job-loc-badge">경기</span>파주시 노래주점</div>
+        <div class="job-desc">●●● 퍼블릭 1시간 10만원 ●●●</div>
+        <div class="job-card-footer">
+          <span class="job-wage">100,000원</span>
+          <span class="job-badge"><span class="crown-silver">🥈</span>1회 30일</span>
+        </div>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="job-card-banner g4"><span>💎 화류지옥<br>서울</span></div>
+      <div class="new-badge">NEW</div>
+      <div class="job-card-body">
+        <div class="job-card-location"><span class="job-loc-badge">서울</span>기타</div>
+        <div class="job-desc">♥최고패이♥화류지옥♥</div>
+        <div class="job-card-footer">
+          <span class="job-wage">500,000원</span>
+          <span class="job-badge"><span class="crown-gold">👑</span>114회 3420일</span>
+        </div>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="job-card-banner g5"><span>🌟 웨이브<br>대전</span></div>
+      <div class="job-card-body">
+        <div class="job-card-location"><span class="job-loc-badge">대전</span>유성구 룸싸롱</div>
+        <div class="job-desc">▶2시간26 ◀ ▶물방 약속.</div>
+        <div class="job-card-footer">
+          <span class="job-wage">130,000원</span>
+          <span class="job-badge"><span class="crown-silver">🥈</span>6회 540일</span>
+        </div>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="job-card-banner g6"><span>🔥 동탄위너<br>경기</span></div>
+      <div class="hot-badge">HOT</div>
+      <div class="job-card-body">
+        <div class="job-card-location"><span class="job-loc-badge">경기</span>화성시 노래주점</div>
+        <div class="job-desc">동탄1등 위너타 가모노 하이퍼블릭.</div>
+        <div class="job-card-footer">
+          <span class="job-wage">150,000원</span>
+          <span class="job-badge"><span class="crown-bronze">🥉</span>3회 90일</span>
+        </div>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="job-card-banner g7"><span>✨ 분당 이대표<br>경기 성남</span></div>
+      <div class="job-card-body">
+        <div class="job-card-location"><span class="job-loc-badge">경기</span>성남시 룸싸롱</div>
+        <div class="job-desc">♥로얄퍼블릭 1시간 T.C25만원이.</div>
+        <div class="job-card-footer">
+          <span class="job-wage">200,000원</span>
+          <span class="job-badge"><span class="crown-gold">👑</span>9회 270일</span>
+        </div>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="job-card-banner g8"><span>💫 강남 VIP룸<br>경기</span></div>
+      <div class="new-badge">NEW</div>
+      <div class="job-card-body">
+        <div class="job-card-location"><span class="job-loc-badge">경기</span>강남 VIP룸</div>
+        <div class="job-desc">★★★ 정통 하이캠오 ★</div>
+        <div class="job-card-footer">
+          <span class="job-wage">65,000원</span>
+          <span class="job-badge"><span class="crown-bronze">🥉</span>59회 1770일</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 프리미엄채용정보 -->
+<div class="section-wrap">
+  <div class="section-header">
+    <h2 class="section-title">프리미엄채용정보</h2>
+    <a href="#" class="section-more">더보기 →</a>
+  </div>
+  <div class="premium-grid">
+    <div class="premium-card">
+      <div class="premium-banner g11">강남짬오❤이태곤대표</div>
+      <div class="premium-body">
+        <div class="premium-name">강남짬오 이태곤대표</div>
+        <div class="premium-area">서울 강남구 · 룸싸롱</div>
+        <div class="premium-wage">면접 후 협의</div>
+      </div>
+    </div>
+    <div class="premium-card">
+      <div class="premium-banner g12">구구단 신제니</div>
+      <div class="premium-body">
+        <div class="premium-name">구구단 신제니</div>
+        <div class="premium-area">서울 · 룸싸롱</div>
+        <div class="premium-wage">150,000원</div>
+      </div>
+    </div>
+    <div class="premium-card">
+      <div class="premium-banner g1">세이렌K팀 재롤대표</div>
+      <div class="premium-body">
+        <div class="premium-name">세이렌K팀 재롤대표</div>
+        <div class="premium-area">서울 · 룸싸롱</div>
+        <div class="premium-wage">150,000원</div>
+      </div>
+    </div>
+    <div class="premium-card">
+      <div class="premium-banner g2">슈퍼맨</div>
+      <div class="premium-body">
+        <div class="premium-name">슈퍼맨</div>
+        <div class="premium-area">경기 화성시 · 노래주점</div>
+        <div class="premium-wage">150,000원</div>
+      </div>
+    </div>
+    <div class="premium-card">
+      <div class="premium-banner g6">골드문</div>
+      <div class="premium-body">
+        <div class="premium-name">골드문</div>
+        <div class="premium-area">인천 미추홀구</div>
+        <div class="premium-wage">75,000원</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 커뮤니티 + 인재정보 -->
+<div class="community-resume-row">
+  <div class="tab-section">
+    <div class="tab-header">
+      <button class="tab-btn active">베스트글</button>
+      <button class="tab-btn">밤문화이야기</button>
+      <button class="tab-btn">단짝찾기</button>
+      <button class="tab-btn">법률상담</button>
+    </div>
+    <div class="tab-content">
+      <div class="community-item">
+        <span class="comm-badge badge-best">BEST</span>
+        <span class="comm-title">3부 강한 하이퍼 어디에요?</span>
+        <span class="comm-time">방금</span>
+      </div>
+      <div class="community-item">
+        <span class="comm-badge badge-new">NEW</span>
+        <span class="comm-title">근데 일하면서 느낀게... 오히려 짠따언니들 많은거같아요</span>
+        <span class="comm-time">3분</span>
+      </div>
+      <div class="community-item">
+        <span class="comm-badge badge-best">BEST</span>
+        <span class="comm-title">신림 퇴근차 해줘요? 아니면 차비?</span>
+        <span class="comm-time">15분</span>
+      </div>
+      <div class="community-item">
+        <span class="comm-badge badge-night">🌙</span>
+        <span class="comm-title">미래고민 - 서울외곽 노도해서 달에 적금만 300씩</span>
+        <span class="comm-time">30분</span>
+      </div>
+      <div class="community-item">
+        <span class="comm-badge badge-new">NEW</span>
+        <span class="comm-title">손님으로만났는데 알고보니 선배언니였어요</span>
+        <span class="comm-time">1시간</span>
+      </div>
+    </div>
+  </div>
+  <div class="resume-table">
+    <table>
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>나이/성별</th>
+          <th>제목</th>
+          <th>희망급여</th>
+          <th>등록일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="resume-name">수○○</td><td>22/여</td>
+          <td class="resume-title"><a href="#">일구해요 🆕</a></td>
+          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-22</td>
+        </tr>
+        <tr>
+          <td class="resume-name">힘○○</td><td>27/여</td>
+          <td class="resume-title"><a href="#">77사이즈 구해요 🆕</a></td>
+          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-22</td>
+        </tr>
+        <tr>
+          <td class="resume-name">고○○</td><td>27/여</td>
+          <td class="resume-title"><a href="#">165 68kg 20대후반 일자리 구해요 🆕</a></td>
+          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-21</td>
+        </tr>
+        <tr>
+          <td class="resume-name">잔○○</td><td>35/여</td>
+          <td class="resume-title"><a href="#">ㅇㅍ구해요 🆕</a></td>
+          <td><span class="wage-tag wage-fixed">400만원</span></td><td>02-21</td>
+        </tr>
+        <tr>
+          <td class="resume-name">ㅇ○○</td><td>23/여</td>
+          <td class="resume-title"><a href="#">일 구해봐용 ㅎㅎ 🆕</a></td>
+          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-21</td>
+        </tr>
+        <tr>
+          <td class="resume-name">보○○</td><td>33/여</td>
+          <td class="resume-title"><a href="#">기타구해요 🆕</a></td>
+          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-21</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 스페셜채용정보 -->
+<div class="section-wrap">
+  <div class="section-header">
+    <h2 class="section-title">스페셜채용정보</h2>
+    <a href="#" class="section-more">더보기 →</a>
+  </div>
+  <div class="special-grid">
+    <div class="special-card">
+      <div class="premium-banner g9">구구단 신제니</div>
+      <div class="premium-body">
+        <div class="premium-name">구구단 신제니</div>
+        <div class="premium-area">서울 · 룸싸롱</div>
+        <div class="premium-wage">150,000원</div>
+      </div>
+    </div>
+    <div class="special-card">
+      <div class="premium-banner g10">비상구</div>
+      <div class="premium-body">
+        <div class="premium-name">비상구</div>
+        <div class="premium-area">서울 강남구 · 기타</div>
+        <div class="premium-wage">500,000원</div>
+      </div>
+    </div>
+    <div class="special-card">
+      <div class="premium-banner g3">일산 1등 하이퍼블릭</div>
+      <div class="premium-body">
+        <div class="premium-name">일산 1등 하이퍼블릭</div>
+        <div class="premium-area">경기 고양시 · 노래주점</div>
+        <div class="premium-wage">170,000원</div>
+      </div>
+    </div>
+    <div class="special-card">
+      <div class="premium-banner g5">아우라 하이퍼블릭</div>
+      <div class="premium-body">
+        <div class="premium-name">아우라 하이퍼블릭</div>
+        <div class="premium-area">경기 · 노래주점</div>
+        <div class="premium-wage">면접 후 협의</div>
+      </div>
+    </div>
+    <div class="special-card">
+      <div class="premium-banner g7">강남미션</div>
+      <div class="premium-body">
+        <div class="premium-name">♡강남 미션♡</div>
+        <div class="premium-area">서울 강남구 · 룸싸롱</div>
+        <div class="premium-wage">130,000원</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 급구채용 + 추천채용 -->
+<div class="urgency-recommend-row">
+  <div>
+    <div class="section-header">
+      <h2 class="section-title" style="font-size:16px">급구채용</h2>
+    </div>
+    <div class="urgency-list">
+      <div class="urgency-card">
+        <div class="urgency-name">♥화류지옥♥</div>
+        <div class="urgency-area">서울</div>
+        <div class="urgency-desc">♥최고패이♥화류지옥♥</div>
+        <div class="urgency-wage">500,000원 <span>· 114회 3420일</span></div>
+      </div>
+      <div class="urgency-card">
+        <div class="urgency-name">강남짬오❤이태곤대표</div>
+        <div class="urgency-area">서울 강남구</div>
+        <div class="urgency-desc">♥순수테이블♥ 2시간40분!</div>
+        <div class="urgency-wage">면접 후 협의 <span>· 42회 1260일</span></div>
+      </div>
+      <div class="urgency-card">
+        <div class="urgency-name">타임</div>
+        <div class="urgency-area">경기 광명시 · 노래주점</div>
+        <div class="urgency-desc">♥철산1등 타가게/고정/반고정.</div>
+        <div class="urgency-wage">130,000원 <span>· 1회 60일</span></div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="section-header">
+      <h2 class="section-title" style="font-size:16px">추천채용</h2>
+    </div>
+    <div class="recommend-list">
+      <div class="recommend-card">
+        <div>
+          <div class="rec-name">♥파주최고TC♥ <span class="rec-area">경기 파주시</span></div>
+          <div class="rec-desc">●●● 퍼블릭 1시간 10만원 ●●● 파주 최고TC</div>
+        </div>
+        <div class="rec-right">
+          <div class="rec-wage">100,000원</div>
+          <div class="rec-meta">노래주점 · 1회 30일</div>
+        </div>
+      </div>
+      <div class="recommend-card">
+        <div>
+          <div class="rec-name">구구단 신제니 <span class="rec-area">서울</span></div>
+          <div class="rec-desc">구구단 신제니 ♡ 정동 여자 마담 ♡ 하이퍼캠오!</div>
+        </div>
+        <div class="rec-right">
+          <div class="rec-wage">150,000원</div>
+          <div class="rec-meta">룸싸롱 · 1회 90일</div>
+        </div>
+      </div>
+      <div class="recommend-card">
+        <div>
+          <div class="rec-name">동탄하퍼대표 <span class="rec-area">경기</span></div>
+          <div class="rec-desc">자유복장하이퍼♥TC12♥60분♥당일지급</div>
+        </div>
+        <div class="rec-right">
+          <div class="rec-wage">3,000,000원</div>
+          <div class="rec-meta">룸싸롱 · 51회 1530일</div>
+        </div>
+      </div>
+      <div class="recommend-card">
+        <div>
+          <div class="rec-name">아우라 하이퍼블릭 <span class="rec-area">경기</span></div>
+          <div class="rec-desc">♥수원1번하이퍼블릭♥ 아우라 대표가 환영합.</div>
+        </div>
+        <div class="rec-right">
+          <div class="rec-wage">면접 후 협의</div>
+          <div class="rec-meta">노래주점 · 3회 540일</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
