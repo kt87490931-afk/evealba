@@ -36,14 +36,17 @@ header("Pragma: no-cache"); // HTTP/1.0
 <head>
 <meta charset="utf-8">
 <?php
-if (G5_IS_MOBILE) {
+// evealba는 반응형 테마 → viewport 필수 (eve_alba_responsive_1.html 기준)
+$is_responsive_theme = (isset($config['cf_theme']) && $config['cf_theme'] === 'evealba');
+if (G5_IS_MOBILE || $is_responsive_theme) {
     echo '<meta name="viewport" id="meta_viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=10">'.PHP_EOL;
     echo '<meta name="HandheldFriendly" content="true">'.PHP_EOL;
     echo '<meta name="format-detection" content="telephone=no">'.PHP_EOL;
-} else {
-    echo '<meta http-equiv="imagetoolbar" content="no">'.PHP_EOL;
-    echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">'.PHP_EOL;
 }
+if (!$is_responsive_theme) {
+    echo '<meta http-equiv="imagetoolbar" content="no">'.PHP_EOL;
+}
+echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">'.PHP_EOL;
 
 if($config['cf_add_meta'])
     echo $config['cf_add_meta'].PHP_EOL;
