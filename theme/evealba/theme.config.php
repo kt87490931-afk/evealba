@@ -2,9 +2,10 @@
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 // 테마가 지원하는 장치 설정 pc, mobile
+// pc: 모바일에서도 PC(반응형) 레이아웃 사용 - evealba는 반응형이라 모바일에서 동일 레이아웃 적용
 // 선언하지 않거나 값을 지정하지 않으면 그누보드5의 설정을 따른다.
 // G5_SET_DEVICE 상수 설정 보다 우선 적용됨
-if(! defined('G5_THEME_DEVICE')) define('G5_THEME_DEVICE', '');
+if(! defined('G5_THEME_DEVICE')) define('G5_THEME_DEVICE', 'pc');
 
 $theme_config = array();
 
