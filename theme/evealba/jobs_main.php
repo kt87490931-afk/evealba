@@ -459,8 +459,6 @@ if (!defined('_GNUBOARD_')) exit;
               <th>채용제목 / 편의사항</th>
               <th class="col-benefits">업소명</th>
               <th>급여조건</th>
-              <th>편의사항</th>
-              <th>점프/통계</th>
             </tr>
           </thead>
           <tbody>
@@ -470,11 +468,19 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>20-35세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">【급구】 개인 특별이벤트 진행中 하퍼 하이퍼블릭 ♡초보환영</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-urgent">급구</span>
-                  <span class="list-tag tag-init">초보가능</span>
-                  <span class="list-tag tag-bonus">당일지급</span>
-                  <span class="list-tag tag-pink">선불가능</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-urgent">급구</span>
+                    <span class="list-tag tag-init">초보가능</span>
+                    <span class="list-tag tag-bonus">당일지급</span>
+                    <span class="list-tag tag-pink">선불가능</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag b-hot">선불가능</span>
+                    <span class="benefit-tag b-hot">순번확실</span>
+                    <span class="benefit-tag">식사제공</span>
+                    <span class="benefit-tag">팁별도</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -486,18 +492,6 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-badge wb-ilbul">일불</span><br>
                 <span class="wage-amount">면접 후 협의</span>
               </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag b-hot">선불가능</span>
-                  <span class="benefit-tag b-hot">순번확실</span>
-                  <span class="benefit-tag">식사제공</span>
-                  <span class="benefit-tag">팁별도</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🔥</span> 16회</div>
-                <div class="stat-line">1320일</div>
-              </td>
             </tr>
             <tr>
               <td class="td-region">서울<br>강남구</td>
@@ -505,9 +499,16 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>20대</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">★하루100~160★강남1등!최고대추!안전제일 출퇴근지원 당일 당달 500,000만</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-bonus">출퇴근지원</span>
-                  <span class="list-tag tag-pink">원룸제공</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-bonus">출퇴근지원</span>
+                    <span class="list-tag tag-pink">원룸제공</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag b-hot">갯수보장</span>
+                    <span class="benefit-tag">지명우대</span>
+                    <span class="benefit-tag">푸쉬가능</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -519,17 +520,6 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-badge wb-ilbul">일불</span><br>
                 <span class="wage-amount">600,000원</span>
               </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag b-hot">갯수보장</span>
-                  <span class="benefit-tag">지명우대</span>
-                  <span class="benefit-tag">푸쉬가능</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🔥</span> 76회</div>
-                <div class="stat-line">2970일</div>
-              </td>
             </tr>
             <tr>
               <td class="td-region">서울<br>강남구</td>
@@ -537,9 +527,16 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>-</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">❤정보❤VIP멤버쉽 한달 3천이상</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-pay">인센티브</span>
-                  <span class="list-tag tag-init">초보가능</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-pay">인센티브</span>
+                    <span class="list-tag tag-init">초보가능</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag b-hot">팁별도</span>
+                    <span class="benefit-tag">인센티브</span>
+                    <span class="benefit-tag">초이스없음</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -551,17 +548,6 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-badge wb-wolbul">월불</span><br>
                 <span class="wage-amount">500,000원</span>
               </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag b-hot">팁별도</span>
-                  <span class="benefit-tag">인센티브</span>
-                  <span class="benefit-tag">초이스없음</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🥈</span> 1회</div>
-                <div class="stat-line">30일</div>
-              </td>
             </tr>
             <tr>
               <td class="td-region">서울<br>강남구</td>
@@ -569,10 +555,18 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>20-28세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title" style="color:var(--hot-pink);font-weight:900;">LA가라오케 고페이 일급 2,000,000원</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-urgent">급구</span>
-                  <span class="list-tag tag-bonus">출퇴근지원</span>
-                  <span class="list-tag tag-pink">인센티브</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-urgent">급구</span>
+                    <span class="list-tag tag-bonus">출퇴근지원</span>
+                    <span class="list-tag tag-pink">인센티브</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag b-hot">출퇴근지원</span>
+                    <span class="benefit-tag b-hot">팁별도</span>
+                    <span class="benefit-tag">인센티브</span>
+                    <span class="benefit-tag">갯수보장</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -584,18 +578,6 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-badge wb-ilbul">일불</span><br>
                 <span class="wage-amount" style="font-size:12px;">2,000,000원</span>
               </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag b-hot">출퇴근지원</span>
-                  <span class="benefit-tag b-hot">팁별도</span>
-                  <span class="benefit-tag">인센티브</span>
-                  <span class="benefit-tag">갯수보장</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🔥</span> 7회</div>
-                <div class="stat-line">630일</div>
-              </td>
             </tr>
             <tr>
               <td class="td-region">서울<br>강서구</td>
@@ -603,9 +585,16 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>전연령</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">♡강서구 TOP 1등 여왕들을 모시나여♡</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-init">초보가능</span>
-                  <span class="list-tag tag-pink">숙식제공</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-init">초보가능</span>
+                    <span class="list-tag tag-pink">숙식제공</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag b-hot">갯수보장</span>
+                    <span class="benefit-tag">지명우대</span>
+                    <span class="benefit-tag">초이스없음</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -617,17 +606,6 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-badge wb-sigan">시급</span><br>
                 <span class="wage-amount">60,000원</span>
               </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag b-hot">갯수보장</span>
-                  <span class="benefit-tag">지명우대</span>
-                  <span class="benefit-tag">초이스없음</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🥉</span> 1회</div>
-                <div class="stat-line">30일</div>
-              </td>
             </tr>
             <tr>
               <td class="td-region">인천<br>중구</td>
@@ -635,9 +613,15 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>-</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">인천 영종도 신규오픈 하루대기없이 일가능</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-urgent">급구</span>
-                  <span class="list-tag tag-bonus">만근비</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-urgent">급구</span>
+                    <span class="list-tag tag-bonus">만근비</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag">순번확실</span>
+                    <span class="benefit-tag">만근비지원</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -649,16 +633,6 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-badge wb-hyup">협의</span><br>
                 <span class="wage-amount">면접 후 협의</span>
               </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag">순번확실</span>
-                  <span class="benefit-tag">만근비지원</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🥈</span> 2회</div>
-                <div class="stat-line">60일</div>
-              </td>
             </tr>
             <tr>
               <td class="td-region">인천<br>계양구</td>
@@ -666,10 +640,17 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>20-35세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">인천패티서1위업소최고수입보장!!수위약감 접대 받으면서 일하세요^^</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-init">초보가능</span>
-                  <span class="list-tag tag-bonus">선불가능</span>
-                  <span class="list-tag tag-pink">갯수보장</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-init">초보가능</span>
+                    <span class="list-tag tag-bonus">선불가능</span>
+                    <span class="list-tag tag-pink">갯수보장</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag b-hot">선불가능</span>
+                    <span class="benefit-tag">만근비지원</span>
+                    <span class="benefit-tag">성형지원</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -681,17 +662,6 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-badge wb-ilbul">일불</span><br>
                 <span class="wage-amount">600,000원</span>
               </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag b-hot">선불가능</span>
-                  <span class="benefit-tag">만근비지원</span>
-                  <span class="benefit-tag">성형지원</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🔥</span> 13회</div>
-                <div class="stat-line">480일</div>
-              </td>
             </tr>
             <tr>
               <td class="td-region">경기<br>파주시</td>
@@ -699,9 +669,16 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>20-40세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">파주 유일 야당새초름 파주최고 출퇴근지원 차비지원</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-bonus">출퇴근지원</span>
-                  <span class="list-tag tag-pink">차비지원</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-bonus">출퇴근지원</span>
+                    <span class="list-tag tag-pink">차비지원</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag b-hot">출퇴근지원</span>
+                    <span class="benefit-tag">차비지원</span>
+                    <span class="benefit-tag">초보가능</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -713,17 +690,6 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-badge wb-ilbul">일불</span><br>
                 <span class="wage-amount">140,000원</span>
               </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag b-hot">출퇴근지원</span>
-                  <span class="benefit-tag">차비지원</span>
-                  <span class="benefit-tag">초보가능</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🥉</span> 10회</div>
-                <div class="stat-line">300일</div>
-              </td>
             </tr>
             <tr>
               <td class="td-region">서울<br>강남구</td>
@@ -731,10 +697,17 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>20-35세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">♥도파민♥하1퍼♥도파민,슈앤미 퍼펙트,엘리트,갈토,언노♥을 급구!!</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-urgent">급구</span>
-                  <span class="list-tag tag-init">초보가능</span>
-                  <span class="list-tag tag-bonus">갯수보장</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-urgent">급구</span>
+                    <span class="list-tag tag-init">초보가능</span>
+                    <span class="list-tag tag-bonus">갯수보장</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag b-hot">갯수보장</span>
+                    <span class="benefit-tag b-hot">인센티브</span>
+                    <span class="benefit-tag">초이스없음</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -746,17 +719,6 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-badge wb-ilbul">일불</span><br>
                 <span class="wage-amount">100,000원</span>
               </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag b-hot">갯수보장</span>
-                  <span class="benefit-tag b-hot">인센티브</span>
-                  <span class="benefit-tag">초이스없음</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🔥</span> 15회</div>
-                <div class="stat-line">690일</div>
-              </td>
             </tr>
             <tr>
               <td class="td-region">서울<br>성동구</td>
@@ -764,9 +726,16 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="col-gender td-gender">여<br>20대</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">♡첫날찡떼X♡지정365일 박스♡</a>
-                <div class="list-tags">
-                  <span class="list-tag tag-pink">지명우대</span>
-                  <span class="list-tag tag-init">초보가능</span>
+                <div class="list-title-bottom">
+                  <div class="list-tags">
+                    <span class="list-tag tag-pink">지명우대</span>
+                    <span class="list-tag tag-init">초보가능</span>
+                  </div>
+                  <div class="benefit-tags">
+                    <span class="benefit-tag">만근비지원</span>
+                    <span class="benefit-tag">식사제공</span>
+                    <span class="benefit-tag b-hot">출퇴근지원</span>
+                  </div>
                 </div>
               </td>
               <td class="col-benefits td-shop">
@@ -777,17 +746,6 @@ if (!defined('_GNUBOARD_')) exit;
               <td class="td-wage">
                 <span class="wage-badge wb-sigan">시급</span><br>
                 <span class="wage-amount">70,000원</span>
-              </td>
-              <td class="td-benefits">
-                <div class="benefit-tags">
-                  <span class="benefit-tag">만근비지원</span>
-                  <span class="benefit-tag">식사제공</span>
-                  <span class="benefit-tag b-hot">출퇴근지원</span>
-                </div>
-              </td>
-              <td class="td-stats">
-                <div class="stat-line"><span class="jump-icon">🔥</span> 11회</div>
-                <div class="stat-line">930일</div>
               </td>
             </tr>
           </tbody>

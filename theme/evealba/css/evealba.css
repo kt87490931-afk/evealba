@@ -437,6 +437,12 @@ nav::before {
   text-decoration:none;
 }
 .list-job-title:hover { color:var(--hot-pink); }
+.list-title-bottom {
+  display:flex; justify-content:space-between; align-items:flex-end;
+  gap:8px; margin-top:6px; flex-wrap:wrap;
+}
+.list-title-bottom .benefit-tags { margin-left:auto; }
+.list-title-bottom .list-tags { margin-top:0; }
 .list-tags {
   display:flex; gap:4px; flex-wrap:wrap; margin-top:3px;
 }
@@ -478,7 +484,6 @@ nav::before {
 .wb-wolbul { background:#F3E5F5; color:#6A1B9A; }
 .wb-hyup { background:#F5F5F5; color:#555; }
 .wb-geondang { background:#FFF8E1; color:#F57F17; }
-.td-benefits { max-width:130px; }
 .benefit-tags { display:flex; flex-wrap:wrap; gap:3px; }
 .benefit-tag {
   font-size:10px;
@@ -1225,11 +1230,9 @@ footer {
   .filter-row { gap:7px; }
   .filter-label { width:44px; font-size:11px; }
   .filter-select { font-size:12px; padding:5px 7px; }
-  /* 채용정보 테이블: 성별·채용제목·업소명 숨김 */
+  /* 채용정보 테이블: 성별·업소명만 숨김 (채용제목은 표시) */
   .list-table thead th:nth-child(3),
   .list-table tbody td:nth-child(3),
-  .list-table thead th:nth-child(4),
-  .list-table tbody td:nth-child(4),
   .list-table thead th:nth-child(5),
   .list-table tbody td:nth-child(5) { display:none; }
   .special-card { grid-column: span 2 !important; }
