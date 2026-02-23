@@ -1,0 +1,290 @@
+/* =========================================================
+   Chat Admin - Minimal Override (keep GNUBOARD admin.css look)
+   - 정렬 UI(화살표 표시) : 링크 href에 order/sort가 있으면 상태 표시
+   - 검색/필터/버튼 한 줄 정렬
+   - 버튼/인풋 높이 통일
+   ========================================================= */
+
+/* --- 0) 너무 강한 커스텀 CSS가 남아있을 때 대비(레이아웃만 최소 보정) --- */
+.wrap,
+.chat-admin-wrap,
+.sp-chat-admin-wrap {
+  max-width: 100% !important;
+}
+
+/* --- 1) 상단 타이틀/필터/검색바/버튼 라인 정렬 --- */
+/* (현재 페이지들에서 topbar/search-form 같은 클래스가 있든 없든, form/controls를 “한 줄”로 정렬) */
+.topbar,
+.filterbar,
+.toolbar,
+.local_sch,
+.local_sch01,
+.local_sch02,
+.local_ov,
+.local_ov01,
+.local_ov02 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.topbar form,
+.filterbar form,
+.toolbar form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* input/select/button 높이 통일 (admin.css 톤 유지) */
+.topbar input[type="text"],
+.topbar input[type="search"],
+.topbar select,
+.filterbar input[type="text"],
+.filterbar input[type="search"],
+.filterbar select,
+.toolbar input[type="text"],
+.toolbar input[type="search"],
+.toolbar select,
+.local_sch input[type="text"],
+.local_sch input[type="search"],
+.local_sch select {
+  height: 30px;
+  line-height: 30px;
+}
+
+/* 버튼 크기/정렬 통일 */
+.topbar button,
+.topbar input[type="submit"],
+.topbar a.btn,
+.filterbar button,
+.filterbar input[type="submit"],
+.filterbar a.btn,
+.toolbar button,
+.toolbar input[type="submit"],
+.toolbar a.btn,
+.local_sch button,
+.local_sch input[type="submit"],
+.local_sch a.btn {
+  height: 30px;
+  line-height: 28px;
+  padding: 0 10px;
+  vertical-align: middle;
+}
+
+/* --- 2) 테이블: admin.css 룩 유지 + 폭/정렬 안정화 --- */
+table {
+  border-collapse: collapse;
+}
+
+table thead th {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+table tbody td {
+  vertical-align: middle;
+}
+
+/* “사유/내용” 같은 긴 컬럼만 줄바꿈 허용하고 나머진 nowrap */
+td.reason,
+td.memo,
+td.desc,
+td.content,
+td.message {
+  white-space: normal;
+}
+
+/* --- 3) 정렬 UI: 헤더 클릭형 “화살표/정렬표시” (기능은 건드리지 않음) ---
+   조건:
+   - TH 안에 <a href="...sort=..."> 또는 <a href="...order=asc/desc"> 가 있으면
+     CSS만으로 화살표 상태를 표시할 수 있음.
+   - 현재 TH가 그냥 텍스트면 “표시만” 가능하고 “정렬 동작”은 CSS로 못 만듭니다.
+*/
+table thead th a {
+  position: relative;
+  padding-right: 16px;
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* 기본: 정렬 가능 표시(↕) */
+table thead th a::after {
+  content: "↕";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  opacity: .55;
+}
+
+/* ASC 표시 */
+table thead th a[href*="order=asc"]::after,
+table thead th a[href*="sort=asc"]::after {
+  content: "▲";
+  opacity: .85;
+}
+
+/* DESC 표시 */
+table thead th a[href*="order=desc"]::after,
+table thead th a[href*="sort=desc"]::after {
+  content: "▼";
+  opacity: .85;
+}
+
+/* =========================================================
+   ScorePoint Chat Admin - unified layout (scoped)
+   ========================================================= */
+html.sp-chat-admin body{
+  background:#f3f4f6;
+}
+
+/* Top navigation next to ADMINISTRATOR */
+html.sp-chat-admin #spChatTopNav{
+  display:inline-flex;
+  gap:16px;
+  margin-left:18px;
+  vertical-align:middle;
+  align-items:center;
+  line-height:1;
+}
+html.sp-chat-admin #spChatTopNav a{
+  color:#fff;
+  opacity:.85;
+  text-decoration:none;
+  font-size:13px;
+  padding:6px 2px;
+}
+html.sp-chat-admin #spChatTopNav a.on,
+html.sp-chat-admin #spChatTopNav a:hover{
+  opacity:1;
+  font-weight:700;
+}
+
+/* Main container helper */
+html.sp-chat-admin .sp-wrap{
+  max-width:1280px;
+  margin:0 auto;
+  padding:22px 16px 40px;
+}
+html.sp-chat-admin .sp-page-title{
+  font-size:22px;
+  font-weight:700;
+  margin:6px 0 16px;
+}
+html.sp-chat-admin .sp-card{
+  background:#fff;
+  border:1px solid #dcdcdc;
+  border-radius:6px;
+  padding:14px;
+  margin-bottom:14px;
+}
+html.sp-chat-admin .sp-row{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+html.sp-chat-admin .sp-col{
+  flex:1;
+  min-width:320px;
+}
+
+/* Excel-like table */
+html.sp-chat-admin .sp-table-wrap{
+  background:#fff;
+  border:1px solid #dcdcdc;
+  border-radius:6px;
+  overflow:hidden;
+}
+html.sp-chat-admin table.tbl{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+html.sp-chat-admin table.tbl th,
+html.sp-chat-admin table.tbl td{
+  border-bottom:1px solid #e6e6e6;
+  padding:10px 10px;
+  font-size:13px;
+  vertical-align:middle;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+html.sp-chat-admin table.tbl thead th{
+  background:#f7f7f7;
+  border-bottom:1px solid #dcdcdc;
+  font-weight:700;
+}
+html.sp-chat-admin table.tbl tbody tr:hover{
+  background:#fafcff;
+}
+html.sp-chat-admin table.tbl td.wrap{
+  white-space:normal;
+  word-break:break-word;
+}
+
+/* Small controls */
+html.sp-chat-admin .sp-toolbar{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin:10px 0 12px;
+}
+html.sp-chat-admin .sp-toolbar input[type="text"],
+html.sp-chat-admin .sp-toolbar select{
+  height:30px;
+  padding:0 8px;
+  border:1px solid #cfcfcf;
+  border-radius:4px;
+  font-size:13px;
+}
+html.sp-chat-admin .btn{
+  display:inline-block;
+  height:30px;
+  line-height:28px;
+  padding:0 10px;
+  border:1px solid #cfcfcf;
+  border-radius:4px;
+  background:#f7f7f7;
+  font-size:13px;
+  cursor:pointer;
+  text-decoration:none;
+  color:#222;
+}
+html.sp-chat-admin .btn.primary{
+  background:#3b6fe6;
+  border-color:#3b6fe6;
+  color:#fff;
+}
+html.sp-chat-admin .btn.danger{
+  background:#e84c4c;
+  border-color:#e84c4c;
+  color:#fff;
+}
+html.sp-chat-admin .tag{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:999px;
+  font-size:12px;
+  line-height:18px;
+  background:#eef2ff;
+  color:#2a3f8f;
+}
+html.sp-chat-admin .tag.off{
+  background:#f1f1f1;
+  color:#666;
+}
+
+/* Mobile */
+@media (max-width: 768px){
+  html.sp-chat-admin #spChatTopNav{ gap:10px; margin-left:10px; }
+  html.sp-chat-admin #spChatTopNav a{ font-size:12px; }
+  html.sp-chat-admin .sp-wrap{ padding:14px 10px 30px; }
+  html.sp-chat-admin table.tbl th,
+  html.sp-chat-admin table.tbl td{ padding:8px 8px; font-size:12px; }
+}
