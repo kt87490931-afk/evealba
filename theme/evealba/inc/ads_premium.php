@@ -1,7 +1,7 @@
 <?php
 /**
  * 프리미엄 채용정보 공통 광고 (메인·채용정보 페이지 동일)
- * PC 6개
+ * PC 5개
  */
 if (!defined('_GNUBOARD_')) exit;
 ?>
@@ -44,14 +44,6 @@ if (!defined('_GNUBOARD_')) exit;
       <div class="premium-name">골드문</div>
       <div class="premium-area">인천 미추홀구</div>
       <div class="premium-wage">75,000원</div>
-    </div>
-  </div>
-  <div class="premium-card">
-    <div class="premium-banner g3">동탄하퍼대표</div>
-    <div class="premium-body">
-      <div class="premium-name">동탄하퍼대표</div>
-      <div class="premium-area">경기 · 룸싸롱</div>
-      <div class="premium-wage">3,000,000원</div>
     </div>
   </div>
 </div>
