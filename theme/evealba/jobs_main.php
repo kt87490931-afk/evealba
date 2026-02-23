@@ -450,6 +450,8 @@ if (!defined('_GNUBOARD_')) exit;
         <span style="font-size:12px;color:#888;">총 <strong style="color:var(--hot-pink);">3,427</strong>건</span>
       </div>
       <div class="list-section">
+        <!-- PC: 테이블 -->
+        <div class="job-list-desktop">
         <div class="list-table-wrap">
         <table class="list-table">
           <thead>
@@ -751,6 +753,181 @@ if (!defined('_GNUBOARD_')) exit;
             </tr>
           </tbody>
         </table>
+        </div>
+        </div>
+
+        <!-- 모바일: 카드형 스택 -->
+        <div class="job-list-mobile">
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">서울</span>
+              <span class="job-card-m-title">【급구】 개인 특별이벤트 진행中 하퍼 하이퍼블릭 ♡초보환영</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">강남구</span>
+              <span class="job-card-m-shop">[엘리트] 엘리트_사라있네 🔥16회 1320일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-urgent">급구</span><span class="list-tag tag-init">초보가능</span><span class="list-tag tag-bonus">당일지급</span><span class="list-tag tag-pink">선불가능</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">룸싸롱 퍼블릭 | 여 20~35세</span>
+              <span class="job-card-m-wage">[일불] 면접 후 협의</span>
+            </div>
+          </a>
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">서울</span>
+              <span class="job-card-m-title">★하루100~160★강남1등!최고대추!안전제일 출퇴근지원 당일 당달 500,000만</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">강남구</span>
+              <span class="job-card-m-shop">[메이드] 메이드 🔥76회 2970일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-bonus">출퇴근지원</span><span class="list-tag tag-pink">원룸제공</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">기타 기타업종 | 여 20대</span>
+              <span class="job-card-m-wage">[일불] 600,000원</span>
+            </div>
+          </a>
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">서울</span>
+              <span class="job-card-m-title">❤정보❤VIP멤버쉽 한달 3천이상</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">강남구</span>
+              <span class="job-card-m-shop">[티파니] 티파니7080 🥈1회 30일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-pay">인센티브</span><span class="list-tag tag-init">초보가능</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">기타 기타업종 | 여 -</span>
+              <span class="job-card-m-wage">[월불] 500,000원</span>
+            </div>
+          </a>
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">서울</span>
+              <span class="job-card-m-title">LA가라오케 고페이 일급 2,000,000원</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">강남구</span>
+              <span class="job-card-m-shop">[LA고페이] LA가라오케 고페이 🔥7회 630일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-urgent">급구</span><span class="list-tag tag-bonus">출퇴근지원</span><span class="list-tag tag-pink">인센티브</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">룸싸롱 텐프로 | 여 20-28세</span>
+              <span class="job-card-m-wage">[일불] 2,000,000원</span>
+            </div>
+          </a>
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">서울</span>
+              <span class="job-card-m-title">♡강서구 TOP 1등 여왕들을 모시나여♡</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">강서구</span>
+              <span class="job-card-m-shop">[아우디리] 아우디리 🥉1회 30일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-init">초보가능</span><span class="list-tag tag-pink">숙식제공</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">노래주점 아가씨 | 여 전연령</span>
+              <span class="job-card-m-wage">[시급] 60,000원</span>
+            </div>
+          </a>
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">인천</span>
+              <span class="job-card-m-title">인천 영종도 신규오픈 하루대기없이 일가능</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">중구</span>
+              <span class="job-card-m-shop">[영종도] 영종도 신규 최실장 🥈2회 60일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-urgent">급구</span><span class="list-tag tag-bonus">만근비</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">노래주점 아가씨 | 여 -</span>
+              <span class="job-card-m-wage">[협의] 면접 후 협의</span>
+            </div>
+          </a>
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">인천</span>
+              <span class="job-card-m-title">인천패티서1위업소최고수입보장!!수위약감 접대 받으면서 일하세요^^</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">계양구</span>
+              <span class="job-card-m-shop">[페티서] 페티서1위 업소 인천본점 🔥13회 480일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-init">초보가능</span><span class="list-tag tag-bonus">선불가능</span><span class="list-tag tag-pink">갯수보장</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">기타 기타업종 | 여 20-35세</span>
+              <span class="job-card-m-wage">[일불] 600,000원</span>
+            </div>
+          </a>
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">경기</span>
+              <span class="job-card-m-title">파주 유일 야당새초름 파주최고 출퇴근지원 차비지원</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">파주시</span>
+              <span class="job-card-m-shop">[초콜렛] 초콜렛 🥉10회 300일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-bonus">출퇴근지원</span><span class="list-tag tag-pink">차비지원</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">룸싸롱 룸싸롱 | 여 20-40세</span>
+              <span class="job-card-m-wage">[일불] 140,000원</span>
+            </div>
+          </a>
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">서울</span>
+              <span class="job-card-m-title">♥도파민♥하1퍼♥도파민,슈앤미 퍼펙트,엘리트,갈토,언노♥을 급구!!</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">강남구</span>
+              <span class="job-card-m-shop">[도파민] 도파민 은성 🔥15회 690일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-urgent">급구</span><span class="list-tag tag-init">초보가능</span><span class="list-tag tag-bonus">갯수보장</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">룸싸롱 퍼블릭 | 여 20-35세</span>
+              <span class="job-card-m-wage">[일불] 100,000원</span>
+            </div>
+          </a>
+          <a href="#" class="job-card-m">
+            <div class="job-card-m-row row-1">
+              <span class="job-card-m-region">서울</span>
+              <span class="job-card-m-title">♡첫날찡떼X♡지정365일 박스♡</span>
+            </div>
+            <div class="job-card-m-row row-2">
+              <span class="job-card-m-region2">성동구</span>
+              <span class="job-card-m-shop">[오렌지] 오렌지이벤트 🔥11회 930일</span>
+            </div>
+            <div class="job-card-m-row row-3">
+              <span class="job-card-m-tags"><span class="list-tag tag-pink">지명우대</span><span class="list-tag tag-init">초보가능</span></span>
+            </div>
+            <div class="job-card-m-row row-4">
+              <span class="job-card-m-type">노래주점 아가씨 | 여 20대</span>
+              <span class="job-card-m-wage">[시급] 70,000원</span>
+            </div>
+          </a>
         </div>
       </div>
     </div>

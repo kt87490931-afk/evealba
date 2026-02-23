@@ -497,6 +497,10 @@ nav::before {
 .td-stats .stat-line { display:flex; align-items:center; gap:3px; justify-content:center; }
 .jump-icon { color:var(--hot-pink); }
 
+/* 모바일 전용 카드형 리스트 */
+.job-list-mobile { display:none; }
+.job-list-desktop { display:block; }
+
 /* PAGINATION */
 .pagination {
   display:flex; justify-content:center;
@@ -1231,14 +1235,31 @@ footer {
   .filter-row { gap:7px; }
   .filter-label { width:44px; font-size:11px; }
   .filter-select { font-size:12px; padding:5px 7px; }
-  /* 채용정보 테이블: 성별만 숨김, 업소명 표시, 가로스크롤 */
-  .list-table thead th:nth-child(3),
-  .list-table tbody td:nth-child(3) { display:none; }
-  .list-table thead th:nth-child(5),
-  .list-table tbody td:nth-child(5) { display:table-cell !important; }
-  .list-table .col-benefits { display:table-cell !important; }
-  .list-table { min-width:480px; }
-  .list-section .list-table-wrap { margin:0 -12px; padding:0 12px; }
+  /* 채용정보: PC테이블 숨김, 모바일 카드 표시 */
+  .job-list-desktop { display:none !important; }
+  .job-list-mobile { display:block !important; }
+  /* 모바일 카드 스타일 */
+  .job-list-mobile { padding:0; }
+  .job-card-m {
+    display:block; width:100%; box-sizing:border-box;
+    padding:12px; margin-bottom:10px;
+    background:#fff; border:1px solid #fae8f0; border-radius:10px;
+    text-decoration:none; color:inherit;
+    transition:background .15s, border-color .15s;
+  }
+  .job-card-m:hover { background:#fff8fa; border-color:var(--pale-pink); }
+  .job-card-m-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; width:100%; }
+  .job-card-m-row:last-child { margin-bottom:0; }
+  .job-card-m-row.row-1 .job-card-m-region { flex:0 0 36px; font-size:12px; color:#888; }
+  .job-card-m-row.row-1 .job-card-m-title { flex:1; min-width:0; font-size:13px; font-weight:700; color:#222; line-height:1.4; word-break:keep-all; overflow-wrap:break-word; }
+  .job-card-m-row.row-2 .job-card-m-region2 { flex:0 0 36px; font-size:11px; color:#888; }
+  .job-card-m-row.row-2 .job-card-m-shop { flex:1; min-width:0; font-size:12px; color:#555; line-height:1.35; word-break:break-all; }
+  .job-card-m-row.row-3 { margin-top:4px; }
+  .job-card-m-row.row-3 .job-card-m-tags { display:flex; flex-wrap:wrap; gap:4px; width:100%; }
+  .job-card-m-row.row-3 .job-card-m-tags .list-tag { margin:0; }
+  .job-card-m-row.row-4 { font-size:11px; color:#666; }
+  .job-card-m-row.row-4 .job-card-m-type { flex:1; min-width:0; }
+  .job-card-m-row.row-4 .job-card-m-wage { flex:0 0 auto; font-weight:700; color:var(--hot-pink); }
   .special-card { grid-column: span 2 !important; }
   .hero-main { height:150px; padding:20px; border-radius:12px; }
   .hero-text h2 { font-size:20px; }
