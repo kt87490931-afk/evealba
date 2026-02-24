@@ -12,22 +12,18 @@ $mypage_url = G5_BBS_URL.'/member_confirm.php?url='.urlencode(G5_BBS_URL.'/regis
   <div class="mypage-header">
     <span class="mypage-icon">👩</span>
     <div>
-      <div class="mypage-title">my PAGE</div>
+      <div class="mypage-title">MY PAGE</div>
       <div class="mypage-sub">마이페이지</div>
     </div>
   </div>
   <div class="side-menu-list">
     <a href="<?php echo $resume_register_url; ?>" class="side-menu-item active">📄 이력서 리스트</a>
     <a href="#" class="side-menu-item">📋 채용정보 스크랩</a>
-    <a href="#" class="side-menu-item">💳 유료결제 내역</a>
-    <a href="#" class="side-menu-item">🔔 알람블로그 앱소설정</a>
     <a href="#" class="side-menu-item">👤 맞춤구인정보</a>
     <a href="#" class="side-menu-item">⚙️ 맞춤구인 정보설정</a>
     <a href="#" class="side-menu-item">📝 내가 작성한 게시글</a>
     <a href="#" class="side-menu-item">💬 내가 작성한 댓글</a>
     <a href="#" class="side-menu-item">🚫 회원 차단 설정</a>
-    <a href="#" class="side-menu-item">🔑 게시글 키워드 차단</a>
-    <a href="#" class="side-menu-item">💬 댓글 키워드 차단</a>
     <a href="#" class="side-menu-item">⭐ 즐겨찾기한 게시글</a>
   </div>
 </div>

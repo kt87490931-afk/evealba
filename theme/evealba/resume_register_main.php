@@ -113,7 +113,6 @@
           <div class="form-label">핸드폰 번호</div>
           <div class="form-cell col">
             <input class="fi fi-sm" type="text" placeholder="010-0000-0000">
-            <p class="hint-red">* 폰핀 안심번호를 선택하면 입력하신 전화번호는 노출되지 않습니다. 안심하고 입력해 주세요.</p>
           </div>
         </div>
 
