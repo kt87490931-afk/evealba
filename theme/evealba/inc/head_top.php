@@ -18,7 +18,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
     <a href="<?php echo G5_BBS_URL; ?>/logout.php">로그아웃</a>
     <?php } else { ?>
     <a href="<?php echo G5_BBS_URL ?>/login.php">로그인</a>
-    <a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a>
+    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/eve_register.php' : '/eve_register.php'; ?>">회원가입</a>
     <?php } ?>
     <?php if ($is_admin) { ?><a href="<?php echo G5_ADMIN_URL ?>">관리자</a><?php } ?>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/cs.php' : '/cs.php'; ?>">고객센터</a>

@@ -33,7 +33,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
         <h2>회원로그인 안내</h2>
         <div>
             <a href="<?php echo G5_BBS_URL ?>/password_lost.php">아이디/비밀번호 찾기</a>
-            <a href="./register.php">회원 가입</a>
+            <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/eve_register.php' : '/eve_register.php'; ?>">회원 가입</a>
         </div>
     </section>
     </form>

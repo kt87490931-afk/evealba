@@ -596,6 +596,144 @@ nav::before {
 .left-sidebar { display:flex; flex-direction:column; gap:12px; }
 .main-area { min-width:0; }
 
+/* 회원가입: 단일 컬럼 레이아웃 (사이드바 없음) */
+.page-layout.layout-register { grid-template-columns:1fr; max-width:900px; }
+
+/* 회원가입 PAGE WRAP */
+.register-page-wrap,
+.page-wrap.register-page-wrap { max-width:900px; margin:24px auto 48px; padding:0 16px; }
+
+/* ======================== 회원가입 STEP BAR */
+.step-bar { background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.08); margin-bottom:20px; display:grid; grid-template-columns:1fr 1fr 1fr; }
+.step-item { padding:18px 14px; display:flex; align-items:center; gap:12px; position:relative; border-right:1px solid #f0e8f0; }
+.step-item:last-child { border-right:none; }
+.step-item::after { content:'›'; position:absolute; right:-1px; top:50%; transform:translateY(-50%); font-size:22px; color:#ddd; z-index:1; }
+.step-item:last-child::after { display:none; }
+.step-num { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; font-size:14px; font-weight:900; flex-shrink:0; transition:all .3s; }
+.step-label { font-size:13px; font-weight:700; color:#bbb; transition:color .3s; }
+.step-sub { font-size:11px; color:#ccc; margin-top:2px; transition:color .3s; }
+.step-icon { font-size:20px; margin-left:auto; opacity:.3; transition:opacity .3s; }
+.step-item.done .step-num { background:linear-gradient(135deg,var(--orange),var(--hot-pink)); color:#fff; box-shadow:0 3px 10px rgba(255,27,107,.3); }
+.step-item.done .step-label { color:var(--hot-pink); }
+.step-item.done .step-sub { color:var(--light-pink); }
+.step-item.done .step-icon { opacity:1; }
+.step-item.active .step-num { background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink)); color:#fff; box-shadow:0 4px 14px rgba(255,27,107,.4); animation:pulse-step .8s ease-in-out infinite alternate; }
+@keyframes pulse-step { from { box-shadow:0 4px 14px rgba(255,27,107,.4); } to { box-shadow:0 4px 22px rgba(255,27,107,.7); } }
+.step-item.active .step-label { color:var(--hot-pink); }
+.step-item.active .step-sub { color:var(--orange); }
+.step-item.active .step-icon { opacity:1; }
+.step-item.inactive .step-num { background:#f0f0f0; color:#bbb; }
+
+/* 회원가입 약관 */
+.terms-box-wrap { padding:14px 20px; }
+.terms-box-title { font-size:13px; font-weight:700; color:var(--dark); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.terms-scroll-box { border:1.5px solid #f0e0e8; border-radius:10px; height:160px; overflow-y:auto; padding:14px 16px; font-size:12px; color:#555; line-height:1.9; background:#fdfbfc; margin-bottom:10px; }
+.terms-scroll-box::-webkit-scrollbar { width:4px; }
+.terms-scroll-box::-webkit-scrollbar-thumb { background:var(--pale-pink); border-radius:2px; }
+.terms-agree-row { display:flex; align-items:center; gap:8px; padding:8px 14px; background:var(--pale-pink); border-radius:8px; cursor:pointer; }
+.terms-agree-row input { accent-color:var(--hot-pink); width:15px; height:15px; cursor:pointer; }
+.terms-agree-row label { font-size:13px; font-weight:700; color:var(--hot-pink); cursor:pointer; }
+
+/* 회원가입 본인인증 */
+.verify-section { padding:14px 20px; }
+.verify-title { font-size:13px; font-weight:700; color:var(--dark); margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+.verify-box { background:linear-gradient(135deg,#f8f8f8,#f0f0f0); border:1.5px solid #e0e0e0; border-radius:14px; padding:30px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+.verify-phone-img { font-size:56px; flex-shrink:0; }
+.verify-right { flex:1; min-width:200px; }
+.verify-right p { font-size:13px; color:#555; line-height:1.8; margin-bottom:12px; }
+.verify-right p span { color:var(--hot-pink); font-weight:700; }
+.btn-verify { display:inline-flex; align-items:center; gap:8px; padding:12px 28px; background:linear-gradient(135deg,var(--dark2),var(--hot-pink)); color:#fff; border:none; border-radius:24px; font-size:14px; font-weight:900; cursor:pointer; box-shadow:0 4px 14px rgba(255,27,107,.3); transition:transform .2s,opacity .2s; animation:pulse-glow 2s infinite; }
+.btn-verify:hover { transform:scale(1.03); }
+.verify-done { display:none; align-items:center; gap:10px; padding:12px 18px; background:linear-gradient(135deg,#e8f5e9,#f1f8e9); border:1.5px solid #A5D6A7; border-radius:10px; margin-top:12px; }
+.verify-done.show { display:flex; }
+.verify-done-icon { font-size:24px; }
+.verify-done-text { font-size:13px; font-weight:700; color:#2E7D32; }
+
+/* 회원가입 폼 STEP 2 */
+.reg-form-header { padding:12px 20px 10px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--pale-pink); flex-wrap:wrap; gap:8px; }
+.reg-form-title { font-size:14px; font-weight:900; color:var(--dark); }
+.reg-form-type-badge { padding:5px 14px; border-radius:14px; font-size:12px; font-weight:900; color:#fff; }
+.badge-biz { background:linear-gradient(135deg,var(--dark2),var(--hot-pink)); }
+.badge-personal { background:linear-gradient(135deg,var(--orange),var(--hot-pink)); }
+.reg-notice { padding:10px 20px; background:linear-gradient(135deg,#fff8fb,#fff0f5); border-bottom:2px solid var(--pale-pink); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.reg-notice-text { font-size:12px; color:#555; }
+.reg-notice-text strong { color:var(--hot-pink); }
+.btn-re-verify { display:inline-flex; align-items:center; gap:5px; padding:6px 14px; background:linear-gradient(135deg,var(--dark2),var(--hot-pink)); color:#fff; border:none; border-radius:14px; font-size:12px; font-weight:700; cursor:pointer; transition:opacity .2s; }
+.btn-re-verify:hover { opacity:.85; }
+
+/* 회원가입 form-row (register 페이지용 오버라이드) */
+.register-page-wrap .form-row { grid-template-columns:130px 1fr; }
+.register-page-wrap .form-label { padding:13px 14px 13px 20px; }
+.btn-id-check { padding:9px 14px; background:linear-gradient(135deg,var(--orange),var(--hot-pink)); color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; transition:opacity .2s; flex-shrink:0; }
+.btn-id-check:hover { opacity:.9; }
+.pw-wrap { position:relative; flex:1; }
+.pw-wrap input { padding-right:36px; width:100%; }
+.pw-toggle { position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:16px; color:#bbb; user-select:none; }
+.date-group { display:flex; align-items:center; gap:6px; }
+.date-group .fi-select { width:90px; }
+.date-group span { font-size:12px; color:#888; }
+.email-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.email-at { font-size:16px; color:#aaa; }
+.fi-select-full { width:100%; padding:9px 12px; border:1.5px solid #f0e0e8; border-radius:8px; font-size:13px; background:#fff; outline:none; cursor:pointer; transition:border-color .2s; color:#333; }
+.fi-select-full:focus { border-color:var(--hot-pink); }
+.sms-row { display:flex; align-items:flex-start; gap:8px; flex-wrap:wrap; }
+.sms-row input { accent-color:var(--hot-pink); width:15px; height:15px; margin-top:2px; flex-shrink:0; }
+.sms-row label { font-size:13px; color:#555; line-height:1.6; }
+.sms-row label span { color:var(--hot-pink); font-weight:700; }
+
+/* 회원가입 STEP 2 하단 버튼 */
+.form-btns { display:flex; justify-content:center; gap:12px; padding:22px 20px; background:#fff8fb; border-top:2px solid var(--pale-pink); flex-wrap:wrap; }
+.btn-join { display:flex; align-items:center; gap:8px; padding:13px 40px; background:linear-gradient(135deg,var(--orange),var(--hot-pink)); color:#fff; border:none; border-radius:28px; font-size:15px; font-weight:900; cursor:pointer; box-shadow:0 5px 18px rgba(255,27,107,.35); transition:transform .2s,opacity .2s; animation:pulse-glow 2s infinite; }
+.btn-join:hover { transform:scale(1.03); opacity:.95; }
+.btn-cancel { display:flex; align-items:center; gap:8px; padding:13px 28px; background:#f5f5f5; color:#888; border:none; border-radius:28px; font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; }
+.btn-cancel:hover { background:var(--pale-pink); color:var(--hot-pink); }
+
+/* 회원가입 유형 선택 버튼 */
+.join-type-btns { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:20px; }
+.btn-type-biz { padding:18px; background:linear-gradient(135deg,var(--dark2),#5C0040); color:#fff; border:none; border-radius:14px; font-size:15px; font-weight:900; cursor:pointer; text-align:center; box-shadow:0 5px 18px rgba(45,0,32,.35); transition:transform .2s; line-height:1.7; }
+.btn-type-biz:hover { transform:translateY(-3px); }
+.btn-type-biz .sub { font-size:12px; opacity:.85; font-weight:400; display:block; margin-top:3px; }
+.btn-type-personal { padding:18px; background:linear-gradient(135deg,var(--orange),var(--hot-pink)); color:#fff; border:none; border-radius:14px; font-size:15px; font-weight:900; cursor:pointer; text-align:center; box-shadow:0 5px 18px rgba(255,107,53,.35); transition:transform .2s; line-height:1.7; }
+.btn-type-personal:hover { transform:translateY(-3px); }
+.btn-type-personal .sub { font-size:12px; opacity:.85; font-weight:400; display:block; margin-top:3px; }
+
+/* 회원가입 STEP 3 완료 화면 */
+.complete-wrap { background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.1); text-align:center; padding:50px 30px; animation:fadeUp .4s ease both; }
+.complete-icon { font-size:72px; margin-bottom:18px; animation:bounceIn .6s ease both; }
+@keyframes bounceIn { 0% { transform:scale(0); } 60% { transform:scale(1.15); } 100% { transform:scale(1); } }
+.complete-title { font-size:26px; font-weight:900; color:var(--dark); margin-bottom:8px; }
+.complete-title span { color:var(--hot-pink); }
+.complete-sub { font-size:14px; color:#888; line-height:1.8; margin-bottom:24px; }
+.complete-info-box { display:inline-flex; flex-direction:column; gap:8px; background:linear-gradient(135deg,#fff5f8,#fff0f5); border:2px solid var(--pale-pink); border-radius:12px; padding:18px 32px; margin-bottom:28px; text-align:left; }
+.ci-row { display:flex; align-items:center; gap:10px; font-size:13px; }
+.ci-label { color:#aaa; font-weight:600; min-width:60px; }
+.ci-val { color:var(--dark); font-weight:900; }
+.ci-val.pink { color:var(--hot-pink); }
+.complete-btns { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+.btn-goto-main { padding:12px 32px; background:linear-gradient(135deg,var(--orange),var(--hot-pink)); color:#fff; border:none; border-radius:24px; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(255,27,107,.3); transition:transform .2s; }
+.btn-goto-main:hover { transform:scale(1.03); }
+.btn-goto-login { padding:12px 24px; background:var(--dark2); color:#fff; border:none; border-radius:24px; font-size:14px; font-weight:700; cursor:pointer; transition:opacity .2s; }
+.btn-goto-login:hover { opacity:.8; }
+
+/* 회원가입 반응형 */
+@media (max-width:700px) {
+  .register-page-wrap { padding:0 12px; }
+  .step-bar { grid-template-columns:1fr; }
+  .step-item { border-right:none; border-bottom:1px solid #f5e8f0; }
+  .step-item::after { content:'↓'; right:auto; left:50%; top:auto; bottom:-14px; }
+  .step-item:last-child { border-bottom:none; }
+  .join-type-btns { grid-template-columns:1fr; }
+  .register-page-wrap .form-row { grid-template-columns:100px 1fr; }
+  .register-page-wrap .form-label { font-size:12px; padding:11px 10px 11px 14px; }
+  .register-page-wrap .form-cell { padding:8px 12px; }
+  .register-page-wrap .fi-md { width:100%; }
+  .register-page-wrap .fi-sm { width:100%; }
+}
+@media (max-width:500px) {
+  .complete-info-box { padding:14px 18px; }
+  .email-row { flex-wrap:wrap; }
+}
+
 /* SIDEBAR WIDGETS */
 .sidebar-widget {
   background:#fff;
@@ -1672,6 +1810,9 @@ footer {
 .btn-file-cancel:hover { background:#fee; color:#c00; border-color:#fcc; }
 .hint { font-size:11px; color:#aaa; line-height:1.7; margin-top:4px; }
 .hint-red { color:var(--req-red); font-size:12px; font-weight:600; }
+.fi-hint { font-size:11px; color:#aaa; margin-top:4px; }
+.fi-hint.ok { color:#2E7D32; }
+.fi-hint.err { color:var(--hot-pink); }
 .hint-blue { color:#1565C0; font-size:12px; }
 .salary-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
 .fi-unit { font-size:13px; color:#555; }

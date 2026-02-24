@@ -129,7 +129,7 @@ $box_height = 205;
     </a>
     <div class="ev-login-links">
         <div class="ev-login-links-left">
-            <a href="<?php echo G5_BBS_URL; ?>/register.php">회원가입</a>
+            <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/eve_register.php' : '/eve_register.php'; ?>">회원가입</a>
             <a href="<?php echo G5_BBS_URL; ?>/password_lost.php">아이디/비밀번호 찾기</a>
         </div>
     </div>

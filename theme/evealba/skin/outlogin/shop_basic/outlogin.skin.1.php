@@ -21,7 +21,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$outlogin_skin_url.'/style.css">'
         </div>
         <input type="submit" id="ol_submit" value="로그인" class="btn_b02">
         <div id="ol_svc">
-            <a href="<?php echo G5_BBS_URL ?>/register.php"><b>회원가입</b></a> /
+            <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/eve_register.php' : '/eve_register.php'; ?>"><b>회원가입</b></a> /
             <a href="<?php echo G5_BBS_URL ?>/password_lost.php">ID/PW 찾기</a>
         </div>
 
