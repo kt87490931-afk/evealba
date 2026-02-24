@@ -242,6 +242,59 @@
 .resume-register-page .resume-summary-photo{width:100px;height:125px;border:2px dashed var(--pale-pink);border-radius:10px;background:#fff8fb;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb;overflow:hidden;}
 .resume-register-page .resume-summary-photo.has-img{padding:0;}
 .resume-register-page .resume-summary-photo.has-img img{width:100%;height:100%;object-fit:cover;}
+
+/* ===== AI매칭에 보여지는 이력서 (eve_alba_resume_1.html 디자인) ===== */
+.resume-register-page .ai-preview-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(255,27,107,.14);margin-bottom:16px;border:2px solid var(--pale-pink);animation:fadeUp .3s ease both;}
+.resume-register-page .ai-preview-header{background:linear-gradient(135deg,var(--dark2) 0%,var(--hot-pink) 60%,var(--light-pink) 100%);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;user-select:none;position:relative;overflow:hidden;}
+.resume-register-page .ai-preview-header::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 40%,rgba(255,255,255,.06) 50%,transparent 60%);background-size:200% 100%;animation:shimmer 3s linear infinite;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.resume-register-page .ai-preview-header-left{display:flex;align-items:center;gap:12px;position:relative;z-index:1;}
+.resume-register-page .ai-preview-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.resume-register-page .ai-preview-title{font-size:15px;font-weight:900;color:#fff;letter-spacing:-.3px;}
+.resume-register-page .ai-preview-subtitle{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px;}
+.resume-register-page .ai-preview-header-right{display:flex;align-items:center;gap:10px;position:relative;z-index:1;flex-shrink:0;}
+.resume-register-page .ai-preview-badge{font-size:11px;color:rgba(255,255,255,.85);white-space:nowrap;}
+.resume-register-page .ai-preview-toggle-btn{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.4);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;flex-shrink:0;}
+.resume-register-page .ai-preview-toggle-btn:hover{background:rgba(255,255,255,.35);}
+.resume-register-page .ai-preview-toggle-btn.collapsed{transform:rotate(180deg);}
+.resume-register-page .ai-preview-body{background:linear-gradient(180deg,#fff8fc 0%,#fff 20%);overflow:hidden;transition:max-height .35s ease,opacity .3s ease;max-height:3000px;opacity:1;}
+.resume-register-page .ai-preview-body.hide{max-height:0;opacity:0;}
+.resume-register-page .aip-row{display:grid;grid-template-columns:190px 1fr;border-bottom:1px solid #fae8f0;min-height:52px;align-items:stretch;}
+.resume-register-page .aip-row:last-of-type{border-bottom:none;}
+.resume-register-page .aip-row-tall{min-height:64px;}
+.resume-register-page .aip-row-photo{min-height:auto;}
+.resume-register-page .aip-label{background:linear-gradient(135deg,#fff0f8,#fff5fb);padding:13px 14px 13px 20px;font-size:12px;font-weight:700;color:#666;display:flex;align-items:flex-start;gap:5px;border-right:2px solid var(--pale-pink);line-height:1.5;}
+.resume-register-page .aip-value{padding:12px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:13px;color:#333;}
+.resume-register-page .aip-value.aip-photo-area{align-items:flex-start;gap:14px;padding:14px 18px;}
+.resume-register-page .aip-empty{color:#ccc;font-size:13px;}
+.resume-register-page .aip-photo-box{width:90px;height:110px;border:2px dashed var(--pale-pink);border-radius:10px;display:flex;align-items:center;justify-content:center;background:#fff8fb;flex-shrink:0;overflow:hidden;}
+.resume-register-page .aip-photo-box img{width:100%;height:100%;object-fit:cover;}
+.resume-register-page .aip-photo-empty{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.resume-register-page .aip-intro{flex:1;font-size:12px;color:#555;line-height:1.8;padding-top:2px;min-width:0;white-space:pre-wrap;word-break:break-all;}
+.resume-register-page .aip-chips{display:flex;align-items:center;flex-wrap:wrap;gap:5px;}
+.resume-register-page .aip-chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;}
+.resume-register-page .aip-chip-pink{background:linear-gradient(135deg,var(--pale-pink),#ffe8f0);color:var(--hot-pink);border:1px solid #ffcde0;}
+.resume-register-page .aip-chip-blue{background:linear-gradient(135deg,#e3f2fd,#e8f4ff);color:#1565C0;border:1px solid #bbdefb;}
+.resume-register-page .aip-chip-green{background:linear-gradient(135deg,#e8f5e9,#f0fff4);color:#2E7D32;border:1px solid #c8e6c9;}
+.resume-register-page .aip-chip-purple{background:linear-gradient(135deg,#f3e5f5,#faf0ff);color:#7B1FA2;border:1px solid #e1bee7;}
+.resume-register-page .aip-chip-orange{background:linear-gradient(135deg,#fff3e0,#fff8f0);color:#E65100;border:1px solid #ffcc80;}
+.resume-register-page .aip-chip-gray{background:#f5f5f5;color:#aaa;border:1px solid #eee;}
+.resume-register-page .aip-sep{color:#ccc;font-size:12px;}
+.resume-register-page .aip-footer{display:flex;align-items:flex-start;gap:10px;padding:12px 20px;background:linear-gradient(135deg,#fff5e8,#fff0f5);border-top:2px dashed var(--pale-pink);}
+.resume-register-page .aip-footer-icon{font-size:18px;flex-shrink:0;}
+.resume-register-page .aip-footer-text{font-size:11px;color:#888;line-height:1.7;}
+.resume-register-page .aip-footer-text strong{color:var(--hot-pink);}
+@media(max-width:900px){
+  .resume-register-page .aip-row{grid-template-columns:130px 1fr;}
+  .resume-register-page .ai-preview-badge{display:none;}
+}
+@media(max-width:600px){
+  .resume-register-page .aip-row{grid-template-columns:1fr;}
+  .resume-register-page .aip-label{border-right:none;border-bottom:1px solid var(--pale-pink);padding:9px 14px;background:linear-gradient(135deg,#fff0f8,#fff5fb);}
+  .resume-register-page .aip-value{padding:10px 14px;}
+  .resume-register-page .aip-value.aip-photo-area{flex-direction:column;gap:10px;}
+}
+
 @media(max-width:600px){
   .resume-register-page .resume-summary-row{grid-template-columns:100px 1fr;}
   .resume-register-page .resume-summary-row .form-label{font-size:12px;padding:10px;}

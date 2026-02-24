@@ -636,67 +636,78 @@
       </div>
     </div>
 
-    <!-- ===== AI매칭에 보여지는 이력서 (제출 전 확인 · AI 매칭 노출용) ===== -->
-    <div class="form-card sh-pink" id="resume-ai-summary-card">
-      <div class="sec-head open" onclick="toggleSec(this)">
-        <span class="sec-head-icon">👤</span>
-        <span class="sec-head-title">AI매칭에 보여지는 이력서</span>
-        <span class="sec-head-sub">제출 전 확인 · AI 매칭 시 노출되는 정보입니다</span>
-        <span class="sec-chevron">▼</span>
-      </div>
-      <div class="sec-body resume-summary-body">
-        <div class="resume-summary-row resume-summary-title">
-          <div class="form-label">이력서 제목</div>
-          <div class="form-cell"><span id="resume-summary-title" class="resume-summary-val">—</span></div>
-        </div>
-        <div class="resume-summary-row resume-summary-photo-intro">
-          <div class="form-label">사진 · 자기소개</div>
-          <div class="form-cell col">
-            <div class="resume-summary-photo-wrap">
-              <div id="resume-summary-photo" class="resume-summary-photo">사진 없음</div>
-            </div>
-            <p id="resume-summary-intro" class="resume-summary-intro">—</p>
+    <!-- ===== AI매칭에 보여지는 이력서 (eve_alba_resume_1.html 디자인) ===== -->
+    <div class="ai-preview-card" id="resume-ai-summary-card">
+      <div class="ai-preview-header" onclick="toggleAiPreview()">
+        <div class="ai-preview-header-left">
+          <div class="ai-preview-avatar">👩</div>
+          <div>
+            <div class="ai-preview-title">AI매칭에 보여지는 이력서</div>
+            <div class="ai-preview-subtitle">실시간으로 입력한 내용이 반영됩니다</div>
           </div>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">닉네임 · 연락방법</div>
-          <div class="form-cell"><span id="resume-summary-nick" class="resume-summary-val">—</span> · <span id="resume-summary-contact" class="resume-summary-val">—</span></div>
+        <div class="ai-preview-header-right">
+          <span class="ai-preview-badge">제출 전 확인 · AI 매칭 시 노출되는 정보입니다</span>
+          <button type="button" class="ai-preview-toggle-btn" id="aiToggleBtn" aria-label="접기/펼치기">▲</button>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">희망급여 · 신장/체중 · 사이즈</div>
-          <div class="form-cell"><span id="resume-summary-salary" class="resume-summary-val">—</span> · <span id="resume-summary-hw" class="resume-summary-val">—</span> · <span id="resume-summary-size" class="resume-summary-val">—</span></div>
+      </div>
+      <div class="ai-preview-body" id="aiPreviewBody">
+        <div class="aip-row">
+          <div class="aip-label">📄 이력서 제목</div>
+          <div class="aip-value" id="resume-summary-title"><span class="aip-empty">—</span></div>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">거주지역 · 학력</div>
-          <div class="form-cell"><span id="resume-summary-region" class="resume-summary-val">—</span> · <span id="resume-summary-edu" class="resume-summary-val">—</span></div>
+        <div class="aip-row aip-row-photo">
+          <div class="aip-label">📷 사진 · 자기소개</div>
+          <div class="aip-value aip-photo-area">
+            <div class="aip-photo-box" id="resume-summary-photo">
+              <div class="aip-photo-empty"><span style="font-size:28px;opacity:.3;">👤</span><span class="aip-empty" style="font-size:11px;margin-top:4px;">사진 없음</span></div>
+            </div>
+            <div class="aip-intro" id="resume-summary-intro"><span class="aip-empty">—</span></div>
+          </div>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">희망분야</div>
-          <div class="form-cell"><span id="resume-summary-job" class="resume-summary-val">—</span></div>
+        <div class="aip-row">
+          <div class="aip-label">👩 닉네임 · 연락방법</div>
+          <div class="aip-value" id="resume-summary-contact-wrap"><span class="aip-chip aip-chip-gray">—</span><span class="aip-sep">·</span><span class="aip-chip aip-chip-gray">—</span></div>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">업무가능지역</div>
-          <div class="form-cell"><span id="resume-summary-work-region" class="resume-summary-val">—</span> <span id="resume-summary-work-extra" class="resume-summary-val"></span></div>
+        <div class="aip-row">
+          <div class="aip-label">💰 희망급여 · 신장/체중 · 사이즈</div>
+          <div class="aip-value" id="resume-summary-salary-wrap"><span class="aip-chip aip-chip-gray">—</span></div>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">근무조건</div>
-          <div class="form-cell"><span id="resume-summary-work-cond" class="resume-summary-val">—</span></div>
+        <div class="aip-row">
+          <div class="aip-label">🏠 거주지역 · 학력</div>
+          <div class="aip-value" id="resume-summary-region-wrap"><span class="aip-chip aip-chip-gray">—</span></div>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">경력사항</div>
-          <div class="form-cell"><span id="resume-summary-career" class="resume-summary-val">—</span></div>
+        <div class="aip-row">
+          <div class="aip-label">💼 희망분야</div>
+          <div class="aip-value" id="resume-summary-job"><span class="aip-empty">—</span></div>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">희망하는 편의사항</div>
-          <div class="form-cell"><span id="resume-summary-amenity" class="resume-summary-val">—</span></div>
+        <div class="aip-row">
+          <div class="aip-label">📍 업무가능지역</div>
+          <div class="aip-value" id="resume-summary-work-region-wrap"><span class="aip-chip aip-chip-gray">—</span></div>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">키워드</div>
-          <div class="form-cell"><span id="resume-summary-keyword" class="resume-summary-val">—</span></div>
+        <div class="aip-row">
+          <div class="aip-label">⏰ 근무조건</div>
+          <div class="aip-value" id="resume-summary-work-cond"><span class="aip-chip aip-chip-gray">—</span></div>
         </div>
-        <div class="resume-summary-row">
-          <div class="form-label">MBTI</div>
-          <div class="form-cell"><span id="resume-summary-mbti" class="resume-summary-val">—</span></div>
+        <div class="aip-row">
+          <div class="aip-label">📚 경력사항</div>
+          <div class="aip-value" id="resume-summary-career"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row aip-row-tall">
+          <div class="aip-label">✅ 희망하는 편의사항</div>
+          <div class="aip-value" id="resume-summary-amenity"><span class="aip-empty">선택된 편의사항이 없습니다</span></div>
+        </div>
+        <div class="aip-row aip-row-tall">
+          <div class="aip-label">🏷️ 키워드</div>
+          <div class="aip-value" id="resume-summary-keyword"><span class="aip-empty">선택된 키워드가 없습니다</span></div>
+        </div>
+        <div class="aip-row">
+          <div class="aip-label">🧠 MBTI</div>
+          <div class="aip-value" id="resume-summary-mbti"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-footer">
+          <div class="aip-footer-icon">🤖</div>
+          <div class="aip-footer-text">위 정보는 <strong>AI 근접 매칭</strong> 시 기업회원(업소)에게 노출됩니다. 민감한 개인정보(전화번호 등)는 선택한 공개 방식에 따라 처리됩니다.</div>
         </div>
       </div>
     </div>
@@ -845,40 +856,67 @@ document.querySelectorAll('.term-chk').forEach(function(c){
   });
 });
 
-/* AI매칭 이력서 요약 실시간 갱신 */
+/* AI매칭 이력서 요약 실시간 갱신 (eve_alba_resume_1 디자인·칩 반영) */
 function updateResumeSummary() {
   function val(id){ var e=document.getElementById(id); return e? (e.value||e.textContent||'').trim():''; }
   function sel(id){ var e=document.getElementById(id); return e&&e.options[e.selectedIndex]? e.options[e.selectedIndex].text:''; }
   function set(id,t){ var e=document.getElementById(id); if(e) e.textContent=t||'—'; }
+  function setHtml(id,html){ var e=document.getElementById(id); if(e) e.innerHTML=html; }
+  function esc(s){ if(!s) return ''; var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+  function chip(t,c){ return '<span class="aip-chip '+(c||'aip-chip-gray')+'">'+esc(t||'—')+'</span>'; }
   function radioVal(name){ var r=document.querySelector('input[name="'+name+'"]:checked'); return r? (r.nextElementSibling? r.nextElementSibling.textContent: r.labels&&r.labels[0]? r.labels[0].textContent: ''):''; }
-  set('resume-summary-title', val('resume_title'));
-  var photoBox=document.getElementById('photoPreview');
-  var sumPhoto=document.getElementById('resume-summary-photo');
+
+  var title = val('resume_title');
+  var titleEl = document.getElementById('resume-summary-title');
+  if(titleEl) titleEl.innerHTML = title ? esc(title) : '<span class="aip-empty">—</span>';
+
+  var photoBox = document.getElementById('photoPreview');
+  var sumPhoto = document.getElementById('resume-summary-photo');
   if(sumPhoto){
     if(photoBox&&photoBox.querySelector('img')){
       sumPhoto.innerHTML=''; var img=photoBox.querySelector('img').cloneNode(true); img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover'; sumPhoto.appendChild(img); sumPhoto.classList.add('has-img');
-    } else { sumPhoto.innerHTML='사진 없음'; sumPhoto.classList.remove('has-img'); }
+    } else { sumPhoto.innerHTML='<div class="aip-photo-empty"><span style="font-size:28px;opacity:.3;">👤</span><span class="aip-empty" style="font-size:11px;margin-top:4px;">사진 없음</span></div>'; sumPhoto.classList.remove('has-img'); }
   }
   set('resume-summary-intro', val('resume_intro')||'—');
-  set('resume-summary-nick', val('resume_nick'));
-  var contactLabel=radioVal('contact'); set('resume-summary-contact', contactLabel||'—');
+
+  var nick = val('resume_nick'), contactLabel = radioVal('contact');
+  setHtml('resume-summary-contact-wrap', chip(nick,'aip-chip-gray')+'<span class="aip-sep">·</span>'+chip(contactLabel,'aip-chip-blue'));
+
   var salType=sel('resume_salary_type'), salAmt=val('resume_salary_amt');
-  set('resume-summary-salary', salAmt ? (salType+' '+salAmt+'원') : (salType||'—'));
+  var salaryText = salAmt ? (salType+' '+salAmt+'원') : (salType||'—');
   var h=val('resume_height'), w=val('resume_weight');
-  set('resume-summary-hw', (h||w) ? (h+'cm / '+w+'kg') : '—');
-  set('resume-summary-size', sel('resume_size'));
+  var hwText = (h||w) ? (h+'cm / '+w+'kg') : '—';
+  var sizeText = sel('resume_size');
+  var salaryParts = [];
+  if(salaryText&&salaryText!=='—') salaryParts.push(chip(salaryText,'aip-chip-orange'));
+  if(hwText&&hwText!=='—') salaryParts.push(chip(hwText,'aip-chip-gray'));
+  if(sizeText&&sizeText!=='—'&&sizeText.indexOf('선택')<0) salaryParts.push(chip(sizeText,'aip-chip-orange'));
+  setHtml('resume-summary-salary-wrap', salaryParts.length ? salaryParts.join('<span class="aip-sep">·</span>') : chip('—','aip-chip-gray'));
+
   var r1=sel('resume_region'), r2=sel('resume_region_detail');
-  set('resume-summary-region', (r1&&r1.indexOf('선택')<0) ? (r2&&r2.indexOf('선택')<0 ? r1+' '+r2 : r1) : '—');
-  set('resume-summary-edu', sel('resume_edu'));
+  var regionText = (r1&&r1.indexOf('선택')<0) ? (r2&&r2.indexOf('선택')<0 ? r1+' '+r2 : r1) : '—';
+  var eduText = sel('resume_edu');
+  var regionParts = [];
+  if(regionText&&regionText!=='—') regionParts.push(chip(regionText,'aip-chip-gray'));
+  if(eduText&&eduText!=='—'&&eduText.indexOf('선택')<0) regionParts.push(chip(eduText,'aip-chip-gray'));
+  setHtml('resume-summary-region-wrap', regionParts.length ? regionParts.join('<span class="aip-sep">·</span>') : chip('—','aip-chip-gray'));
+
   var j1=sel('resume_job1'), j2=sel('resume_job2');
-  set('resume-summary-job', (j1&&j1.indexOf('-')<0) ? (j2&&j2.indexOf('-')<0 ? j1+' / '+j2 : j1) : '—');
+  var jobText = (j1&&j1.indexOf('-')<0) ? (j2&&j2.indexOf('-')<0 ? j1+' / '+j2 : j1) : '—';
+  var jobEl = document.getElementById('resume-summary-job');
+  if(jobEl) jobEl.innerHTML = jobText && jobText!=='—' ? chip(jobText,'aip-chip-purple') : '<span class="aip-empty">—</span>';
+
   var wr1=sel('resume_work_region'), wr2=sel('resume_work_region_detail');
-  set('resume-summary-work-region', (wr1&&wr1.indexOf('선택')<0) ? (wr2&&wr2.indexOf('선택')<0 ? wr1+' '+wr2 : wr1) : '—');
+  var workRegionText = (wr1&&wr1.indexOf('선택')<0) ? (wr2&&wr2.indexOf('선택')<0 ? wr1+' '+wr2 : wr1) : '—';
   var ex=[];
   if(document.getElementById('rg-all')&&document.getElementById('rg-all').checked) ex.push('전국 가능');
   if(document.getElementById('rg-travel')&&document.getElementById('rg-travel').checked) ex.push('출장 가능');
   if(document.getElementById('rg-abroad')&&document.getElementById('rg-abroad').checked) ex.push('해외 가능');
-  set('resume-summary-work-extra', ex.length? ' ('+ex.join(', ')+')' : '');
+  var workRegionParts = [];
+  if(workRegionText&&workRegionText!=='—') workRegionParts.push(chip(workRegionText,'aip-chip-gray'));
+  for(var i=0;i<ex.length;i++) workRegionParts.push(chip(ex[i],'aip-chip-blue'));
+  setHtml('resume-summary-work-region-wrap', workRegionParts.length ? workRegionParts.join('<span class="aip-sep">·</span>') : chip('—','aip-chip-gray'));
+
   var wt=radioVal('work-type');
   var days=[], dayIds=['day-mon','day-tue','day-wed','day-thu','day-fri','day-sat','day-sun'], dayLabels=['월','화','수','목','금','토','일'];
   for(var i=0;i<dayIds.length;i++) if(document.getElementById(dayIds[i])&&document.getElementById(dayIds[i]).checked) days.push(dayLabels[i]);
@@ -887,7 +925,9 @@ function updateResumeSummary() {
   if(days.length) workCond+=' · '+days.join(',');
   if(wtType&&wtType!=='무관') workCond+=' · '+wtType;
   if(wtS||wtE) workCond+=' · '+(wtS||'')+'~'+(wtE||'');
-  set('resume-summary-work-cond', workCond);
+  var workCondEl = document.getElementById('resume-summary-work-cond');
+  if(workCondEl) workCondEl.innerHTML = (workCond&&workCond!=='—') ? chip(workCond,'aip-chip-blue') : '<span class="aip-empty">—</span>';
+
   var careerRows=document.querySelectorAll('#careerBody tr');
   var careerTexts=[];
   for(var i=0;i<careerRows.length;i++){
@@ -897,15 +937,26 @@ function updateResumeSummary() {
       if(a||b||c||d) careerTexts.push((a||'-')+' / '+(b||'-')+' / '+(c||'-')+' / '+(d||'-'));
     }
   }
-  set('resume-summary-career', careerTexts.length ? careerTexts.join(' | ') : '—');
+  var careerEl = document.getElementById('resume-summary-career');
+  if(careerEl) careerEl.innerHTML = careerTexts.length ? chip(careerTexts.join(' | '),'aip-chip-green') : '<span class="aip-empty">—</span>';
+
   var am=[], amIds=['am-1','am-2','am-3','am-4','am-5','am-6','am-7','am-8','am-9','am-10','am-11','am-12','am-13','am-14','am-15','am-16','am-17','am-18','am-19','am-20','am-21'];
   for(var i=0;i<amIds.length;i++){ var cb=document.getElementById(amIds[i]); if(cb&&cb.checked&&cb.nextElementSibling) am.push(cb.nextElementSibling.textContent); }
-  set('resume-summary-amenity', am.length ? am.join(', ') : '—');
+  var amenityEl = document.getElementById('resume-summary-amenity');
+  if(amenityEl) amenityEl.innerHTML = am.length ? am.map(function(a){ return chip(a,'aip-chip-pink'); }).join('') : '<span class="aip-empty">선택된 편의사항이 없습니다</span>';
+
   var kw=[], kwIds=['kw-1','kw-2','kw-3','kw-4','kw-5','kw-6','kw-7','kw-8','kw-9','kw-10','kw-11','kw-12','kw-13','kw-14','kw-15','kw-16','kw-17','kw-18','kw-19','kw-20','kw-21','kw-22','kw-23','kw-24'];
   for(var j=0;j<kwIds.length;j++){ var c=document.getElementById(kwIds[j]); if(c&&c.checked&&c.nextElementSibling) kw.push(c.nextElementSibling.textContent); }
-  set('resume-summary-keyword', kw.length ? kw.join(', ') : '—');
+  var keywordEl = document.getElementById('resume-summary-keyword');
+  if(keywordEl) keywordEl.innerHTML = kw.length ? kw.map(function(k){ return chip(k,'aip-chip-orange'); }).join('') : '<span class="aip-empty">선택된 키워드가 없습니다</span>';
+
   var mbtiR=document.querySelector('input[name="mbti"]:checked');
-  set('resume-summary-mbti', mbtiR? mbtiR.value: '—');
+  var mbtiEl = document.getElementById('resume-summary-mbti');
+  if(mbtiEl) mbtiEl.innerHTML = mbtiR ? chip(mbtiR.value,'aip-chip-purple') : '<span class="aip-empty">—</span>';
+}
+function toggleAiPreview(){
+  var body=document.getElementById('aiPreviewBody'), btn=document.getElementById('aiToggleBtn');
+  if(body){ body.classList.toggle('hide'); if(btn) btn.classList.toggle('collapsed'); if(btn) btn.textContent=body.classList.contains('hide')?'▼':'▲'; }
 }
 (function(){
   var ids=['resume_title','resume_nick','resume_phone','resume_birth_y','resume_birth_m','resume_birth_d','resume_salary_type','resume_salary_amt','resume_height','resume_weight','resume_size','resume_region','resume_region_detail','resume_edu','resume_job1','resume_job2','resume_work_region','resume_work_region_detail','resume_work_time_type','resume_work_time_start','resume_work_time_end','resume_intro'];
