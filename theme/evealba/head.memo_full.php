@@ -1,6 +1,6 @@
 <?php
 /**
- * 쪽지함 전체 레이아웃 - eve_alba_messages.html 동일 (top-bar, header, nav, breadcrumb, sidebar + main)
+ * 쪽지함 전체 레이아웃 - 왼쪽 사이드바 없음, 상단 단순화 바(유저+통계) + 탭 + 본문
  * 필요 변수(선행 설정): $memo_recv_count, $memo_unread_count, $memo_send_count, $memo_current_tab, $member_type, $member (mb_nick, mb_id)
  */
 if (!defined('_GNUBOARD_')) exit;
@@ -43,37 +43,20 @@ $nav_active = '';
 </div>
 
 <div class="page-layout memo-page-layout">
-  <div class="sidebar memo-sidebar">
-    <div class="profile-card">
-      <div class="profile-card-header">
-        <div class="profile-avatar"><?php echo $member_id ? get_member_profile_img($member_id) : '👤'; ?></div>
-        <div class="profile-name"><?php echo htmlspecialchars($member_name); ?> <span>님</span></div>
-        <div class="profile-greeting">즐거운 하루되세요! 🌸</div>
-        <span class="profile-role"><?php echo $role_icon; ?> <?php echo isset($member_type) ? htmlspecialchars($member_type) : '일반회원'; ?></span>
-      </div>
-      <div class="profile-card-body">
-        <div class="msg-stat-grid">
-          <div class="msg-stat"><div class="msg-stat-num"><?php echo $memo_recv_count; ?></div><div class="msg-stat-label">받은쪽지</div></div>
-          <div class="msg-stat"><div class="msg-stat-num orange"><?php echo $memo_unread_count; ?></div><div class="msg-stat-label">미확인</div></div>
-          <div class="msg-stat"><div class="msg-stat-num dark"><?php echo $memo_send_count; ?></div><div class="msg-stat-label">보낸쪽지</div></div>
-        </div>
-        <a href="<?php echo G5_BBS_URL ?>/memo_form.php" class="btn-new-msg">✉️ 쪽지 보내기</a>
+  <!-- 단순화 상단바: 유저정보 + 쪽지 통계 (1번 이미지 스타일) -->
+  <div class="memo-top-widget">
+    <div class="memo-tw-left">
+      <div class="memo-tw-avatar"><?php echo $member_id ? get_member_profile_img($member_id) : '👤'; ?></div>
+      <div class="memo-tw-info">
+        <div class="memo-tw-name"><?php echo htmlspecialchars($member_name); ?> <span>님</span></div>
+        <span class="memo-tw-role"><?php echo $role_icon; ?> <?php echo isset($member_type) ? htmlspecialchars($member_type) : '일반회원'; ?></span>
       </div>
     </div>
-    <div class="sidebar-menu">
-      <div class="sidebar-menu-title">✉️ 쪽지함</div>
-      <a href="<?php echo G5_BBS_URL ?>/memo.php?kind=recv" class="sidebar-menu-item <?php echo ($memo_current_tab==='recv')?'active':''; ?>">
-        <span class="sidebar-menu-icon">📥</span>받은 쪽지함<?php if ($memo_recv_count) { ?><span class="smb"><?php echo $memo_recv_count; ?></span><?php } ?>
-      </a>
-      <a href="<?php echo G5_BBS_URL ?>/memo.php?kind=unread" class="sidebar-menu-item <?php echo ($memo_current_tab==='unread')?'active':''; ?>">
-        <span class="sidebar-menu-icon">🔔</span>미열람 목록<?php if ($memo_unread_count) { ?><span class="smb orange"><?php echo $memo_unread_count; ?></span><?php } ?>
-      </a>
-      <a href="<?php echo G5_BBS_URL ?>/memo.php?kind=send" class="sidebar-menu-item <?php echo ($memo_current_tab==='send')?'active':''; ?>">
-        <span class="sidebar-menu-icon">📤</span>보낸 쪽지함<span class="smb gray"><?php echo $memo_send_count; ?></span>
-      </a>
-      <a href="<?php echo G5_BBS_URL ?>/memo_form.php" class="sidebar-menu-item <?php echo ($memo_current_tab==='form')?'active':''; ?>">
-        <span class="sidebar-menu-icon">✏️</span>쪽지 보내기
-      </a>
+    <div class="memo-tw-divider"></div>
+    <div class="memo-tw-right">
+      <div class="memo-tw-stat"><span class="memo-tw-num"><?php echo $memo_recv_count; ?></span><span class="memo-tw-label">받은쪽지</span></div>
+      <div class="memo-tw-stat"><span class="memo-tw-num orange"><?php echo $memo_unread_count; ?></span><span class="memo-tw-label">미확인</span></div>
+      <div class="memo-tw-stat"><span class="memo-tw-num dark"><?php echo $memo_send_count; ?></span><span class="memo-tw-label">보낸쪽지</span></div>
     </div>
   </div>
   <div class="main-area memo-main">

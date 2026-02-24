@@ -1,51 +1,41 @@
 /**
- * 쪽지함 전체 레이아웃 - eve_alba_messages.html 동일
+ * 쪽지함 레이아웃 - 왼쪽 사이드바 제거, 상단 단순화 바(1번 이미지 스타일) + 탭/본문
  */
-/* page-layout: 사이드바 220px + 메인 */
-.page-layout.memo-page-layout { max-width: 1100px; margin: 20px auto 48px; padding: 0 16px; display: grid; grid-template-columns: 220px 1fr; gap: 18px; align-items: start; }
+/* 단일 컬럼: 상단바 + 메인 */
+.page-layout.memo-page-layout { max-width: 900px; margin: 20px auto 48px; padding: 0 16px; display: flex; flex-direction: column; gap: 0; align-items: stretch; }
 body.memo-page-body .ticker-wrap { display: none; }
-.sidebar.memo-sidebar { display: flex; flex-direction: column; gap: 12px; }
 .main-area.memo-main { min-width: 0; }
 
-/* 프로필 카드 (사이드바) */
-.profile-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(255,27,107,.1); }
-.profile-card-header { background: linear-gradient(135deg, var(--dark2), var(--hot-pink)); padding: 20px 16px; text-align: center; }
-.profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--hot-pink)); margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 3px solid rgba(255,255,255,.5); box-shadow: 0 4px 14px rgba(0,0,0,.2); overflow: hidden; }
-.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.profile-name { color: #fff; font-size: 16px; font-weight: 900; margin-bottom: 3px; }
-.profile-name span { color: var(--gold); }
-.profile-greeting { font-size: 11px; color: rgba(255,255,255,.75); margin-top: 3px; }
-.profile-role { background: rgba(255,255,255,.2); border-radius: 10px; padding: 3px 10px; color: rgba(255,255,255,.9); font-size: 11px; display: inline-block; margin-top: 8px; }
-.profile-card-body { padding: 14px; }
-.msg-stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: #f5e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
-.msg-stat-grid .msg-stat { background: #fff; padding: 12px 6px; text-align: center; }
-.msg-stat-grid .msg-stat-num { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: var(--hot-pink); line-height: 1; }
-.msg-stat-grid .msg-stat-num.orange { color: var(--orange); }
-.msg-stat-grid .msg-stat-num.dark { color: var(--dark2); }
-.msg-stat-grid .msg-stat-label { font-size: 10px; color: #aaa; margin-top: 3px; }
-.btn-new-msg { display: block; width: 100%; padding: 11px; background: linear-gradient(135deg, var(--orange), var(--hot-pink)); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 900; cursor: pointer; text-align: center; box-shadow: 0 4px 12px rgba(255,27,107,.3); text-decoration: none; transition: transform .2s; }
-.btn-new-msg:hover { transform: scale(1.03); color: #fff; }
+/* 단순화 상단바: 왼쪽(아바타+이름+회원유형) | 오른쪽(받은/미확인/보낸) */
+.memo-top-widget { display: flex; align-items: stretch; background: #fff; border-radius: 16px 16px 0 0; overflow: hidden; box-shadow: 0 4px 16px rgba(255,27,107,.1); border-bottom: 1px solid #fdf0f5; }
+.memo-tw-left { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: linear-gradient(135deg, var(--dark2, #6b2d5c), var(--hot-pink, #ff1b6b)); flex: 0 0 auto; }
+.memo-tw-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--hot-pink)); border: 2px solid rgba(255,193,7,.9); display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; flex-shrink: 0; }
+.memo-tw-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.memo-tw-info { display: flex; flex-direction: column; gap: 4px; }
+.memo-tw-name { color: #ffc107; font-size: 16px; font-weight: 900; line-height: 1.2; }
+.memo-tw-name span { color: #ffc107; }
+.memo-tw-role { background: rgba(255,255,255,.2); border-radius: 10px; padding: 4px 10px; color: #fff; font-size: 11px; display: inline-block; width: fit-content; }
+.memo-tw-divider { width: 1px; background: #eee; flex-shrink: 0; }
+.memo-tw-right { display: flex; flex: 1; align-items: stretch; background: #fff; }
+.memo-tw-stat { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 8px; gap: 4px; }
+.memo-tw-stat + .memo-tw-stat { border-left: 1px solid #f5e8f0; }
+.memo-tw-num { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: var(--hot-pink); line-height: 1; }
+.memo-tw-num.orange { color: var(--orange); }
+.memo-tw-num.dark { color: var(--dark2); }
+.memo-tw-label { font-size: 11px; color: #999; }
 
-/* 사이드바 메뉴 */
-.sidebar-menu { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
-.sidebar-menu-title { background: linear-gradient(135deg, var(--hot-pink), var(--deep-pink)); color: #fff; padding: 10px 16px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-.sidebar-menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; font-size: 13px; color: #555; border-bottom: 1px solid #fdf0f5; transition: all .2s; position: relative; text-decoration: none; color: inherit; }
-.sidebar-menu-item:last-child { border-bottom: none; }
-.sidebar-menu-item:hover { background: var(--bg); color: var(--hot-pink); }
-.sidebar-menu-item.active { background: linear-gradient(135deg, #fff5f8, #fff0f5); color: var(--hot-pink); font-weight: 700; }
-.sidebar-menu-item.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--hot-pink); border-radius: 0 2px 2px 0; }
-.sidebar-menu-icon { font-size: 16px; }
-.smb { margin-left: auto; background: var(--hot-pink); color: #fff; border-radius: 10px; padding: 1px 8px; font-size: 11px; font-weight: 700; }
-.smb.orange { background: var(--orange); }
-.smb.gray { background: #aaa; }
-
-/* 탭 헤더 (메인 영역 상단) */
-.tab-header.memo-tabs { display: flex; background: #fff; border-radius: 14px 14px 0 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.07); border-bottom: 2px solid var(--pale-pink); }
+/* 탭 헤더 (상단바 바로 아래, 3번 이미지) */
+.tab-header.memo-tabs { display: flex; background: #fff; border-radius: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.07); border-bottom: 2px solid var(--pale-pink); }
 .tab-header.memo-tabs .tab-btn { flex: 1; padding: 14px 8px; background: #fff; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-size: 13px; font-weight: 700; color: #aaa; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all .2s; position: relative; text-decoration: none; color: inherit; font-family: inherit; }
 .tab-header.memo-tabs .tab-btn:hover { background: #fff8fb; color: var(--hot-pink); }
 .tab-header.memo-tabs .tab-btn.active { background: linear-gradient(180deg, #fff5f8, #fff0f5); color: var(--hot-pink); border-bottom-color: var(--hot-pink); }
 
-@media (max-width: 800px) {
-  .page-layout.memo-page-layout { grid-template-columns: 1fr; }
-  .sidebar.memo-sidebar { display: none; }
+/* 본문 카드: 상단바·탭과 한 덩어리로 하단만 둥글게 */
+.main-area.memo-main .content-card { border-radius: 0 0 14px 14px; }
+
+@media (max-width: 600px) {
+  .memo-top-widget { flex-direction: column; }
+  .memo-tw-divider { width: 100%; height: 1px; }
+  .memo-tw-right { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .memo-tw-stat + .memo-tw-stat { border-left: none; border-top: 1px solid #f5e8f0; }
 }
