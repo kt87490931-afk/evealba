@@ -8,10 +8,7 @@ define('_RESUME_REGISTER_', true);
 define('_TALENT_', true);
 if (!defined('_GNUBOARD_')) exit;
 
-if ($is_guest) {
-    alert('회원만 이력서를 등록할 수 있습니다.', G5_BBS_URL.'/login.php?url='.urlencode(G5_BBS_URL.'/resume_register.php'));
-}
-
+// 이력서 등록 페이지 공개 (비회원도 열람·입력 가능, 제출 시 로그인 유도는 추후 적용 가능)
 if (defined('G5_THEME_PATH')) {
     require_once(G5_THEME_PATH.'/resume_register.php');
     return;

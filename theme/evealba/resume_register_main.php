@@ -25,8 +25,8 @@
       <div class="sec-body">
 
         <!-- 사진 등록 -->
-        <div style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid #fae8f0;">
-          <div class="form-label" style="align-self:flex-start;padding-top:15px;border-right:2px solid var(--pale-pink);">사진 등록</div>
+        <div class="resume-photo-row" style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid #fae8f0;align-items:stretch;">
+          <div class="form-label resume-photo-label" style="padding:15px 14px 15px 18px;border-right:2px solid var(--pale-pink);">사진 등록</div>
           <div style="padding:14px 18px;">
             <div class="photo-upload-area" style="padding:0;gap:16px;">
               <div class="photo-box">
