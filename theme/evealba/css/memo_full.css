@@ -1,9 +1,9 @@
 /**
- * 쪽지함 레이아웃 - 메인과 동일(급구·좌측사이드바·히어로) + 상단 단순화 바 + 탭/본문
- * - 히어로·쪽지함 가로 958px 통일
- * - memo-top-widget 4칸·tab-btn 4칸 각 225px
+ * 쪽지함 레이아웃 - eve_alba_messages_1.html 탭 디자인 참고, 이브알바 박스 간격 적용
+ * - 히어로·쪽지함 가로 958px (메인헤드 영역과 통일)
+ * - memo-top-widget 4칸·tab 4칸 각 225px, 원본 탭 스타일
  */
-/* 쪽지함 영역·히어로 가로 958px (메인배너와 동일) */
+/* 쪽지함 영역·히어로 가로 958px (메인배너·메인헤드와 동일) */
 body.memo-page-body .main-area .hero-section,
 body.memo-page-body .main-area .hero-main,
 body.memo-page-body .memo-page-layout { width: 958px; max-width: 100%; margin-left: auto; margin-right: auto; box-sizing: border-box; }
@@ -18,10 +18,10 @@ body.memo-page-body .memo-page-layout { margin: 0 auto 24px; padding: 0; display
   max-width: 100%;
   margin: 0 auto;
   background: #fff;
-  border-radius: 16px 16px 0 0;
+  border-radius: 14px 14px 0 0;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(255,27,107,.1);
-  border-bottom: 1px solid #fdf0f5;
+  box-shadow: 0 2px 8px rgba(0,0,0,.07);
+  border-bottom: 2px solid var(--pale-pink);
 }
 .memo-tw-cell {
   width: 225px;
@@ -38,35 +38,34 @@ body.memo-page-body .memo-page-layout { margin: 0 auto 24px; padding: 0; display
 }
 .memo-tw-role {
   background: rgba(255,255,255,.2);
-  border-radius: 10px;
-  padding: 6px 12px;
-  color: #fff;
-  font-size: 13px;
+  border-radius: 8px;
+  padding: 4px 10px;
+  color: rgba(255,255,255,.95);
+  font-size: 12px;
   font-weight: 700;
   display: inline-block;
 }
 .memo-tw-stat + .memo-tw-stat { border-left: 1px solid #f5e8f0; }
-.memo-tw-num { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: var(--hot-pink); line-height: 1; }
+.memo-tw-num { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 900; color: var(--hot-pink); line-height: 1; }
 .memo-tw-num.orange { color: var(--orange); }
 .memo-tw-num.dark { color: var(--dark2); }
-.memo-tw-label { font-size: 11px; color: #999; }
+.memo-tw-label { font-size: 10px; color: #aaa; margin-top: 2px; }
 
-/* 탭 헤더: 4개 각 225px (받은쪽지함, 미열람목록, 보낸쪽지함, 쪽지보내기) */
+/* 탭 헤더 - eve_alba_messages_1.html 원본 디자인 (flex, padding 13px 8px, icon 20px, active 하단 3px) */
 .tab-header.memo-tabs {
   display: flex;
   width: 900px;
   max-width: 100%;
   margin: 0 auto;
   background: #fff;
-  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,.07);
-  border-bottom: 2px solid var(--pale-pink);
+  border-bottom: 3px solid transparent;
+  box-shadow: none;
 }
 .tab-header.memo-tabs .tab-btn {
   width: 225px;
   flex: 0 0 225px;
-  padding: 14px 8px;
+  padding: 13px 8px;
   background: #fff;
   border: none;
   border-bottom: 3px solid transparent;
@@ -85,11 +84,36 @@ body.memo-page-body .memo-page-layout { margin: 0 auto 24px; padding: 0; display
   font-family: inherit;
   box-sizing: border-box;
 }
+.tab-header.memo-tabs .tab-btn-icon { font-size: 20px; }
 .tab-header.memo-tabs .tab-btn:hover { background: #fff8fb; color: var(--hot-pink); }
-.tab-header.memo-tabs .tab-btn.active { background: linear-gradient(180deg, #fff5f8, #fff0f5); color: var(--hot-pink); border-bottom-color: var(--hot-pink); }
+.tab-header.memo-tabs .tab-btn.active {
+  background: linear-gradient(180deg, #fff5f8, #fff0f5);
+  color: var(--hot-pink);
+  border-bottom: 3px solid var(--hot-pink);
+}
+.tab-header.memo-tabs .tbb {
+  position: absolute;
+  top: 10px;
+  right: 50%;
+  transform: translateX(calc(50% - 22px));
+  background: var(--hot-pink);
+  color: #fff;
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 900;
+  min-width: 18px;
+  text-align: center;
+}
+.tab-header.memo-tabs .tbb.orange { background: var(--orange); }
 
-/* 본문 카드: 상단바·탭과 한 덩어리로 하단만 둥글게 (부모 memo-page-layout 958px) */
-.main-area.memo-main .content-card { border-radius: 0 0 14px 14px; box-sizing: border-box; }
+/* 쪽지 본문 카드 - 이브알바 박스 간격: 탭과 content-card 사이 여백 */
+.main-area.memo-main .content-card {
+  border-radius: 0 0 14px 14px;
+  box-sizing: border-box;
+  margin-top: 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.08);
+}
 
 @media (max-width: 1000px) {
   body.memo-page-body .memo-page-layout,
