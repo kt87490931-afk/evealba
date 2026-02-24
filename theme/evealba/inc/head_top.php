@@ -44,7 +44,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
     <div class="header-actions">
       <div class="kakao-btn">카카오톡<br><b>EvéAlba</b></div>
       <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_register.php' : '/jobs_register.php'; ?>">채용공고 등록</a>
-      <a href="<?php echo G5_BBS_URL ?>/register.php" class="btn-register">이력서 등록</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/resume_register.php' : '/resume_register.php'; ?>" class="btn-register">이력서 등록</a>
     </div>
   </div>
 </header>
