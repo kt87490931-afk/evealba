@@ -1,9 +1,8 @@
 /**
- * 쪽지함 레이아웃 - 왼쪽 사이드바 제거, 상단 단순화 바(1번 이미지 스타일) + 탭/본문
+ * 쪽지함 레이아웃 - 메인과 동일(급구·좌측사이드바·히어로) + 상단 단순화 바 + 탭/본문
  */
-/* 단일 컬럼: 상단바 + 메인 */
-.page-layout.memo-page-layout { max-width: 900px; margin: 20px auto 48px; padding: 0 16px; display: flex; flex-direction: column; gap: 0; align-items: stretch; }
-body.memo-page-body .ticker-wrap { display: none; }
+/* memo 본문 영역: 상단바 + 메인 (page-layout 안의 main-area 안에 있음) */
+.memo-page-layout { max-width: 900px; margin: 0 auto 24px; padding: 0; display: flex; flex-direction: column; gap: 0; align-items: stretch; }
 .main-area.memo-main { min-width: 0; }
 
 /* 단순화 상단바: 왼쪽(아바타+이름+회원유형) | 오른쪽(받은/미확인/보낸) */

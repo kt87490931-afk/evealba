@@ -2,7 +2,9 @@
 if (!defined('_GNUBOARD_')) exit;
 ?>
   </div><!-- /main-area.memo-main -->
-</div><!-- /page-layout.memo-page-layout -->
+    </div><!-- /memo-page-layout -->
+  </div><!-- /main-area -->
+</div><!-- /page-layout -->
 
 <footer>
   <div class="footer-inner">

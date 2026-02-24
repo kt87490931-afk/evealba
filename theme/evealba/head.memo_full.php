@@ -34,17 +34,21 @@ $nav_active = '';
 <body class="memo-page-body">
 <?php include G5_THEME_PATH.'/inc/head_top.php'; ?>
 
-<div class="breadcrumb-bar">
-  <div class="breadcrumb-inner">
-    <a href="<?php echo G5_URL ?>">🏠 메인</a><span class="sep">›</span>
-    <a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=<?php echo urlencode(G5_BBS_URL.'/memo.php'); ?>">마이페이지</a><span class="sep">›</span>
-    <span class="current"><?php echo ($memo_current_tab==='recv') ? '📥 받은 쪽지함' : (($memo_current_tab==='unread') ? '🔔 미열람 목록' : (($memo_current_tab==='send') ? '📤 보낸 쪽지함' : '✉️ 쪽지 보내기')); ?></span>
-  </div>
-</div>
-
-<div class="page-layout memo-page-layout">
-  <!-- 단순화 상단바: 유저정보 + 쪽지 통계 (1번 이미지 스타일) -->
-  <div class="memo-top-widget">
+<!-- PAGE LAYOUT: 메인과 동일 (좌측 사이드바 + 메인) -->
+<div class="page-layout">
+  <?php include G5_THEME_PATH.'/inc/sidebar_main.php'; ?>
+  <div class="main-area">
+    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+    <div class="breadcrumb-bar">
+      <div class="breadcrumb-inner">
+        <a href="<?php echo G5_URL ?>">🏠 메인</a><span class="sep">›</span>
+        <a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=<?php echo urlencode(G5_BBS_URL.'/memo.php'); ?>">마이페이지</a><span class="sep">›</span>
+        <span class="current"><?php echo ($memo_current_tab==='recv') ? '📥 받은 쪽지함' : (($memo_current_tab==='unread') ? '🔔 미열람 목록' : (($memo_current_tab==='send') ? '📤 보낸 쪽지함' : '✉️ 쪽지 보내기')); ?></span>
+      </div>
+    </div>
+    <div class="memo-page-layout">
+      <!-- 단순화 상단바: 유저정보 + 쪽지 통계 -->
+      <div class="memo-top-widget">
     <div class="memo-tw-left">
       <div class="memo-tw-avatar"><?php echo $member_id ? get_member_profile_img($member_id) : '👤'; ?></div>
       <div class="memo-tw-info">
