@@ -61,14 +61,4 @@ if (!defined('_GNUBOARD_')) exit;
   </div>
 </div>
 
-<!-- 연락처 위젯 -->
-<div class="sidebar-widget">
-  <div class="widget-body" style="padding:0;">
-    <div class="cs-contact-widget">
-      <div class="csc-title">📞 이브알바 고객센터</div>
-      <div class="csc-phone">1588-0000</div>
-      <div class="csc-hours">평일 09:30~19:00<br>점심 12:00~13:30<br>*공휴일·일 근무 안함</div>
-      <div class="csc-kakao">💬 EvéAlba</div>
-    </div>
-  </div>
-</div>
+<?php include G5_THEME_PATH.'/inc/sidebar_cs_widget.php'; ?>

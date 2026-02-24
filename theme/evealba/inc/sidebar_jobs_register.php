@@ -44,18 +44,4 @@ if (!defined('_GNUBOARD_')) exit;
   </div>
 </div>
 
-<!-- 고객지원센터 -->
-<div class="sidebar-widget">
-  <div class="widget-body" style="padding:0;">
-    <div class="cs-widget">
-      <div class="cs-widget-title">📞 이브알바 고객센터</div>
-      <div class="cs-widget-phone">1588-0000</div>
-      <div class="cs-widget-hours">평일 09:30~19:00 · 점심 12:00~13:30<br>*공휴일·일 근무하지 않습니다.</div>
-      <div class="cs-kakao">💬 EvéAlba</div>
-      <div class="cs-links">
-        <span class="cs-link-btn">FAQ 도움말</span>
-        <span class="cs-link-btn">광고문의</span>
-      </div>
-    </div>
-  </div>
-</div>
+<?php include G5_THEME_PATH.'/inc/sidebar_cs_widget.php'; ?>

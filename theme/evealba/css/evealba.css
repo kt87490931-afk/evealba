@@ -596,6 +596,44 @@ nav::before {
 .left-sidebar { display:flex; flex-direction:column; gap:12px; }
 .main-area { min-width:0; }
 
+/* ======================== 고객지원센터 위젯 (공통, 모든 페이지 동일) */
+.cs-support-widget { padding:0 !important; box-shadow:none !important; overflow:visible; }
+.cs-support-box {
+  border-radius:12px; overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);
+  background:#fff; border:1px solid #f5e8f0;
+}
+.cs-support-header {
+  background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
+  color:#fff; padding:12px 14px;
+  font-size:13px; font-weight:900;
+  display:flex; align-items:center; gap:6px;
+}
+.cs-support-body {
+  padding:14px 16px; background:#fff; text-align:center;
+}
+.cs-support-label {
+  font-size:12px; font-weight:700; color:var(--hot-pink);
+  margin-bottom:4px;
+}
+.cs-support-phone {
+  font-size:22px; font-weight:900; color:#222; letter-spacing:-.5px;
+  margin-bottom:6px;
+}
+.cs-support-hours {
+  font-size:11px; color:#888; line-height:1.6; margin-bottom:4px;
+}
+.cs-support-note {
+  font-size:10px; color:#bbb; margin-bottom:12px;
+}
+.cs-support-kakao {
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  padding:8px 20px; background:#FEE500;
+  border-radius:14px; font-size:12px; font-weight:900; color:#333;
+  text-decoration:none; transition:opacity .2s; box-shadow:0 2px 8px rgba(254,229,0,.4);
+}
+.cs-support-kakao:hover { opacity:.9; color:#333; }
+
 /* 회원가입: 단일 컬럼 레이아웃 (사이드바 없음) */
 .page-layout.layout-register { grid-template-columns:1fr; max-width:900px; }
 
