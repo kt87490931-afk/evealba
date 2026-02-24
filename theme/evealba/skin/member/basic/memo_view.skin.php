@@ -1,31 +1,24 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit;
 $nick = get_sideview($mb['mb_id'], $mb['mb_nick'], $mb['mb_email'], $mb['mb_homepage']);
 if($kind == "recv") {
     $kind_str = "보낸";
     $kind_date = "받은";
-}
-else {
+} else {
     $kind_str = "받는";
     $kind_date = "보낸";
 }
-
-// add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
+$memo_recv_count = (int)sql_fetch("SELECT count(*) as cnt FROM {$g5['memo_table']} WHERE me_recv_mb_id = '{$member['mb_id']}' AND me_type='recv'")['cnt'];
+$memo_unread_count = function_exists('get_memo_not_read') ? get_memo_not_read($member['mb_id']) : 0;
+$memo_send_count = (int)sql_fetch("SELECT count(*) as cnt FROM {$g5['memo_table']} WHERE me_send_mb_id = '{$member['mb_id']}' AND me_type='send'")['cnt'];
+$member_type = (isset($member['mb_2']) && (strpos($member['mb_2'], 'biz') !== false || $member['mb_2'] === '기업')) ? '기업회원' : '일반회원';
+$memo_current_tab = $kind;
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
+include_once(G5_THEME_PATH.'/inc/memo_header.php');
 ?>
-
 <!-- 쪽지보기 시작 { -->
-<div id="memo_view" class="new_win">
-    <h1 id="win_title"><?php echo $g5['title'] ?></h1>
+<div id="memo_view" class="new_win memo-popup-wrap">
     <div class="new_win_con2">
-        <!-- 쪽지함 선택 시작 { -->
-        <ul class="win_ul">
-            <li class="<?php if ($kind == 'recv') {  ?>selected<?php }  ?>"><a href="./memo.php?kind=recv">받은쪽지</a></li>
-            <li class="<?php if ($kind == 'send') {  ?>selected<?php }  ?>"><a href="./memo.php?kind=send">보낸쪽지</a></li>
-            <li><a href="./memo_form.php">쪽지쓰기</a></li>
-        </ul>
-        <!-- } 쪽지함 선택 끝 -->
-
         <article id="memo_view_contents">
             <header>
                 <h2>쪽지 내용</h2>
@@ -56,7 +49,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
             </p>
         </article>
 		<div class="win_btn">
-			<?php if ($kind == 'recv') {  ?><a href="./memo_form.php?me_recv_mb_id=<?php echo $mb['mb_id'] ?>&amp;me_id=<?php echo $memo['me_id'] ?>" class="reply_btn">답장</a><?php }  ?>
+			<?php if ($kind == 'recv') {  ?><a href="./memo_form.php?me_id=<?php echo $memo['me_id'] ?>" class="reply_btn">답장</a><?php }  ?>
 			<button type="button" onclick="window.close();" class="btn_close">창닫기</button>
     	</div>
     </div>

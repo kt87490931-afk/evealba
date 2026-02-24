@@ -9,7 +9,14 @@ if (!chk_captcha()) {
     alert('자동등록방지 숫자가 틀렸습니다.');
 }
 
-$recv_list = isset($_POST['me_recv_mb_id']) ? explode(',', trim($_POST['me_recv_mb_id'])) : array();
+$admin_row = sql_fetch("SELECT mb_id FROM {$g5['member_table']} WHERE mb_level = 10 ORDER BY mb_no ASC LIMIT 1");
+$admin_mb_id = isset($admin_row['mb_id']) ? $admin_row['mb_id'] : (isset($config['cf_admin']) ? $config['cf_admin'] : 'admin');
+$recv_raw = isset($_POST['me_recv_mb_id']) ? trim($_POST['me_recv_mb_id']) : '';
+if (!$is_admin) {
+    $recv_list = array($admin_mb_id);
+} else {
+    $recv_list = $recv_raw ? explode(',', $recv_raw) : array();
+}
 $str_nick_list = '';
 $msg = '';
 $error_list  = array();
@@ -24,7 +31,8 @@ for ($i=0; $i<count($recv_list); $i++) {
 
     $row = sql_fetch(" select mb_id, mb_nick, mb_open, mb_leave_date, mb_intercept_date from {$g5['member_table']} where mb_id = '{$recv_list_id}' ");
     if ($row) {
-        if ($is_admin || ($row['mb_open'] && (!$row['mb_leave_date'] && !$row['mb_intercept_date']))) {
+        $is_admin_recipient = ($recv_list_id === $admin_mb_id);
+        if ($is_admin_recipient || $is_admin || ($row['mb_open'] && (!$row['mb_leave_date'] && !$row['mb_intercept_date']))) {
             $member_list['id'][]   = $row['mb_id'];
             $member_list['nick'][] = $row['mb_nick'];
         } else {

@@ -39,6 +39,7 @@ $memo = sql_fetch($sql);
 set_session('ss_memo_delete_token', $token = uniqid(time()));
 $del_link = 'memo_delete.php?me_id='.$memo['me_id'].'&amp;token='.$token.'&amp;kind='.$kind;
 
+define('G5_MEMO_POPUP', true);
 $g5['title'] = $t.' 쪽지 보기';
 include_once(G5_PATH.'/head.sub.php');
 

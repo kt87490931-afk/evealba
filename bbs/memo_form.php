@@ -6,27 +6,24 @@ if ($is_guest) {
     alert_close('회원만 이용하실 수 있습니다.');
 }
 
-$mb_id = isset($mb_id) ? get_search_string($mb_id) : '';
+define('G5_MEMO_POPUP', true);
 
-if (!$member['mb_open'] && $is_admin != 'super' && $member['mb_id'] != $mb_id) {
-    alert_close("자신의 정보를 공개하지 않으면 다른분에게 쪽지를 보낼 수 없습니다. 정보공개 설정은 회원정보수정에서 하실 수 있습니다.");
-}
+$admin_row = sql_fetch("SELECT mb_id, mb_nick FROM {$g5['member_table']} WHERE mb_level = 10 ORDER BY mb_no ASC LIMIT 1");
+$admin_mb_id = isset($admin_row['mb_id']) ? $admin_row['mb_id'] : (isset($config['cf_admin']) ? $config['cf_admin'] : 'admin');
 
 $content = "";
-$me_recv_mb_id   = isset($_REQUEST['me_recv_mb_id']) ? clean_xss_tags($_REQUEST['me_recv_mb_id'], 1, 1) : '';
-$me_id           = isset($_REQUEST['me_id']) ? clean_xss_tags($_REQUEST['me_id'], 1, 1) : '';
+$me_recv_mb_id = $admin_mb_id;
+$me_id = isset($_REQUEST['me_id']) ? clean_xss_tags($_REQUEST['me_id'], 1, 1) : '';
 
-// 탈퇴한 회원에게 쪽지 보낼 수 없음
 if ($me_recv_mb_id)
 {
     $mb = get_member($me_recv_mb_id);
     if (!(isset($mb['mb_id']) && $mb['mb_id']))
-        alert_close('회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.');
+        alert_close('운영자 정보를 찾을 수 없습니다.');
 
-    if (!$mb['mb_open'] && $is_admin != 'super')
-        alert_close('정보공개를 하지 않았습니다.');
+    // 이브알바: 운영자에게만 쪽지 발송, mb_open 검사 생략
 
-    // 4.00.15
+    // 4.00.15 답장 인용
     $row = sql_fetch(" select me_memo from {$g5['memo_table']} where me_id = '{$me_id}' and (me_recv_mb_id = '{$member['mb_id']}' or me_send_mb_id = '{$member['mb_id']}') ");
     if (isset($row['me_memo']) && $row['me_memo'])
     {
@@ -38,6 +35,12 @@ if ($me_recv_mb_id)
 
     }
 }
+
+$memo_recv_count = (int)sql_fetch("SELECT count(*) as cnt FROM {$g5['memo_table']} WHERE me_recv_mb_id = '{$member['mb_id']}' AND me_type='recv'")['cnt'];
+$memo_unread_count = function_exists('get_memo_not_read') ? get_memo_not_read($member['mb_id']) : 0;
+$memo_send_count = (int)sql_fetch("SELECT count(*) as cnt FROM {$g5['memo_table']} WHERE me_send_mb_id = '{$member['mb_id']}' AND me_type='send'")['cnt'];
+$member_type = (isset($member['mb_2']) && (strpos($member['mb_2'], 'biz') !== false || $member['mb_2'] === '기업')) ? '기업회원' : '일반회원';
+$memo_current_tab = 'form';
 
 $g5['title'] = '쪽지 보내기';
 include_once(G5_PATH.'/head.sub.php');
