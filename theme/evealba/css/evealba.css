@@ -1422,7 +1422,7 @@ footer {
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
     text-align:right;
   }
-  .special-card { grid-column: span 2 !important; }
+  .special-card { grid-column: span 1; }
   .hero-main { height:150px; padding:20px; border-radius:12px; }
   .hero-text h2 { font-size:20px; }
   .hero-text h2 span { font-size:24px; }
