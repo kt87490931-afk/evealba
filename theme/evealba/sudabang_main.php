@@ -236,7 +236,7 @@ if (!defined('_GNUBOARD_')) exit;
           </div>
         </div>
         <div style="display:flex;gap:6px">
-          <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/used.php' : '/used.php'; ?>" class="board-more" style="border-color:rgba(255,255,255,.4);color:#fff;">더보기 →</a>
+          <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="board-more" style="border-color:rgba(255,255,255,.4);color:#fff;">더보기 →</a>
           <a href="<?php echo G5_BBS_URL ?>/write.php?bo_table=used" class="board-write-btn" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.4);">✏️ 글쓰기</a>
         </div>
       </div>

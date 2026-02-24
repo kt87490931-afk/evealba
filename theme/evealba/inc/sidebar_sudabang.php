@@ -31,7 +31,7 @@ if (!defined('_GNUBOARD_')) exit;
       <a href="#" class="side-comm-item active">🌙 밤문화이야기<span class="side-comm-count">2,341</span></a>
       <a href="#" class="side-comm-item">💑 같이일할단짝찾기<span class="side-comm-count">847</span></a>
       <a href="#" class="side-comm-item">⚖️ 무료법률자문<span class="side-comm-count">193</span></a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/used.php' : '/used.php'; ?>" class="side-comm-item">🛍️ 중고거래<span class="side-comm-count">412</span></a>
+      <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="side-comm-item">🛍️ 중고거래<span class="side-comm-count">412</span></a>
     </div>
   </div>
 </div>
