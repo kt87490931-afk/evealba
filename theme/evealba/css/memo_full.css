@@ -10,11 +10,11 @@ body.memo-page-body .memo-page-layout { width: 958px; max-width: 100%; margin-le
 body.memo-page-body .memo-page-layout { margin: 0 auto 24px; padding: 0; display: flex; flex-direction: column; gap: 0; align-items: stretch; }
 .main-area.memo-main { min-width: 0; }
 
-/* memo-top-widget: 4칸 각 225px (회원유형 | 받은쪽지 | 미확인 | 보낸쪽지) */
+/* memo-top-widget: 4칸, 가로 958px (메인배너와 동일) */
 .memo-top-widget {
   display: flex;
   align-items: stretch;
-  width: 900px;
+  width: 958px;
   max-width: 100%;
   margin: 0 auto;
   background: #fff;
@@ -24,8 +24,8 @@ body.memo-page-body .memo-page-layout { margin: 0 auto 24px; padding: 0; display
   border-bottom: 2px solid var(--pale-pink);
 }
 .memo-tw-cell {
-  width: 225px;
-  flex: 0 0 225px;
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,10 +51,10 @@ body.memo-page-body .memo-page-layout { margin: 0 auto 24px; padding: 0; display
 .memo-tw-num.dark { color: var(--dark2); }
 .memo-tw-label { font-size: 10px; color: #aaa; margin-top: 2px; }
 
-/* 탭 헤더 - eve_alba_messages_1.html 원본 디자인 (flex, padding 13px 8px, icon 20px, active 하단 3px) */
+/* 탭 헤더 - 가로 958px (메인배너와 동일), 4칸 균등 */
 .tab-header.memo-tabs {
   display: flex;
-  width: 900px;
+  width: 958px;
   max-width: 100%;
   margin: 0 auto;
   background: #fff;
@@ -63,8 +63,8 @@ body.memo-page-body .memo-page-layout { margin: 0 auto 24px; padding: 0; display
   box-shadow: none;
 }
 .tab-header.memo-tabs .tab-btn {
-  width: 225px;
-  flex: 0 0 225px;
+  flex: 1;
+  min-width: 0;
   padding: 13px 8px;
   background: #fff;
   border: none;

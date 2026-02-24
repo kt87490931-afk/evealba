@@ -35,8 +35,21 @@ if ($page < 1) { $page = 1; } // 페이지가 없으면 첫 페이지 (1 페이�
 
 run_event('memo_list', $kind, $unkind, $page);
 
-$unread_where = ($memo_current_tab === 'unread') ? " AND me_read_datetime LIKE '0%' " : "";
-$sql = " select count(*) as cnt from {$g5['memo_table']} where me_{$kind}_mb_id = '{$member['mb_id']}' and me_type = '$kind' $unread_where ";
+$st = isset($_GET['st']) ? trim($_GET['st']) : '';
+$qstr = '';
+if ($st !== '') $qstr = '&st=' . urlencode($st);
+
+$unread_where = ($memo_current_tab === 'unread') ? " AND a.me_read_datetime LIKE '0%' " : "";
+$search_where = '';
+if ($st !== '') {
+    $st_esc = sql_escape("%{$st}%");
+    $search_where = " AND (a.me_memo LIKE '{$st_esc}' OR b.mb_nick LIKE '{$st_esc}') ";
+}
+if ($st !== '') {
+    $sql = " select count(*) as cnt from {$g5['memo_table']} a left join {$g5['member_table']} b on (a.me_{$unkind}_mb_id = b.mb_id) where a.me_{$kind}_mb_id = '{$member['mb_id']}' and a.me_type = '$kind' $unread_where $search_where ";
+} else {
+    $sql = " select count(*) as cnt from {$g5['memo_table']} where me_{$kind}_mb_id = '{$member['mb_id']}' and me_type = '$kind' " . (($memo_current_tab === 'unread') ? " AND me_read_datetime LIKE '0%' " : "");
+}
 $row = sql_fetch($sql);
 $total_count = $row['cnt'];
 
@@ -55,14 +68,12 @@ else
     $recv_img = 'off';
     $send_img = 'on';
 }
-$qstr = isset($qstr) ? $qstr : '';
-
 $list = array();
 
 $sql = " select a.*, b.mb_id, b.mb_nick, b.mb_email, b.mb_homepage
             from {$g5['memo_table']} a
             left join {$g5['member_table']} b on (a.me_{$unkind}_mb_id = b.mb_id)
-            where a.me_{$kind}_mb_id = '{$member['mb_id']}' and a.me_type = '$kind' $unread_where
+            where a.me_{$kind}_mb_id = '{$member['mb_id']}' and a.me_type = '$kind' $unread_where $search_where
             order by a.me_id desc limit $from_record, {$config['cf_page_rows']} ";
 
 $result = sql_query($sql);

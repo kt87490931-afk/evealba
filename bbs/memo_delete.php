@@ -10,28 +10,49 @@ set_session('ss_memo_delete_token', '');
 if (!($token && $delete_token == $token))
     alert('토큰 에러로 삭제 불가합니다.');
 
-$me_id = isset($_REQUEST['me_id']) ? (int) $_REQUEST['me_id'] : 0;
+$kind = isset($_REQUEST['kind']) ? clean_xss_tags($_REQUEST['kind'], 0, 1) : 'recv';
+if (!in_array($kind, array('recv', 'send'), true)) $kind = 'recv';
 
-$sql = " select * from {$g5['memo_table']} where me_id = '{$me_id}' ";
-$row = sql_fetch($sql);
+$me_ids = array();
+if (isset($_REQUEST['me_id']) && is_array($_REQUEST['me_id'])) {
+    foreach ($_REQUEST['me_id'] as $v) { $id = (int) $v; if ($id > 0) $me_ids[] = $id; }
+} elseif (isset($_REQUEST['me_id'])) {
+    $id = (int) $_REQUEST['me_id'];
+    if ($id > 0) $me_ids[] = $id;
+}
 
-$sql = " delete from {$g5['memo_table']}
-            where me_id = '{$me_id}'
-            and (me_recv_mb_id = '{$member['mb_id']}' or me_send_mb_id = '{$member['mb_id']}') ";
-sql_query($sql);
+if (empty($me_ids)) {
+    alert('삭제할 쪽지를 선택해 주세요.');
+}
 
-if (!$row['me_read_datetime'][0]) // 메모 받기전이면
-{
-    $sql = " update {$g5['member_table']}
-                set mb_memo_call = ''
-                where mb_id = '{$row['me_recv_mb_id']}'
-                and mb_memo_call = '{$row['me_send_mb_id']}' ";
+$deleted = 0;
+foreach ($me_ids as $me_id) {
+    $me_id = (int) $me_id;
+    $sql = " select * from {$g5['memo_table']} where me_id = '{$me_id}' ";
+    $row = sql_fetch($sql);
+    if (!$row) continue;
+
+    $sql = " delete from {$g5['memo_table']}
+                where me_id = '{$me_id}'
+                and (me_recv_mb_id = '{$member['mb_id']}' or me_send_mb_id = '{$member['mb_id']}') ";
     sql_query($sql);
+    $deleted++;
 
+    if (isset($row['me_read_datetime']) && $row['me_read_datetime'][0] == '0') // 메모 받기전이면
+    {
+        $sql = " update {$g5['member_table']}
+                    set mb_memo_call = ''
+                    where mb_id = '{$row['me_recv_mb_id']}'
+                    and mb_memo_call = '{$row['me_send_mb_id']}' ";
+        sql_query($sql);
+    }
+
+    run_event('memo_delete', $me_id, $row);
+}
+
+if ($deleted > 0 && function_exists('get_memo_not_read')) {
     $sql = " update `{$g5['member_table']}` set mb_memo_cnt = '".get_memo_not_read($member['mb_id'])."' where mb_id = '{$member['mb_id']}' ";
     sql_query($sql);
 }
-
-run_event('memo_delete', $me_id, $row);
 
 goto_url('./memo.php?kind='.$kind);
