@@ -93,8 +93,11 @@
 .resume-register-page .form-cell{padding:10px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:8px;}
 .resume-register-page .form-cell.col{flex-direction:column;align-items:flex-start;}
 /* 사진 등록 행: 왼쪽 레이블 분홍 배경·세로선이 오른쪽 높이만큼 채워지도록 */
-.resume-register-page .resume-photo-row{align-items:stretch;}
-.resume-register-page .resume-photo-row .resume-photo-label{min-height:100%;background:#fff8fb;display:flex;align-items:flex-start;}
+.resume-register-page .resume-photo-row{display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid #fae8f0;align-items:stretch;min-height:auto;}
+.resume-register-page .resume-photo-row .resume-photo-label{min-height:100%;background:#fff8fb;display:flex;align-items:flex-start;padding:15px 14px 15px 18px;border-right:2px solid var(--pale-pink);}
+.resume-register-page .resume-photo-row .form-cell-photo{padding:14px 18px;min-width:0;}
+.resume-register-page .resume-photo-row .photo-upload-area{min-width:0;}
+.resume-register-page .resume-photo-row .photo-box{flex-shrink:0;}
 
 /* INPUTS */
 .resume-register-page .fi{padding:9px 13px;border:1.5px solid #f0e0e8;border-radius:8px;font-size:13px;background:#fff;outline:none;transition:border-color .2s;color:#333;}
@@ -319,6 +322,13 @@
   .resume-register-page .mbti-grid{grid-template-columns:repeat(2,1fr);}
   .resume-register-page .fi-sm{width:100%;}
   .resume-register-page .fi-md{width:100%;}
+  /* 모바일: 사진 등록 라인 단일 열로 표시, 오른쪽 튀어나옴 방지 */
+  .resume-register-page .resume-photo-row{grid-template-columns:1fr;}
+  .resume-register-page .resume-photo-row .resume-photo-label{border-right:none;border-bottom:2px solid var(--pale-pink);}
+  .resume-register-page .resume-photo-row .form-cell-photo{max-width:100%;overflow:hidden;}
+  .resume-register-page .resume-photo-row .photo-upload-area{flex-direction:column;}
+  .resume-register-page .resume-photo-row .photo-box{width:100%;max-width:140px;}
+  .resume-register-page .resume-photo-row .photo-preview{width:100%;max-width:140px;}
   /* 편의사항·키워드·MBTI유형 섹션 헤더 2줄 표시 */
   .resume-register-page .sec-head{flex-wrap:wrap;}
   .resume-register-page .sec-head-sub{flex:1 1 100%;width:100%;margin-top:4px;}

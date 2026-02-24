@@ -1,4 +1,7 @@
-<?php if (!defined('_GNUBOARD_')) exit; $mb_id = isset($member['mb_id']) ? get_text($member['mb_id']) : ''; ?>
+<?php if (!defined('_GNUBOARD_')) exit;
+$mb_id = isset($member['mb_id']) ? get_text($member['mb_id']) : '';
+$mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
+?>
 
     <div class="page-title-bar">
       <h2 class="page-title">📄 이력서 등록</h2>
@@ -25,9 +28,9 @@
       <div class="sec-body">
 
         <!-- 사진 등록 -->
-        <div class="resume-photo-row" style="display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid #fae8f0;align-items:stretch;">
-          <div class="form-label resume-photo-label" style="padding:15px 14px 15px 18px;border-right:2px solid var(--pale-pink);">사진 등록</div>
-          <div style="padding:14px 18px;">
+        <div class="resume-photo-row form-row-photo-mobile">
+          <div class="form-label resume-photo-label">사진 등록</div>
+          <div class="form-cell form-cell-photo">
             <div class="photo-upload-area" style="padding:0;gap:16px;">
               <div class="photo-box">
                 <div class="photo-preview" id="photoPreview" onclick="triggerFile('photo-file')">
@@ -67,7 +70,7 @@
         <div class="form-row">
           <div class="form-label">이름(닉네임) <span class="req">*</span></div>
           <div class="form-cell">
-            <input class="fi fi-sm" type="text" placeholder="닉네임을 입력해주세요" id="resume_nick">
+            <input class="fi fi-sm" type="text" placeholder="닉네임을 입력해주세요" id="resume_nick" value="<?php echo htmlspecialchars($mb_nick); ?>">
           </div>
         </div>
 
@@ -79,16 +82,16 @@
           </div>
         </div>
 
-        <!-- 생년월일 -->
+        <!-- 나이 -->
         <div class="form-row">
-          <div class="form-label">생년월일 <span class="req">*</span></div>
-          <div class="form-cell" style="gap:5px;">
-            <input class="fi fi-xs" type="text" placeholder="YYYY" maxlength="4" style="width:80px;text-align:center;" id="resume_birth_y">
-            <span style="font-size:13px;color:#888;">년</span>
-            <input class="fi" type="text" placeholder="MM" maxlength="2" style="width:56px;text-align:center;" id="resume_birth_m">
-            <span style="font-size:13px;color:#888;">월</span>
-            <input class="fi" type="text" placeholder="DD" maxlength="2" style="width:56px;text-align:center;" id="resume_birth_d">
-            <span style="font-size:13px;color:#888;">일</span>
+          <div class="form-label">나이 <span class="req">*</span></div>
+          <div class="form-cell">
+            <select class="fi fi-select fi-sm" id="resume_age" title="나이 선택">
+              <option value="">선택</option>
+              <?php for ($a = 19; $a <= 60; $a++) { ?>
+              <option value="<?php echo $a; ?>"><?php echo $a; ?>세</option>
+              <?php } ?>
+            </select>
           </div>
         </div>
 
@@ -736,7 +739,7 @@
           </div>
           <div class="terms-item">
             <input type="checkbox" class="term-chk" id="term3">
-            <label for="term3">[필수] 만 18세 미만은 이력서 등록이 불가합니다. 본인은 만 18세 이상임을 확인합니다.</label>
+            <label for="term3">[필수] 만 19세 미만은 이력서 등록이 불가합니다. 본인은 만 19세 이상임을 확인합니다.</label>
           </div>
           <div class="terms-item">
             <input type="checkbox" class="term-chk" id="term4">
@@ -959,7 +962,7 @@ function toggleAiPreview(){
   if(body){ body.classList.toggle('hide'); if(btn) btn.classList.toggle('collapsed'); if(btn) btn.textContent=body.classList.contains('hide')?'▼':'▲'; }
 }
 (function(){
-  var ids=['resume_title','resume_nick','resume_phone','resume_birth_y','resume_birth_m','resume_birth_d','resume_salary_type','resume_salary_amt','resume_height','resume_weight','resume_size','resume_region','resume_region_detail','resume_edu','resume_job1','resume_job2','resume_work_region','resume_work_region_detail','resume_work_time_type','resume_work_time_start','resume_work_time_end','resume_intro'];
+  var ids=['resume_title','resume_nick','resume_phone','resume_age','resume_salary_type','resume_salary_amt','resume_height','resume_weight','resume_size','resume_region','resume_region_detail','resume_edu','resume_job1','resume_job2','resume_work_region','resume_work_region_detail','resume_work_time_type','resume_work_time_start','resume_work_time_end','resume_intro'];
   function attach(){ for(var i=0;i<ids.length;i++){ var el=document.getElementById(ids[i]); if(el){ el.addEventListener('input', updateResumeSummary); el.addEventListener('change', updateResumeSummary); } } }
   document.querySelectorAll('input[name="contact"], input[name="work-type"], input[name="mbti"]').forEach(function(el){ el.addEventListener('change', updateResumeSummary); });
   for(var k=1;k<=21;k++){ var am=document.getElementById('am-'+k); if(am) am.addEventListener('change', updateResumeSummary); }
