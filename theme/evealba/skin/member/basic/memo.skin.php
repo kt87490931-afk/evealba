@@ -8,7 +8,7 @@ $list_count = count($list);
 <div id="memo_list" class="new_win memo-popup-wrap">
   <div class="content-card">
     <div class="msg-toolbar">
-      <span class="msg-toolbar-title"><?php echo ($memo_current_tab==='recv') ? '받은쪽지' : (($memo_current_tab==='unread') ? '미열람' : '보낸쪽지'); ?> <span><?php echo $list_count; ?>통</span></span>
+      <span class="msg-toolbar-title"><?php echo ($memo_current_tab==='recv') ? '📥 받은 쪽지함' : (($memo_current_tab==='unread') ? '🔔 미열람 목록' : '📤 보낸 쪽지함'); ?> <span>(총 <?php echo $list_count; ?>건)</span></span>
     </div>
     <div class="memo-list-actions">
       <a href="./memo_form.php" class="memo-btn-write">✉️ 쪽지 쓰기</a>
@@ -24,18 +24,19 @@ $list_count = count($list);
       ?>
       <li class="msg-item<?php echo $item_class; ?>">
         <div class="msg-chk">
-          <input type="checkbox" name="me_id[]" value="<?php echo $row['me_id']; ?>" id="me_id_<?php echo $row['me_id']; ?>">
+          <input type="checkbox" class="msg-checkbox" name="me_id[]" value="<?php echo $row['me_id']; ?>" id="me_id_<?php echo $row['me_id']; ?>">
         </div>
         <a href="<?php echo $row['view_href']; ?>" class="msg-body">
           <div class="msg-hrow">
             <span class="msg-sender"><?php echo get_text($row['name']); ?></span>
-            <?php if (!$readed) { ?><span class="msg-badge">N</span><?php } ?>
+            <?php if (!$readed) { ?><span class="mbadge new">미열람</span><?php } ?>
           </div>
-          <div class="msg-title"><?php echo get_text($memo_preview); ?></div>
+          <div class="msg-title"><?php echo $readed ? get_text($memo_preview) : '<b>'.get_text($memo_preview).'</b>'; ?></div>
           <div class="msg-preview"><?php echo get_text($memo_preview); ?></div>
         </a>
         <div class="msg-meta">
           <span class="msg-date"><?php echo $row['send_datetime']; ?></span>
+          <span class="msg-st<?php echo $readed ? '' : ' unread'; ?>"><?php echo $readed ? '열람' : '미열람'; ?></span>
           <a href="<?php echo $row['del_href']; ?>" onclick="del(this.href); return false;" class="memo-del" title="삭제"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
         </div>
       </li>
@@ -51,7 +52,7 @@ $list_count = count($list);
     <?php echo $write_pages; ?>
     <p class="win_desc"><i class="fa fa-info-circle" aria-hidden="true"></i> 쪽지 보관일수는 최장 <strong><?php echo $config['cf_memo_del']; ?></strong>일 입니다.</p>
     <div class="win_btn">
-      <button type="button" onclick="window.close();" class="btn_close">창닫기</button>
+      <button type="button" onclick="if(window.history.length>1){history.back();}else{location.href='<?php echo G5_URL; ?>';} return false;" class="btn_close">뒤로</button>
     </div>
   </div>
 </div>

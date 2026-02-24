@@ -23,7 +23,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$outlogin_skin_url.'/style.css">'
 
     <ul id="ol_after_private">
         <li id="ol_after_memo">
-            <a href="<?php echo G5_BBS_URL ?>/memo.php" target="_blank" class="win_memo">
+            <a href="<?php echo G5_BBS_URL ?>/memo.php" class="win_memo">
             	<i class="fa fa-envelope-o" aria-hidden="true"></i>
                 <span class="sound_only">안 읽은</span>쪽지
                 <strong><?php echo $memo_not_read ?></strong>

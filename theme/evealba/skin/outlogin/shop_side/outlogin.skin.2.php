@@ -45,7 +45,7 @@ for($k=0; $cp=sql_fetch_array($res); $k++) {
         	</a>
         </li>
         <li>
-            <a href="<?php echo G5_BBS_URL ?>/memo.php" target="_blank" id="ol_after_memo" class="win_memo">
+            <a href="<?php echo G5_BBS_URL ?>/memo.php" id="ol_after_memo" class="win_memo">
             	<i class="fa fa-envelope-o" aria-hidden="true"></i><span class="sound_only">안 읽은 </span>쪽지
                 <strong><?php echo $memo_not_read ?></strong>
             </a>

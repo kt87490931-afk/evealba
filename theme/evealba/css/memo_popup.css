@@ -22,9 +22,10 @@ body.memo-popup-body {
   padding: 0;
   min-height: 100vh;
 }
-.memo-popup-wrap { max-width: 640px; margin: 0 auto; padding: 0; }
+.memo-popup-wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
 
-/* 가로형 프로필 위젯 (참조: top-widget) */
+/* 가로형 프로필 위젯 - eve_alba_messages_1.html .top-widget */
+.top-widget,
 .memo-box-header {
   background: #fff;
   border-radius: 14px 14px 0 0;
@@ -87,6 +88,7 @@ body.memo-popup-body {
 .tw-stat:hover { background: var(--bg); }
 .tw-stat:last-child { border-right: none; }
 .tw-stat-num {
+  font-family: 'Outfit', sans-serif;
   font-size: 20px;
   font-weight: 900;
   color: var(--hot-pink);
@@ -159,7 +161,7 @@ body.memo-popup-body {
   flex-wrap: wrap;
   background: linear-gradient(135deg, #fff8fb, #fff0f5);
 }
-.msg-toolbar-title { font-size: 15px; font-weight: 900; color: var(--dark); margin-right: auto; }
+.msg-toolbar-title { font-size: 15px; font-weight: 900; color: var(--dark); display: flex; align-items: center; gap: 7px; margin-right: auto; }
 .msg-toolbar-title span { color: var(--hot-pink); }
 .msg-list { list-style: none; margin: 0; padding: 0; }
 .msg-item {
@@ -175,15 +177,14 @@ body.memo-popup-body {
 }
 .msg-item .msg-body { text-decoration: none; color: inherit; cursor: pointer; display: block; min-width: 0; }
 .msg-chk { display: flex; align-items: center; }
-.msg-chk input { margin: 0; }
-.msg-badge {
-  background: var(--hot-pink);
-  color: #fff;
-  border-radius: 10px;
-  padding: 1px 6px;
-  font-size: 10px;
-  font-weight: 900;
-}
+.msg-checkbox { width: 17px; height: 17px; accent-color: var(--hot-pink); cursor: pointer; margin: 0; }
+.msg-chk .msg-checkbox { margin: 0; }
+.mbadge { padding: 2px 7px; border-radius: 8px; font-size: 10px; font-weight: 700; }
+.mbadge.admin { background: var(--dark2); color: #fff; }
+.mbadge.biz { background: var(--orange); color: #fff; }
+.mbadge.new { background: var(--hot-pink); color: #fff; }
+.msg-st { padding: 2px 7px; border-radius: 8px; font-size: 10px; font-weight: 700; background: #f0f0f0; color: #bbb; }
+.msg-st.unread { background: linear-gradient(135deg, #fff0e0, #ffe0cc); color: var(--orange); }
 .msg-item:last-child { border-bottom: none; }
 .msg-item:hover { background: linear-gradient(135deg, #fff8fb, #fff0f5); }
 .msg-item.unread { background: linear-gradient(135deg, #fff5f8, #fff0f5); }
@@ -242,8 +243,14 @@ body.memo-popup-body {
 }
 .btn_close:hover { background: var(--pale-pink); color: var(--hot-pink); }
 
+@media (max-width: 800px) {
+  .tab-btn { font-size: 12px; padding: 11px 6px; }
+  .tab-btn-icon { font-size: 17px; }
+  .tw-profile { padding: 10px 14px; }
+  .tw-stat { padding: 0 12px; }
+}
 @media (max-width: 500px) {
-  .memo-box-header { flex-direction: column; }
+  .top-widget, .memo-box-header { flex-direction: column; }
   .tw-divider { display: none; }
   .tw-stats { border-top: 1px solid rgba(255,255,255,.2); width: 100%; justify-content: space-around; padding: 8px 0; }
   .tw-stat { border-right: none; padding: 0 12px; }

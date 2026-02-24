@@ -106,7 +106,7 @@ $box_height = 205;
                 <div class="ev-login-menu-row">
                     <a href="<?php echo $link_mypage; ?>">마이페이지</a>
                     <span>|</span>
-                    <a href="<?php echo $link_memo; ?>" onclick="window.open(this.href,'win_memo','left=100,top=100,width=615,height=630,scrollbars=1');return false;" rel="noopener">쪽지함<?php if ($memo_badge_count > 0) { ?><span class="ev-memo-badge">+<?php echo $memo_badge_count; ?></span><?php } ?></a>
+                    <a href="<?php echo $link_memo; ?>">쪽지함<?php if ($memo_badge_count > 0) { ?><span class="ev-memo-badge">+<?php echo $memo_badge_count; ?></span><?php } ?></a>
                 </div>
             </div>
         </div>

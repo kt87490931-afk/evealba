@@ -13,7 +13,7 @@ $member_name = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
 $member_id = isset($member['mb_id']) ? $member['mb_id'] : '';
 $role_icon = (strpos($member_type, '기업') !== false) ? '🏢' : '👤';
 ?>
-<div class="memo-box-header">
+<div class="top-widget memo-box-header">
   <div class="tw-profile">
     <div class="tw-avatar">
       <?php echo $member_id ? get_member_profile_img($member_id) : '👤'; ?>

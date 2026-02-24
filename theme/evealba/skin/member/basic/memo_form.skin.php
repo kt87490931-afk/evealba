@@ -31,7 +31,7 @@ include_once(G5_THEME_PATH.'/inc/memo_header.php');
         </div>
         <div class="win_btn">
             <button type="submit" id="btn_submit" class="btn btn_b02 reply_btn">보내기</button>
-            <button type="button" onclick="window.close();" class="btn_close">창닫기</button>
+            <button type="button" onclick="if(window.history.length>1){history.back();}else{location.href='<?php echo G5_URL; ?>';} return false;" class="btn_close">뒤로</button>
         </div>
         </form>
     </div>

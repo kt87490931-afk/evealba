@@ -50,7 +50,7 @@ include_once(G5_THEME_PATH.'/inc/memo_header.php');
         </article>
 		<div class="win_btn">
 			<?php if ($kind == 'recv') {  ?><a href="./memo_form.php?me_id=<?php echo $memo['me_id'] ?>" class="reply_btn">답장</a><?php }  ?>
-			<button type="button" onclick="window.close();" class="btn_close">창닫기</button>
+			<button type="button" onclick="if(window.history.length>1){history.back();}else{location.href='<?php echo G5_URL; ?>';} return false;" class="btn_close">뒤로</button>
     	</div>
     </div>
 </div>
