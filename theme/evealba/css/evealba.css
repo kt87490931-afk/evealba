@@ -654,6 +654,14 @@ nav::before {
 .login-links a { font-size:11px; color:var(--gray); transition:color .2s; }
 .login-links a:hover { color:var(--hot-pink); }
 .login-links .sep { color:#ddd; }
+/* 로그인 상태 */
+.login-logged { padding:8px 0; text-align:center; }
+.login-logged-info { font-size:13px; color:var(--text-dark); margin-bottom:8px; }
+.login-logged-info strong { color:var(--hot-pink); }
+.login-logged-actions { display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap; font-size:11px; }
+.login-logged-actions a { color:var(--gray); transition:color .2s; }
+.login-logged-actions a:hover { color:var(--hot-pink); }
+.login-logged-actions .sep { color:#ddd; }
 .quick-links {
   display:grid;
   grid-template-columns:repeat(2,1fr);

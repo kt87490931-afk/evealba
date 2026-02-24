@@ -13,8 +13,13 @@ $nav_active = isset($nav_active) ? $nav_active : '';
     고객센터: 1588-0000 (평일 09:00~18:00)
   </div>
   <div>
+    <?php if ($is_member) { ?>
+    <a href="<?php echo G5_BBS_URL; ?>/member_confirm.php?url=<?php echo urlencode(G5_BBS_URL.'/register_form.php'); ?>">마이페이지</a>
+    <a href="<?php echo G5_BBS_URL; ?>/logout.php">로그아웃</a>
+    <?php } else { ?>
     <a href="<?php echo G5_BBS_URL ?>/login.php">로그인</a>
     <a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a>
+    <?php } ?>
     <?php if ($is_admin) { ?><a href="<?php echo G5_ADMIN_URL ?>">관리자</a><?php } ?>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/cs.php' : '/cs.php'; ?>">고객센터</a>
   </div>
@@ -38,7 +43,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
     </div>
     <div class="header-actions">
       <div class="kakao-btn">카카오톡<br><b>EvéAlba</b></div>
-      <a href="#">채용공고 등록</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>">채용공고 등록</a>
       <a href="<?php echo G5_BBS_URL ?>/register.php" class="btn-register">이력서 등록</a>
     </div>
   </div>
@@ -48,7 +53,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
 <nav>
   <div class="nav-scroll">
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="nav-item<?php echo ($nav_active==='jobs') ? ' active' : ''; ?>"><span class="nav-icon">📋</span>채용정보</a>
-    <a href="#" class="nav-item"><span class="nav-icon">📍</span>지역별채용</a>
+    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="nav-item"><span class="nav-icon">📍</span>지역별채용</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/talent.php' : '/talent.php'; ?>" class="nav-item<?php echo ($nav_active==='talent') ? ' active' : ''; ?>"><span class="nav-icon">👑</span>인재정보</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/sudabang.php' : '/sudabang.php'; ?>" class="nav-item<?php echo ($nav_active==='sudabang') ? ' active' : ''; ?>"><span class="nav-icon">💬</span>이브수다방</a>
     <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="nav-item<?php echo ($nav_active==='used') ? ' active' : ''; ?>"><span class="nav-icon">🏪</span>중고거래</a>

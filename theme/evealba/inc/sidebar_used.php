@@ -4,34 +4,7 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 ?>
-<!-- 로그인 -->
-<div class="sidebar-widget">
-  <div class="widget-title">🌸 로그인</div>
-  <div class="login-visitor">오늘 방문 <strong><?php echo number_format($config['cf_today_cnt']); ?></strong>명</div>
-  <div class="widget-body">
-    <?php if ($is_member) { ?>
-    <div style="padding:12px; text-align:center; color:var(--hot-pink); font-weight:700;"><?php echo get_text($member['mb_nick']); ?>님 환영합니다</div>
-    <div class="login-links">
-      <a href="<?php echo G5_BBS_URL ?>/logout.php">로그아웃</a><span class="sep">|</span>
-      <a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=member_form.php">정보수정</a>
-    </div>
-    <?php } else { ?>
-    <form method="post" action="<?php echo G5_BBS_URL ?>/login.php">
-    <input type="hidden" name="url" value="<?php echo str_replace(array('&amp;', '"'), array('&', '\''), get_pretty_url($bo_table)); ?>">
-    <div class="login-form">
-      <input type="text" name="mb_id" placeholder="아이디" required>
-      <input type="password" name="mb_password" placeholder="비밀번호" required>
-      <button type="submit">로그인</button>
-    </div>
-    </form>
-    <div class="login-links">
-      <a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a><span class="sep">|</span>
-      <a href="<?php echo G5_BBS_URL ?>/password_lost.php">아이디 찾기</a><span class="sep">|</span>
-      <a href="<?php echo G5_BBS_URL ?>/password_lost.php">비밀번호</a>
-    </div>
-    <?php } ?>
-  </div>
-</div>
+<?php include G5_THEME_PATH.'/inc/sidebar_login_widget.php'; ?>
 
 <!-- 커뮤니티 메뉴 -->
 <div class="sidebar-widget">
@@ -54,16 +27,16 @@ if (!defined('_GNUBOARD_')) exit;
     <div class="region-grid">
       <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">서울</a>
       <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">경기</a>
-      <a href="#" class="region-btn">인천</a>
-      <a href="#" class="region-btn">부산</a>
-      <a href="#" class="region-btn">대구</a>
-      <a href="#" class="region-btn">광주</a>
-      <a href="#" class="region-btn">대전</a>
-      <a href="#" class="region-btn">울산</a>
-      <a href="#" class="region-btn">강원</a>
-      <a href="#" class="region-btn">충청</a>
-      <a href="#" class="region-btn">전라</a>
-      <a href="#" class="region-btn">경상</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">인천</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">부산</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">대구</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">광주</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">대전</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">울산</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">강원</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">충청</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">전라</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">경상</a>
     </div>
   </div>
 </div>
