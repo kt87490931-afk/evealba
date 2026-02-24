@@ -119,6 +119,9 @@ document.querySelectorAll('.side-cs-item').forEach(function(el){
 <?php if ($config['cf_analytics']) { echo $config['cf_analytics']; } ?>
 
 <?php
+if (defined('_JOBS_') && is_file(G5_THEME_PATH.'/js/jobs_filter.js')) {
+    echo '<script src="'.G5_THEME_URL.'/js/jobs_filter.js?v='.@filemtime(G5_THEME_PATH.'/js/jobs_filter.js').'"></script>';
+}
 if (is_file(G5_THEME_PATH.'/js/sp_user_menu_common.js')) {
     echo '<script src="'.G5_THEME_URL.'/js/sp_user_menu_common.js?v='.@filemtime(G5_THEME_PATH.'/js/sp_user_menu_common.js').'"></script>';
 }
