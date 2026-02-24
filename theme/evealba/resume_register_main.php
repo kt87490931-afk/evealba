@@ -66,11 +66,11 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
           </div>
         </div>
 
-        <!-- 이름(닉네임) -->
+        <!-- 닉네임 (가입 시 고정, 수정 불가) -->
         <div class="form-row">
-          <div class="form-label">이름(닉네임) <span class="req">*</span></div>
+          <div class="form-label">닉네임 <span class="req">*</span></div>
           <div class="form-cell">
-            <input class="fi fi-sm" type="text" placeholder="닉네임을 입력해주세요" id="resume_nick" value="<?php echo htmlspecialchars($mb_nick); ?>">
+            <input class="fi fi-sm fi-readonly" type="text" id="resume_nick" value="<?php echo htmlspecialchars($mb_nick); ?>" readonly>
           </div>
         </div>
 
@@ -88,7 +88,7 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
           <div class="form-cell">
             <select class="fi fi-select fi-sm" id="resume_age" title="나이 선택">
               <option value="">선택</option>
-              <?php for ($a = 19; $a <= 60; $a++) { ?>
+              <?php for ($a = 20; $a <= 60; $a++) { ?>
               <option value="<?php echo $a; ?>"><?php echo $a; ?>세</option>
               <?php } ?>
             </select>
@@ -197,23 +197,21 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
           </div>
         </div>
 
-        <!-- 거주지역 -->
+        <!-- 거주지역 (jobs.php 채용정보검색과 동일) -->
         <div class="form-row">
           <div class="form-label">거주지역</div>
           <div class="form-cell">
             <select class="fi-select" id="resume_region">
-              <option>지역선택</option>
-              <option>서울</option><option>경기</option><option>인천</option>
-              <option>부산</option><option>대구</option><option>광주</option>
-              <option>대전</option><option>울산</option><option>강원</option>
-              <option>충청북도</option><option>충청남도</option><option>전라북도</option>
-              <option>전라남도</option><option>경상북도</option><option>경상남도</option>
-              <option>제주</option>
+              <option value="">지역선택</option>
+              <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
+              <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+              <?php } ?>
             </select>
             <select class="fi-select" id="resume_region_detail">
-              <option>세부지역선택</option>
-              <option>강남구</option><option>서초구</option><option>종로구</option>
-              <option>중구</option><option>마포구</option><option>성동구</option>
+              <option value="">세부지역선택</option>
+              <?php foreach ((isset($ev_region_details) ? $ev_region_details : []) as $rd) { ?>
+              <option value="<?php echo (int)$rd['erd_id']; ?>" data-er-id="<?php echo (int)$rd['er_id']; ?>"><?php echo htmlspecialchars($rd['erd_name']); ?></option>
+              <?php } ?>
             </select>
           </div>
         </div>
@@ -277,18 +275,16 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
           <div class="form-label">업무지역 <span class="req">*</span></div>
           <div class="form-cell">
             <select class="fi-select" id="resume_work_region">
-              <option>지역선택</option>
-              <option>서울</option><option>경기</option><option>인천</option>
-              <option>부산</option><option>대구</option><option>광주</option>
-              <option>대전</option><option>울산</option><option>강원</option>
-              <option>충청북도</option><option>충청남도</option><option>전라북도</option>
-              <option>전라남도</option><option>경상북도</option><option>경상남도</option>
-              <option>세종</option><option>제주</option>
+              <option value="">지역선택</option>
+              <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
+              <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+              <?php } ?>
             </select>
             <select class="fi-select" id="resume_work_region_detail">
-              <option>세부지역선택</option>
-              <option>강남구</option><option>서초구</option><option>종로구</option>
-              <option>중구</option><option>마포구</option><option>성동구</option>
+              <option value="">세부지역선택</option>
+              <?php foreach ((isset($ev_region_details) ? $ev_region_details : []) as $rd) { ?>
+              <option value="<?php echo (int)$rd['erd_id']; ?>" data-er-id="<?php echo (int)$rd['er_id']; ?>"><?php echo htmlspecialchars($rd['erd_name']); ?></option>
+              <?php } ?>
             </select>
           </div>
         </div>
@@ -431,6 +427,7 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
       </div>
       <div class="sec-body">
         <div class="amenity-grid">
+          <div class="chk-item"><input type="checkbox" id="am-0"><label for="am-0">당일지급</label></div>
           <div class="chk-item"><input type="checkbox" id="am-1"><label for="am-1">선불가능</label></div>
           <div class="chk-item"><input type="checkbox" id="am-2"><label for="am-2">순번확실</label></div>
           <div class="chk-item"><input type="checkbox" id="am-3"><label for="am-3">원룸제공</label></div>
@@ -943,7 +940,7 @@ function updateResumeSummary() {
   var careerEl = document.getElementById('resume-summary-career');
   if(careerEl) careerEl.innerHTML = careerTexts.length ? chip(careerTexts.join(' | '),'aip-chip-green') : '<span class="aip-empty">—</span>';
 
-  var am=[], amIds=['am-1','am-2','am-3','am-4','am-5','am-6','am-7','am-8','am-9','am-10','am-11','am-12','am-13','am-14','am-15','am-16','am-17','am-18','am-19','am-20','am-21'];
+  var am=[], amIds=['am-0','am-1','am-2','am-3','am-4','am-5','am-6','am-7','am-8','am-9','am-10','am-11','am-12','am-13','am-14','am-15','am-16','am-17','am-18','am-19','am-20','am-21'];
   for(var i=0;i<amIds.length;i++){ var cb=document.getElementById(amIds[i]); if(cb&&cb.checked&&cb.nextElementSibling) am.push(cb.nextElementSibling.textContent); }
   var amenityEl = document.getElementById('resume-summary-amenity');
   if(amenityEl) amenityEl.innerHTML = am.length ? am.map(function(a){ return chip(a,'aip-chip-pink'); }).join('') : '<span class="aip-empty">선택된 편의사항이 없습니다</span>';
@@ -961,11 +958,41 @@ function toggleAiPreview(){
   var body=document.getElementById('aiPreviewBody'), btn=document.getElementById('aiToggleBtn');
   if(body){ body.classList.toggle('hide'); if(btn) btn.classList.toggle('collapsed'); if(btn) btn.textContent=body.classList.contains('hide')?'▼':'▲'; }
 }
+/* 지역 선택 시 세부지역 필터 (jobs.php 채용정보검색과 동일) */
+function filterResumeSubByRegion(regionId, detailId) {
+  var region = document.getElementById(regionId);
+  var detail = document.getElementById(detailId);
+  if (!region || !detail) return;
+  var opts = detail.querySelectorAll('option[data-er-id]');
+  var cache = [];
+  opts.forEach(function(o){ cache.push({ value: o.value, text: o.textContent, erId: o.getAttribute('data-er-id') }); });
+  var firstOpt = detail.querySelector('option[value=""]');
+  function apply() {
+    var erId = region.value;
+    while (detail.options.length) detail.remove(0);
+    if (firstOpt) { var p = document.createElement('option'); p.value = ''; p.textContent = firstOpt.textContent; detail.appendChild(p); }
+    cache.forEach(function(o) {
+      if (!erId || o.erId === erId) {
+        var opt = document.createElement('option');
+        opt.value = o.value;
+        opt.textContent = o.text;
+        opt.setAttribute('data-er-id', o.erId);
+        detail.appendChild(opt);
+      }
+    });
+    detail.value = '';
+    if (typeof updateResumeSummary === 'function') updateResumeSummary();
+  }
+  region.addEventListener('change', apply);
+  apply();
+}
 (function(){
+  filterResumeSubByRegion('resume_region', 'resume_region_detail');
+  filterResumeSubByRegion('resume_work_region', 'resume_work_region_detail');
   var ids=['resume_title','resume_nick','resume_phone','resume_age','resume_salary_type','resume_salary_amt','resume_height','resume_weight','resume_size','resume_region','resume_region_detail','resume_edu','resume_job1','resume_job2','resume_work_region','resume_work_region_detail','resume_work_time_type','resume_work_time_start','resume_work_time_end','resume_intro'];
   function attach(){ for(var i=0;i<ids.length;i++){ var el=document.getElementById(ids[i]); if(el){ el.addEventListener('input', updateResumeSummary); el.addEventListener('change', updateResumeSummary); } } }
   document.querySelectorAll('input[name="contact"], input[name="work-type"], input[name="mbti"]').forEach(function(el){ el.addEventListener('change', updateResumeSummary); });
-  for(var k=1;k<=21;k++){ var am=document.getElementById('am-'+k); if(am) am.addEventListener('change', updateResumeSummary); }
+  for(var k=0;k<=21;k++){ var amEl=document.getElementById('am-'+k); if(amEl) amEl.addEventListener('change', updateResumeSummary); }
   for(var k=1;k<=24;k++){ var kw=document.getElementById('kw-'+k); if(kw) kw.addEventListener('change', updateResumeSummary); }
   ['rg-all','rg-travel','rg-abroad'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('change', updateResumeSummary); });
   var careerBody=document.getElementById('careerBody');
