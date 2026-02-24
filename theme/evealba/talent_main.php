@@ -59,42 +59,46 @@ if (!defined('_GNUBOARD_')) exit;
     </div>
 
     <!-- 검색 필터 -->
-    <div class="filter-box">
+    <?php
+    $tf = isset($talent_filters) ? $talent_filters : array('er_id'=>0,'ei_id'=>0,'ej_id'=>0,'stx'=>'');
+    $talent_form_action = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/talent.php' : 'talent.php';
+    ?>
+    <form method="get" action="<?php echo htmlspecialchars($talent_form_action); ?>" id="talent-search-form" class="filter-box">
       <div class="filter-title">인재정보 검색하기 &nbsp;<small style="font-size:11px;font-weight:500;color:#aaa">조건 하나만 선택해도 검색이 가능합니다!</small></div>
       <div class="filter-rows">
         <div class="filter-row">
           <span class="filter-label">▸ 직종</span>
-          <select class="filter-select" name="ei_id" id="filter-ei-id">
+          <select class="filter-select" name="ei_id" id="talent-filter-ei-id">
             <option value="">1차 직종선택</option>
             <?php foreach ((isset($ev_industries) ? $ev_industries : []) as $i) { ?>
-            <option value="<?php echo (int)$i['ei_id']; ?>"><?php echo htmlspecialchars($i['ei_name']); ?></option>
+            <option value="<?php echo (int)$i['ei_id']; ?>"<?php echo ($tf['ei_id']==$i['ei_id'])?' selected':''; ?>><?php echo htmlspecialchars($i['ei_name']); ?></option>
             <?php } ?>
           </select>
-          <select class="filter-select" name="ej_id" id="filter-ej-id">
+          <select class="filter-select" name="ej_id" id="talent-filter-ej-id">
             <option value="">2차 세부직종</option>
             <?php foreach ((isset($ev_jobs) ? $ev_jobs : []) as $j) { ?>
-            <option value="<?php echo (int)$j['ej_id']; ?>" data-ei-id="<?php echo (int)$j['ei_id']; ?>"><?php echo htmlspecialchars($j['ej_name']); ?></option>
+            <option value="<?php echo (int)$j['ej_id']; ?>" data-ei-id="<?php echo (int)$j['ei_id']; ?>"<?php echo ($tf['ej_id']==$j['ej_id'])?' selected':''; ?>><?php echo htmlspecialchars($j['ej_name']); ?></option>
             <?php } ?>
           </select>
           &nbsp;&nbsp;
           <span class="filter-label">▸ 지역</span>
-          <select class="filter-select" name="er_id">
+          <select class="filter-select" name="er_id" id="talent-filter-er-id">
             <option value="">지역선택</option>
             <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
-            <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+            <option value="<?php echo (int)$r['er_id']; ?>"<?php echo ($tf['er_id']==$r['er_id'])?' selected':''; ?>><?php echo htmlspecialchars($r['er_name']); ?></option>
             <?php } ?>
           </select>
         </div>
         <div class="filter-row">
           <span class="filter-label">▸ 키워드</span>
-          <input class="filter-input" type="text" placeholder="이름(닉네임), 지역, 나이, 키워드로 검색 가능합니다.">
+          <input class="filter-input" type="text" name="stx" placeholder="이름(닉네임), 지역, 나이, 키워드로 검색 가능합니다." value="<?php echo htmlspecialchars($tf['stx']); ?>">
         </div>
       </div>
       <div class="filter-actions">
-        <button class="btn-search" id="searchBtn">🔍 검색</button>
-        <button class="btn-reset">초기화</button>
+        <button type="submit" class="btn-search">🔍 검색</button>
+        <button type="button" class="btn-reset">초기화</button>
       </div>
-    </div>
+    </form>
 
     <!-- 인재정보 리스트 -->
     <div class="section-header">
@@ -115,7 +119,7 @@ if (!defined('_GNUBOARD_')) exit;
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr class="talent-row" data-region="서울" data-type="룸싸롱">
             <td class="td-name">마○○<span class="name-private">닉네임 비공개</span></td>
             <td class="td-gender"><span class="gender-badge gender-f">여</span><br><span class="age-text">26세</span></td>
             <td class="td-title"><a href="#" class="talent-title">강남 룸구해요 <span class="badge-new-inline">N</span></a><div class="talent-region">희망지역 : <strong>서울</strong></div></td>
@@ -123,7 +127,7 @@ if (!defined('_GNUBOARD_')) exit;
             <td class="td-wage"><span class="wage-badge wb-hyup">협의</span><span class="wage-amount">면접 후 협의</span></td>
             <td class="td-date">2026-02-23</td>
           </tr>
-          <tr>
+          <tr class="talent-row" data-region="서울" data-type="마사지">
             <td class="td-name">짜○○</td>
             <td class="td-gender"><span class="gender-badge gender-f">여</span><br><span class="age-text">27세</span></td>
             <td class="td-title"><a href="#" class="talent-title">서울 경기 인천 쉬어 야간 구해요 <span class="badge-new-inline">N</span></a><div class="talent-region">희망지역 : <strong>서울</strong></div></td>
@@ -131,7 +135,7 @@ if (!defined('_GNUBOARD_')) exit;
             <td class="td-wage"><span class="wage-badge wb-ilbul">일불</span><span class="wage-amount">400,000원</span></td>
             <td class="td-date">2026-02-23</td>
           </tr>
-          <tr class="lock-row">
+          <tr class="talent-row lock-row" data-region="경북" data-type="기타">
             <td class="td-name">9090○○</td>
             <td class="td-gender"><span class="gender-badge gender-f">여</span><br><span class="age-text">27세</span></td>
             <td class="td-title"><a href="#" class="talent-title">일급 40이상 <span class="badge-new-inline">N</span></a><div class="talent-region">희망지역 : <strong>경북</strong></div></td>
@@ -139,7 +143,7 @@ if (!defined('_GNUBOARD_')) exit;
             <td class="td-wage"><span class="wage-badge wb-ilbul">일불</span><span class="wage-amount">400,000원</span></td>
             <td class="td-date">2026-02-22</td>
           </tr>
-          <tr class="lock-row">
+          <tr class="talent-row lock-row" data-region="서울" data-type="기타">
             <td class="td-name">넬○○</td>
             <td class="td-gender"><span class="gender-badge gender-f">여</span><br><span class="age-text">33세</span></td>
             <td class="td-title"><a href="#" class="talent-title">160 66kg 일종 둘론 일자리 구합니다 <span class="badge-new-inline">N</span></a><div class="talent-region">희망지역 : <strong>서울</strong></div></td>
@@ -147,7 +151,7 @@ if (!defined('_GNUBOARD_')) exit;
             <td class="td-wage"><span class="wage-badge wb-hyup">협의</span><span class="wage-amount">면접 후 협의</span></td>
             <td class="td-date">2026-02-22</td>
           </tr>
-          <tr>
+          <tr class="talent-row" data-region="서울" data-type="노래주점">
             <td class="td-name">훞○○</td>
             <td class="td-gender"><span class="gender-badge gender-f">여</span><br><span class="age-text">27세</span></td>
             <td class="td-title"><a href="#" class="talent-title">77사이즈 ㅎC ㄹㅎC ㄴC 구해요 <span class="badge-hot-inline">HOT</span></a><div class="talent-region">희망지역 : <strong>서울</strong></div></td>
@@ -155,7 +159,7 @@ if (!defined('_GNUBOARD_')) exit;
             <td class="td-wage"><span class="wage-badge wb-hyup">협의</span><span class="wage-amount">면접 후 협의</span></td>
             <td class="td-date">2026-02-21</td>
           </tr>
-          <tr>
+          <tr class="talent-row" data-region="서울" data-type="노래주점">
             <td class="td-name">꼬○○</td>
             <td class="td-gender"><span class="gender-badge gender-f">여</span><br><span class="age-text">27세</span></td>
             <td class="td-title"><a href="#" class="talent-title">165 68kg 20대초반 일자리 구해요 <span class="badge-new-inline">N</span></a><div class="talent-region">희망지역 : <strong>서울</strong></div></td>
@@ -163,7 +167,7 @@ if (!defined('_GNUBOARD_')) exit;
             <td class="td-wage"><span class="wage-badge wb-hyup">협의</span><span class="wage-amount">면접 후 협의</span></td>
             <td class="td-date">2026-02-21</td>
           </tr>
-          <tr>
+          <tr class="talent-row" data-region="경기" data-type="기타">
             <td class="td-name">수○○</td>
             <td class="td-gender"><span class="gender-badge gender-f">여</span><br><span class="age-text">22세</span></td>
             <td class="td-title"><a href="#" class="talent-title">일구해요 <span class="badge-new-inline">N</span></a><div class="talent-region">희망지역 : <strong>경기</strong></div></td>
@@ -171,7 +175,7 @@ if (!defined('_GNUBOARD_')) exit;
             <td class="td-wage"><span class="wage-badge wb-hyup">협의</span><span class="wage-amount">면접 후 협의</span></td>
             <td class="td-date">2026-02-21</td>
           </tr>
-          <tr>
+          <tr class="talent-row" data-region="서울" data-type="노래주점">
             <td class="td-name">cnjzi○○</td>
             <td class="td-gender"><span class="gender-badge gender-f">여</span><br><span class="age-text">27세</span></td>
             <td class="td-title"><a href="#" class="talent-title">20대 77 여자 일 구해요 <span class="badge-new-inline">N</span></a><div class="talent-region">희망지역 : <strong>서울</strong></div></td>
@@ -195,25 +199,25 @@ if (!defined('_GNUBOARD_')) exit;
     </div>
 
     <!-- 하단 재검색 -->
-    <div class="bottom-search">
+    <form method="get" action="<?php echo htmlspecialchars($talent_form_action); ?>" class="bottom-search">
       <select class="filter-select" name="ei_id">
         <option value="">1차 직종선택</option>
         <?php foreach ((isset($ev_industries) ? $ev_industries : []) as $i) { ?>
-        <option value="<?php echo (int)$i['ei_id']; ?>"><?php echo htmlspecialchars($i['ei_name']); ?></option>
+        <option value="<?php echo (int)$i['ei_id']; ?>"<?php echo ($tf['ei_id']==$i['ei_id'])?' selected':''; ?>><?php echo htmlspecialchars($i['ei_name']); ?></option>
         <?php } ?>
       </select>
       <select class="filter-select" name="ej_id">
         <option value="">2차 직종선택</option>
         <?php foreach ((isset($ev_jobs) ? $ev_jobs : []) as $j) { ?>
-        <option value="<?php echo (int)$j['ej_id']; ?>"><?php echo htmlspecialchars($j['ej_name']); ?></option>
+        <option value="<?php echo (int)$j['ej_id']; ?>"<?php echo ($tf['ej_id']==$j['ej_id'])?' selected':''; ?>><?php echo htmlspecialchars($j['ej_name']); ?></option>
         <?php } ?>
       </select>
       <select class="filter-select" name="er_id">
         <option value="">지역선택</option>
         <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
-        <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+        <option value="<?php echo (int)$r['er_id']; ?>"<?php echo ($tf['er_id']==$r['er_id'])?' selected':''; ?>><?php echo htmlspecialchars($r['er_name']); ?></option>
         <?php } ?>
       </select>
-      <input class="filter-input" type="text" placeholder="키워드 입력">
-      <button class="btn-bottom-search">🔍 검색</button>
-    </div>
+      <input class="filter-input" type="text" name="stx" placeholder="키워드 입력" value="<?php echo htmlspecialchars($tf['stx']); ?>">
+      <button type="submit" class="btn-bottom-search">🔍 검색</button>
+    </form>

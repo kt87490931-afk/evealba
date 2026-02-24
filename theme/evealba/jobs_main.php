@@ -8,7 +8,11 @@ if (!defined('_GNUBOARD_')) exit;
     <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
 
     <!-- 검색 필터 박스 -->
-    <div class="filter-box">
+    <?php
+    $jf = isset($job_filters) ? $job_filters : array('er_id'=>0,'erd_id'=>0,'ei_id'=>0,'ej_id'=>0,'ec_id'=>0,'stx'=>'');
+    $jobs_form_action = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : 'jobs.php';
+    ?>
+    <form method="get" action="<?php echo htmlspecialchars($jobs_form_action); ?>" id="jobs-search-form" class="filter-box">
       <div class="filter-title">채용정보 검색하기 &nbsp;<small style="font-size:11px;font-weight:500;color:#aaa">조건 하나만 선택해도 검색이 가능합니다!</small></div>
       <div class="filter-rows">
         <div class="filter-row">
@@ -16,13 +20,13 @@ if (!defined('_GNUBOARD_')) exit;
           <select class="filter-select" name="er_id" id="filter-er-id">
             <option value="">지역선택</option>
             <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
-            <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+            <option value="<?php echo (int)$r['er_id']; ?>"<?php echo ($jf['er_id']==$r['er_id'])?' selected':''; ?>><?php echo htmlspecialchars($r['er_name']); ?></option>
             <?php } ?>
           </select>
           <select class="filter-select" name="erd_id" id="filter-erd-id">
             <option value="">세부지역선택</option>
             <?php foreach ((isset($ev_region_details) ? $ev_region_details : []) as $rd) { ?>
-            <option value="<?php echo (int)$rd['erd_id']; ?>" data-er-id="<?php echo (int)$rd['er_id']; ?>"><?php echo htmlspecialchars($rd['erd_name']); ?></option>
+            <option value="<?php echo (int)$rd['erd_id']; ?>" data-er-id="<?php echo (int)$rd['er_id']; ?>"<?php echo ($jf['erd_id']==$rd['erd_id'])?' selected':''; ?>><?php echo htmlspecialchars($rd['erd_name']); ?></option>
             <?php } ?>
           </select>
           &nbsp;&nbsp;
@@ -30,13 +34,13 @@ if (!defined('_GNUBOARD_')) exit;
           <select class="filter-select" name="ei_id" id="filter-ei-id">
             <option value="">직종선택</option>
             <?php foreach ((isset($ev_industries) ? $ev_industries : []) as $i) { ?>
-            <option value="<?php echo (int)$i['ei_id']; ?>"><?php echo htmlspecialchars($i['ei_name']); ?></option>
+            <option value="<?php echo (int)$i['ei_id']; ?>"<?php echo ($jf['ei_id']==$i['ei_id'])?' selected':''; ?>><?php echo htmlspecialchars($i['ei_name']); ?></option>
             <?php } ?>
           </select>
           <select class="filter-select" name="ej_id" id="filter-ej-id">
             <option value="">세부직종선택</option>
             <?php foreach ((isset($ev_jobs) ? $ev_jobs : []) as $j) { ?>
-            <option value="<?php echo (int)$j['ej_id']; ?>" data-ei-id="<?php echo (int)$j['ei_id']; ?>"><?php echo htmlspecialchars($j['ej_name']); ?></option>
+            <option value="<?php echo (int)$j['ej_id']; ?>" data-ei-id="<?php echo (int)$j['ei_id']; ?>"<?php echo ($jf['ej_id']==$j['ej_id'])?' selected':''; ?>><?php echo htmlspecialchars($j['ej_name']); ?></option>
             <?php } ?>
           </select>
         </div>
@@ -45,29 +49,29 @@ if (!defined('_GNUBOARD_')) exit;
           <select class="filter-select" name="ec_id">
             <option value="">--선택--</option>
             <?php foreach ((isset($ev_conveniences) ? $ev_conveniences : []) as $c) { ?>
-            <option value="<?php echo (int)$c['ec_id']; ?>"><?php echo htmlspecialchars($c['ec_name']); ?></option>
+            <option value="<?php echo (int)$c['ec_id']; ?>"<?php echo ($jf['ec_id']==$c['ec_id'])?' selected':''; ?>><?php echo htmlspecialchars($c['ec_name']); ?></option>
             <?php } ?>
           </select>
           &nbsp;&nbsp;
           <span class="filter-label">▸ 고용</span>
-          <select class="filter-select">
-            <option>고용형태</option>
-            <option>고용</option>
-            <option>파견</option>
-            <option>도급</option>
-            <option>위임</option>
+          <select class="filter-select" name="employ_type">
+            <option value="">고용형태</option>
+            <option value="고용"<?php echo (isset($_GET['employ_type'])&&$_GET['employ_type']==='고용')?' selected':''; ?>>고용</option>
+            <option value="파견"<?php echo (isset($_GET['employ_type'])&&$_GET['employ_type']==='파견')?' selected':''; ?>>파견</option>
+            <option value="도급"<?php echo (isset($_GET['employ_type'])&&$_GET['employ_type']==='도급')?' selected':''; ?>>도급</option>
+            <option value="위임"<?php echo (isset($_GET['employ_type'])&&$_GET['employ_type']==='위임')?' selected':''; ?>>위임</option>
           </select>
         </div>
         <div class="filter-row">
           <span class="filter-label">▸ 키워드</span>
-          <input class="filter-input" type="text" placeholder="제목, 업체명, 닉네임, 키워드로 검색 가능합니다.">
+          <input class="filter-input" type="text" name="stx" placeholder="제목, 업체명, 닉네임, 키워드로 검색 가능합니다." value="<?php echo htmlspecialchars($jf['stx']); ?>">
         </div>
       </div>
       <div class="filter-actions">
-        <button type="button" class="btn-search">🔍 검색</button>
+        <button type="submit" class="btn-search">🔍 검색</button>
         <button type="button" class="btn-reset">초기화</button>
       </div>
-    </div>
+    </form>
 
     <!-- 우대채용정보 -->
     <div class="section-wrap">
@@ -78,8 +82,8 @@ if (!defined('_GNUBOARD_')) exit;
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
-      <div class="featured-grid">
-        <div class="job-card">
+      <div class="featured-grid" id="jobs-featured-grid">
+        <div class="job-card" data-region="서울" data-subregion="강남구" data-type="룸싸롱">
           <div class="job-card-banner g1"><span>👑 강남 하이퍼블릭<br>아우라</span></div>
           <div class="hot-badge">HOT</div>
           <div class="job-card-body">
@@ -91,7 +95,7 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
         </div>
-        <div class="job-card">
+        <div class="job-card" data-region="경기" data-subregion="부천시" data-type="룸싸롱">
           <div class="job-card-banner g2"><span>💜 부천 하이퍼블릭<br>메메</span></div>
           <div class="hot-badge">HOT</div>
           <div class="job-card-body">
@@ -103,7 +107,7 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
         </div>
-        <div class="job-card">
+        <div class="job-card" data-region="경기" data-subregion="파주시" data-type="노래주점">
           <div class="job-card-banner g3"><span>❤ 파주최고TC<br>REINA</span></div>
           <div class="hot-badge">HOT</div>
           <div class="job-card-body">
@@ -115,7 +119,7 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
         </div>
-        <div class="job-card">
+        <div class="job-card" data-region="서울" data-subregion="기타" data-type="기타">
           <div class="job-card-banner g4"><span>🔵 화류지옥<br>서울</span></div>
           <div class="new-badge">NEW</div>
           <div class="job-card-body">
@@ -127,7 +131,7 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
         </div>
-        <div class="job-card">
+        <div class="job-card" data-region="서울" data-subregion="강남구" data-type="기타">
           <div class="job-card-banner g5"><span>🌿 강남 유엔미<br>강인한 사장</span></div>
           <div class="job-card-body">
             <div class="job-card-location"><span class="job-loc-badge">서울</span>강남구 룸싸롱</div>
@@ -138,7 +142,7 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
         </div>
-        <div class="job-card">
+        <div class="job-card" data-region="경기" data-subregion="수원시" data-type="노래주점">
           <div class="job-card-banner g9"><span>🎀 수원1등<br>재광팀</span></div>
           <div class="job-card-body">
             <div class="job-card-location"><span class="job-loc-badge">경기</span>수원시 노래주점</div>
@@ -149,7 +153,7 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
         </div>
-        <div class="job-card">
+        <div class="job-card" data-region="서울" data-subregion="강서구" data-type="노래주점">
           <div class="job-card-banner g10"><span>⚡ 아우디리<br>강서구</span></div>
           <div class="job-card-body">
             <div class="job-card-location"><span class="job-loc-badge">서울</span>강서구 노래주점</div>
@@ -160,7 +164,7 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
         </div>
-        <div class="job-card">
+        <div class="job-card" data-region="경기" data-subregion="고양시" data-type="룸싸롱">
           <div class="job-card-banner g11"><span>💜 익산 정부장<br>전북</span></div>
           <div class="job-card-body">
             <div class="job-card-location"><span class="job-loc-badge">경기</span>고양시 룸싸롱</div>
@@ -303,8 +307,8 @@ if (!defined('_GNUBOARD_')) exit;
               <th>급여조건</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
+          <tbody id="jobs-list-tbody">
+            <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="룸싸롱">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">룸싸롱<br>퍼블릭</td>
               <td class="col-gender td-gender">여<br>20-35세</td>
@@ -335,7 +339,7 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-amount">면접 후 협의</span>
               </td>
             </tr>
-            <tr>
+            <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="기타">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">기타<br>기타업종</td>
               <td class="col-gender td-gender">여<br>20대</td>
@@ -363,7 +367,7 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-amount">600,000원</span>
               </td>
             </tr>
-            <tr>
+            <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="기타">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">기타<br>기타업종</td>
               <td class="col-gender td-gender">여<br>-</td>
@@ -391,7 +395,7 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-amount">500,000원</span>
               </td>
             </tr>
-            <tr>
+            <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="룸싸롱">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">룸싸롱<br>텐프로</td>
               <td class="col-gender td-gender">여<br>20-28세</td>
@@ -421,7 +425,7 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-amount" style="font-size:12px;">2,000,000원</span>
               </td>
             </tr>
-            <tr>
+            <tr class="job-list-row" data-region="서울" data-subregion="강서구" data-type="노래주점">
               <td class="td-region">서울<br>강서구</td>
               <td class="td-type">노래주점<br>아가씨</td>
               <td class="col-gender td-gender">여<br>전연령</td>
@@ -449,7 +453,7 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-amount">60,000원</span>
               </td>
             </tr>
-            <tr>
+            <tr class="job-list-row" data-region="인천" data-subregion="중구" data-type="노래주점">
               <td class="td-region">인천<br>중구</td>
               <td class="td-type">노래주점<br>아가씨</td>
               <td class="col-gender td-gender">여<br>-</td>
@@ -476,7 +480,7 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-amount">면접 후 협의</span>
               </td>
             </tr>
-            <tr>
+            <tr class="job-list-row" data-region="인천" data-subregion="계양구" data-type="기타">
               <td class="td-region">인천<br>계양구</td>
               <td class="td-type">기타<br>기타업종</td>
               <td class="col-gender td-gender">여<br>20-35세</td>
@@ -505,7 +509,7 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-amount">600,000원</span>
               </td>
             </tr>
-            <tr>
+            <tr class="job-list-row" data-region="경기" data-subregion="파주시" data-type="룸싸롱">
               <td class="td-region">경기<br>파주시</td>
               <td class="td-type">룸싸롱<br>룸싸롱</td>
               <td class="col-gender td-gender">여<br>20-40세</td>
@@ -533,7 +537,7 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-amount">140,000원</span>
               </td>
             </tr>
-            <tr>
+            <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="룸싸롱">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">룸싸롱<br>퍼블릭</td>
               <td class="col-gender td-gender">여<br>20-35세</td>
@@ -562,7 +566,7 @@ if (!defined('_GNUBOARD_')) exit;
                 <span class="wage-amount">100,000원</span>
               </td>
             </tr>
-            <tr>
+            <tr class="job-list-row" data-region="서울" data-subregion="성동구" data-type="노래주점">
               <td class="td-region">서울<br>성동구</td>
               <td class="td-type">노래주점<br>아가씨</td>
               <td class="col-gender td-gender">여<br>20대</td>

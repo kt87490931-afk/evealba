@@ -122,6 +122,9 @@ document.querySelectorAll('.side-cs-item').forEach(function(el){
 if (defined('_JOBS_') && is_file(G5_THEME_PATH.'/js/jobs_filter.js')) {
     echo '<script src="'.G5_THEME_URL.'/js/jobs_filter.js?v='.@filemtime(G5_THEME_PATH.'/js/jobs_filter.js').'"></script>';
 }
+if (defined('_TALENT_') && is_file(G5_THEME_PATH.'/js/talent_filter.js')) {
+    echo '<script src="'.G5_THEME_URL.'/js/talent_filter.js?v='.@filemtime(G5_THEME_PATH.'/js/talent_filter.js').'"></script>';
+}
 if (is_file(G5_THEME_PATH.'/js/sp_user_menu_common.js')) {
     echo '<script src="'.G5_THEME_URL.'/js/sp_user_menu_common.js?v='.@filemtime(G5_THEME_PATH.'/js/sp_user_menu_common.js').'"></script>';
 }

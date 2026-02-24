@@ -1,5 +1,5 @@
 /**
- * 채용정보 필터: 지역↔세부지역 연동, 검색 버튼 submit, 결과 필터링
+ * 인재정보 필터: 직종↔세부직종 연동, 검색 버튼 submit, 결과 필터링
  */
 (function() {
   function ready(fn) {
@@ -49,69 +49,51 @@
   }
 
   function applySearchFilter() {
-    var form = document.getElementById('jobs-search-form');
+    var form = document.getElementById('talent-search-form');
     if (!form) return;
 
-    var erSelect = document.getElementById('filter-er-id');
-    var erdSelect = document.getElementById('filter-erd-id');
-    var eiSelect = document.getElementById('filter-ei-id');
+    var erSelect = document.getElementById('talent-filter-er-id');
+    var eiSelect = document.getElementById('talent-filter-ei-id');
+    var ejSelect = document.getElementById('talent-filter-ej-id');
     var stxInput = form.querySelector('input[name="stx"]');
+
     var regionName = (erSelect && erSelect.value && erSelect.selectedOptions[0]) ? erSelect.selectedOptions[0].textContent.trim() : '';
-    var subregionName = (erdSelect && erdSelect.value && erdSelect.selectedOptions[0]) ? erdSelect.selectedOptions[0].textContent.trim() : '';
     var typeName = (eiSelect && eiSelect.value && eiSelect.selectedOptions[0]) ? eiSelect.selectedOptions[0].textContent.trim() : '';
+    var subTypeName = (ejSelect && ejSelect.value && ejSelect.selectedOptions[0]) ? ejSelect.selectedOptions[0].textContent.trim() : '';
     var stx = stxInput ? stxInput.value.trim().toLowerCase() : '';
 
-    var hasFilter = !!regionName || !!subregionName || !!typeName || !!stx;
+    var hasFilter = !!regionName || !!typeName || !!subTypeName || !!stx;
 
     function match(el) {
       if (!hasFilter) return true;
       var r = (el.getAttribute('data-region') || '').trim();
-      var sr = (el.getAttribute('data-subregion') || '').trim();
       var t = (el.getAttribute('data-type') || '').trim();
+      var fullText = (el.textContent || '').toLowerCase();
       if (regionName && r !== regionName) return false;
-      if (subregionName && sr !== subregionName) return false;
       if (typeName && t !== typeName) return false;
-      if (stx) {
-        var text = (el.textContent || '').toLowerCase();
-        if (text.indexOf(stx) === -1) return false;
-      }
+      if (subTypeName && fullText.indexOf(subTypeName) === -1) return false;
+      if (stx && fullText.indexOf(stx) === -1) return false;
       return true;
     }
 
-    document.querySelectorAll('.job-card').forEach(function(el) {
+    document.querySelectorAll('.talent-row').forEach(function(el) {
       el.style.display = match(el) ? '' : 'none';
-    });
-    document.querySelectorAll('.job-list-row').forEach(function(el) {
-      el.style.display = match(el) ? '' : 'none';
-    });
-    document.querySelectorAll('.job-card-m').forEach(function(el) {
-      var region = (el.querySelector('.job-card-m-region') || {}).textContent || '';
-      var subregion = (el.querySelector('.job-card-m-region2') || {}).textContent || '';
-      var typeText = (el.querySelector('.job-card-m-type') || {}).textContent || '';
-      var fullText = (el.textContent || '').toLowerCase();
-      var ok = true;
-      if (regionName && region.trim() !== regionName) ok = false;
-      if (subregionName && subregion.trim() !== subregionName) ok = false;
-      if (typeName && typeText.indexOf(typeName) === -1) ok = false;
-      if (stx && fullText.indexOf(stx) === -1) ok = false;
-      el.style.display = ok ? '' : 'none';
     });
   }
 
   function initResetBtn() {
-    var form = document.getElementById('jobs-search-form');
+    var form = document.getElementById('talent-search-form');
     var resetBtn = form && form.querySelector('.btn-reset');
     if (resetBtn) {
       resetBtn.addEventListener('click', function() {
-        var url = (typeof g5_url !== 'undefined' ? g5_url : '/') + 'jobs.php';
+        var url = (typeof g5_url !== 'undefined' ? g5_url : '/') + 'talent.php';
         window.location.href = url;
       });
     }
   }
 
   ready(function() {
-    filterSubByParent('filter-er-id', 'filter-erd-id', 'er-id');
-    filterSubByParent('filter-ei-id', 'filter-ej-id', 'ei-id');
+    filterSubByParent('talent-filter-ei-id', 'talent-filter-ej-id', 'ei-id');
     applySearchFilter();
     initResetBtn();
   });
