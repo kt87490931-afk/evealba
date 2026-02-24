@@ -101,6 +101,7 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
         </div>
       </div>
     </div>
+    <?php include G5_THEME_PATH.'/inc/sidebar_cs_widget.php'; ?>
   </aside>
 
   <!-- 메인 영역 (index.php에서 채움) -->

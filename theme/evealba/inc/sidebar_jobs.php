@@ -113,3 +113,5 @@ if (!defined('_GNUBOARD_')) exit;
     </div>
   </div>
 </div>
+
+<?php include G5_THEME_PATH.'/inc/sidebar_cs_widget.php'; ?>
