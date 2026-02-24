@@ -415,12 +415,19 @@
       </div>
     </div>
 
-    <!-- ===== 7. 편의사항 ===== -->
+    <!-- 🤖 AI 근접 매칭 안내 (희망하는 편의사항 위) -->
+    <div class="resume-ai-matching-notice">
+      <div class="resume-ai-matching-inner">
+        🤖 <strong>AI 근접 매칭</strong>이란? 희망 편의사항, 키워드, MBTI를 선택하면, 업소의 니즈와 구직자의 성향을 분석하여 최적의 매칭을 도와주는 서비스입니다.
+      </div>
+    </div>
+
+    <!-- ===== 7. 희망하는 편의사항 ===== -->
     <div class="form-card sh-green">
       <div class="sec-head open" onclick="toggleSec(this)">
         <span class="sec-head-icon">✅</span>
-        <span class="sec-head-title">편의사항</span>
-        <span class="sec-head-sub">* 리스트에 출력되는 사항입니다. 2개 이상 선택하면 검색 시 유리합니다.</span>
+        <span class="sec-head-title">희망하는 편의사항</span>
+        <span class="sec-head-sub">2개 이상 선택하면 매칭에 유리합니다.</span>
         <span class="sec-chevron">▼</span>
       </div>
       <div class="sec-body">
@@ -455,7 +462,7 @@
       <div class="sec-head open" onclick="toggleSec(this)">
         <span class="sec-head-icon">🏷️</span>
         <span class="sec-head-title">키워드</span>
-        <span class="sec-head-sub">* 해당하는 키워드를 선택하면 검색 시 유리합니다.</span>
+        <span class="sec-head-sub">해당하는 키워드를 선택하면 매칭에 유리합니다.</span>
         <span class="sec-chevron">▼</span>
       </div>
       <div class="sec-body">
@@ -511,21 +518,15 @@
       </div>
     </div>
 
-    <!-- ===== 10. MBTI (AI 매칭) ===== -->
+    <!-- ===== 10. MBTI유형 ===== -->
     <div class="form-card" style="border:2px solid var(--pale-pink);">
       <div class="sec-head open" style="background:linear-gradient(135deg,#6A1B9A,#AB47BC);" onclick="toggleSec(this)">
         <span class="sec-head-icon">🧠</span>
-        <span class="sec-head-title" style="color:#fff;">MBTI 유형 (AI 근접 매칭)</span>
-        <span class="sec-head-sub" style="color:rgba(255,255,255,.8);">선택 입력 · 기업회원 인재정보 열람 시 노출 · AI 매칭에 활용됩니다</span>
+        <span class="sec-head-title" style="color:#fff;">MBTI유형</span>
+        <span class="sec-head-sub" style="color:rgba(255,255,255,.8);">MBTI 유형을 선택하면 매칭에 유리합니다.</span>
         <span class="sec-chevron" style="color:#fff;">▼</span>
       </div>
       <div class="sec-body">
-        <div style="padding:12px 18px 0;background:linear-gradient(135deg,#f9f5ff,#fdf0ff);">
-          <div style="background:rgba(106,27,154,.08);border:1.5px solid #CE93D8;border-radius:10px;padding:10px 14px;font-size:12px;color:#6A1B9A;line-height:1.7;">
-            🤖 <strong>AI 근접 매칭</strong>이란? MBTI 그룹(NT/NF/SJ/SP) 단위로 업소의 니즈와 구직자의 성향을 분석하여 최적의 매칭을 도와주는 서비스입니다.
-          </div>
-        </div>
-
         <!-- NT 분석가형 -->
         <div class="mbti-group mbti-group-nt">
           <div class="mbti-group-title">🔵 NT — 분석가형</div>

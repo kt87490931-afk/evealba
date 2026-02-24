@@ -222,12 +222,19 @@
 .resume-register-page .caution-main{font-size:15px;font-weight:900;color:var(--hot-pink);}
 .resume-register-page .caution-arrow{color:rgba(255,255,255,.5);font-size:18px;flex-shrink:0;}
 
+/* AI 근접 매칭 안내 (희망하는 편의사항 위) */
+.resume-register-page .resume-ai-matching-notice{margin-bottom:16px;}
+.resume-register-page .resume-ai-matching-inner{background:linear-gradient(135deg,#f9f5ff,#fdf0ff);border:1.5px solid #CE93D8;border-radius:10px;padding:12px 18px;font-size:12px;color:#6A1B9A;line-height:1.7;}
+
 @media(max-width:900px){
   .resume-register-page .page-layout{grid-template-columns:1fr;padding:0 12px;}
   .resume-register-page .left-sidebar{display:none;}
   .resume-register-page .amenity-grid{grid-template-columns:repeat(3,1fr);}
   .resume-register-page .chk-grid{grid-template-columns:repeat(3,1fr);}
   .resume-register-page .mbti-grid{grid-template-columns:repeat(2,1fr);}
+  /* 편의사항·키워드·MBTI유형 섹션 헤더 2줄 표시 */
+  .resume-register-page .sec-head{flex-wrap:wrap;}
+  .resume-register-page .sec-head-sub{flex:1 1 100%;width:100%;margin-top:4px;}
 }
 @media(max-width:600px){
   .resume-register-page .form-row{grid-template-columns:100px 1fr;}
@@ -238,4 +245,7 @@
   .resume-register-page .mbti-grid{grid-template-columns:repeat(2,1fr);}
   .resume-register-page .fi-sm{width:100%;}
   .resume-register-page .fi-md{width:100%;}
+  /* 편의사항·키워드·MBTI유형 섹션 헤더 2줄 표시 */
+  .resume-register-page .sec-head{flex-wrap:wrap;}
+  .resume-register-page .sec-head-sub{flex:1 1 100%;width:100%;margin-top:4px;}
 }
