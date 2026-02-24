@@ -10,6 +10,14 @@ if(G5_COMMUNITY_USE === false) {
     return;
 }
 include_once(G5_THEME_PATH.'/head.sub.php');
+if (file_exists(G5_LIB_PATH.'/ev_master.lib.php')) {
+    include_once(G5_LIB_PATH.'/ev_master.lib.php');
+    $ev_regions = ev_get_regions();
+    $ev_industries = ev_get_industries();
+    $ev_jobs = ev_get_jobs();
+} else {
+    $ev_regions = $ev_industries = $ev_jobs = [];
+}
 include_once(G5_LIB_PATH.'/latest.lib.php');
 include_once(G5_LIB_PATH.'/outlogin.lib.php');
 include_once(G5_LIB_PATH.'/poll.lib.php');

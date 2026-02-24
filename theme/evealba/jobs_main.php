@@ -13,68 +13,40 @@ if (!defined('_GNUBOARD_')) exit;
       <div class="filter-rows">
         <div class="filter-row">
           <span class="filter-label">▸ 지역</span>
-          <select class="filter-select">
-            <option>지역선택</option>
-            <option>서울</option>
-            <option>경기</option>
-            <option>인천</option>
-            <option>부산</option>
-            <option>대구</option>
-            <option>광주</option>
-            <option>대전</option>
-            <option>울산</option>
-            <option>강원</option>
-            <option>충청</option>
-            <option>전라</option>
-            <option>경상</option>
-            <option>제주</option>
+          <select class="filter-select" name="er_id" id="filter-er-id">
+            <option value="">지역선택</option>
+            <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
+            <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+            <?php } ?>
           </select>
-          <select class="filter-select">
-            <option>세부지역선택</option>
-            <option>강남구</option>
-            <option>서초구</option>
-            <option>마포구</option>
-            <option>홍대</option>
-            <option>이태원</option>
-            <option>신사동</option>
+          <select class="filter-select" name="erd_id" id="filter-erd-id">
+            <option value="">세부지역선택</option>
+            <?php foreach ((isset($ev_region_details) ? $ev_region_details : []) as $rd) { ?>
+            <option value="<?php echo (int)$rd['erd_id']; ?>" data-er-id="<?php echo (int)$rd['er_id']; ?>"><?php echo htmlspecialchars($rd['erd_name']); ?></option>
+            <?php } ?>
           </select>
           &nbsp;&nbsp;
           <span class="filter-label">▸ 직종</span>
-          <select class="filter-select">
-            <option>직종선택</option>
-            <option>룸싸롱</option>
-            <option>하이퍼블릭</option>
-            <option>퍼블릭</option>
-            <option>주점</option>
-            <option>바</option>
-            <option>다방</option>
-            <option>마사지</option>
-            <option>기타</option>
+          <select class="filter-select" name="ei_id" id="filter-ei-id">
+            <option value="">직종선택</option>
+            <?php foreach ((isset($ev_industries) ? $ev_industries : []) as $i) { ?>
+            <option value="<?php echo (int)$i['ei_id']; ?>"><?php echo htmlspecialchars($i['ei_name']); ?></option>
+            <?php } ?>
           </select>
-          <select class="filter-select">
-            <option>세부직종선택</option>
-            <option>아가씨</option>
-            <option>초미씨</option>
-            <option>미씨</option>
-            <option>TC</option>
+          <select class="filter-select" name="ej_id" id="filter-ej-id">
+            <option value="">세부직종선택</option>
+            <?php foreach ((isset($ev_jobs) ? $ev_jobs : []) as $j) { ?>
+            <option value="<?php echo (int)$j['ej_id']; ?>" data-ei-id="<?php echo (int)$j['ei_id']; ?>"><?php echo htmlspecialchars($j['ej_name']); ?></option>
+            <?php } ?>
           </select>
         </div>
         <div class="filter-row">
           <span class="filter-label">▸ 편의</span>
-          <select class="filter-select">
-            <option>--선택--</option>
-            <option>선불가능</option>
-            <option>순번확실</option>
-            <option>원룸제공</option>
-            <option>만근비지원</option>
-            <option>성형지원</option>
-            <option>출퇴근지원</option>
-            <option>식사제공</option>
-            <option>팁별도</option>
-            <option>인센티브</option>
-            <option>갯수보장</option>
-            <option>초이스없음</option>
-            <option>당일지급</option>
+          <select class="filter-select" name="ec_id">
+            <option value="">--선택--</option>
+            <?php foreach ((isset($ev_conveniences) ? $ev_conveniences : []) as $c) { ?>
+            <option value="<?php echo (int)$c['ec_id']; ?>"><?php echo htmlspecialchars($c['ec_name']); ?></option>
+            <?php } ?>
           </select>
           &nbsp;&nbsp;
           <span class="filter-label">▸ 고용</span>
@@ -827,31 +799,23 @@ if (!defined('_GNUBOARD_')) exit;
 
     <!-- 하단 재검색 -->
     <div class="bottom-search">
-      <select class="filter-select">
-        <option>지역선택</option>
-        <option>서울</option>
-        <option>경기</option>
-        <option>인천</option>
-        <option>부산</option>
-        <option>대구</option>
-        <option>광주</option>
-        <option>대전</option>
-        <option>울산</option>
-        <option>강원</option>
+      <select class="filter-select" name="er_id">
+        <option value="">지역선택</option>
+        <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
+        <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+        <?php } ?>
       </select>
-      <select class="filter-select">
-        <option>–1차 직종선택–</option>
-        <option>룸싸롱</option>
-        <option>노래주점</option>
-        <option>마사지</option>
-        <option>기타</option>
+      <select class="filter-select" name="ei_id">
+        <option value="">1차 직종선택</option>
+        <?php foreach ((isset($ev_industries) ? $ev_industries : []) as $i) { ?>
+        <option value="<?php echo (int)$i['ei_id']; ?>"><?php echo htmlspecialchars($i['ei_name']); ?></option>
+        <?php } ?>
       </select>
-      <select class="filter-select">
-        <option>–2차 직종선택–</option>
-        <option>아가씨</option>
-        <option>초미씨</option>
-        <option>미씨</option>
-        <option>TC</option>
+      <select class="filter-select" name="ej_id">
+        <option value="">2차 직종선택</option>
+        <?php foreach ((isset($ev_jobs) ? $ev_jobs : []) as $j) { ?>
+        <option value="<?php echo (int)$j['ej_id']; ?>"><?php echo htmlspecialchars($j['ej_name']); ?></option>
+        <?php } ?>
       </select>
       <input class="filter-input" type="text" placeholder="키워드 입력">
       <button type="button" class="btn-bottom-search">🔍 검색</button>
