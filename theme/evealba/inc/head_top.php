@@ -29,10 +29,10 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <span class="logo-alba">알바</span>
     </a>
     <div class="search-box">
-      <form method="get" action="<?php echo G5_BBS_URL ?>/search.php">
+      <form method="get" action="<?php echo ($nav_active==='used') ? ((defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/used.php' : '/used.php') : (G5_BBS_URL.'/search.php'); ?>">
         <input type="hidden" name="sfl" value="wr_subject||wr_content">
         <input type="hidden" name="sop" value="and">
-        <input type="text" name="stx" placeholder="<?php echo ($nav_active==='cs') ? '궁금하신 내용을 검색하세요' : '업소명, 지역명으로 검색하세요'; ?>">
+        <input type="text" name="stx" placeholder="<?php echo ($nav_active==='cs') ? '궁금하신 내용을 검색하세요' : (($nav_active==='used') ? '중고거래 상품을 검색하세요' : '업소명, 지역명으로 검색하세요'); ?>">
         <button type="submit">🔍</button>
       </form>
     </div>
@@ -51,14 +51,14 @@ $nav_active = isset($nav_active) ? $nav_active : '';
     <a href="#" class="nav-item"><span class="nav-icon">📍</span>지역별채용</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/talent.php' : '/talent.php'; ?>" class="nav-item<?php echo ($nav_active==='talent') ? ' active' : ''; ?>"><span class="nav-icon">👑</span>인재정보</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/sudabang.php' : '/sudabang.php'; ?>" class="nav-item<?php echo ($nav_active==='sudabang') ? ' active' : ''; ?>"><span class="nav-icon">💬</span>이브수다방</a>
-    <a href="#" class="nav-item"><span class="nav-icon">🏪</span>중고거래</a>
+    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/used.php' : '/used.php'; ?>" class="nav-item<?php echo ($nav_active==='used') ? ' active' : ''; ?>"><span class="nav-icon">🏪</span>중고거래</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/cs.php' : '/cs.php'; ?>" class="nav-item<?php echo ($nav_active==='cs') ? ' active' : ''; ?>"><span class="nav-icon">🎀</span>고객센터</a>
   </div>
 </nav>
 
 <!-- TICKER -->
 <div class="ticker-wrap">
-  <span class="ticker-label"><?php echo ($nav_active==='talent') ? '🌸 신규' : (($nav_active==='sudabang') ? '💬 HOT' : (($nav_active==='cs') ? '🎀 고객센터' : '🔥 급구')); ?></span>
+  <span class="ticker-label"><?php echo ($nav_active==='talent') ? '🌸 신규' : (($nav_active==='sudabang') ? '💬 HOT' : (($nav_active==='used') ? '🛍️ NEW' : (($nav_active==='cs') ? '🎀 고객센터' : '🔥 급구'))); ?></span>
   <div class="ticker-track">
     <div class="ticker-inner">
 <?php if ($nav_active==='talent') { ?>
@@ -89,6 +89,15 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <span><b>[베스트]</b> 3부 강한 하퍼 어디예요 💬24</span>
       <span><b>[밤문화]</b> 하퍼 담당분들은 잘 안... 💬17</span>
       <span><b>[단짝찾기]</b> 현재 회원님의 헝볼로 같이 일할 단짝찾기 💬8</span>
+<?php } elseif ($nav_active==='used') { ?>
+      <span><b>웃저렴하게팔아용</b> - 의류 · 방금</span>
+      <span><b>유엘핀 수입의류 판매</b> [2] - 의류 · 방금</span>
+      <span><b>정뤌 불가리 세르펜티 투보가스 시계</b> - 시계 · 방금</span>
+      <span><b>라쉘 로쎔제이 수입의류 홀복 미시착 새상품</b> - 의류 · 방금</span>
+      <span><b>루이비통 7.5 미우미우 7.5 버버리 8.5</b> - 신발 · 방금</span>
+      <span><b>베이스 메이크업 화장품 브러쉬세트</b> - 화장품 · 방금</span>
+      <span><b>웃저렴하게팔아용</b> - 의류 · 방금</span>
+      <span><b>유엘핀 수입의류 판매</b> - 의류 · 방금</span>
 <?php } else { ?>
       <span><b>[강남] 클럽마샤</b> 일급 150만원 · 밀빵OK · 당일면접</span>
       <span><b>[홍대] 하이퍼블릭 이브</b> 시급 15만원 · 초보환영</span>

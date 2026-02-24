@@ -1,24 +1,35 @@
 <?php
 /**
- * 이브수다방 페이지 전용 좌측 사이드바 (eve_alba_sudabang_1.html 100% 동일)
+ * 중고거래 페이지 전용 좌측 사이드바 (eve_alba_used.html 100% 동일)
  */
 if (!defined('_GNUBOARD_')) exit;
 ?>
 <!-- 로그인 -->
 <div class="sidebar-widget">
   <div class="widget-title">🌸 로그인</div>
-  <div class="login-visitor">오늘 방문 <strong>24,153</strong>명</div>
+  <div class="login-visitor">오늘 방문 <strong><?php echo number_format($config['cf_today_cnt']); ?></strong>명</div>
   <div class="widget-body">
-    <div class="login-form">
-      <input type="text" placeholder="아이디">
-      <input type="password" placeholder="비밀번호">
-      <button>로그인</button>
+    <?php if ($is_member) { ?>
+    <div style="padding:12px; text-align:center; color:var(--hot-pink); font-weight:700;"><?php echo get_text($member['mb_nick']); ?>님 환영합니다</div>
+    <div class="login-links">
+      <a href="<?php echo G5_BBS_URL ?>/logout.php">로그아웃</a><span class="sep">|</span>
+      <a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=member_form.php">정보수정</a>
     </div>
+    <?php } else { ?>
+    <form method="post" action="<?php echo G5_BBS_URL ?>/login.php">
+    <input type="hidden" name="url" value="<?php echo str_replace(array('&amp;', '"'), array('&', '\''), get_pretty_url($bo_table)); ?>">
+    <div class="login-form">
+      <input type="text" name="mb_id" placeholder="아이디" required>
+      <input type="password" name="mb_password" placeholder="비밀번호" required>
+      <button type="submit">로그인</button>
+    </div>
+    </form>
     <div class="login-links">
       <a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a><span class="sep">|</span>
       <a href="<?php echo G5_BBS_URL ?>/password_lost.php">아이디 찾기</a><span class="sep">|</span>
       <a href="<?php echo G5_BBS_URL ?>/password_lost.php">비밀번호</a>
     </div>
+    <?php } ?>
   </div>
 </div>
 
@@ -28,10 +39,10 @@ if (!defined('_GNUBOARD_')) exit;
   <div class="widget-body">
     <div class="side-comm-list">
       <a href="#" class="side-comm-item">🏆 베스트글<span class="side-comm-count">128</span></a>
-      <a href="#" class="side-comm-item active">🌙 밤문화이야기<span class="side-comm-count">2,341</span></a>
+      <a href="#" class="side-comm-item">🌙 밤문화이야기<span class="side-comm-count">2,341</span></a>
       <a href="#" class="side-comm-item">💑 같이일할단짝찾기<span class="side-comm-count">847</span></a>
       <a href="#" class="side-comm-item">⚖️ 무료법률자문<span class="side-comm-count">193</span></a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/used.php' : '/used.php'; ?>" class="side-comm-item">🛍️ 중고거래<span class="side-comm-count">412</span></a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/used.php' : '/used.php'; ?>" class="side-comm-item active">🛍️ 중고거래<span class="side-comm-count"><?php echo isset($board['bo_count_write']) ? number_format($board['bo_count_write']) : '0'; ?></span></a>
     </div>
   </div>
 </div>
@@ -41,8 +52,8 @@ if (!defined('_GNUBOARD_')) exit;
   <div class="widget-title">📍 지역별 채용정보</div>
   <div class="widget-body">
     <div class="region-grid">
-      <a href="#" class="region-btn">서울</a>
-      <a href="#" class="region-btn">경기</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">서울</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">경기</a>
       <a href="#" class="region-btn">인천</a>
       <a href="#" class="region-btn">부산</a>
       <a href="#" class="region-btn">대구</a>
