@@ -19,7 +19,14 @@ if (file_exists(G5_LIB_PATH.'/ev_master.lib.php')) {
     $ev_industries = ev_get_industries();
     $ev_jobs = ev_get_jobs();
     $ev_conveniences = ev_get_conveniences();
-    // DB 비어있으면 정적 폴백
+    // DB 비어있거나 세부지역 부족(서울만 등) 시 전체 폴백
+    if (empty($ev_region_details) || count($ev_region_details) < 100) {
+        if (file_exists(G5_LIB_PATH.'/ev_region_fallback.inc.php')) {
+            include_once G5_LIB_PATH.'/ev_region_fallback.inc.php';
+            $ev_region_details = $ev_region_details_fallback;
+            if (empty($ev_regions)) $ev_regions = $ev_regions_fallback;
+        }
+    }
     if (empty($ev_regions)) {
         $ev_regions = array(
             array('er_id'=>1,'er_name'=>'서울'), array('er_id'=>2,'er_name'=>'경기'), array('er_id'=>3,'er_name'=>'인천'),
@@ -28,22 +35,6 @@ if (file_exists(G5_LIB_PATH.'/ev_master.lib.php')) {
             array('er_id'=>10,'er_name'=>'경남'), array('er_id'=>11,'er_name'=>'경북'), array('er_id'=>12,'er_name'=>'전남'),
             array('er_id'=>13,'er_name'=>'전북'), array('er_id'=>14,'er_name'=>'충남'), array('er_id'=>15,'er_name'=>'충북'),
             array('er_id'=>16,'er_name'=>'세종'), array('er_id'=>17,'er_name'=>'제주'));
-    }
-    if (empty($ev_region_details)) {
-        $ev_region_details = array(
-            array('erd_id'=>1,'er_id'=>1,'erd_name'=>'강남구'), array('erd_id'=>2,'er_id'=>1,'erd_name'=>'강동구'),
-            array('erd_id'=>3,'er_id'=>1,'erd_name'=>'강북구'), array('erd_id'=>4,'er_id'=>1,'erd_name'=>'강서구'),
-            array('erd_id'=>5,'er_id'=>1,'erd_name'=>'관악구'), array('erd_id'=>6,'er_id'=>1,'erd_name'=>'광진구'),
-            array('erd_id'=>7,'er_id'=>1,'erd_name'=>'구로구'), array('erd_id'=>8,'er_id'=>1,'erd_name'=>'금천구'),
-            array('erd_id'=>9,'er_id'=>1,'erd_name'=>'노원구'), array('erd_id'=>10,'er_id'=>1,'erd_name'=>'도봉구'),
-            array('erd_id'=>11,'er_id'=>1,'erd_name'=>'동대문구'), array('erd_id'=>12,'er_id'=>1,'erd_name'=>'동작구'),
-            array('erd_id'=>13,'er_id'=>1,'erd_name'=>'마포구'), array('erd_id'=>14,'er_id'=>1,'erd_name'=>'서대문구'),
-            array('erd_id'=>15,'er_id'=>1,'erd_name'=>'서초구'), array('erd_id'=>16,'er_id'=>1,'erd_name'=>'성동구'),
-            array('erd_id'=>17,'er_id'=>1,'erd_name'=>'성북구'), array('erd_id'=>18,'er_id'=>1,'erd_name'=>'송파구'),
-            array('erd_id'=>19,'er_id'=>1,'erd_name'=>'양천구'), array('erd_id'=>20,'er_id'=>1,'erd_name'=>'영등포구'),
-            array('erd_id'=>21,'er_id'=>1,'erd_name'=>'용산구'), array('erd_id'=>22,'er_id'=>1,'erd_name'=>'은평구'),
-            array('erd_id'=>23,'er_id'=>1,'erd_name'=>'종로구'), array('erd_id'=>24,'er_id'=>1,'erd_name'=>'중구'),
-            array('erd_id'=>25,'er_id'=>1,'erd_name'=>'중랑구'), array('erd_id'=>26,'er_id'=>1,'erd_name'=>'기타'));
     }
     if (empty($ev_industries)) {
         $ev_industries = array(
