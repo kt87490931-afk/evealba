@@ -1,6 +1,10 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
+if (defined('G5_IS_MEMO_PAGE') && G5_IS_MEMO_PAGE && is_file(G5_THEME_PATH.'/tail.memo_full.php')) {
+    require_once(G5_THEME_PATH.'/tail.memo_full.php');
+    return;
+}
 if (defined('G5_MEMO_POPUP') && G5_MEMO_POPUP && is_file(G5_THEME_PATH.'/tail.memo.php')) {
     require_once(G5_THEME_PATH.'/tail.memo.php');
     return;

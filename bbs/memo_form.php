@@ -6,7 +6,7 @@ if ($is_guest) {
     alert_close('회원만 이용하실 수 있습니다.');
 }
 
-define('G5_MEMO_POPUP', true);
+define('G5_IS_MEMO_PAGE', true);
 
 $admin_row = sql_fetch("SELECT mb_id, mb_nick FROM {$g5['member_table']} WHERE mb_level = 10 ORDER BY mb_no ASC LIMIT 1");
 $admin_mb_id = isset($admin_row['mb_id']) ? $admin_row['mb_id'] : (isset($config['cf_admin']) ? $config['cf_admin'] : 'admin');
@@ -43,6 +43,7 @@ $member_type = (isset($member['mb_2']) && (strpos($member['mb_2'], 'biz') !== fa
 $memo_current_tab = 'form';
 
 $g5['title'] = '쪽지 보내기';
+$g5_head_title = $g5['title'] . ' | ' . $config['cf_title'];
 include_once(G5_PATH.'/head.sub.php');
 
 // 이브알바: 테마 사용 시 쪽지는 항상 테마 스킨 사용

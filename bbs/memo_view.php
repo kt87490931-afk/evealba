@@ -5,6 +5,7 @@ if (!$is_member)
     alert('회원만 이용하실 수 있습니다.');
 
 $me_id = isset($_REQUEST['me_id']) ? (int) $_REQUEST['me_id'] : 0;
+$kind = isset($_REQUEST['kind']) ? clean_xss_tags($_REQUEST['kind'], 0, 1) : 'recv';
 
 if ($kind == 'recv')
 {
@@ -39,8 +40,14 @@ $memo = sql_fetch($sql);
 set_session('ss_memo_delete_token', $token = uniqid(time()));
 $del_link = 'memo_delete.php?me_id='.$memo['me_id'].'&amp;token='.$token.'&amp;kind='.$kind;
 
-define('G5_MEMO_POPUP', true);
+define('G5_IS_MEMO_PAGE', true);
 $g5['title'] = $t.' 쪽지 보기';
+$g5_head_title = $g5['title'] . ' | ' . $config['cf_title'];
+$memo_recv_count = (int)sql_fetch("SELECT count(*) as cnt FROM {$g5['memo_table']} WHERE me_recv_mb_id = '{$member['mb_id']}' AND me_type='recv'")['cnt'];
+$memo_unread_count = function_exists('get_memo_not_read') ? get_memo_not_read($member['mb_id']) : 0;
+$memo_send_count = (int)sql_fetch("SELECT count(*) as cnt FROM {$g5['memo_table']} WHERE me_send_mb_id = '{$member['mb_id']}' AND me_type='send'")['cnt'];
+$member_type = (isset($member['mb_2']) && (strpos($member['mb_2'], 'biz') !== false || $member['mb_2'] === '기업')) ? '기업회원' : '일반회원';
+$memo_current_tab = $kind;
 include_once(G5_PATH.'/head.sub.php');
 
 // 이전 쪽지
