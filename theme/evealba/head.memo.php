@@ -18,6 +18,7 @@ $g5_head_title = strip_tags($g5_head_title);
 <title><?php echo $g5_head_title; ?></title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/evealba.css?ver=<?php echo G5_CSS_VER ?>">
+<link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_popup.css?ver=<?php echo G5_CSS_VER ?>">
 <link rel="stylesheet" href="<?php echo G5_JS_URL ?>/font-awesome/css/font-awesome.min.css">
 <?php $memo_skin_url = isset($member_skin_url) ? $member_skin_url : (G5_THEME_URL.'/skin/member/basic'); ?>
 <link rel="stylesheet" href="<?php echo $memo_skin_url; ?>/style.css">
