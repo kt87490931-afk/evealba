@@ -15,6 +15,24 @@ if (file_exists(G5_LIB_PATH.'/ev_master.lib.php')) {
     $ev_regions = ev_get_regions();
     $ev_industries = ev_get_industries();
     $ev_jobs = ev_get_jobs();
+    if (empty($ev_regions)) {
+        $ev_regions = array(
+            array('er_id'=>1,'er_name'=>'서울'), array('er_id'=>2,'er_name'=>'경기'), array('er_id'=>3,'er_name'=>'인천'),
+            array('er_id'=>4,'er_name'=>'부산'), array('er_id'=>5,'er_name'=>'대구'), array('er_id'=>6,'er_name'=>'광주'),
+            array('er_id'=>7,'er_name'=>'대전'), array('er_id'=>8,'er_name'=>'울산'), array('er_id'=>9,'er_name'=>'강원'),
+            array('er_id'=>10,'er_name'=>'충청'), array('er_id'=>11,'er_name'=>'전라'), array('er_id'=>12,'er_name'=>'경상'),
+            array('er_id'=>13,'er_name'=>'제주'));
+    }
+    if (empty($ev_industries)) {
+        $ev_industries = array(
+            array('ei_id'=>1,'ei_name'=>'룸싸롱'), array('ei_id'=>2,'ei_name'=>'노래주점'),
+            array('ei_id'=>3,'ei_name'=>'마사지'), array('ei_id'=>4,'ei_name'=>'기타'));
+    }
+    if (empty($ev_jobs)) {
+        $ev_jobs = array(
+            array('ej_id'=>1,'ei_id'=>1,'ej_name'=>'아가씨'), array('ej_id'=>2,'ei_id'=>1,'ej_name'=>'초미씨'),
+            array('ej_id'=>3,'ei_id'=>1,'ej_name'=>'미씨'), array('ej_id'=>4,'ei_id'=>1,'ej_name'=>'TC'));
+    }
 } else {
     $ev_regions = $ev_industries = $ev_jobs = [];
 }

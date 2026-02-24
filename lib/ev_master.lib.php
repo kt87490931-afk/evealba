@@ -9,10 +9,12 @@ if (!defined('_GNUBOARD_')) exit;
  * 마스터 테이블 존재 여부 확인
  */
 function ev_master_tables_exist() {
-    global $g5;
-    $t = isset($g5['g5_ev_region_table']) ? $g5['g5_ev_region_table'] : 'g5_ev_region';
-    $r = sql_fetch("SHOW TABLES LIKE '{$t}'");
-    return !empty($r);
+    static $cached = null;
+    if ($cached !== null) return $cached;
+    $t = 'g5_ev_region';
+    $res = @sql_query("SELECT 1 FROM {$t} LIMIT 1", false);
+    $cached = ($res !== false);
+    return $cached;
 }
 
 /**

@@ -19,6 +19,40 @@ if (file_exists(G5_LIB_PATH.'/ev_master.lib.php')) {
     $ev_industries = ev_get_industries();
     $ev_jobs = ev_get_jobs();
     $ev_conveniences = ev_get_conveniences();
+    // DB 비어있으면 정적 폴백
+    if (empty($ev_regions)) {
+        $ev_regions = array(
+            array('er_id'=>1,'er_name'=>'서울'), array('er_id'=>2,'er_name'=>'경기'), array('er_id'=>3,'er_name'=>'인천'),
+            array('er_id'=>4,'er_name'=>'부산'), array('er_id'=>5,'er_name'=>'대구'), array('er_id'=>6,'er_name'=>'광주'),
+            array('er_id'=>7,'er_name'=>'대전'), array('er_id'=>8,'er_name'=>'울산'), array('er_id'=>9,'er_name'=>'강원'),
+            array('er_id'=>10,'er_name'=>'충청'), array('er_id'=>11,'er_name'=>'전라'), array('er_id'=>12,'er_name'=>'경상'),
+            array('er_id'=>13,'er_name'=>'제주'));
+    }
+    if (empty($ev_region_details)) {
+        $ev_region_details = array(
+            array('erd_id'=>1,'er_id'=>1,'erd_name'=>'강남구'), array('erd_id'=>2,'er_id'=>1,'erd_name'=>'서초구'),
+            array('erd_id'=>3,'er_id'=>1,'erd_name'=>'마포구'), array('erd_id'=>4,'er_id'=>1,'erd_name'=>'홍대'),
+            array('erd_id'=>5,'er_id'=>1,'erd_name'=>'이태원'), array('erd_id'=>6,'er_id'=>1,'erd_name'=>'신사동'));
+    }
+    if (empty($ev_industries)) {
+        $ev_industries = array(
+            array('ei_id'=>1,'ei_name'=>'룸싸롱'), array('ei_id'=>2,'ei_name'=>'노래주점'),
+            array('ei_id'=>3,'ei_name'=>'마사지'), array('ei_id'=>4,'ei_name'=>'기타'));
+    }
+    if (empty($ev_jobs)) {
+        $ev_jobs = array(
+            array('ej_id'=>1,'ei_id'=>1,'ej_name'=>'아가씨'), array('ej_id'=>2,'ei_id'=>1,'ej_name'=>'초미씨'),
+            array('ej_id'=>3,'ei_id'=>1,'ej_name'=>'미씨'), array('ej_id'=>4,'ei_id'=>1,'ej_name'=>'TC'));
+    }
+    if (empty($ev_conveniences)) {
+        $ev_conveniences = array(
+            array('ec_id'=>1,'ec_name'=>'선불가능'), array('ec_id'=>2,'ec_name'=>'순번확실'),
+            array('ec_id'=>3,'ec_name'=>'원룸제공'), array('ec_id'=>4,'ec_name'=>'만근비지원'),
+            array('ec_id'=>5,'ec_name'=>'성형지원'), array('ec_id'=>6,'ec_name'=>'출퇴근지원'),
+            array('ec_id'=>7,'ec_name'=>'식사제공'), array('ec_id'=>8,'ec_name'=>'팁별도'),
+            array('ec_id'=>9,'ec_name'=>'인센티브'), array('ec_id'=>10,'ec_name'=>'갯수보장'),
+            array('ec_id'=>11,'ec_name'=>'초이스없음'), array('ec_id'=>12,'ec_name'=>'당일지급'));
+    }
 } else {
     $ev_regions = $ev_region_details = $ev_industries = $ev_jobs = $ev_conveniences = [];
 }
