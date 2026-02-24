@@ -67,7 +67,7 @@
         <div class="form-row">
           <div class="form-label">이름(닉네임) <span class="req">*</span></div>
           <div class="form-cell">
-            <input class="fi fi-sm" type="text" placeholder="닉네임을 입력해주세요">
+            <input class="fi fi-sm" type="text" placeholder="닉네임을 입력해주세요" id="resume_nick">
           </div>
         </div>
 
@@ -75,10 +75,7 @@
         <div class="form-row">
           <div class="form-label">성별</div>
           <div class="form-cell">
-            <select class="fi-select">
-              <option>여성</option>
-              <option>남성</option>
-            </select>
+            <input class="fi fi-sm fi-readonly" type="text" value="여성" readonly id="resume_gender">
           </div>
         </div>
 
@@ -86,11 +83,11 @@
         <div class="form-row">
           <div class="form-label">생년월일 <span class="req">*</span></div>
           <div class="form-cell" style="gap:5px;">
-            <input class="fi fi-xs" type="text" placeholder="YYYY" maxlength="4" style="width:80px;text-align:center;">
+            <input class="fi fi-xs" type="text" placeholder="YYYY" maxlength="4" style="width:80px;text-align:center;" id="resume_birth_y">
             <span style="font-size:13px;color:#888;">년</span>
-            <input class="fi" type="text" placeholder="MM" maxlength="2" style="width:56px;text-align:center;">
+            <input class="fi" type="text" placeholder="MM" maxlength="2" style="width:56px;text-align:center;" id="resume_birth_m">
             <span style="font-size:13px;color:#888;">월</span>
-            <input class="fi" type="text" placeholder="DD" maxlength="2" style="width:56px;text-align:center;">
+            <input class="fi" type="text" placeholder="DD" maxlength="2" style="width:56px;text-align:center;" id="resume_birth_d">
             <span style="font-size:13px;color:#888;">일</span>
           </div>
         </div>
@@ -112,7 +109,7 @@
         <div class="form-row">
           <div class="form-label">핸드폰 번호</div>
           <div class="form-cell col">
-            <input class="fi fi-sm" type="text" placeholder="010-0000-0000">
+            <input class="fi fi-sm" type="text" placeholder="010-0000-0000" id="resume_phone">
           </div>
         </div>
 
@@ -120,13 +117,12 @@
         <div class="form-row">
           <div class="form-label">SNS 아이디</div>
           <div class="form-cell" style="gap:6px;">
-            <select class="fi-select">
+            <select class="fi-select" id="resume_sns_type">
               <option>라인</option>
               <option>카카오톡</option>
               <option>텔레그램</option>
-              <option>위켓</option>
             </select>
-            <input class="fi fi-sm" type="text" placeholder="SNS 아이디">
+            <input class="fi fi-sm" type="text" placeholder="SNS 아이디" id="resume_sns_id">
           </div>
         </div>
 
@@ -147,7 +143,7 @@
         <div class="form-row">
           <div class="form-label">이력서 제목 <span class="req">*</span></div>
           <div class="form-cell" style="position:relative;">
-            <input class="fi fi-full" type="text" placeholder="이력서 제목을 입력해주세요" maxlength="40">
+            <input class="fi fi-full" type="text" placeholder="이력서 제목을 입력해주세요" maxlength="40" id="resume_title">
             <span style="position:absolute;right:22px;font-size:11px;color:#aaa;">40자 제한</span>
           </div>
         </div>
@@ -156,14 +152,14 @@
         <div class="form-row">
           <div class="form-label">희망급여</div>
           <div class="form-cell">
-            <select class="fi-select">
+            <select class="fi-select" id="resume_salary_type">
               <option>급여협의</option>
               <option>시급</option>
               <option>일급</option>
               <option>주급</option>
               <option>월급</option>
             </select>
-            <input class="fi fi-xs" type="text" placeholder="금액 입력">
+            <input class="fi fi-xs" type="text" placeholder="금액 입력" id="resume_salary_amt">
             <span style="font-size:13px;color:#888;">원</span>
           </div>
         </div>
@@ -173,10 +169,10 @@
           <div class="form-label">신장 / 체중</div>
           <div class="form-cell">
             <div class="hw-row">
-              <input class="fi" type="text" placeholder="신장" style="width:80px;text-align:center;">
+              <input class="fi" type="text" placeholder="신장" style="width:80px;text-align:center;" id="resume_height">
               <span class="fi-unit">cm</span>
               <span style="color:#ccc;margin:0 4px;">|</span>
-              <input class="fi" type="text" placeholder="체중" style="width:80px;text-align:center;">
+              <input class="fi" type="text" placeholder="체중" style="width:80px;text-align:center;" id="resume_weight">
               <span class="fi-unit">kg</span>
             </div>
           </div>
@@ -186,7 +182,7 @@
         <div class="form-row">
           <div class="form-label">사이즈</div>
           <div class="form-cell">
-            <select class="fi-select">
+            <select class="fi-select" id="resume_size">
               <option>선택안함</option>
               <option>44사이즈</option>
               <option>55사이즈</option>
@@ -202,7 +198,7 @@
         <div class="form-row">
           <div class="form-label">거주지역</div>
           <div class="form-cell">
-            <select class="fi-select">
+            <select class="fi-select" id="resume_region">
               <option>지역선택</option>
               <option>서울</option><option>경기</option><option>인천</option>
               <option>부산</option><option>대구</option><option>광주</option>
@@ -211,7 +207,7 @@
               <option>전라남도</option><option>경상북도</option><option>경상남도</option>
               <option>제주</option>
             </select>
-            <select class="fi-select">
+            <select class="fi-select" id="resume_region_detail">
               <option>세부지역선택</option>
               <option>강남구</option><option>서초구</option><option>종로구</option>
               <option>중구</option><option>마포구</option><option>성동구</option>
@@ -223,7 +219,7 @@
         <div class="form-row">
           <div class="form-label">학력</div>
           <div class="form-cell">
-            <select class="fi-select">
+            <select class="fi-select" id="resume_edu">
               <option>선택안함</option>
               <option>중학교 졸업</option>
               <option>고등학교 졸업</option>
@@ -249,13 +245,13 @@
         <div class="form-row">
           <div class="form-label">희망분야 <span class="req">*</span></div>
           <div class="form-cell">
-            <select class="fi-select">
+            <select class="fi-select" id="resume_job1">
               <option>-1차 직종선택-</option>
               <option>단란주점</option><option>룸살롱</option><option>가라오케</option>
               <option>노래방</option><option>클럽</option><option>바(Bar)</option>
               <option>퍼블릭</option><option>마사지</option><option>풀살롱</option>
             </select>
-            <select class="fi-select">
+            <select class="fi-select" id="resume_job2">
               <option>-2차 직종선택-</option>
               <option>서빙</option><option>도우미</option><option>아가씨</option>
               <option>TC</option><option>미시</option><option>초미시</option>
@@ -277,7 +273,7 @@
         <div class="form-row">
           <div class="form-label">업무지역 <span class="req">*</span></div>
           <div class="form-cell">
-            <select class="fi-select">
+            <select class="fi-select" id="resume_work_region">
               <option>지역선택</option>
               <option>서울</option><option>경기</option><option>인천</option>
               <option>부산</option><option>대구</option><option>광주</option>
@@ -286,7 +282,7 @@
               <option>전라남도</option><option>경상북도</option><option>경상남도</option>
               <option>세종</option><option>제주</option>
             </select>
-            <select class="fi-select">
+            <select class="fi-select" id="resume_work_region_detail">
               <option>세부지역선택</option>
               <option>강남구</option><option>서초구</option><option>종로구</option>
               <option>중구</option><option>마포구</option><option>성동구</option>
@@ -351,11 +347,11 @@
         <div class="form-row">
           <div class="form-label">근무시간</div>
           <div class="form-cell" style="gap:6px;">
-            <select class="fi-select"><option>무관</option><option>주간</option><option>야간</option><option>새벽</option></select>
+            <select class="fi-select" id="resume_work_time_type"><option>무관</option><option>주간</option><option>야간</option><option>새벽</option></select>
             <span style="font-size:13px;color:#888;">시작</span>
-            <input class="fi" type="text" placeholder="00:00" style="width:80px;text-align:center;">
+            <input class="fi" type="text" placeholder="00:00" style="width:80px;text-align:center;" id="resume_work_time_start">
             <span style="font-size:13px;color:#888;">~</span>
-            <input class="fi" type="text" placeholder="00:00" style="width:80px;text-align:center;">
+            <input class="fi" type="text" placeholder="00:00" style="width:80px;text-align:center;" id="resume_work_time_end">
           </div>
         </div>
 
@@ -492,10 +488,6 @@
           <div class="chk-item"><input type="checkbox" id="kw-23"><label for="kw-23">업소</label></div>
           <div class="chk-item"><input type="checkbox" id="kw-24"><label for="kw-24">기타</label></div>
         </div>
-        <div class="form-row" style="border-top:2px solid var(--pale-pink);">
-          <div class="form-label" style="font-size:12px;">키워드 직접입력</div>
-          <div class="form-cell"><input class="fi fi-full" type="text" placeholder="직접 키워드를 입력하세요 (쉼표로 구분)"></div>
-        </div>
       </div>
     </div>
 
@@ -511,7 +503,7 @@
         <div class="form-row" style="min-height:160px;">
           <div class="form-label">자기소개 <span class="req">*</span></div>
           <div class="form-cell col">
-            <textarea class="fi fi-full" style="min-height:140px;" placeholder="자신을 어필할 수 있는 내용을 자유롭게 작성해주세요.&#10;예) 성격, 장점, 희망 업소 유형, 특이사항 등"></textarea>
+            <textarea class="fi fi-full" style="min-height:140px;" placeholder="자신을 어필할 수 있는 내용을 자유롭게 작성해주세요.&#10;예) 성격, 장점, 희망 업소 유형, 특이사항 등" id="resume_intro"></textarea>
             <p class="hint">* 2000자 이내로 작성해주세요.</p>
           </div>
         </div>
@@ -644,6 +636,71 @@
       </div>
     </div>
 
+    <!-- ===== AI매칭에 보여지는 이력서 (제출 전 확인 · AI 매칭 노출용) ===== -->
+    <div class="form-card sh-pink" id="resume-ai-summary-card">
+      <div class="sec-head open" onclick="toggleSec(this)">
+        <span class="sec-head-icon">👤</span>
+        <span class="sec-head-title">AI매칭에 보여지는 이력서</span>
+        <span class="sec-head-sub">제출 전 확인 · AI 매칭 시 노출되는 정보입니다</span>
+        <span class="sec-chevron">▼</span>
+      </div>
+      <div class="sec-body resume-summary-body">
+        <div class="resume-summary-row resume-summary-title">
+          <div class="form-label">이력서 제목</div>
+          <div class="form-cell"><span id="resume-summary-title" class="resume-summary-val">—</span></div>
+        </div>
+        <div class="resume-summary-row resume-summary-photo-intro">
+          <div class="form-label">사진 · 자기소개</div>
+          <div class="form-cell col">
+            <div class="resume-summary-photo-wrap">
+              <div id="resume-summary-photo" class="resume-summary-photo">사진 없음</div>
+            </div>
+            <p id="resume-summary-intro" class="resume-summary-intro">—</p>
+          </div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">닉네임 · 연락방법</div>
+          <div class="form-cell"><span id="resume-summary-nick" class="resume-summary-val">—</span> · <span id="resume-summary-contact" class="resume-summary-val">—</span></div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">희망급여 · 신장/체중 · 사이즈</div>
+          <div class="form-cell"><span id="resume-summary-salary" class="resume-summary-val">—</span> · <span id="resume-summary-hw" class="resume-summary-val">—</span> · <span id="resume-summary-size" class="resume-summary-val">—</span></div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">거주지역 · 학력</div>
+          <div class="form-cell"><span id="resume-summary-region" class="resume-summary-val">—</span> · <span id="resume-summary-edu" class="resume-summary-val">—</span></div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">희망분야</div>
+          <div class="form-cell"><span id="resume-summary-job" class="resume-summary-val">—</span></div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">업무가능지역</div>
+          <div class="form-cell"><span id="resume-summary-work-region" class="resume-summary-val">—</span> <span id="resume-summary-work-extra" class="resume-summary-val"></span></div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">근무조건</div>
+          <div class="form-cell"><span id="resume-summary-work-cond" class="resume-summary-val">—</span></div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">경력사항</div>
+          <div class="form-cell"><span id="resume-summary-career" class="resume-summary-val">—</span></div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">희망하는 편의사항</div>
+          <div class="form-cell"><span id="resume-summary-amenity" class="resume-summary-val">—</span></div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">키워드</div>
+          <div class="form-cell"><span id="resume-summary-keyword" class="resume-summary-val">—</span></div>
+        </div>
+        <div class="resume-summary-row">
+          <div class="form-label">MBTI</div>
+          <div class="form-cell"><span id="resume-summary-mbti" class="resume-summary-val">—</span></div>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== 11. 약관 동의 ===== -->
     <div class="form-card">
       <div class="sec-head open" style="background:linear-gradient(135deg,#37474F,#546E7A);" onclick="toggleSec(this)">
@@ -729,6 +786,7 @@ function previewPhoto(input) {
   reader.onload = function(e) {
     var prev = document.getElementById('photoPreview');
     prev.innerHTML = '<img src="'+e.target.result+'" alt="프로필사진">';
+    if(typeof updateResumeSummary==='function') updateResumeSummary();
   };
   reader.readAsDataURL(input.files[0]);
 }
@@ -738,6 +796,7 @@ function clearPhoto() {
   document.getElementById('photo-fn').style.color = '#aaa';
   document.getElementById('photoPreview').innerHTML =
     '<span class="photo-preview-icon">📷</span><span class="photo-preview-text">클릭하여<br>사진 등록</span>';
+  if(typeof updateResumeSummary==='function') updateResumeSummary();
 }
 
 /* 경력 행 추가/삭제 */
@@ -751,12 +810,14 @@ function addCareerRow() {
     +'<td><input type="text" placeholder="금액" style="width:100%;"></td>'
     +'<td style="text-align:center;"><button class="btn-row-del" onclick="delCareerRow(this)">삭제</button></td>';
   tbody.appendChild(tr);
+  if(typeof updateResumeSummary==='function') updateResumeSummary();
 }
 function delCareerRow(btn) {
   var row = btn.closest('tr');
   var tbody = document.getElementById('careerBody');
   if(tbody.rows.length > 1) row.remove();
   else alert('최소 1개 행은 필요합니다.');
+  if(typeof updateResumeSummary==='function') updateResumeSummary();
 }
 
 /* MBTI 선택 */
@@ -783,6 +844,81 @@ document.querySelectorAll('.term-chk').forEach(function(c){
     document.getElementById('agree-all').checked = (all.length === checked.length);
   });
 });
+
+/* AI매칭 이력서 요약 실시간 갱신 */
+function updateResumeSummary() {
+  function val(id){ var e=document.getElementById(id); return e? (e.value||e.textContent||'').trim():''; }
+  function sel(id){ var e=document.getElementById(id); return e&&e.options[e.selectedIndex]? e.options[e.selectedIndex].text:''; }
+  function set(id,t){ var e=document.getElementById(id); if(e) e.textContent=t||'—'; }
+  function radioVal(name){ var r=document.querySelector('input[name="'+name+'"]:checked'); return r? (r.nextElementSibling? r.nextElementSibling.textContent: r.labels&&r.labels[0]? r.labels[0].textContent: ''):''; }
+  set('resume-summary-title', val('resume_title'));
+  var photoBox=document.getElementById('photoPreview');
+  var sumPhoto=document.getElementById('resume-summary-photo');
+  if(sumPhoto){
+    if(photoBox&&photoBox.querySelector('img')){
+      sumPhoto.innerHTML=''; var img=photoBox.querySelector('img').cloneNode(true); img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover'; sumPhoto.appendChild(img); sumPhoto.classList.add('has-img');
+    } else { sumPhoto.innerHTML='사진 없음'; sumPhoto.classList.remove('has-img'); }
+  }
+  set('resume-summary-intro', val('resume_intro')||'—');
+  set('resume-summary-nick', val('resume_nick'));
+  var contactLabel=radioVal('contact'); set('resume-summary-contact', contactLabel||'—');
+  var salType=sel('resume_salary_type'), salAmt=val('resume_salary_amt');
+  set('resume-summary-salary', salAmt ? (salType+' '+salAmt+'원') : (salType||'—'));
+  var h=val('resume_height'), w=val('resume_weight');
+  set('resume-summary-hw', (h||w) ? (h+'cm / '+w+'kg') : '—');
+  set('resume-summary-size', sel('resume_size'));
+  var r1=sel('resume_region'), r2=sel('resume_region_detail');
+  set('resume-summary-region', (r1&&r1.indexOf('선택')<0) ? (r2&&r2.indexOf('선택')<0 ? r1+' '+r2 : r1) : '—');
+  set('resume-summary-edu', sel('resume_edu'));
+  var j1=sel('resume_job1'), j2=sel('resume_job2');
+  set('resume-summary-job', (j1&&j1.indexOf('-')<0) ? (j2&&j2.indexOf('-')<0 ? j1+' / '+j2 : j1) : '—');
+  var wr1=sel('resume_work_region'), wr2=sel('resume_work_region_detail');
+  set('resume-summary-work-region', (wr1&&wr1.indexOf('선택')<0) ? (wr2&&wr2.indexOf('선택')<0 ? wr1+' '+wr2 : wr1) : '—');
+  var ex=[];
+  if(document.getElementById('rg-all')&&document.getElementById('rg-all').checked) ex.push('전국 가능');
+  if(document.getElementById('rg-travel')&&document.getElementById('rg-travel').checked) ex.push('출장 가능');
+  if(document.getElementById('rg-abroad')&&document.getElementById('rg-abroad').checked) ex.push('해외 가능');
+  set('resume-summary-work-extra', ex.length? ' ('+ex.join(', ')+')' : '');
+  var wt=radioVal('work-type');
+  var days=[], dayIds=['day-mon','day-tue','day-wed','day-thu','day-fri','day-sat','day-sun'], dayLabels=['월','화','수','목','금','토','일'];
+  for(var i=0;i<dayIds.length;i++) if(document.getElementById(dayIds[i])&&document.getElementById(dayIds[i]).checked) days.push(dayLabels[i]);
+  var wtType=sel('resume_work_time_type'), wtS=val('resume_work_time_start'), wtE=val('resume_work_time_end');
+  var workCond=wt||'—';
+  if(days.length) workCond+=' · '+days.join(',');
+  if(wtType&&wtType!=='무관') workCond+=' · '+wtType;
+  if(wtS||wtE) workCond+=' · '+(wtS||'')+'~'+(wtE||'');
+  set('resume-summary-work-cond', workCond);
+  var careerRows=document.querySelectorAll('#careerBody tr');
+  var careerTexts=[];
+  for(var i=0;i<careerRows.length;i++){
+    var inputs=careerRows[i].querySelectorAll('input[type="text"], select');
+    if(inputs.length>=4){
+      var a=inputs[0].value.trim(), b=inputs[1].options&&inputs[1].options[inputs[1].selectedIndex]? inputs[1].options[inputs[1].selectedIndex].text:'', c=inputs[2].value.trim(), d=inputs[3].value.trim();
+      if(a||b||c||d) careerTexts.push((a||'-')+' / '+(b||'-')+' / '+(c||'-')+' / '+(d||'-'));
+    }
+  }
+  set('resume-summary-career', careerTexts.length ? careerTexts.join(' | ') : '—');
+  var am=[], amIds=['am-1','am-2','am-3','am-4','am-5','am-6','am-7','am-8','am-9','am-10','am-11','am-12','am-13','am-14','am-15','am-16','am-17','am-18','am-19','am-20','am-21'];
+  for(var i=0;i<amIds.length;i++){ var cb=document.getElementById(amIds[i]); if(cb&&cb.checked&&cb.nextElementSibling) am.push(cb.nextElementSibling.textContent); }
+  set('resume-summary-amenity', am.length ? am.join(', ') : '—');
+  var kw=[], kwIds=['kw-1','kw-2','kw-3','kw-4','kw-5','kw-6','kw-7','kw-8','kw-9','kw-10','kw-11','kw-12','kw-13','kw-14','kw-15','kw-16','kw-17','kw-18','kw-19','kw-20','kw-21','kw-22','kw-23','kw-24'];
+  for(var j=0;j<kwIds.length;j++){ var c=document.getElementById(kwIds[j]); if(c&&c.checked&&c.nextElementSibling) kw.push(c.nextElementSibling.textContent); }
+  set('resume-summary-keyword', kw.length ? kw.join(', ') : '—');
+  var mbtiR=document.querySelector('input[name="mbti"]:checked');
+  set('resume-summary-mbti', mbtiR? mbtiR.value: '—');
+}
+(function(){
+  var ids=['resume_title','resume_nick','resume_phone','resume_birth_y','resume_birth_m','resume_birth_d','resume_salary_type','resume_salary_amt','resume_height','resume_weight','resume_size','resume_region','resume_region_detail','resume_edu','resume_job1','resume_job2','resume_work_region','resume_work_region_detail','resume_work_time_type','resume_work_time_start','resume_work_time_end','resume_intro'];
+  function attach(){ for(var i=0;i<ids.length;i++){ var el=document.getElementById(ids[i]); if(el){ el.addEventListener('input', updateResumeSummary); el.addEventListener('change', updateResumeSummary); } } }
+  document.querySelectorAll('input[name="contact"], input[name="work-type"], input[name="mbti"]').forEach(function(el){ el.addEventListener('change', updateResumeSummary); });
+  for(var k=1;k<=21;k++){ var am=document.getElementById('am-'+k); if(am) am.addEventListener('change', updateResumeSummary); }
+  for(var k=1;k<=24;k++){ var kw=document.getElementById('kw-'+k); if(kw) kw.addEventListener('change', updateResumeSummary); }
+  ['rg-all','rg-travel','rg-abroad'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('change', updateResumeSummary); });
+  var careerBody=document.getElementById('careerBody');
+  if(careerBody){ careerBody.addEventListener('input', updateResumeSummary); careerBody.addEventListener('change', updateResumeSummary); }
+  attach();
+  if(document.readyState==='complete') updateResumeSummary(); else window.addEventListener('load', updateResumeSummary);
+})();
 
 /* 이력서 등록 */
 function submitResume() {

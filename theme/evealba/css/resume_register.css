@@ -226,6 +226,24 @@
 .resume-register-page .resume-ai-matching-notice{margin-bottom:16px;}
 .resume-register-page .resume-ai-matching-inner{background:linear-gradient(135deg,#f9f5ff,#fdf0ff);border:1.5px solid #CE93D8;border-radius:10px;padding:12px 18px;font-size:12px;color:#6A1B9A;line-height:1.7;}
 
+/* AI매칭에 보여지는 이력서 (요약) - 기본 신상정보와 동일 sh-pink */
+.resume-register-page .resume-summary-body{padding:0;}
+.resume-register-page .resume-summary-row{display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid #fae8f0;align-items:stretch;min-height:44px;}
+.resume-register-page .resume-summary-row:last-child{border-bottom:none;}
+.resume-register-page .resume-summary-row .form-label{background:#fff8fb;padding:12px 14px 12px 18px;font-size:13px;font-weight:700;color:#555;border-right:2px solid var(--pale-pink);}
+.resume-register-page .resume-summary-row .form-cell{padding:10px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:6px;}
+.resume-register-page .resume-summary-row .form-cell.col{flex-direction:column;align-items:flex-start;}
+.resume-register-page .resume-summary-val{color:#333;}
+.resume-register-page .resume-summary-intro{font-size:12px;color:#555;line-height:1.7;white-space:pre-wrap;word-break:break-word;margin:8px 0 0;}
+.resume-register-page .resume-summary-photo-wrap{margin-bottom:8px;}
+.resume-register-page .resume-summary-photo{width:100px;height:125px;border:2px dashed var(--pale-pink);border-radius:10px;background:#fff8fb;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb;overflow:hidden;}
+.resume-register-page .resume-summary-photo.has-img{padding:0;}
+.resume-register-page .resume-summary-photo.has-img img{width:100%;height:100%;object-fit:cover;}
+@media(max-width:600px){
+  .resume-register-page .resume-summary-row{grid-template-columns:100px 1fr;}
+  .resume-register-page .resume-summary-row .form-label{font-size:12px;padding:10px;}
+}
+
 @media(max-width:900px){
   .resume-register-page .page-layout{grid-template-columns:1fr;padding:0 12px;}
   .resume-register-page .left-sidebar{display:none;}
