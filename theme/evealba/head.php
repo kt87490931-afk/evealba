@@ -34,7 +34,7 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
       <div class="widget-title">⚡ 빠른 메뉴</div>
       <div class="widget-body">
         <div class="quick-links">
-          <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="quick-link-btn"><span class="ql-icon">📋</span>채용공고 등록</a>
+          <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_register.php' : '/jobs_register.php'; ?>" class="quick-link-btn"><span class="ql-icon">📋</span>채용공고 등록</a>
           <a href="<?php echo G5_BBS_URL; ?>/register.php" class="quick-link-btn"><span class="ql-icon">👩</span>이력서 등록</a>
           <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="quick-link-btn"><span class="ql-icon">📍</span>지역별 채용</a>
           <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/sudabang.php' : '/sudabang.php'; ?>" class="quick-link-btn"><span class="ql-icon">💬</span>수다방</a>
