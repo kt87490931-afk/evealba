@@ -11,18 +11,18 @@ if (!defined('_GNUBOARD_')) exit;
   <div class="widget-title">📍 지역별 채용정보</div>
   <div class="widget-body">
     <div class="region-grid">
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">서울</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">경기</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">인천</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">부산</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">대구</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">광주</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">대전</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">울산</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">강원</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">충청</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">전라</a>
-      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="region-btn">경상</a>
+      <?php
+      $sidebar_regions = isset($ev_regions) && !empty($ev_regions) ? $ev_regions : array(
+        array('er_name'=>'서울'), array('er_name'=>'경기'), array('er_name'=>'인천'), array('er_name'=>'부산'),
+        array('er_name'=>'대구'), array('er_name'=>'광주'), array('er_name'=>'대전'), array('er_name'=>'울산'),
+        array('er_name'=>'강원'), array('er_name'=>'경남'), array('er_name'=>'경북'), array('er_name'=>'전남'),
+        array('er_name'=>'전북'), array('er_name'=>'충남'), array('er_name'=>'충북'), array('er_name'=>'세종'),
+        array('er_name'=>'제주'));
+      $jobs_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php';
+      foreach ($sidebar_regions as $sr) {
+        echo '<a href="'.htmlspecialchars($jobs_url).'" class="region-btn">'.htmlspecialchars($sr['er_name']).'</a>';
+      }
+      ?>
     </div>
   </div>
 </div>

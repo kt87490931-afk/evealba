@@ -20,8 +20,9 @@ if (file_exists(G5_LIB_PATH.'/ev_master.lib.php')) {
             array('er_id'=>1,'er_name'=>'서울'), array('er_id'=>2,'er_name'=>'경기'), array('er_id'=>3,'er_name'=>'인천'),
             array('er_id'=>4,'er_name'=>'부산'), array('er_id'=>5,'er_name'=>'대구'), array('er_id'=>6,'er_name'=>'광주'),
             array('er_id'=>7,'er_name'=>'대전'), array('er_id'=>8,'er_name'=>'울산'), array('er_id'=>9,'er_name'=>'강원'),
-            array('er_id'=>10,'er_name'=>'충청'), array('er_id'=>11,'er_name'=>'전라'), array('er_id'=>12,'er_name'=>'경상'),
-            array('er_id'=>13,'er_name'=>'제주'));
+            array('er_id'=>10,'er_name'=>'경남'), array('er_id'=>11,'er_name'=>'경북'), array('er_id'=>12,'er_name'=>'전남'),
+            array('er_id'=>13,'er_name'=>'전북'), array('er_id'=>14,'er_name'=>'충남'), array('er_id'=>15,'er_name'=>'충북'),
+            array('er_id'=>16,'er_name'=>'세종'), array('er_id'=>17,'er_name'=>'제주'));
     }
     if (empty($ev_industries)) {
         $ev_industries = array(
