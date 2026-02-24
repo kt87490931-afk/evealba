@@ -77,6 +77,11 @@ if(isset($page) && $page){
     $list_link .= '&amp;page='.(int) $page;
 }
 
+// 이브알바: 테마 사용 시 쪽지는 항상 테마 스킨 사용
+if (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/skin/member/basic/memo_view.skin.php')) {
+    $member_skin_path = G5_THEME_PATH.'/skin/member/basic';
+    $member_skin_url  = G5_THEME_URL.'/skin/member/basic';
+}
 include_once($member_skin_path.'/memo_view.skin.php');
 
 include_once(G5_PATH.'/tail.sub.php');

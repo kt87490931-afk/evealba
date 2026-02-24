@@ -45,6 +45,11 @@ $memo_current_tab = 'form';
 $g5['title'] = '쪽지 보내기';
 include_once(G5_PATH.'/head.sub.php');
 
+// 이브알바: 테마 사용 시 쪽지는 항상 테마 스킨 사용
+if (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/skin/member/basic/memo_form.skin.php')) {
+    $member_skin_path = G5_THEME_PATH.'/skin/member/basic';
+    $member_skin_url  = G5_THEME_URL.'/skin/member/basic';
+}
 $memo_action_url = G5_HTTPS_BBS_URL."/memo_form_update.php";
 include_once($member_skin_path.'/memo_form.skin.php');
 

@@ -95,6 +95,11 @@ for ($i=0; $row=sql_fetch_array($result); $i++)
 $list_kind_param = ($memo_current_tab === 'unread') ? 'unread' : $kind;
 $write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, "./memo.php?kind=$list_kind_param".$qstr."&amp;page=");
 
+// 이브알바: 테마 사용 시 쪽지는 항상 테마 스킨 사용 (cf_member_skin이 basic이면 루트 스킨이 로드되므로 강제)
+if (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/skin/member/basic/memo.skin.php')) {
+    $member_skin_path = G5_THEME_PATH.'/skin/member/basic';
+    $member_skin_url  = G5_THEME_URL.'/skin/member/basic';
+}
 include_once($member_skin_path.'/memo.skin.php');
 
 include_once(G5_PATH.'/tail.sub.php');
