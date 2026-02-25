@@ -581,10 +581,10 @@
               <tr class="ad-tr" style="background:#fff8fb;">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name" style="color:#C850C0;">1. 특수배너</div>
-                  <div class="ad-svc-desc">모든 페이지 메뉴 상단에 특수배너형으로<br>사이트 최상단에 배치됩니다.</div>
+                  <div class="ad-svc-desc">모든 페이지 최상단에 특수배너형으로<br>사이트 최상단 or 우측플로팅배너에 배치됩니다.</div>
                 </td>
                 <td class="ad-td ad-type">—</td>
-                <td class="ad-td ad-period" style="color:#C850C0;font-weight:700;">유료광고 최대건수를 넘었습니다<br>(23건 현재 광고중)</td>
+                <td class="ad-td ad-period" style="color:#C850C0;font-weight:700;">고객센터문의</td>
                 <td class="ad-td ad-price">—</td>
                 <td class="ad-td ad-chk">—</td>
               </tr>
@@ -593,7 +593,7 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">2. 우대</div>
-                  <div class="ad-svc-desc">메인 중단의 가장 눈에 띄는 위치에 배치됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공, 이력서 등록시 알림 문자 즉시 발송)</div>
+                  <div class="ad-svc-desc">메인 상단의 가장 눈에 띄는 위치에 배치됩니다.<br>줄광고가 함께 등록됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
@@ -611,7 +611,7 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">3. 프리미엄</div>
-                  <div class="ad-svc-desc">메인페이지 우대등록 하단의 위치에 배치됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공, 이력서 등록시 알림 문자 즉시 발송)</div>
+                  <div class="ad-svc-desc">메인페이지와 채용정보 중단의 위치에 배치됩니다.<br>줄광고가 함께 등록됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
@@ -629,7 +629,7 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">4. 스페셜</div>
-                  <div class="ad-svc-desc">채용정보,지역별 채용페이지 중단에 배치됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
+                  <div class="ad-svc-desc">메인페이지와 채용정보 중단에 배치됩니다.<br>줄광고가 함께 등록됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
@@ -647,16 +647,16 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">5. 급구</div>
-                  <div class="ad-svc-desc">기본 노출모양이 진하며, 메인좌측하단 위치에 배치됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
+                  <div class="ad-svc-desc">최상단 "급구"영역에 1줄노출, 하단 급구란에 배치됩니다.<br>줄광고가 함께 등록됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
-                <td class="ad-td ad-price">100,000 원<br>185,000 원<br>240,000 원</td>
+                <td class="ad-td ad-price">150,000 원<br>285,000 원<br>420,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="100000" data-label="급구 30일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="185000" data-label="급구 60일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="240000" data-label="급구 90일" onchange="calcTotal()">
+                    <input type="checkbox" data-price="150000" data-label="급구 30일" onchange="calcTotal()">
+                    <input type="checkbox" data-price="285000" data-label="급구 60일" onchange="calcTotal()">
+                    <input type="checkbox" data-price="420000" data-label="급구 90일" onchange="calcTotal()">
                   </div>
                 </td>
               </tr>
@@ -665,7 +665,7 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">6. 추천</div>
-                  <div class="ad-svc-desc">메인 급구채용정보 우측에 위치하며 비교적 진한 노출모양을 가지고 있습니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
+                  <div class="ad-svc-desc">메인 급구채용정보 우측에 위치하며 비교적 진한 노출모양을 가지고 있습니다.<br>줄광고가 함께 등록됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
@@ -700,7 +700,7 @@
               <!-- 음선상중 안내 -->
               <tr class="ad-tr">
                 <td colspan="5" class="ad-td" style="background:#e8f5e9;color:#2E7D32;font-weight:700;font-size:12px;text-align:left;">
-                  💡 옵션상중만 결제하실 경우 광고노출이 되지않습니다.
+                  💡 옵션만 결제하실 경우 광고노출이 되지않습니다.
                 </td>
               </tr>
             </tbody>
@@ -712,10 +712,8 @@
           <div class="nb-title">🌟 특수배너</div>
           <div class="nb-body">
             특수배너 광고등록은 고객센터와 일정 협의 후 진행 가능합니다<br>
-            특수배너 광고시 모든 광고옵션이 적용되며 <span class="red">모바일상단에 노출됩니다.</span><br><br>
-            <span class="red">특수배너 예약은 지금 바로 고객센터로 문의 주세요.</span>
-            <span class="phone">고객센터 1588-0000</span>
-            * 특수배너 예약은 대기자 상황에 따라 달라질 수 있습니다.
+            특수배너 광고시 모든 광고옵션이 적용되며 모바일상단에 노출됩니다.<br><br>
+            *모든 특수배너는 우대채용정보, 프리미엄채용정보, 줄광고가 함께 등록됩니다.
           </div>
           <hr class="nb-divider">
           <div class="nb-title">⚡ 점프옵션 서비스제공 안내</div>
