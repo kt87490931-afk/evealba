@@ -9,9 +9,13 @@ require_once './_common.php';
 auth_check_menu($auth, $sub_menu, 'w');
 check_admin_token();
 
-$jr_ids = isset($_POST['chk']) && is_array($_POST['chk']) ? $_POST['chk'] : array();
+$jr_ids = array();
+if (isset($_POST['jr_ids']) && $_POST['jr_ids'] !== '') {
+    $jr_ids = array_map('intval', array_filter(explode(',', $_POST['jr_ids'])));
+} elseif (isset($_POST['chk']) && is_array($_POST['chk'])) {
+    foreach ($_POST['chk'] as $v) { $id = (int)$v; if ($id) $jr_ids[] = $id; }
+}
 $jr_id = isset($_REQUEST['jr_id']) ? (int)$_REQUEST['jr_id'] : 0;
-
 if ($jr_id) {
     $jr_ids = array($jr_id);
 }

@@ -78,6 +78,7 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
 
 <form name="fjobslist" id="fjobslist" method="post" action="">
 <input type="hidden" name="token" value="<?php echo $token; ?>">
+<input type="hidden" name="jr_ids" id="jr_ids_hidden" value="">
 
 <div class="tbl_head01 tbl_wrap">
     <table>
@@ -174,7 +175,7 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
     </table>
 </div>
 
-<div class="btn_fixed_top" style="margin-bottom:10px;">
+<div class="local_desc01 local_desc" style="margin-top:10px;margin-bottom:10px;">
     <button type="button" class="btn btn_02" onclick="fjobslist_do('입금확인')">선택입금확인</button>
     <button type="button" class="btn btn_03" onclick="fjobslist_do('승인')">선택승인</button>
 </div>
@@ -191,16 +192,16 @@ function check_all(f) {
 function fjobslist_do(act) {
     var f = document.getElementById('fjobslist');
     if (!f) return;
-    var cnt = 0;
-    for (var i = 0; i < f.length; i++) {
-        if (f.elements[i].name === 'chk[]' && f.elements[i].checked) cnt++;
-    }
-    if (cnt === 0) { alert('항목을 선택하세요.'); return; }
+    var chks = f.querySelectorAll('input[name="chk[]"]:checked');
+    var ids = [];
+    for (var i = 0; i < chks.length; i++) { if (chks[i].value) ids.push(chks[i].value); }
+    if (ids.length === 0) { alert('항목을 선택하세요.'); return; }
+    document.getElementById('jr_ids_hidden').value = ids.join(',');
     if (act === '입금확인') {
-        if (!confirm(cnt + '건 입금확인 하시겠습니까?')) return;
+        if (!confirm(ids.length + '건 입금확인 하시겠습니까?')) return;
         f.action = './jobs_register_confirm_update.php';
     } else if (act === '승인') {
-        if (!confirm(cnt + '건 승인하시겠습니까? 광고가 노출됩니다.')) return;
+        if (!confirm(ids.length + '건 승인하시겠습니까? 광고가 노출됩니다.')) return;
         f.action = './jobs_register_approve_update.php';
     } else return;
     f.submit();
