@@ -19,6 +19,16 @@ if (!sql_num_rows($tb_check)) {
     exit;
 }
 
+// jr_payment_confirmed 컬럼 없으면 마이그레이션 008 적용
+$col_check = sql_query("SHOW COLUMNS FROM g5_jobs_register LIKE 'jr_payment_confirmed'", false);
+if (!$col_check || !sql_num_rows($col_check)) {
+    sql_query("ALTER TABLE g5_jobs_register ADD COLUMN jr_payment_confirmed tinyint NOT NULL DEFAULT 0 AFTER jr_status", false);
+    sql_query("ALTER TABLE g5_jobs_register ADD COLUMN jr_approved tinyint NOT NULL DEFAULT 0 AFTER jr_payment_confirmed", false);
+    sql_query("ALTER TABLE g5_jobs_register ADD COLUMN jr_approved_datetime datetime DEFAULT NULL AFTER jr_approved", false);
+    sql_query("ALTER TABLE g5_jobs_register ADD COLUMN jr_ad_labels varchar(500) NOT NULL DEFAULT '' AFTER jr_data", false);
+    sql_query("UPDATE g5_jobs_register SET jr_payment_confirmed=1, jr_approved=1, jr_approved_datetime=jr_datetime WHERE jr_status='ongoing' AND (jr_approved_datetime IS NULL OR jr_approved_datetime='')", false);
+}
+
 $jr_table = 'g5_jobs_register';
 $sql_search = " where (1) ";
 
@@ -175,7 +185,7 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
     </table>
 </div>
 
-<div class="local_desc01 local_desc" style="margin-top:10px;margin-bottom:10px;">
+<div class="btn_fixed_top">
     <button type="button" class="btn btn_02" onclick="fjobslist_do('입금확인')">선택입금확인</button>
     <button type="button" class="btn btn_03" onclick="fjobslist_do('승인')">선택승인</button>
 </div>
