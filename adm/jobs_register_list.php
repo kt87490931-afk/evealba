@@ -202,18 +202,24 @@ function check_all(f) {
 function fjobslist_do(act) {
     var f = document.getElementById('fjobslist');
     if (!f) return;
-    var chks = f.querySelectorAll('input[name="chk[]"]:checked');
+    var chks = document.getElementsByName('chk[]');
     var ids = [];
-    for (var i = 0; i < chks.length; i++) { if (chks[i].value) ids.push(chks[i].value); }
+    for (var i = 0; i < chks.length; i++) {
+        if (chks[i].checked && chks[i].value && f.contains(chks[i])) ids.push(chks[i].value);
+    }
     if (ids.length === 0) { alert('항목을 선택하세요.'); return; }
-    document.getElementById('jr_ids_hidden').value = ids.join(',');
+    var idsStr = ids.join(',');
+    var el = document.getElementById('jr_ids_hidden');
+    if (el) el.value = idsStr;
+    var url;
     if (act === '입금확인') {
         if (!confirm(ids.length + '건 입금확인 하시겠습니까?')) return;
-        f.action = './jobs_register_confirm_update.php';
+        url = './jobs_register_confirm_update.php?jr_ids=' + encodeURIComponent(idsStr);
     } else if (act === '승인') {
         if (!confirm(ids.length + '건 승인하시겠습니까? 광고가 노출됩니다.')) return;
-        f.action = './jobs_register_approve_update.php';
+        url = './jobs_register_approve_update.php?jr_ids=' + encodeURIComponent(idsStr);
     } else return;
+    f.action = url;
     f.submit();
 }
 </script>
