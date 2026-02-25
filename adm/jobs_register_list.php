@@ -140,7 +140,11 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
                 }
 
                 $ad_labels = isset($row['jr_ad_labels']) ? trim($row['jr_ad_labels']) : '';
-                if (!$ad_labels) $ad_labels = '—';
+                if (!$ad_labels) {
+                    $jc = (int)($row['jr_jump_count'] ?? 0);
+                    $period = (int)($row['jr_ad_period'] ?? 30);
+                    $ad_labels = ($jc <= 300) ? '줄광고 30일' : (($jc <= 700) ? '줄광고 60일' : (($jc <= 1200) ? '줄광고 90일' : "줄광고 {$period}일"));
+                }
 
                 $bg = 'bg' . ($i % 2);
                 $confirm_url = './jobs_register_confirm_update.php?jr_id=' . $row['jr_id'] . '&token=' . $token;

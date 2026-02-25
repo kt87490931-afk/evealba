@@ -6,19 +6,8 @@
 $sub_menu = '910100';
 require_once './_common.php';
 
-// 디버그 로그 헬퍼 (원인 파악 후 제거 예정)
-$g5_jr_debug_log = (defined('G5_DATA_PATH') ? G5_DATA_PATH : (dirname(__FILE__) . '/../data')) . '/log/jobs_register_debug.log';
-@mkdir(dirname($g5_jr_debug_log), 0755, true);
-function _jr_debug($msg, $logfile = null) {
-    global $g5_jr_debug_log;
-    $file = $logfile ?: $g5_jr_debug_log;
-    @file_put_contents($file, date('Y-m-d H:i:s') . ' ' . $msg . "\n", FILE_APPEND | LOCK_EX);
-}
-
 auth_check_menu($auth, $sub_menu, 'w');
 check_admin_token();
-
-_jr_debug('[APPROVE] REQUEST_METHOD=' . ($_SERVER['REQUEST_METHOD'] ?? '') . ' POST_jr_ids=' . ($_POST['jr_ids'] ?? '') . ' GET_jr_ids=' . ($_GET['jr_ids'] ?? '') . ' REQUEST_jr_id=' . ($_REQUEST['jr_id'] ?? ''));
 
 $jr_ids = array();
 if (isset($_POST['jr_ids']) && $_POST['jr_ids'] !== '') {
@@ -46,26 +35,19 @@ foreach ($jr_ids as $k => $v) {
     $id = (int)(is_array($v) ? $v : $v);
     if (!$id) continue;
 
-    $row = sql_fetch("SELECT jr_id, jr_payment_confirmed, jr_approved, jr_title, jr_ai_title, jr_subject_display, jr_ad_period, jr_approved_datetime FROM g5_jobs_register WHERE jr_id = '{$id}'");
-    if (!$row) {
-        _jr_debug("[APPROVE] jr_id={$id} row not found");
-        continue;
-    }
-    _jr_debug("[APPROVE] jr_id={$id} row: payment=" . (int)($row['jr_payment_confirmed'] ?? 0) . " approved=" . (int)($row['jr_approved'] ?? 0));
+    $row = sql_fetch("SELECT jr_id, jr_payment_confirmed, jr_approved, jr_title, jr_subject_display, jr_ad_period, jr_approved_datetime FROM g5_jobs_register WHERE jr_id = '{$id}'");
+    if (!$row) continue;
 
     if ($row['jr_approved']) {
         $approve_fail[] = $id . ': 이미 승인됨';
-        _jr_debug("[APPROVE] jr_id={$id} skip: already approved");
         continue;
     }
     if (!$row['jr_payment_confirmed']) {
         $approve_fail[] = $id . ': 입금확인 후 승인 가능';
-        _jr_debug("[APPROVE] jr_id={$id} skip: payment not confirmed");
         continue;
     }
 
-    $display_title = (!empty($row['jr_ai_title'])) ? $row['jr_ai_title'] : $row['jr_title'];
-    $display_title = $display_title ?: $row['jr_subject_display'];
+    $display_title = ($row['jr_title'] ?? '') ?: ($row['jr_subject_display'] ?? '');
     $display_esc = sql_escape_string($display_title);
 
     $approved_dt = date('Y-m-d H:i:s');
@@ -73,12 +55,10 @@ foreach ($jr_ids as $k => $v) {
 
     sql_query("UPDATE g5_jobs_register SET jr_approved = 1, jr_approved_datetime = '{$approved_dt}', jr_end_date = '{$end_date}', jr_status = 'ongoing', jr_subject_display = '{$display_esc}' WHERE jr_id = '{$id}'");
     $approve_ok++;
-    _jr_debug("[APPROVE] jr_id={$id} OK");
 }
 
 $msg = $approve_ok ? $approve_ok . '건 승인 완료. 광고가 노출됩니다.' : '승인된 건이 없습니다.';
 if (!empty($approve_fail)) {
     $msg .= ' (' . implode(', ', $approve_fail) . ')';
 }
-_jr_debug('[APPROVE] result approve_ok=' . $approve_ok . ' msg=' . $msg);
 alert($msg, './jobs_register_list.php');

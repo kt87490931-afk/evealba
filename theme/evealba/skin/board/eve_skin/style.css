@@ -75,12 +75,14 @@
 
 /* ===== 진행중인 채용정보 리스트 (jobs-ongoing) ===== */
 .jobs-ongoing-list .jobs-ongoing-thead,
-.jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:90px 1fr 90px 100px 80px 70px; }
+.jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:90px 1fr 90px 120px 80px 70px 80px 70px; }
 .jobs-ongoing-list .jobs-ongoing-wrap .board-td.td-extend { padding:6px; }
 .jobs-ongoing-list .btn-extend { padding:6px 14px; background:linear-gradient(135deg,var(--ev-orange),var(--ev-hot-pink)); color:#fff; border:none; border-radius:14px; font-size:12px; font-weight:700; cursor:pointer; }
 .jobs-ongoing-list .btn-extend:hover { opacity:.9; }
 .jobs-ongoing-list .status-badge { display:inline-block; padding:2px 8px; border-radius:8px; font-size:11px; font-weight:700; }
-.jobs-ongoing-list .status-pending { background:#FFF3E0; color:#E65100; }
+.jobs-ongoing-list .status-pending,
+.jobs-ongoing-list .status-payment-wait { background:#FFF3E0; color:#E65100; }
+.jobs-ongoing-list .status-approve-wait { background:#E3F2FD; color:#1565C0; }
 .jobs-ongoing-list .status-ongoing { background:#E8F5E9; color:#2E7D32; }
 .jobs-ended-list .jobs-ongoing-thead,
 .jobs-ended-list .jobs-ongoing-row { grid-template-columns:90px 1fr 80px 70px; }
@@ -89,17 +91,18 @@
 .jobs-payment-list .board-td.td-price { font-weight:700; color:var(--ev-hot-pink); }
 @media (max-width:900px) {
   .jobs-ongoing-list .jobs-ongoing-thead,
-  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:90px 1fr 90px 70px; }
-  .jobs-ongoing-list .board-th:nth-child(4), .jobs-ongoing-list .board-td:nth-child(4),
-  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5) { display:none; }
+  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:90px 1fr 90px 100px 80px 70px; }
+  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5),
+  .jobs-ongoing-list .board-th:nth-child(6), .jobs-ongoing-list .board-td:nth-child(6) { display:none; }
 }
 @media (max-width:600px) {
   .jobs-ongoing-list .jobs-ongoing-thead,
-  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:1fr 70px; }
+  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:1fr 90px 70px; }
   .jobs-ongoing-list .board-th:nth-child(1), .jobs-ongoing-list .board-td:nth-child(1),
-  .jobs-ongoing-list .board-th:nth-child(3), .jobs-ongoing-list .board-td:nth-child(3),
   .jobs-ongoing-list .board-th:nth-child(4), .jobs-ongoing-list .board-td:nth-child(4),
-  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5) { display:none; }
+  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5),
+  .jobs-ongoing-list .board-th:nth-child(6), .jobs-ongoing-list .board-td:nth-child(6),
+  .jobs-ongoing-list .board-th:nth-child(7), .jobs-ongoing-list .board-td:nth-child(7) { display:none; }
 }
 
 /* ===== 연장 모달 ===== */

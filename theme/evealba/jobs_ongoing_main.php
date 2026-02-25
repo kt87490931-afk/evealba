@@ -14,18 +14,49 @@ if ($is_member) {
         $mb_id_esc = addslashes($member['mb_id']);
         $sql = "SELECT * FROM `g5_jobs_register` WHERE mb_id = '{$mb_id_esc}' AND jr_status IN ('pending','ongoing') ORDER BY jr_datetime DESC";
         $result = sql_query($sql);
+        $today = date('Y-m-d');
         while ($row = sql_fetch_array($result)) {
             $status = $row['jr_status'];
-            $status_label = ($status === 'pending') ? '입금대기중' : '진행중';
+            $payment_ok = !empty($row['jr_payment_confirmed']);
+            $approved = !empty($row['jr_approved']);
+            if ($status === 'ongoing') {
+                $status_label = '진행중';
+                $status_class = 'ongoing';
+            } elseif ($status === 'pending' && $payment_ok && !$approved) {
+                $status_label = '승인대기';
+                $status_class = 'approve-wait';
+            } else {
+                $status_label = '입금대기중';
+                $status_class = 'payment-wait';
+            }
+            $remaining = '—';
+            if ($approved && !empty($row['jr_end_date'])) {
+                $end_ts = strtotime($row['jr_end_date']);
+                $today_ts = strtotime($today);
+                if ($end_ts >= $today_ts) {
+                    $remaining = (int)(($end_ts - $today_ts) / 86400) . '일';
+                } else {
+                    $remaining = '마감';
+                }
+            }
+            $ad_labels = isset($row['jr_ad_labels']) ? trim($row['jr_ad_labels']) : '';
+            if (!$ad_labels) {
+                $jc = (int)($row['jr_jump_count'] ?? 0);
+                $period = (int)($row['jr_ad_period'] ?? 30);
+                $ad_labels = ($jc <= 300) ? '줄광고 30일' : (($jc <= 700) ? '줄광고 60일' : (($jc <= 1200) ? '줄광고 90일' : "줄광고 {$period}일"));
+            }
             $list[] = array(
                 'jr_id' => $row['jr_id'],
                 'wr_id' => $row['jr_id'],
                 'subject' => $row['jr_subject_display'] ?: '[제목없음]',
                 'datetime2' => date('Y-m-d', strtotime($row['jr_datetime'])),
                 'status' => $status,
+                'status_class' => $status_class,
                 'status_label' => $status_label,
                 'ad_period' => $row['jr_ad_period'] ? $row['jr_ad_period'].'일' : '—',
                 'jump_count' => $row['jr_jump_count'],
+                'remaining' => $remaining,
+                'ad_labels' => $ad_labels,
                 'view_href' => $jobs_view_url_base.'?jr_id='.$row['jr_id']
             );
         }
@@ -57,7 +88,9 @@ if ($is_member) {
       <div class="board-th">날짜</div>
       <div class="board-th td-title">제목</div>
       <div class="board-th">상태</div>
+      <div class="board-th">신청광고목록</div>
       <div class="board-th">광고기간</div>
+      <div class="board-th">남은기간</div>
       <div class="board-th">점프횟수</div>
       <div class="board-th">연장</div>
     </div>
@@ -74,9 +107,11 @@ if ($is_member) {
         </div>
       </div>
       <div class="board-td td-status">
-        <span class="status-badge status-<?php echo isset($row['status']) ? $row['status'] : 'pending'; ?>"><?php echo isset($row['status_label']) ? $row['status_label'] : ''; ?></span>
+        <span class="status-badge status-<?php echo isset($row['status_class']) ? $row['status_class'] : 'payment-wait'; ?>"><?php echo isset($row['status_label']) ? htmlspecialchars($row['status_label']) : ''; ?></span>
       </div>
+      <div class="board-td td-ad-labels" style="font-size:12px;"><?php echo isset($row['ad_labels']) ? htmlspecialchars(cut_str(str_replace(',', ', ', $row['ad_labels']), 30)) : '—'; ?></div>
       <div class="board-td td-period"><?php echo isset($row['ad_period']) ? $row['ad_period'] : '—'; ?></div>
+      <div class="board-td td-remaining"><?php echo isset($row['remaining']) ? $row['remaining'] : '—'; ?></div>
       <div class="board-td td-jump"><?php echo isset($row['jump_count']) ? number_format($row['jump_count']) : '—'; ?></div>
       <div class="board-td td-extend">
         <button type="button" class="btn-extend" onclick="event.preventDefault();event.stopPropagation();openExtendPopup('<?php echo $extend_url; ?>');">연장</button>
