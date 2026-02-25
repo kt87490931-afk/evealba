@@ -2004,8 +2004,6 @@ footer {
 .jobs-register-page .ai-preview-title{font-size:15px;font-weight:900;color:#fff;letter-spacing:-.3px;}
 .jobs-register-page .ai-preview-subtitle{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px;}
 .jobs-register-page .ai-preview-header-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.jobs-register-page .ai-preview-refresh-btn{padding:6px 12px;background:rgba(255,255,255,.25);border:1.5px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;}
-.jobs-register-page .ai-preview-refresh-btn:hover{background:rgba(255,255,255,.4);}
 .jobs-register-page .ai-preview-badge{font-size:11px;color:rgba(255,255,255,.85);white-space:nowrap;}
 .jobs-register-page .ai-preview-toggle-btn{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.4);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;flex-shrink:0;}
 .jobs-register-page .ai-preview-toggle-btn:hover{background:rgba(255,255,255,.35);}

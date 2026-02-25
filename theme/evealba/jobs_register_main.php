@@ -539,8 +539,7 @@
           </div>
         </div>
         <div class="ai-preview-header-right">
-          <button type="button" class="ai-preview-refresh-btn" onclick="updateJobsAiSummary()" title="종합정리 새로고침">🔄 새로고침</button>
-          <span class="ai-preview-badge">제출 전 확인 · Gemini AI 업소소개글 생성에 활용됩니다</span>
+          <span class="ai-preview-badge">제출 전 확인 · AI 업소소개글 생성에 활용됩니다</span>
           <button type="button" class="ai-preview-toggle-btn" id="jobsAiToggleBtn" aria-label="접기/펼치기">▲</button>
         </div>
       </div>
@@ -599,7 +598,7 @@
         </div>
         <div class="aip-footer">
           <div class="aip-footer-icon">🤖</div>
-          <div class="aip-footer-text">위 정보를 기준으로 <strong>Gemini AI</strong>가 업소소개글을 자동 작성합니다. 최대한 꼼꼼히 입력해주세요.</div>
+          <div class="aip-footer-text">위 정보를 기준으로 <strong>AI</strong>가 업소소개글을 자동 작성합니다. 최대한 꼼꼼히 입력해주세요.</div>
         </div>
       </div>
     </div>
