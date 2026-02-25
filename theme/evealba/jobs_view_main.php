@@ -24,7 +24,9 @@ $jobs_base_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
 $jobs_ongoing_url = $jobs_base_url ? $jobs_base_url.'/jobs_ongoing.php' : '/jobs_ongoing.php';
 
 $status = $row['jr_status'];
-$status_label = ($status === 'pending') ? '입금대기중' : '진행중';
+$payment_ok = !empty($row['jr_payment_confirmed']);
+$status_label = ($status === 'ongoing') ? '진행중' : ($payment_ok ? '입금확인' : '입금대기중');
+$status_class = ($status === 'ongoing') ? 'ongoing' : ($payment_ok ? 'payment-ok' : 'payment-wait');
 
 $data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();
 $nick = isset($data['job_nickname']) ? $data['job_nickname'] : $row['jr_nickname'];
@@ -35,11 +37,11 @@ $desc_env = isset($data['desc_env']) ? $data['desc_env'] : '';
 $desc_benefit = isset($data['desc_benefit']) ? $data['desc_benefit'] : '';
 $desc_qualify = isset($data['desc_qualify']) ? $data['desc_qualify'] : '';
 $desc_extra = isset($data['desc_extra']) ? $data['desc_extra'] : '';
-$ai_summary = ''; // TODO: AI 생성 소개글 (진행중일 때만)
+$ai_summary = isset($data['ai_content']) ? trim($data['ai_content']) : '';
 ?>
 <div class="page-title-bar">
   <h2 class="page-title"><?php echo htmlspecialchars($row['jr_subject_display']); ?></h2>
-  <span class="status-badge status-<?php echo $status; ?>"><?php echo $status_label; ?></span>
+  <span class="status-badge status-<?php echo $status_class; ?>"><?php echo $status_label; ?></span>
 </div>
 
 <div class="jobs-view-wrap">
@@ -59,7 +61,7 @@ $ai_summary = ''; // TODO: AI 생성 소개글 (진행중일 때만)
     </div>
   </div>
 
-  <?php if ($status === 'ongoing' && $ai_summary) { ?>
+  <?php if (($status === 'ongoing' || !empty($row['jr_payment_confirmed'])) && $ai_summary) { ?>
   <div class="form-card" style="margin-bottom:16px;">
     <div class="sec-head open">
       <span class="sec-head-icon">🤖</span>
