@@ -3,7 +3,7 @@
  * 어드민 - 채용정보등록 관리 (광고등록리스트)
  * 수동 페이지: 입금확인·승인 후 광고 노출
  */
-$sub_menu = '300830';
+$sub_menu = '910100';
 require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'r');

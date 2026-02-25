@@ -3,7 +3,7 @@
  * 어드민 - 채용정보등록 입금확인 처리
  * 입금확인 후 승인(서류검수)을 별도 진행해야 광고 노출
  */
-$sub_menu = '300830';
+$sub_menu = '910100';
 require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'w');
