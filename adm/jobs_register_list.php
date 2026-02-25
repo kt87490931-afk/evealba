@@ -76,7 +76,7 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
     <a href="?st=ended" class="btn_ov01<?php echo $st === 'ended' ? ' on' : ''; ?>"><span class="ov_txt">마감</span><span class="ov_num"><?php echo number_format($ended_cnt); ?>건</span></a>
 </div>
 
-<form name="fjobslist" id="fjobslist" method="post" action="" onsubmit="return fjobslist_submit(this);">
+<form name="fjobslist" id="fjobslist" method="post" action="">
 <input type="hidden" name="token" value="<?php echo $token; ?>">
 
 <div class="tbl_head01 tbl_wrap">
@@ -175,8 +175,8 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
 </div>
 
 <div class="btn_fixed_top" style="margin-bottom:10px;">
-    <button type="submit" name="act_button" value="입금확인" class="btn btn_02">선택입금확인</button>
-    <button type="submit" name="act_button" value="승인" class="btn btn_03">선택승인</button>
+    <button type="button" class="btn btn_02" onclick="fjobslist_do('입금확인')">선택입금확인</button>
+    <button type="button" class="btn btn_03" onclick="fjobslist_do('승인')">선택승인</button>
 </div>
 
 </form>
@@ -188,17 +188,22 @@ function check_all(f) {
         if (f.elements[i].name === 'chk[]') f.elements[i].checked = chk;
     }
 }
-function fjobslist_submit(f) {
-    var act = f.act_button ? f.act_button.value : '';
-    if (!act) return false;
+function fjobslist_do(act) {
+    var f = document.getElementById('fjobslist');
+    if (!f) return;
     var cnt = 0;
     for (var i = 0; i < f.length; i++) {
         if (f.elements[i].name === 'chk[]' && f.elements[i].checked) cnt++;
     }
-    if (cnt === 0) { alert('항목을 선택하세요.'); return false; }
-    if (act === '입금확인') { f.action = './jobs_register_confirm_update.php'; return confirm(cnt + '건 입금확인 하시겠습니까?'); }
-    if (act === '승인') { f.action = './jobs_register_approve_update.php'; return confirm(cnt + '건 승인하시겠습니까? 광고가 노출됩니다.'); }
-    return false;
+    if (cnt === 0) { alert('항목을 선택하세요.'); return; }
+    if (act === '입금확인') {
+        if (!confirm(cnt + '건 입금확인 하시겠습니까?')) return;
+        f.action = './jobs_register_confirm_update.php';
+    } else if (act === '승인') {
+        if (!confirm(cnt + '건 승인하시겠습니까? 광고가 노출됩니다.')) return;
+        f.action = './jobs_register_approve_update.php';
+    } else return;
+    f.submit();
 }
 </script>
 
