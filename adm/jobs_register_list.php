@@ -141,6 +141,7 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
 
                 $bg = 'bg' . ($i % 2);
                 $confirm_url = './jobs_register_confirm_update.php?jr_id=' . $row['jr_id'] . '&token=' . $token;
+                $cancel_url = './jobs_register_cancel_update.php?jr_id=' . $row['jr_id'] . '&token=' . $token;
                 $view_url = $jobs_view_base . '?jr_id=' . $row['jr_id'];
                 ?>
                 <tr class="<?php echo $bg; ?>">
@@ -161,7 +162,9 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
                     <td class="td_mng"><a href="<?php echo $view_url; ?>" class="btn btn_02" target="_blank">보기</a></td>
                     <td class="td_mng td_mng_l">
                         <?php if (!$payment_ok) { ?>
-                            <a href="<?php echo $confirm_url; ?>" class="btn btn_02" onclick="return confirm('입금확인 하시겠습니까? 진행중으로 전환됩니다.');">입금확인</a>
+                            <a href="<?php echo $confirm_url; ?>" class="btn btn_02" onclick="return confirm('입금확인 하시겠습니까?');">입금확인</a>
+                        <?php } elseif ($row['jr_status'] === 'pending') { ?>
+                            <a href="<?php echo $cancel_url; ?>" class="btn btn_01" onclick="return confirm('입금확인을 취소하여 입금대기중으로 변경하시겠습니까?');">취소</a>
                         <?php } else { ?>
                             —
                         <?php } ?>
@@ -180,6 +183,7 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
 
 <div class="btn_fixed_top">
     <button type="button" class="btn btn_02" onclick="fjobslist_do('입금확인')">선택입금확인</button>
+    <button type="button" class="btn btn_01" onclick="fjobslist_do('취소')">선택취소</button>
 </div>
 
 </form>
@@ -205,8 +209,11 @@ function fjobslist_do(act) {
     if (el) el.value = idsStr;
     var url;
     if (act === '입금확인') {
-        if (!confirm(ids.length + '건 입금확인 하시겠습니까? 진행중으로 전환됩니다.')) return;
+        if (!confirm(ids.length + '건 입금확인 하시겠습니까?')) return;
         url = './jobs_register_confirm_update.php?jr_ids=' + encodeURIComponent(idsStr);
+    } else if (act === '취소') {
+        if (!confirm(ids.length + '건 입금확인을 취소하여 입금대기중으로 변경하시겠습니까?')) return;
+        url = './jobs_register_cancel_update.php?jr_ids=' + encodeURIComponent(idsStr);
     } else return;
     f.action = url;
     f.submit();

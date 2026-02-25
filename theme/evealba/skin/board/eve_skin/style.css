@@ -82,7 +82,8 @@
 .jobs-ongoing-list .status-badge { display:inline-block; padding:2px 8px; border-radius:8px; font-size:11px; font-weight:700; }
 .jobs-ongoing-list .status-pending,
 .jobs-ongoing-list .status-payment-wait { background:#FFF3E0; color:#E65100; }
-.jobs-ongoing-list .status-approve-wait { background:#E3F2FD; color:#1565C0; }
+.jobs-ongoing-list .status-approve-wait,
+.jobs-ongoing-list .status-payment-ok { background:#E3F2FD; color:#1565C0; }
 .jobs-ongoing-list .status-ongoing { background:#E8F5E9; color:#2E7D32; }
 .jobs-ended-list .jobs-ongoing-thead,
 .jobs-ended-list .jobs-ongoing-row { grid-template-columns:90px 1fr 80px 70px; }

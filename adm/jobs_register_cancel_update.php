@@ -1,7 +1,6 @@
 <?php
 /**
- * 어드민 - 채용정보등록 입금확인 처리
- * 입금확인 시 jr_payment_confirmed=1 설정 (회원 진행중 페이지에 입금확인 표시)
+ * 어드민 - 채용정보등록 입금확인 취소 (입금대기중으로 되돌림)
  */
 $sub_menu = '910100';
 require_once './_common.php';
@@ -23,22 +22,22 @@ if ($jr_id) {
 }
 
 if (empty($jr_ids)) {
-    alert('입금확인할 항목을 선택하세요.', './jobs_register_list.php');
+    alert('취소할 항목을 선택하세요.', './jobs_register_list.php');
 }
 
-$confirm_ok = 0;
+$cancel_ok = 0;
 foreach ($jr_ids as $k => $v) {
     $id = (int)(is_array($v) ? $v : $v);
     if (!$id) continue;
 
     $row = sql_fetch("SELECT jr_id, jr_status, jr_payment_confirmed FROM g5_jobs_register WHERE jr_id = '{$id}'");
     if (!$row) continue;
-    if ($row['jr_payment_confirmed']) continue;
+    if (!$row['jr_payment_confirmed']) continue;
     if ($row['jr_status'] !== 'pending') continue;
 
-    sql_query("UPDATE g5_jobs_register SET jr_payment_confirmed = 1 WHERE jr_id = '{$id}'");
-    $confirm_ok++;
+    sql_query("UPDATE g5_jobs_register SET jr_payment_confirmed = 0 WHERE jr_id = '{$id}'");
+    $cancel_ok++;
 }
 
-$msg = $confirm_ok ? $confirm_ok . '건 입금확인 완료.' : '입금확인할 건이 없습니다.';
+$msg = $cancel_ok ? $cancel_ok . '건 입금대기중으로 변경되었습니다.' : '취소할 건이 없습니다.';
 alert($msg, './jobs_register_list.php');

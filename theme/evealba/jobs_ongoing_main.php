@@ -22,9 +22,9 @@ if ($is_member) {
             if ($status === 'ongoing') {
                 $status_label = '진행중';
                 $status_class = 'ongoing';
-            } elseif ($status === 'pending' && $payment_ok && !$approved) {
-                $status_label = '승인대기';
-                $status_class = 'approve-wait';
+            } elseif ($status === 'pending' && $payment_ok) {
+                $status_label = '입금확인';
+                $status_class = 'payment-ok';
             } else {
                 $status_label = '입금대기중';
                 $status_class = 'payment-wait';
