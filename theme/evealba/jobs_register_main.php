@@ -754,8 +754,8 @@
         </div>
 
         <!-- 아이콘 추가 -->
-        <div class="icon-section">
-          <div style="background:linear-gradient(135deg,var(--dark2),#5C0040);padding:10px 16px;border-radius:8px;margin-bottom:12px;">
+        <div class="icon-section icon-section-gradient">
+          <div class="icon-section-header">
             <p style="font-size:13px;color:var(--gold);font-weight:700;">⭐ 아이콘 추가</p>
             <p style="font-size:11px;color:rgba(255,255,255,.8);margin-top:4px;">7개 줄광고 옵션을 사용할 경우에 부가적으로 추가 가능한 옵션입니다. 단독으로 옵션사용시 채용광고가 노출되지 않습니다.</p>
           </div>
@@ -764,28 +764,28 @@
           <p style="font-size:13px;font-weight:700;color:#555;margin-bottom:10px;">📱 아이콘출력 결제</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
             <div class="radio-item"><input type="radio" name="icon-pay" id="ip-none" checked><label for="ip-none">광고하지않음</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-free"><label for="ip-free" style="color:var(--hot-pink);font-weight:700;">♥ 초보환영</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-room"><label for="ip-room" style="color:#9C27B0;font-weight:700;">❤️ 원룸제공</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-earn"><label for="ip-earn" style="color:var(--orange);font-weight:700;">🌟 고금시설</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-free"><label for="ip-free" style="color:var(--hot-pink);font-weight:700;">💖 초보환영</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-room"><label for="ip-room" style="color:#9C27B0;font-weight:700;">🏡 원룸제공</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-earn"><label for="ip-earn" style="color:var(--orange);font-weight:700;">💎 고급시설</label></div>
             <div class="radio-item"><input type="radio" name="icon-pay" id="ip-blk"><label for="ip-blk" style="background:#333;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;">블랙 관리</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-pay"><label for="ip-pay" style="color:#E91E63;font-weight:700;">💸 폰비♥ 지급</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-size"><label for="ip-size" style="color:#F44336;font-weight:700;">사이즈 ✕</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-set"><label for="ip-set" style="color:#4CAF50;font-weight:700;">🌿 셋트환영</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-pay"><label for="ip-pay" style="color:#E91E63;font-weight:700;">📱 폰비지급</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-size"><label for="ip-size" style="color:#F44336;font-weight:700;">사이즈✘</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-set"><label for="ip-set" style="color:#4CAF50;font-weight:700;">🎀 세트환영</label></div>
             <div class="radio-item"><input type="radio" name="icon-pay" id="ip-car"><label for="ip-car" style="color:#2196F3;font-weight:700;">🚗 픽업가능</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-mem"><label for="ip-mem" style="color:#FF9800;font-weight:700;">👥 1회원제운영</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-mem"><label for="ip-mem" style="color:#FF9800;font-weight:700;">🙋 1회원제운영</label></div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:#f5f5f5;border-radius:8px;padding:10px;">
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-no" checked><label for="ip-no" style="font-size:12px;">광고하지않음</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-30"><label for="ip-30" style="font-size:12px;color:var(--hot-pink);">기간별 30일 30,000원</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-60"><label for="ip-60" style="font-size:12px;color:var(--hot-pink);">기간별 60일 55,000원</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-90"><label for="ip-90" style="font-size:12px;color:var(--hot-pink);">기간별 90일 70,000원</label></div>
+          <div class="icon-period-box">
+            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-no" checked data-price="0" onchange="calcTotal()"><label for="ip-no" style="font-size:12px;">광고하지않음</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-30" data-price="30000" onchange="calcTotal()"><label for="ip-30" style="font-size:12px;color:var(--hot-pink);">기간별 30일 30,000원</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-60" data-price="55000" onchange="calcTotal()"><label for="ip-60" style="font-size:12px;color:var(--hot-pink);">기간별 60일 55,000원</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-90" data-price="70000" onchange="calcTotal()"><label for="ip-90" style="font-size:12px;color:var(--hot-pink);">기간별 90일 70,000원</label></div>
           </div>
         </div>
 
         <!-- 형광펜 선택 -->
-        <div class="highlight-section">
+        <div class="highlight-section highlight-section-gradient">
           <p class="hl-title">🖊 형광펜 선택  <span style="font-size:11px;color:#aaa;">사용할 형광색을 설정하세요</span></p>
-          <div style="padding:10px;background:#f9f9f9;border-radius:10px;margin-bottom:10px;">
+          <div class="hl-inner-box">
             <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:8px;">형광펜 채용정보</div>
             <div class="hl-price-row">
               <div class="hl-price-item"><input type="checkbox" id="hl-30" data-price="30000" onchange="calcTotal()"><label for="hl-30" class="hl-price-label">기간별 30일</label><span class="hl-price-val">30,000원</span></div>
