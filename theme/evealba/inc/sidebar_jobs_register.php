@@ -17,9 +17,6 @@ if (!defined('_GNUBOARD_')) exit;
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_register.php' : '/jobs_register.php'; ?>" class="side-menu-item active">📋 진행중인 채용정보</a>
     <a href="#" class="side-menu-item">📁 마감된 채용정보</a>
     <a href="#" class="side-menu-item">💳 유료결제 내역</a>
-    <a href="#" class="side-menu-item">🚫 회원 차단 설정</a>
-    <a href="#" class="side-menu-item">🔑 게시글 키워드 차단</a>
-    <a href="#" class="side-menu-item">💬 댓글 키워드 차단</a>
     <a href="<?php echo G5_BBS_URL; ?>/member_confirm.php?url=<?php echo urlencode(G5_BBS_URL.'/register_form.php'); ?>" class="side-menu-item">⚙️ 회원정보 수정</a>
   </div>
 </div>

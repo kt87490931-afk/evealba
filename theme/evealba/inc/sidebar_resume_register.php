@@ -23,7 +23,6 @@ $mypage_url = G5_BBS_URL.'/member_confirm.php?url='.urlencode(G5_BBS_URL.'/regis
     <a href="#" class="side-menu-item">⚙️ 맞춤구인 정보설정</a>
     <a href="#" class="side-menu-item">📝 내가 작성한 게시글</a>
     <a href="#" class="side-menu-item">💬 내가 작성한 댓글</a>
-    <a href="#" class="side-menu-item">🚫 회원 차단 설정</a>
     <a href="#" class="side-menu-item">⭐ 즐겨찾기한 게시글</a>
   </div>
 </div>
