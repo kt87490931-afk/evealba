@@ -479,7 +479,7 @@
     </div>
 
     <!-- =============================
-         8. 상세설명 (에디터)
+         8. 상세설명 (5개 폼)
     ============================= -->
     <div class="form-card sh-pink">
       <div class="sec-head open" onclick="toggleSec(this)">
@@ -489,33 +489,41 @@
         <span class="sec-chevron">▼</span>
       </div>
       <div class="sec-body">
-        <div style="padding:14px 18px 16px;">
-          <!-- 툴바 -->
-          <div style="background:#f8f0f5;border:1.5px solid #f0e0e8;border-bottom:none;border-radius:10px 10px 0 0;padding:8px 12px;display:flex;flex-wrap:wrap;gap:3px;align-items:center;">
-            <div style="display:flex;gap:2px;">
-              <select style="padding:4px 6px;border:1px solid #e8d8e8;border-radius:5px;font-size:11px;background:#fff;cursor:pointer;font-family:inherit;outline:none;"><option>스타일</option><option>본문</option><option>제목1</option></select>
-              <select style="padding:4px 6px;border:1px solid #e8d8e8;border-radius:5px;font-size:11px;background:#fff;cursor:pointer;font-family:inherit;outline:none;"><option>폰트</option><option>나눔고딕</option><option>맑은고딕</option></select>
-              <select style="padding:4px 6px;border:1px solid #e8d8e8;border-radius:5px;font-size:11px;background:#fff;cursor:pointer;font-family:inherit;outline:none;width:52px;"><option>크기</option><option>10</option><option>12</option><option>14</option><option>16</option><option>18</option></select>
-            </div>
-            <div style="width:1px;height:20px;background:#e0d0e0;margin:0 4px;"></div>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;font-weight:700;color:#555;cursor:pointer;"><b>B</b></button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;"><i>I</i></button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;"><u>U</u></button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;"><s>S</s></button>
-            <div style="width:1px;height:20px;background:#e0d0e0;margin:0 4px;"></div>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;">🖼</button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;">🔗</button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;">😊</button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;">⊞</button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;">▶</button>
-            <div style="width:1px;height:20px;background:#e0d0e0;margin:0 4px;"></div>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;">≡</button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;">☰</button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;">1.</button>
-            <button style="padding:4px 7px;background:#fff;border:1px solid #e8d8e8;border-radius:5px;font-size:12px;cursor:pointer;">•</button>
+        <p class="desc-ai-notice">*작성한 상세설명을 기준으로 AI 자동 상세설명글을 작성해드립니다. 최대한 꼼꼼히 작성 부탁드립니다.</p>
+        <div class="form-row">
+          <div class="form-label">업소 위치 및 업소 소개 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <textarea class="desc-field" name="desc_location" id="desc_location" rows="4" placeholder="업소 위치 및 업소 소개를 입력해주세요 (10자 이상)" required minlength="10"></textarea>
+            <span class="desc-count" id="cnt_location">0</span> / 10자 이상
           </div>
-          <!-- 에디터 본문 -->
-          <textarea style="width:100%;min-height:260px;padding:14px 16px;border:1.5px solid #f0e0e8;border-top:none;border-radius:0 0 10px 10px;font-size:13px;line-height:1.8;color:#333;background:#fff;resize:vertical;outline:none;font-family:inherit;" placeholder="업소 상세 설명을 입력해주세요.&#10;&#10;• 업소 소개 및 특징&#10;• 근무 환경&#10;• 지원 혜택 및 복리후생&#10;• 지원 자격 및 우대사항"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-label">근무환경 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <textarea class="desc-field" name="desc_env" id="desc_env" rows="4" placeholder="근무환경을 입력해주세요 (10자 이상)" required minlength="10"></textarea>
+            <span class="desc-count" id="cnt_env">0</span> / 10자 이상
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">지원 혜택 및 복리후생 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <textarea class="desc-field" name="desc_benefit" id="desc_benefit" rows="4" placeholder="지원 혜택 및 복리후생을 입력해주세요 (10자 이상)" required minlength="10"></textarea>
+            <span class="desc-count" id="cnt_benefit">0</span> / 10자 이상
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">지원 자격 및 우대사항 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <textarea class="desc-field" name="desc_qualify" id="desc_qualify" rows="4" placeholder="지원 자격 및 우대사항을 입력해주세요 (10자 이상)" required minlength="10"></textarea>
+            <span class="desc-count" id="cnt_qualify">0</span> / 10자 이상
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">추가 상세설명 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <textarea class="desc-field" name="desc_extra" id="desc_extra" rows="4" placeholder="추가 상세설명을 입력해주세요 (10자 이상)" required minlength="10"></textarea>
+            <span class="desc-count" id="cnt_extra">0</span> / 10자 이상
+          </div>
         </div>
       </div>
     </div>
@@ -923,6 +931,12 @@ document.addEventListener('DOMContentLoaded', function() {
   filterJobRegionDetail('job_work_region_1', 'job_work_region_detail_1');
   filterJobRegionDetail('job_work_region_2', 'job_work_region_detail_2');
   filterJobRegionDetail('job_work_region_3', 'job_work_region_detail_3');
+  /* 상세설명 5개 폼 글자수 카운트 */
+  ['desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'].forEach(function(id){
+    var el = document.getElementById(id);
+    var cnt = document.getElementById('cnt_'+id.replace('desc_',''));
+    if(el && cnt){ el.addEventListener('input',function(){ cnt.textContent = this.value.length; }); }
+  });
 });
 
 function filterJobRegionDetail(regionId, detailId) {
@@ -1023,6 +1037,16 @@ document.querySelectorAll('.term-chk').forEach(function(c){
 
 /* 결제하기 유효성 검사 */
 function checkPayment() {
+  var descIds = ['desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'];
+  var descLabels = ['업소 위치 및 업소 소개','근무환경','지원 혜택 및 복리후생','지원 자격 및 우대사항','추가 상세설명'];
+  for(var i=0;i<descIds.length;i++){
+    var el = document.getElementById(descIds[i]);
+    if(el && el.value.trim().length < 10){
+      alert('상세설명 "'+descLabels[i]+'"은(는) 10자 이상 입력해주세요.');
+      el.focus();
+      return;
+    }
+  }
   var allTerms = document.querySelectorAll('.term-chk');
   var checkedTerms = document.querySelectorAll('.term-chk:checked');
   if(allTerms.length !== checkedTerms.length){
