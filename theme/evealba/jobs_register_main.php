@@ -174,16 +174,50 @@
       </div>
       <div class="sec-body">
         <div class="form-row">
-          <div class="form-label">근무지역 <span class="req">*</span></div>
+          <div class="form-label">1순위 <span class="req">*</span></div>
           <div class="form-cell">
-            <select class="fi-select" id="job_work_region">
-              <option value="">지역선택</option>
+            <select class="fi-select" id="job_work_region_1">
+              <option value="">1순위 지역선택</option>
               <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
               <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
               <?php } ?>
             </select>
-            <select class="fi-select" id="job_work_region_detail">
-              <option value="">세부지역선택</option>
+            <select class="fi-select" id="job_work_region_detail_1">
+              <option value="">1순위 세부지역선택</option>
+              <?php foreach ((isset($ev_region_details) ? $ev_region_details : []) as $rd) { ?>
+              <option value="<?php echo (int)$rd['erd_id']; ?>" data-er-id="<?php echo (int)$rd['er_id']; ?>"><?php echo htmlspecialchars($rd['erd_name']); ?></option>
+              <?php } ?>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">2순위</div>
+          <div class="form-cell">
+            <select class="fi-select" id="job_work_region_2">
+              <option value="">2순위 지역선택</option>
+              <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
+              <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+              <?php } ?>
+            </select>
+            <select class="fi-select" id="job_work_region_detail_2">
+              <option value="">2순위 세부지역선택</option>
+              <?php foreach ((isset($ev_region_details) ? $ev_region_details : []) as $rd) { ?>
+              <option value="<?php echo (int)$rd['erd_id']; ?>" data-er-id="<?php echo (int)$rd['er_id']; ?>"><?php echo htmlspecialchars($rd['erd_name']); ?></option>
+              <?php } ?>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">3순위</div>
+          <div class="form-cell">
+            <select class="fi-select" id="job_work_region_3">
+              <option value="">3순위 지역선택</option>
+              <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
+              <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+              <?php } ?>
+            </select>
+            <select class="fi-select" id="job_work_region_detail_3">
+              <option value="">3순위 세부지역선택</option>
               <?php foreach ((isset($ev_region_details) ? $ev_region_details : []) as $rd) { ?>
               <option value="<?php echo (int)$rd['erd_id']; ?>" data-er-id="<?php echo (int)$rd['er_id']; ?>"><?php echo htmlspecialchars($rd['erd_name']); ?></option>
               <?php } ?>
@@ -887,8 +921,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (card) card.classList.toggle('selected', this.checked);
     });
   });
-  /* 근무지역-세부지역 연동 (이력서등록과 동일) */
-  filterJobRegionDetail('job_work_region', 'job_work_region_detail');
+  /* 근무지역-세부지역 연동 (1~3순위) */
+  filterJobRegionDetail('job_work_region_1', 'job_work_region_detail_1');
+  filterJobRegionDetail('job_work_region_2', 'job_work_region_detail_2');
+  filterJobRegionDetail('job_work_region_3', 'job_work_region_detail_3');
 });
 
 function filterJobRegionDetail(regionId, detailId) {
