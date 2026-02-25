@@ -45,6 +45,16 @@ if ($is_member) {
                 $period = (int)($row['jr_ad_period'] ?? 30);
                 $ad_labels = ($jc <= 300) ? '줄광고 30일' : (($jc <= 700) ? '줄광고 60일' : (($jc <= 1200) ? '줄광고 90일' : "줄광고 {$period}일"));
             }
+            $thumb_url = '';
+            if (!empty($row['jr_data'])) {
+                $jr_data_arr = @json_decode($row['jr_data'], true);
+                if (is_array($jr_data_arr)) {
+                    if (!empty($jr_data_arr['thumb_url'])) $thumb_url = $jr_data_arr['thumb_url'];
+                    elseif (!empty($jr_data_arr['thumb']) && is_string($jr_data_arr['thumb'])) $thumb_url = $jr_data_arr['thumb'];
+                    elseif (!empty($jr_data_arr['image']) && is_string($jr_data_arr['image'])) $thumb_url = $jr_data_arr['image'];
+                    elseif (!empty($jr_data_arr['images'][0])) $thumb_url = is_string($jr_data_arr['images'][0]) ? $jr_data_arr['images'][0] : '';
+                }
+            }
             $list[] = array(
                 'jr_id' => $row['jr_id'],
                 'wr_id' => $row['jr_id'],
@@ -57,6 +67,9 @@ if ($is_member) {
                 'jump_count' => $row['jr_jump_count'],
                 'remaining' => $remaining,
                 'ad_labels' => $ad_labels,
+                'total_amount' => (int)($row['jr_total_amount'] ?? 0),
+                'nickname' => isset($row['jr_nickname']) ? trim($row['jr_nickname']) : '',
+                'thumb_url' => $thumb_url,
                 'view_href' => $jobs_view_url_base.'?jr_id='.$row['jr_id']
             );
         }
@@ -85,31 +98,47 @@ if ($is_member) {
 
   <div class="board-wrap jobs-ongoing-wrap">
     <div class="board-thead jobs-ongoing-thead">
-      <div class="board-th">날짜</div>
-      <div class="board-th td-title">제목</div>
-      <div class="board-th">상태</div>
-      <div class="board-th">신청광고목록</div>
+      <div class="board-th">번호</div>
+      <div class="board-th">썸네일</div>
+      <div class="board-th th-title">제목</div>
+      <div class="board-th">등록인</div>
+      <div class="board-th th-date">등록일</div>
       <div class="board-th">광고기간</div>
       <div class="board-th">남은기간</div>
-      <div class="board-th">점프횟수</div>
+      <div class="board-th">점프</div>
       <div class="board-th">연장</div>
     </div>
 
     <?php if (count($list) > 0) {
+      $num = $total_count;
       foreach ($list as $row) {
         $extend_url = $jobs_extend_popup_url . '?jr_id=' . (isset($row['jr_id']) ? $row['jr_id'] : '');
+        $thumb_url = isset($row['thumb_url']) ? trim($row['thumb_url']) : '';
+        $thumb_full = ($thumb_url && (strpos($thumb_url, 'http') === 0 || strpos($thumb_url, '/') === 0)) ? $thumb_url : ($thumb_url ? (G5_DATA_URL . '/jobs/' . ltrim($thumb_url, '/')) : '');
     ?>
     <a href="<?php echo isset($row['view_href']) ? $row['view_href'] : '#'; ?>" class="board-row jobs-ongoing-row">
-      <div class="board-td td-date"><?php echo isset($row['datetime2']) ? $row['datetime2'] : ''; ?></div>
+      <div class="board-td td-num"><?php echo $num--; ?></div>
+      <div class="board-td td-thumb">
+        <?php if ($thumb_full) { ?>
+        <div class="thumb-box"><img src="<?php echo htmlspecialchars($thumb_full); ?>" alt=""></div>
+        <?php } else { ?>
+        <div class="thumb-empty"><span class="thumb-empty-icon">📋</span><span class="thumb-empty-text">이미지 없음</span></div>
+        <?php } ?>
+      </div>
       <div class="board-td td-title">
         <div class="td-title-inner">
-          <span class="post-title-text"><?php echo isset($row['subject']) ? htmlspecialchars($row['subject']) : ''; ?></span>
+          <div class="td-title-top">
+            <span class="post-title-text"><?php echo isset($row['subject']) ? htmlspecialchars($row['subject']) : ''; ?></span>
+            <span class="status-badge status-<?php echo isset($row['status_class']) ? $row['status_class'] : 'payment-wait'; ?>"><?php echo isset($row['status_label']) ? htmlspecialchars($row['status_label']) : ''; ?></span>
+          </div>
+          <div class="td-title-bottom">
+            <?php if (!empty($row['total_amount'])) { ?><span class="td-price"><?php echo number_format($row['total_amount']); ?>원</span><?php } ?>
+            <?php if (!empty($row['ad_labels'])) { ?><span class="cat-badge cat-jobs"><?php echo htmlspecialchars(cut_str(str_replace(',', ', ', $row['ad_labels']), 20)); ?></span><?php } ?>
+          </div>
         </div>
       </div>
-      <div class="board-td td-status">
-        <span class="status-badge status-<?php echo isset($row['status_class']) ? $row['status_class'] : 'payment-wait'; ?>"><?php echo isset($row['status_label']) ? htmlspecialchars($row['status_label']) : ''; ?></span>
-      </div>
-      <div class="board-td td-ad-labels" style="font-size:12px;"><?php echo isset($row['ad_labels']) ? htmlspecialchars(cut_str(str_replace(',', ', ', $row['ad_labels']), 30)) : '—'; ?></div>
+      <div class="board-td td-writer"><?php echo !empty($row['nickname']) ? htmlspecialchars($row['nickname']) : '—'; ?></div>
+      <div class="board-td td-date"><?php echo isset($row['datetime2']) ? $row['datetime2'] : ''; ?></div>
       <div class="board-td td-period"><?php echo isset($row['ad_period']) ? $row['ad_period'] : '—'; ?></div>
       <div class="board-td td-remaining"><?php echo isset($row['remaining']) ? $row['remaining'] : '—'; ?></div>
       <div class="board-td td-jump"><?php echo isset($row['jump_count']) ? number_format($row['jump_count']) : '—'; ?></div>

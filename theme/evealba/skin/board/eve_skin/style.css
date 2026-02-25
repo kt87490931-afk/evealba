@@ -73,9 +73,38 @@
   .ev-board-list .board-th:nth-child(6), .ev-board-list .board-td:nth-child(6) { display:none; }
 }
 
-/* ===== 진행중인 채용정보 리스트 (jobs-ongoing) ===== */
+/* ===== 진행중인 채용정보 리스트 (jobs-ongoing) - eve_alba_board_v2 스타일 ===== */
 .jobs-ongoing-list .jobs-ongoing-thead,
-.jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:90px 1fr 90px 120px 80px 70px 80px 70px; }
+.jobs-ongoing-list .jobs-ongoing-row {
+  grid-template-columns:54px 110px 1fr 88px 90px 80px 70px 70px 80px;
+  min-height:96px;
+  align-items:center;
+}
+.jobs-ongoing-list .board-th.th-title { text-align:left; }
+.jobs-ongoing-list .board-td.td-num { color:#aaa; font-size:12px; flex-direction:column; gap:2px; }
+.jobs-ongoing-list .board-td.td-thumb { padding:8px 6px; justify-content:center; align-items:center; }
+.jobs-ongoing-list .board-td.td-title { text-align:left; padding:10px 12px 10px 8px; justify-content:flex-start; }
+.jobs-ongoing-list .board-td.td-writer { font-size:12px; color:#777; }
+.jobs-ongoing-list .board-td.td-date { font-size:11px; color:var(--ev-hot-pink); }
+.jobs-ongoing-list .td-title-inner { display:flex; flex-direction:column; gap:5px; }
+.jobs-ongoing-list .td-title-top { display:flex; align-items:center; gap:5px; flex-wrap:wrap; }
+.jobs-ongoing-list .td-title-bottom { display:flex; align-items:center; gap:6px; font-size:11px; color:#aaa; flex-wrap:wrap; }
+.jobs-ongoing-list .td-price { font-size:13px; font-weight:900; color:var(--ev-hot-pink); }
+.jobs-ongoing-list .cat-badge.cat-jobs { background:#FFE4F0; color:#C9007A; }
+.jobs-ongoing-list .thumb-box {
+  width:92px; height:72px; border-radius:8px; overflow:hidden; flex-shrink:0;
+  background:#f5e8f0; position:relative; border:1.5px solid #f0e0e8; transition:all .2s;
+}
+.jobs-ongoing-list .board-row:hover .thumb-box { border-color:var(--ev-light-pink); box-shadow:0 3px 10px rgba(255,27,107,.15); }
+.jobs-ongoing-list .thumb-box img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+.jobs-ongoing-list .board-row:hover .thumb-box img { transform:scale(1.06); }
+.jobs-ongoing-list .thumb-empty {
+  width:92px; height:72px; border-radius:8px;
+  background:linear-gradient(135deg,#fdf0f5,#fae8f0); border:1.5px dashed var(--ev-pale-pink);
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:4px;
+}
+.jobs-ongoing-list .thumb-empty-icon { font-size:22px; opacity:.35; }
+.jobs-ongoing-list .thumb-empty-text { font-size:9px; color:#ccc; }
 .jobs-ongoing-list .jobs-ongoing-wrap .board-td.td-extend { padding:6px; }
 .jobs-ongoing-list .btn-extend { padding:6px 14px; background:linear-gradient(135deg,var(--ev-orange),var(--ev-hot-pink)); color:#fff; border:none; border-radius:14px; font-size:12px; font-weight:700; cursor:pointer; }
 .jobs-ongoing-list .btn-extend:hover { opacity:.9; }
@@ -92,18 +121,22 @@
 .jobs-payment-list .board-td.td-price { font-weight:700; color:var(--ev-hot-pink); }
 @media (max-width:900px) {
   .jobs-ongoing-list .jobs-ongoing-thead,
-  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:90px 1fr 90px 100px 80px 70px; }
-  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5),
-  .jobs-ongoing-list .board-th:nth-child(6), .jobs-ongoing-list .board-td:nth-child(6) { display:none; }
+  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:52px 84px 1fr 80px 90px 70px 80px; }
+  .jobs-ongoing-list .board-th:nth-child(6), .jobs-ongoing-list .board-td:nth-child(6),
+  .jobs-ongoing-list .board-th:nth-child(7), .jobs-ongoing-list .board-td:nth-child(7) { display:none; }
+  .jobs-ongoing-list .thumb-box, .jobs-ongoing-list .thumb-empty { width:76px; height:60px; }
 }
 @media (max-width:600px) {
   .jobs-ongoing-list .jobs-ongoing-thead,
-  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:1fr 90px 70px; }
+  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:72px 1fr 80px; }
   .jobs-ongoing-list .board-th:nth-child(1), .jobs-ongoing-list .board-td:nth-child(1),
   .jobs-ongoing-list .board-th:nth-child(4), .jobs-ongoing-list .board-td:nth-child(4),
   .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5),
   .jobs-ongoing-list .board-th:nth-child(6), .jobs-ongoing-list .board-td:nth-child(6),
-  .jobs-ongoing-list .board-th:nth-child(7), .jobs-ongoing-list .board-td:nth-child(7) { display:none; }
+  .jobs-ongoing-list .board-th:nth-child(7), .jobs-ongoing-list .board-td:nth-child(7),
+  .jobs-ongoing-list .board-th:nth-child(8), .jobs-ongoing-list .board-td:nth-child(8) { display:none; }
+  .jobs-ongoing-list .thumb-box, .jobs-ongoing-list .thumb-empty { width:64px; height:54px; }
+  .jobs-ongoing-list .post-title-text { max-width:180px; font-size:12px; }
 }
 
 /* ===== 연장 모달 ===== */
