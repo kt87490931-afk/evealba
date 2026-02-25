@@ -42,7 +42,7 @@ include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 
 $nav_active = 'jobs';
-$jobs_mypage_active = 'register';
+if (!isset($jobs_mypage_active)) $jobs_mypage_active = 'register';
 include G5_THEME_PATH.'/inc/head_top.php';
 ?>
 
@@ -53,7 +53,7 @@ include G5_THEME_PATH.'/inc/head_top.php';
     <span class="sep">›</span>
     <a href="<?php echo G5_BBS_URL; ?>/member_confirm.php?url=<?php echo urlencode(G5_BBS_URL.'/register_form.php'); ?>">회원정보</a>
     <span class="sep">›</span>
-    <span class="current">📝 채용정보 등록</span>
+    <span class="current"><?php echo isset($jobs_breadcrumb_current) ? $jobs_breadcrumb_current : '📝 채용정보 등록'; ?></span>
   </div>
 </div>
 

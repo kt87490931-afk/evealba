@@ -7,6 +7,7 @@ if (!defined('_GNUBOARD_')) exit;
 
 $jobs_base_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
 $jobs_register_url = $jobs_base_url ? $jobs_base_url.'/jobs_register.php' : '/jobs_register.php';
+$jobs_ongoing_url = $jobs_base_url ? $jobs_base_url.'/jobs_ongoing.php' : '/jobs_ongoing.php';
 $jobs_mem_confirm_url = G5_BBS_URL.'/member_confirm.php?url='.urlencode(G5_BBS_URL.'/register_form.php');
 
 $jobs_mypage_active = isset($jobs_mypage_active) ? $jobs_mypage_active : 'register';
@@ -22,7 +23,7 @@ $jobs_mypage_active = isset($jobs_mypage_active) ? $jobs_mypage_active : 'regist
   </div>
   <div class="side-menu-list">
     <a href="<?php echo $jobs_register_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'register') ? ' active' : ''; ?>">📝 채용정보등록</a>
-    <a href="#" class="side-menu-item<?php echo ($jobs_mypage_active === 'ongoing') ? ' active' : ''; ?>">📋 진행중인 채용정보</a>
+    <a href="<?php echo $jobs_ongoing_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'ongoing') ? ' active' : ''; ?>">📋 진행중인 채용정보</a>
     <a href="#" class="side-menu-item<?php echo ($jobs_mypage_active === 'ended') ? ' active' : ''; ?>">📁 마감된 채용정보</a>
     <a href="#" class="side-menu-item<?php echo ($jobs_mypage_active === 'payment') ? ' active' : ''; ?>">💳 유료결제 내역</a>
     <a href="<?php echo $jobs_mem_confirm_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'member') ? ' active' : ''; ?>">⚙️ 회원정보 수정</a>

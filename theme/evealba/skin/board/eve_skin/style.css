@@ -73,6 +73,40 @@
   .ev-board-list .board-th:nth-child(6), .ev-board-list .board-td:nth-child(6) { display:none; }
 }
 
+/* ===== 진행중인 채용정보 리스트 (jobs-ongoing) ===== */
+.jobs-ongoing-list .jobs-ongoing-thead,
+.jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:90px 1fr 90px 100px 80px 70px; }
+.jobs-ongoing-list .jobs-ongoing-wrap .board-td.td-extend { padding:6px; }
+.jobs-ongoing-list .btn-extend { padding:6px 14px; background:linear-gradient(135deg,var(--ev-orange),var(--ev-hot-pink)); color:#fff; border:none; border-radius:14px; font-size:12px; font-weight:700; cursor:pointer; }
+.jobs-ongoing-list .btn-extend:hover { opacity:.9; }
+.jobs-ongoing-list .status-badge { display:inline-block; padding:2px 8px; border-radius:8px; font-size:11px; font-weight:700; }
+.jobs-ongoing-list .status-pending { background:#FFF3E0; color:#E65100; }
+.jobs-ongoing-list .status-ongoing { background:#E8F5E9; color:#2E7D32; }
+@media (max-width:900px) {
+  .jobs-ongoing-list .jobs-ongoing-thead,
+  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:90px 1fr 90px 70px; }
+  .jobs-ongoing-list .board-th:nth-child(4), .jobs-ongoing-list .board-td:nth-child(4),
+  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5) { display:none; }
+}
+@media (max-width:600px) {
+  .jobs-ongoing-list .jobs-ongoing-thead,
+  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:1fr 70px; }
+  .jobs-ongoing-list .board-th:nth-child(1), .jobs-ongoing-list .board-td:nth-child(1),
+  .jobs-ongoing-list .board-th:nth-child(3), .jobs-ongoing-list .board-td:nth-child(3),
+  .jobs-ongoing-list .board-th:nth-child(4), .jobs-ongoing-list .board-td:nth-child(4),
+  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5) { display:none; }
+}
+
+/* ===== 연장 모달 ===== */
+.jobs-extend-modal { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px; }
+.extend-modal-overlay { position:absolute; inset:0; background:rgba(0,0,0,.5); }
+.extend-modal-content { position:relative; background:#fff; border-radius:14px; max-width:800px; width:100%; max-height:90vh; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.2); }
+.extend-modal-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; background:linear-gradient(135deg,var(--ev-orange),var(--ev-hot-pink)); color:#fff; }
+.extend-modal-header h3 { margin:0; font-size:16px; font-weight:900; }
+.extend-modal-close { background:none; border:none; color:#fff; font-size:28px; cursor:pointer; line-height:1; padding:0; width:36px; height:36px; }
+.extend-modal-body { padding:0; overflow:auto; max-height:calc(90vh - 54px); }
+.extend-modal-body iframe { display:block; min-height:600px; }
+
 /* ===== VIEW ===== */
 .ev-view-wrap .font-size-bar { display:flex; justify-content:flex-end; gap:7px; margin-bottom:12px; }
 .ev-view-wrap .btn-font { padding:5px 13px; background:#fff; border:1.5px solid #f0e0e8; border-radius:8px; font-size:12px; color:#888; cursor:pointer; }
