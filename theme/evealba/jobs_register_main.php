@@ -20,7 +20,7 @@
         <div class="form-row">
           <div class="form-label">닉네임 (업소명) <span class="req">*</span></div>
           <div class="form-cell">
-            <input class="fi fi-md" type="text" placeholder="업소명을 입력해주세요">
+            <input class="fi fi-md" type="text" id="job_nickname" placeholder="업소명을 입력해주세요">
           </div>
         </div>
 
@@ -54,7 +54,7 @@
         <div class="form-row">
           <div class="form-label">상호 <span class="req">*</span></div>
           <div class="form-cell col">
-            <input class="fi fi-md fi-readonly" type="text" placeholder="" readonly>
+            <input class="fi fi-md fi-readonly" type="text" id="job_company" placeholder="" readonly>
             <p class="hint-blue">+ 첨부된 확인문서 검수 후 기재된 상호로 자동등록됩니다.</p>
           </div>
         </div>
@@ -114,7 +114,7 @@
         <div class="form-row">
           <div class="form-label">채용제목 <span class="req">*</span></div>
           <div class="form-cell" style="position:relative;">
-            <input class="fi fi-full" type="text" placeholder="채용 제목을 입력해주세요" maxlength="40">
+            <input class="fi fi-full" type="text" id="job_title" placeholder="채용 제목을 입력해주세요" maxlength="40">
             <span style="position:absolute;right:22px;font-size:11px;color:#aaa;">40자 제한</span>
           </div>
         </div>
@@ -145,14 +145,14 @@
           <div class="form-label">급여조건 <span class="req">*</span></div>
           <div class="form-cell">
             <div class="salary-row">
-              <select class="fi-select">
+              <select class="fi-select" id="job_salary_type">
                 <option>급여협의</option>
                 <option>시급</option>
                 <option>일급</option>
                 <option>주급</option>
                 <option>월급</option>
               </select>
-              <input class="fi fi-xs" type="text" placeholder="금액 입력">
+              <input class="fi fi-xs" type="text" id="job_salary_amt" placeholder="금액 입력">
               <span class="fi-unit">원</span>
               <button class="btn-salary-guide">💰 급여 기준표</button>
             </div>
@@ -241,13 +241,13 @@
         <div class="form-row">
           <div class="form-label">업종/직종 <span class="req">*</span></div>
           <div class="form-cell">
-            <select class="fi-select">
+            <select class="fi-select" id="job_job1">
               <option>-1차 직종선택-</option>
               <option>단란주점</option><option>룸살롱</option><option>가라오케</option>
               <option>노래방</option><option>클럽</option><option>바(Bar)</option>
               <option>퍼블릭</option><option>마사지</option><option>풀살롱</option>
             </select>
-            <select class="fi-select">
+            <select class="fi-select" id="job_job2">
               <option>-2차 직종선택-</option>
               <option>서빙</option><option>도우미</option><option>아가씨</option>
               <option>TC</option><option>미시</option><option>초미시</option>
@@ -539,6 +539,7 @@
           </div>
         </div>
         <div class="ai-preview-header-right">
+          <button type="button" class="ai-preview-refresh-btn" onclick="updateJobsAiSummary()" title="종합정리 새로고침">🔄 새로고침</button>
           <span class="ai-preview-badge">제출 전 확인 · Gemini AI 업소소개글 생성에 활용됩니다</span>
           <button type="button" class="ai-preview-toggle-btn" id="jobsAiToggleBtn" aria-label="접기/펼치기">▲</button>
         </div>
@@ -1017,7 +1018,47 @@ document.addEventListener('DOMContentLoaded', function() {
     var cnt = document.getElementById('cnt_'+id.replace('desc_',''));
     if(el && cnt){ el.addEventListener('input',function(){ cnt.textContent = this.value.length; }); }
   });
+  /* AI 종합정리 자동 반영: 폼 변경 시 업데이트 */
+  var summaryFields = ['job_nickname','job_company','job_title','job_salary_type','job_salary_amt','job_work_region_1','job_work_region_detail_1','job_work_region_2','job_work_region_detail_2','job_work_region_3','job_work_region_detail_3','job_job1','job_job2','desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'];
+  summaryFields.forEach(function(id){
+    var el = document.getElementById(id);
+    if(el){ el.addEventListener('input', updateJobsAiSummary); el.addEventListener('change', updateJobsAiSummary); }
+  });
+  document.querySelectorAll('input[name="employ-type"]').forEach(function(r){ r.addEventListener('change', updateJobsAiSummary); });
+  document.querySelectorAll('#am-0,#am-1,#am-2,#am-3,#am-4,#am-5,#am-6,#am-7,#am-8,#am-9,#am-10,#am-11,#am-12,#am-13,#am-14,#am-15,#am-16,#am-17,#am-18,#am-19,#am-20,#am-21').forEach(function(c){ c.addEventListener('change', updateJobsAiSummary); });
+  document.querySelectorAll('[id^="kw-"]').forEach(function(c){ c.addEventListener('change', updateJobsAiSummary); });
+  document.querySelectorAll('input[name="mbti_prefer[]"]').forEach(function(c){ c.addEventListener('change', updateJobsAiSummary); });
+  updateJobsAiSummary();
 });
+
+function updateJobsAiSummary() {
+  function val(id){ var e=document.getElementById(id); return e?e.value.trim():''; }
+  function txt(id){ var e=document.getElementById(id); return e?e.value.trim():'—'; }
+  function sel(id){ var e=document.getElementById(id); if(!e||!e.options[e.selectedIndex]) return '—'; var o=e.options[e.selectedIndex]; return o.value?o.text:'—'; }
+  function set(id,v){ var e=document.getElementById(id); if(!e) return; var s=v||'—'; e.innerHTML = s==='—'?'<span class="aip-empty">—</span>':s.replace(/\n/g,'<br>'); }
+  var nick = val('job_nickname'), comp = val('job_company');
+  set('job-summary-name', nick || comp ? [nick,comp].filter(Boolean).join(' · ') : null);
+  var title = val('job_title'), emp = document.querySelector('input[name="employ-type"]:checked');
+  set('job-summary-title', title || emp ? [title, emp?emp.nextElementSibling.textContent:''].filter(Boolean).join(' · ') : null);
+  var st = sel('job_salary_type'), sa = val('job_salary_amt');
+  set('job-summary-salary', st!=='—' || sa ? (st==='급여협의' || st==='—' ? (sa?sa+'원':'급여협의') : st+(sa?' '+sa+'원':'')) : null);
+  var r1=sel('job_work_region_1'), d1=sel('job_work_region_detail_1'), r2=sel('job_work_region_2'), d2=sel('job_work_region_detail_2'), r3=sel('job_work_region_3'), d3=sel('job_work_region_detail_3');
+  var arr=[]; if(r1!=='—'||d1!=='—') arr.push('1순위:'+(d1!=='—'?d1:r1)); if(r2!=='—'||d2!=='—') arr.push('2순위:'+(d2!=='—'?d2:r2)); if(r3!=='—'||d3!=='—') arr.push('3순위:'+(d3!=='—'?d3:r3));
+  set('job-summary-region', arr.length?arr.join(' / '):null);
+  var j1=sel('job_job1'), j2=sel('job_job2');
+  set('job-summary-jobtype', (j1!=='—'||j2!=='—') ? [j1,j2].filter(function(x){return x!=='—';}).join(' / ') : null);
+  var am = []; document.querySelectorAll('#am-0,#am-1,#am-2,#am-3,#am-4,#am-5,#am-6,#am-7,#am-8,#am-9,#am-10,#am-11,#am-12,#am-13,#am-14,#am-15,#am-16,#am-17,#am-18,#am-19,#am-20,#am-21').forEach(function(c){ if(c.checked){ var l=c.nextElementSibling; if(l) am.push(l.textContent); } });
+  set('job-summary-amenity', am.length?am.join(', '):'<span class="aip-empty">선택된 편의사항이 없습니다</span>');
+  var kw = []; document.querySelectorAll('[id^="kw-"]').forEach(function(c){ if(c.checked){ var l=c.nextElementSibling; if(l) kw.push(l.textContent); } });
+  set('job-summary-keyword', kw.length?kw.join(', '):'<span class="aip-empty">선택된 키워드가 없습니다</span>');
+  var mbti = []; document.querySelectorAll('input[name="mbti_prefer[]"]:checked').forEach(function(c){ mbti.push(c.value); });
+  set('job-summary-mbti', mbti.length?mbti.join(', '):null);
+  set('job-summary-desc1', txt('desc_location')===''?null:txt('desc_location'));
+  set('job-summary-desc2', txt('desc_env')===''?null:txt('desc_env'));
+  set('job-summary-desc3', txt('desc_benefit')===''?null:txt('desc_benefit'));
+  set('job-summary-desc4', txt('desc_qualify')===''?null:txt('desc_qualify'));
+  set('job-summary-desc5', txt('desc_extra')===''?null:txt('desc_extra'));
+}
 
 function filterJobRegionDetail(regionId, detailId) {
   var region = document.getElementById(regionId);
