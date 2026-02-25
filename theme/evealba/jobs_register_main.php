@@ -634,14 +634,13 @@
               </tr>
             </thead>
             <tbody>
-              <!-- 필수 결제 안내 -->
+              <!-- 줄광고 필수영역 (핑크테두리) -->
+              <tbody class="ad-line-ad-required">
               <tr class="ad-tr-highlight">
                 <td class="ad-td td-svc" colspan="5">
-                  <span style="background:var(--hot-pink);color:#fff;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:900;margin-right:8px;">필수결제사항</span>
-                  <span style="font-size:13px;font-weight:700;color:var(--dark);">박스광고와 함께 적용 시 노출기간을 동일하게 해주세요</span>
+                  <span style="font-size:13px;font-weight:700;color:var(--hot-pink);">줄광고는 필수결제 사항 입니다. 박스광고와 함께 적용 시 노출기간을 동일하게 해주세요</span>
                 </td>
               </tr>
-
               <!-- 7. 줄광고 -->
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
@@ -659,12 +658,13 @@
                   </div>
                 </td>
               </tr>
-
+              </tbody>
+              <tbody>
               <!-- 1. 특수배너 -->
               <tr class="ad-tr" style="background:#fff8fb;">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name" style="color:#C850C0;">1. 특수배너</div>
-                  <div class="ad-svc-desc">모든 페이지 최상단에 특수배너형으로<br>사이트 최상단 or 우측플로팅배너에 배치됩니다.</div>
+                  <div class="ad-svc-desc">모든 페이지 최상단에 특수배너형으로<br>사이트 최상단 or 좌·우측플로팅배너에 배치됩니다.</div>
                 </td>
                 <td class="ad-td ad-type">—</td>
                 <td class="ad-td ad-period" style="color:#C850C0;font-weight:700;">고객센터문의</td>
@@ -676,7 +676,7 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">2. 우대</div>
-                  <div class="ad-svc-desc">메인 상단의 가장 눈에 띄는 위치에 배치됩니다.<br>줄광고가 함께 등록됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공)</div>
+                  <div class="ad-svc-desc">메인 상단의 가장 눈에 띄는 위치에 배치됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
@@ -694,7 +694,7 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">3. 프리미엄</div>
-                  <div class="ad-svc-desc">메인페이지와 채용정보 중단의 위치에 배치됩니다.<br>줄광고가 함께 등록됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공)</div>
+                  <div class="ad-svc-desc">메인페이지와 채용정보 중단의 위치에 배치됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
@@ -712,7 +712,7 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">4. 스페셜</div>
-                  <div class="ad-svc-desc">메인페이지와 채용정보 중단에 배치됩니다.<br>줄광고가 함께 등록됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
+                  <div class="ad-svc-desc">메인페이지와 채용정보 중단에 배치됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
@@ -730,7 +730,7 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">5. 급구</div>
-                  <div class="ad-svc-desc">최상단 "급구"영역에 1줄노출, 하단 급구란에 배치됩니다.<br>줄광고가 함께 등록됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
+                  <div class="ad-svc-desc">최상단 "급구"영역에 1줄노출, 하단 급구란에 배치됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
@@ -748,7 +748,7 @@
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
                   <div class="ad-svc-name">6. 추천</div>
-                  <div class="ad-svc-desc">메인 급구채용정보 우측에 위치하며 비교적 진한 노출모양을 가지고 있습니다.<br>줄광고가 함께 등록됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
+                  <div class="ad-svc-desc">메인 급구채용정보 우측에 위치하며 비교적 진한 노출모양을 가지고 있습니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
