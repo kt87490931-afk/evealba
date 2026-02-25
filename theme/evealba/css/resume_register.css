@@ -32,13 +32,7 @@
 .resume-register-page .side-cta-btn:hover{opacity:.9;}
 .resume-register-page .btn-resume-reg{background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));color:#fff;}
 .resume-register-page .btn-job-scrap{background:linear-gradient(135deg,var(--orange),var(--hot-pink));color:#fff;}
-.resume-register-page .cs-widget{background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));border-radius:9px;padding:12px;text-align:center;color:#fff;}
-.resume-register-page .cs-widget-title{font-size:11px;opacity:.9;margin-bottom:5px;}
-.resume-register-page .cs-widget-phone{font-size:20px;font-weight:900;letter-spacing:-.5px;margin-bottom:3px;}
-.resume-register-page .cs-widget-hours{font-size:10px;opacity:.85;line-height:1.7;}
-.resume-register-page .cs-kakao{display:inline-flex;align-items:center;gap:5px;margin-top:9px;padding:5px 14px;background:#FEE500;border-radius:14px;font-size:11px;font-weight:900;color:#333;}
-.resume-register-page .cs-links{display:flex;gap:6px;margin-top:8px;}
-.resume-register-page .cs-link-btn{flex:1;padding:5px;background:rgba(255,255,255,.15);border-radius:6px;font-size:11px;color:#fff;text-align:center;border:1px solid rgba(255,255,255,.3);cursor:pointer;}
+/* 고객지원센터 위젯은 sidebar_cs_widget.php 공통 사용 (메인과 동일) */
 
 /* PAGE TITLE */
 .resume-register-page .page-title-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
