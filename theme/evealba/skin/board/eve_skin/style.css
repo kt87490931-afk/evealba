@@ -82,6 +82,11 @@
 .jobs-ongoing-list .status-badge { display:inline-block; padding:2px 8px; border-radius:8px; font-size:11px; font-weight:700; }
 .jobs-ongoing-list .status-pending { background:#FFF3E0; color:#E65100; }
 .jobs-ongoing-list .status-ongoing { background:#E8F5E9; color:#2E7D32; }
+.jobs-ended-list .jobs-ongoing-thead,
+.jobs-ended-list .jobs-ongoing-row { grid-template-columns:90px 1fr 80px 70px; }
+.jobs-payment-list .jobs-ongoing-thead,
+.jobs-payment-list .jobs-ongoing-row { grid-template-columns:120px 1fr 100px 70px 80px; }
+.jobs-payment-list .board-td.td-price { font-weight:700; color:var(--ev-hot-pink); }
 @media (max-width:900px) {
   .jobs-ongoing-list .jobs-ongoing-thead,
   .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:90px 1fr 90px 70px; }

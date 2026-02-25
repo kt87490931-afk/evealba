@@ -3,10 +3,35 @@
 $jobs_base_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
 $jobs_register_url = $jobs_base_url ? $jobs_base_url.'/jobs_register.php' : '/jobs_register.php';
 $jobs_extend_popup_url = $jobs_base_url ? $jobs_base_url.'/jobs_extend_popup.php' : '/jobs_extend_popup.php';
+$jobs_view_url_base = $jobs_base_url ? $jobs_base_url.'/jobs_view.php' : '/jobs_view.php';
 
-// TODO: 채용정보 테이블 연동 시 본인 글 조회 (입금대기중/진행중)
 $list = array();
 $total_count = 0;
+if ($is_member) {
+    $jr_table = 'g5_jobs_register';
+    $tb_check = sql_query("SHOW TABLES LIKE 'g5_jobs_register'", false);
+    if (sql_num_rows($tb_check)) {
+        $mb_id_esc = addslashes($member['mb_id']);
+        $sql = "SELECT * FROM `g5_jobs_register` WHERE mb_id = '{$mb_id_esc}' AND jr_status IN ('pending','ongoing') ORDER BY jr_datetime DESC";
+        $result = sql_query($sql);
+        while ($row = sql_fetch_array($result)) {
+            $status = $row['jr_status'];
+            $status_label = ($status === 'pending') ? '입금대기중' : '진행중';
+            $list[] = array(
+                'jr_id' => $row['jr_id'],
+                'wr_id' => $row['jr_id'],
+                'subject' => $row['jr_subject_display'] ?: '[제목없음]',
+                'datetime2' => date('Y-m-d', strtotime($row['jr_datetime'])),
+                'status' => $status,
+                'status_label' => $status_label,
+                'ad_period' => $row['jr_ad_period'] ? $row['jr_ad_period'].'일' : '—',
+                'jump_count' => $row['jr_jump_count'],
+                'view_href' => $jobs_view_url_base.'?jr_id='.$row['jr_id']
+            );
+        }
+        $total_count = count($list);
+    }
+}
 ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/skin/board/eve_skin/style.css?v=<?php echo @filemtime(G5_THEME_PATH.'/skin/board/eve_skin/style.css'); ?>">
 
@@ -39,7 +64,7 @@ $total_count = 0;
 
     <?php if (count($list) > 0) {
       foreach ($list as $row) {
-        $extend_url = $jobs_extend_popup_url . '?wr_id=' . (isset($row['wr_id']) ? $row['wr_id'] : '');
+        $extend_url = $jobs_extend_popup_url . '?jr_id=' . (isset($row['jr_id']) ? $row['jr_id'] : '');
     ?>
     <a href="<?php echo isset($row['view_href']) ? $row['view_href'] : '#'; ?>" class="board-row jobs-ongoing-row">
       <div class="board-td td-date"><?php echo isset($row['datetime2']) ? $row['datetime2'] : ''; ?></div>

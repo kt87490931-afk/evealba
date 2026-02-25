@@ -1,4 +1,11 @@
-<?php if (!defined('_GNUBOARD_')) exit; ?>
+<?php if (!defined('_GNUBOARD_')) exit;
+$jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_register_update.php' : '/jobs_register_update.php';
+?>
+<form name="fjobregister" id="fjobregister" method="post" action="<?php echo $jobs_update_url; ?>">
+<input type="hidden" name="job_data" id="job_data_hidden" value="">
+<input type="hidden" name="total_amount" id="total_amount_hidden" value="0">
+<input type="hidden" name="ad_period" id="ad_period_hidden" value="30">
+<input type="hidden" name="ad_labels" id="ad_labels_hidden" value="">
 
     <div class="page-title-bar">
       <h2 class="page-title">📝 채용정보등록</h2>
@@ -124,10 +131,10 @@
           <div class="form-label">고용형태 <span class="req">*</span></div>
           <div class="form-cell">
             <div class="radio-group">
-              <div class="radio-item"><input type="radio" name="employ-type" id="et-hire" checked><label for="et-hire">고용</label></div>
-              <div class="radio-item"><input type="radio" name="employ-type" id="et-pa"><label for="et-pa">파견</label></div>
-              <div class="radio-item"><input type="radio" name="employ-type" id="et-do"><label for="et-do">도급</label></div>
-              <div class="radio-item"><input type="radio" name="employ-type" id="et-we"><label for="et-we">위임</label></div>
+              <div class="radio-item"><input type="radio" name="employ-type" id="et-hire" value="고용" checked><label for="et-hire">고용</label></div>
+              <div class="radio-item"><input type="radio" name="employ-type" id="et-pa" value="파견"><label for="et-pa">파견</label></div>
+              <div class="radio-item"><input type="radio" name="employ-type" id="et-do" value="도급"><label for="et-do">도급</label></div>
+              <div class="radio-item"><input type="radio" name="employ-type" id="et-we" value="위임"><label for="et-we">위임</label></div>
             </div>
           </div>
         </div>
@@ -984,7 +991,7 @@
 
         <!-- 결제하기 버튼 -->
         <div class="pay-btn-wrap">
-          <button class="btn-pay" onclick="checkPayment()">
+          <button type="button" class="btn-pay" onclick="checkPayment()">
             💳 결제하기
           </button>
         </div>
@@ -992,6 +999,7 @@
       </div>
     </div>
 
+</form>
 
 <script>
 /* MBTI 다중선택: 체크박스 변경 시 카드 selected 클래스 동기화 */
@@ -1155,7 +1163,7 @@ document.querySelectorAll('.term-chk').forEach(function(c){
   });
 });
 
-/* 결제하기 유효성 검사 */
+/* 결제하기 유효성 검사 → 입금대기중으로 저장 */
 function checkPayment() {
   var descIds = ['desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'];
   var descLabels = ['업소 위치 및 업소 소개','근무환경','지원 혜택 및 복리후생','지원 자격 및 우대사항','추가 상세설명'];
@@ -1173,6 +1181,42 @@ function checkPayment() {
     alert('모든 약관에 동의해주세요.');
     return;
   }
-  alert('결제 페이지로 이동합니다.');
+  var nick = document.getElementById('job_nickname');
+  if(!nick || !nick.value.trim()){
+    alert('닉네임(업소명)을 입력해주세요.');
+    if(nick) nick.focus();
+    return;
+  }
+  var title = document.getElementById('job_title');
+  if(!title || !title.value.trim()){
+    alert('채용제목을 입력해주세요.');
+    if(title) title.focus();
+    return;
+  }
+  var data = {};
+  var ids = ['job_nickname','job_company','job_title','job_salary_type','job_salary_amt','job_work_region_1','job_work_region_detail_1','job_work_region_2','job_work_region_detail_2','job_work_region_3','job_work_region_detail_3','job_job1','job_job2','desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'];
+  ids.forEach(function(id){ var e=document.getElementById(id); data[id]=e?e.value:''; });
+  var emp = document.querySelector('input[name="employ-type"]:checked');
+  data['employ_type'] = emp ? emp.value : '';
+  var total = 0;
+  var adPeriod = 30;
+  var adLabels = [];
+  document.querySelectorAll('.ad-table input[type="checkbox"][data-price]:checked').forEach(function(cb){
+    total += parseInt(cb.dataset.price||0);
+    var lb = cb.dataset.label||'';
+    if(lb) adLabels.push(lb);
+    if(/줄광고\s*30/.test(lb)) adPeriod=30;
+    if(/줄광고\s*60/.test(lb)) adPeriod=60;
+    if(/줄광고\s*90/.test(lb)) adPeriod=90;
+  });
+  if(total === 0){
+    alert('광고 옵션을 1개 이상 선택해주세요. (줄광고 필수)');
+    return;
+  }
+  document.getElementById('job_data_hidden').value = JSON.stringify(data);
+  document.getElementById('total_amount_hidden').value = total;
+  document.getElementById('ad_period_hidden').value = adPeriod;
+  document.getElementById('ad_labels_hidden').value = adLabels.join(',');
+  document.getElementById('fjobregister').submit();
 }
 </script>
