@@ -1995,3 +1995,28 @@ footer {
   .discount-banner-inner { flex-direction:column; }
   .ad-table .ad-td:nth-child(2) { display:none; }
 }
+
+/* ===== 채용정보등록: AI업소소개글용 종합정리 (AI매칭 이력서 동일 디자인) ===== */
+.jobs-register-page .ai-preview-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(255,27,107,.14);margin-bottom:16px;border:2px solid var(--pale-pink);}
+.jobs-register-page .ai-preview-header{background:linear-gradient(135deg,var(--dark2) 0%,var(--hot-pink) 60%,var(--light-pink) 100%);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;user-select:none;}
+.jobs-register-page .ai-preview-header-left{display:flex;align-items:center;gap:12px;}
+.jobs-register-page .ai-preview-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.jobs-register-page .ai-preview-title{font-size:15px;font-weight:900;color:#fff;letter-spacing:-.3px;}
+.jobs-register-page .ai-preview-subtitle{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px;}
+.jobs-register-page .ai-preview-header-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.jobs-register-page .ai-preview-badge{font-size:11px;color:rgba(255,255,255,.85);white-space:nowrap;}
+.jobs-register-page .ai-preview-toggle-btn{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.4);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;flex-shrink:0;}
+.jobs-register-page .ai-preview-toggle-btn:hover{background:rgba(255,255,255,.35);}
+.jobs-register-page .ai-preview-toggle-btn.collapsed{transform:rotate(180deg);}
+.jobs-register-page .ai-preview-body{background:linear-gradient(180deg,#fff8fc 0%,#fff 20%);overflow:hidden;transition:max-height .35s ease,opacity .3s ease;max-height:5000px;opacity:1;}
+.jobs-register-page .ai-preview-body.hide{max-height:0;opacity:0;}
+.jobs-register-page .aip-row{display:grid;grid-template-columns:190px 1fr;border-bottom:1px solid #fae8f0;min-height:52px;align-items:stretch;}
+.jobs-register-page .aip-row:last-of-type{border-bottom:none;}
+.jobs-register-page .aip-row-tall{min-height:64px;}
+.jobs-register-page .aip-label{background:linear-gradient(135deg,#fff0f8,#fff5fb);padding:13px 14px 13px 20px;font-size:12px;font-weight:700;color:#666;display:flex;align-items:flex-start;gap:5px;border-right:2px solid var(--pale-pink);line-height:1.5;}
+.jobs-register-page .aip-value{padding:12px 18px;display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:13px;color:#333;white-space:pre-wrap;word-break:break-word;}
+.jobs-register-page .aip-empty{color:#ccc;font-size:13px;}
+.jobs-register-page .aip-footer{display:flex;align-items:flex-start;gap:10px;padding:12px 20px;background:linear-gradient(135deg,#fff5e8,#fff0f5);border-top:2px dashed var(--pale-pink);}
+.jobs-register-page .aip-footer-icon{font-size:18px;flex-shrink:0;}
+.jobs-register-page .aip-footer-text{font-size:11px;color:#888;line-height:1.7;}
+.jobs-register-page .aip-footer-text strong{color:var(--hot-pink);}

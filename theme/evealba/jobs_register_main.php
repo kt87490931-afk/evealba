@@ -528,6 +528,81 @@
       </div>
     </div>
 
+    <!-- ===== AI업소소개글용 종합정리 (상세설명 ↔ 광고유료결제 사이) ===== -->
+    <div class="ai-preview-card jobs-ai-preview" id="jobs-ai-summary-card">
+      <div class="ai-preview-header" onclick="toggleJobsAiPreview()">
+        <div class="ai-preview-header-left">
+          <div class="ai-preview-avatar">🏢</div>
+          <div>
+            <div class="ai-preview-title">AI업소소개글용 종합정리</div>
+            <div class="ai-preview-subtitle">실시간으로 입력한 내용이 반영됩니다</div>
+          </div>
+        </div>
+        <div class="ai-preview-header-right">
+          <span class="ai-preview-badge">제출 전 확인 · Gemini AI 업소소개글 생성에 활용됩니다</span>
+          <button type="button" class="ai-preview-toggle-btn" id="jobsAiToggleBtn" aria-label="접기/펼치기">▲</button>
+        </div>
+      </div>
+      <div class="ai-preview-body" id="jobsAiPreviewBody">
+        <div class="aip-row">
+          <div class="aip-label">🏢 닉네임 · 상호</div>
+          <div class="aip-value" id="job-summary-name"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row">
+          <div class="aip-label">📋 채용제목 · 고용형태</div>
+          <div class="aip-value" id="job-summary-title"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row">
+          <div class="aip-label">💰 급여조건</div>
+          <div class="aip-value" id="job-summary-salary"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row">
+          <div class="aip-label">📍 근무지역</div>
+          <div class="aip-value" id="job-summary-region"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row">
+          <div class="aip-label">💼 업종/직종</div>
+          <div class="aip-value" id="job-summary-jobtype"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row aip-row-tall">
+          <div class="aip-label">✅ 편의사항</div>
+          <div class="aip-value" id="job-summary-amenity"><span class="aip-empty">선택된 편의사항이 없습니다</span></div>
+        </div>
+        <div class="aip-row aip-row-tall">
+          <div class="aip-label">🏷️ 키워드</div>
+          <div class="aip-value" id="job-summary-keyword"><span class="aip-empty">선택된 키워드가 없습니다</span></div>
+        </div>
+        <div class="aip-row">
+          <div class="aip-label">🧠 선호 MBTI</div>
+          <div class="aip-value" id="job-summary-mbti"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row aip-row-tall">
+          <div class="aip-label">📍 업소 위치 및 업소 소개</div>
+          <div class="aip-value" id="job-summary-desc1"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row aip-row-tall">
+          <div class="aip-label">🏭 근무환경</div>
+          <div class="aip-value" id="job-summary-desc2"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row aip-row-tall">
+          <div class="aip-label">🎁 지원 혜택 및 복리후생</div>
+          <div class="aip-value" id="job-summary-desc3"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row aip-row-tall">
+          <div class="aip-label">📋 지원 자격 및 우대사항</div>
+          <div class="aip-value" id="job-summary-desc4"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row aip-row-tall">
+          <div class="aip-label">📝 추가 상세설명</div>
+          <div class="aip-value" id="job-summary-desc5"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-footer">
+          <div class="aip-footer-icon">🤖</div>
+          <div class="aip-footer-text">위 정보를 기준으로 <strong>Gemini AI</strong>가 업소소개글을 자동 작성합니다. 최대한 꼼꼼히 입력해주세요.</div>
+        </div>
+      </div>
+    </div>
+
     <!-- =============================
          9. 광고유료결제
     ============================= -->
@@ -931,6 +1006,11 @@ document.addEventListener('DOMContentLoaded', function() {
   filterJobRegionDetail('job_work_region_1', 'job_work_region_detail_1');
   filterJobRegionDetail('job_work_region_2', 'job_work_region_detail_2');
   filterJobRegionDetail('job_work_region_3', 'job_work_region_detail_3');
+  /* AI업소소개글 종합정리 토글 */
+  window.toggleJobsAiPreview = function(){
+    var body = document.getElementById('jobsAiPreviewBody'), btn = document.getElementById('jobsAiToggleBtn');
+    if (body) { body.classList.toggle('hide'); if (btn) { btn.classList.toggle('collapsed'); btn.textContent = body.classList.contains('hide') ? '▼' : '▲'; } }
+  };
   /* 상세설명 5개 폼 글자수 카운트 */
   ['desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'].forEach(function(id){
     var el = document.getElementById(id);
