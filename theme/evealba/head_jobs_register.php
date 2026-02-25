@@ -42,6 +42,7 @@ include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 
 $nav_active = 'jobs';
+$jobs_mypage_active = 'register';
 include G5_THEME_PATH.'/inc/head_top.php';
 ?>
 
