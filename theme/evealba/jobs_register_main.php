@@ -176,19 +176,17 @@
         <div class="form-row">
           <div class="form-label">근무지역 <span class="req">*</span></div>
           <div class="form-cell">
-            <select class="fi-select">
-              <option>지역선택</option>
-              <option>서울</option><option>경기</option><option>인천</option>
-              <option>부산</option><option>대구</option><option>광주</option>
-              <option>대전</option><option>울산</option><option>강원</option>
-              <option>충청북도</option><option>충청남도</option><option>전라북도</option>
-              <option>전라남도</option><option>경상북도</option><option>경상남도</option>
-              <option>제주</option>
+            <select class="fi-select" id="job_work_region">
+              <option value="">지역선택</option>
+              <?php foreach ((isset($ev_regions) ? $ev_regions : []) as $r) { ?>
+              <option value="<?php echo (int)$r['er_id']; ?>"><?php echo htmlspecialchars($r['er_name']); ?></option>
+              <?php } ?>
             </select>
-            <select class="fi-select">
-              <option>세부지역선택</option>
-              <option>강남구</option><option>서초구</option><option>종로구</option>
-              <option>중구</option><option>마포구</option><option>성동구</option>
+            <select class="fi-select" id="job_work_region_detail">
+              <option value="">세부지역선택</option>
+              <?php foreach ((isset($ev_region_details) ? $ev_region_details : []) as $rd) { ?>
+              <option value="<?php echo (int)$rd['erd_id']; ?>" data-er-id="<?php echo (int)$rd['er_id']; ?>"><?php echo htmlspecialchars($rd['erd_name']); ?></option>
+              <?php } ?>
             </select>
           </div>
         </div>
@@ -889,7 +887,36 @@ document.addEventListener('DOMContentLoaded', function() {
       if (card) card.classList.toggle('selected', this.checked);
     });
   });
+  /* 근무지역-세부지역 연동 (이력서등록과 동일) */
+  filterJobRegionDetail('job_work_region', 'job_work_region_detail');
 });
+
+function filterJobRegionDetail(regionId, detailId) {
+  var region = document.getElementById(regionId);
+  var detail = document.getElementById(detailId);
+  if (!region || !detail) return;
+  var opts = detail.querySelectorAll('option[data-er-id]');
+  var cache = [];
+  opts.forEach(function(o){ cache.push({ value: o.value, text: o.textContent, erId: o.getAttribute('data-er-id') }); });
+  var firstOpt = detail.querySelector('option[value=""]');
+  function apply() {
+    var erId = region.value;
+    while (detail.options.length) detail.remove(0);
+    if (firstOpt) { var p = document.createElement('option'); p.value = ''; p.textContent = firstOpt.textContent; detail.appendChild(p); }
+    cache.forEach(function(o) {
+      if (!erId || o.erId === erId) {
+        var opt = document.createElement('option');
+        opt.value = o.value;
+        opt.textContent = o.text;
+        opt.setAttribute('data-er-id', o.erId);
+        detail.appendChild(opt);
+      }
+    });
+    detail.value = '';
+  }
+  region.addEventListener('change', apply);
+  apply();
+}
 
 /* 섹션 열기/닫기 */
 function toggleSec(head) {
