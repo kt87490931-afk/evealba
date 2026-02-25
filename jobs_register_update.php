@@ -11,18 +11,36 @@ if (!$is_member) {
 $jobs_ongoing_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_ongoing.php' : '/jobs_ongoing.php';
 
 // POST 데이터 수신
-$job_data = isset($_POST['job_data']) ? $_POST['job_data'] : '';
+$job_data = isset($_POST['job_data']) ? stripslashes((string)$_POST['job_data']) : '';
 $total_amount = isset($_POST['total_amount']) ? (int)$_POST['total_amount'] : 0;
 $ad_period = isset($_POST['ad_period']) ? (int)$_POST['ad_period'] : 30;
-$ad_labels = isset($_POST['ad_labels']) ? $_POST['ad_labels'] : '';
+$ad_labels = isset($_POST['ad_labels']) ? stripslashes((string)$_POST['ad_labels']) : '';
 
-if (empty($job_data)) {
-    alert('입력 데이터가 없습니다.', G5_URL.'/jobs_register.php');
+// base64 인코딩된 JSON 또는 raw JSON 또는 폼필드 fallback
+$data = null;
+if (!empty($job_data)) {
+    if (preg_match('/^[A-Za-z0-9+\/=]+$/', trim($job_data))) {
+        $decoded = @base64_decode($job_data, true);
+        if ($decoded !== false) {
+            $data = json_decode($decoded, true);
+        }
+    }
+    if (!$data || !is_array($data)) {
+        $data = json_decode($job_data, true);
+    }
 }
-
-$data = json_decode($job_data, true);
-if (!$data) {
-    alert('데이터 형식 오류입니다.', G5_URL.'/jobs_register.php');
+if (!$data || !is_array($data)) {
+    // JSON 실패 시 폼 필드에서 직접 추출 (fallback)
+    $data = array(
+        'job_nickname' => isset($_POST['job_nickname']) ? stripslashes((string)$_POST['job_nickname']) : '',
+        'job_company' => isset($_POST['job_company']) ? stripslashes((string)$_POST['job_company']) : '',
+        'job_title' => isset($_POST['job_title']) ? stripslashes((string)$_POST['job_title']) : '',
+        'desc_location' => isset($_POST['desc_location']) ? stripslashes((string)$_POST['desc_location']) : '',
+        'desc_env' => isset($_POST['desc_env']) ? stripslashes((string)$_POST['desc_env']) : '',
+        'desc_benefit' => isset($_POST['desc_benefit']) ? stripslashes((string)$_POST['desc_benefit']) : '',
+        'desc_qualify' => isset($_POST['desc_qualify']) ? stripslashes((string)$_POST['desc_qualify']) : '',
+        'desc_extra' => isset($_POST['desc_extra']) ? stripslashes((string)$_POST['desc_extra']) : ''
+    );
 }
 
 $nickname = isset($data['job_nickname']) ? clean_xss_tags($data['job_nickname']) : '';
@@ -69,7 +87,8 @@ if (!sql_num_rows($tb_check)) {
     sql_query($create_sql);
 }
 
-$jr_data_esc = sql_escape_string($job_data);
+$job_data_to_store = (is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE) : $job_data);
+$jr_data_esc = sql_escape_string($job_data_to_store);
 $jr_nick_esc = sql_escape_string($nickname);
 $jr_comp_esc = sql_escape_string($company);
 $jr_title_esc = sql_escape_string($title);

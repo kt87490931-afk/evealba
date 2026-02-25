@@ -27,7 +27,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
         <div class="form-row">
           <div class="form-label">닉네임 (업소명) <span class="req">*</span></div>
           <div class="form-cell">
-            <input class="fi fi-md" type="text" id="job_nickname" placeholder="업소명을 입력해주세요">
+            <input class="fi fi-md" type="text" id="job_nickname" name="job_nickname" placeholder="업소명을 입력해주세요">
           </div>
         </div>
 
@@ -61,7 +61,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
         <div class="form-row">
           <div class="form-label">상호 <span class="req">*</span></div>
           <div class="form-cell col">
-            <input class="fi fi-md fi-readonly" type="text" id="job_company" placeholder="" readonly>
+            <input class="fi fi-md fi-readonly" type="text" id="job_company" name="job_company" placeholder="" readonly>
             <p class="hint-blue">+ 첨부된 확인문서 검수 후 기재된 상호로 자동등록됩니다.</p>
           </div>
         </div>
@@ -121,7 +121,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
         <div class="form-row">
           <div class="form-label">채용제목 <span class="req">*</span></div>
           <div class="form-cell" style="position:relative;">
-            <input class="fi fi-full" type="text" id="job_title" placeholder="채용 제목을 입력해주세요" maxlength="40">
+            <input class="fi fi-full" type="text" id="job_title" name="job_title" placeholder="채용 제목을 입력해주세요" maxlength="40">
             <span style="position:absolute;right:22px;font-size:11px;color:#aaa;">40자 제한</span>
           </div>
         </div>
@@ -1213,7 +1213,11 @@ function checkPayment() {
     alert('광고 옵션을 1개 이상 선택해주세요. (줄광고 필수)');
     return;
   }
-  document.getElementById('job_data_hidden').value = JSON.stringify(data);
+  try {
+    document.getElementById('job_data_hidden').value = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  } catch (e) {
+    document.getElementById('job_data_hidden').value = JSON.stringify(data);
+  }
   document.getElementById('total_amount_hidden').value = total;
   document.getElementById('ad_period_hidden').value = adPeriod;
   document.getElementById('ad_labels_hidden').value = adLabels.join(',');
