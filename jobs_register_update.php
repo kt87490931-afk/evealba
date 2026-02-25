@@ -15,6 +15,7 @@ $job_data = isset($_POST['job_data']) ? stripslashes((string)$_POST['job_data'])
 $total_amount = isset($_POST['total_amount']) ? (int)$_POST['total_amount'] : 0;
 $ad_period = isset($_POST['ad_period']) ? (int)$_POST['ad_period'] : 30;
 $ad_labels = isset($_POST['ad_labels']) ? stripslashes((string)$_POST['ad_labels']) : '';
+$ad_labels = trim($ad_labels);
 
 // base64 인코딩된 JSON 또는 raw JSON 또는 폼필드 fallback
 $data = null;
@@ -70,11 +71,15 @@ if (!sql_num_rows($tb_check)) {
       `jr_id` int unsigned NOT NULL AUTO_INCREMENT,
       `mb_id` varchar(20) NOT NULL DEFAULT '',
       `jr_status` varchar(20) NOT NULL DEFAULT 'pending',
+      `jr_payment_confirmed` tinyint NOT NULL DEFAULT 0,
+      `jr_approved` tinyint NOT NULL DEFAULT 0,
+      `jr_approved_datetime` datetime DEFAULT NULL,
       `jr_nickname` varchar(100) NOT NULL DEFAULT '',
       `jr_company` varchar(200) NOT NULL DEFAULT '',
       `jr_title` varchar(200) NOT NULL DEFAULT '',
       `jr_subject_display` varchar(300) NOT NULL DEFAULT '',
       `jr_data` longtext,
+      `jr_ad_labels` varchar(500) NOT NULL DEFAULT '',
       `jr_ad_period` int NOT NULL DEFAULT 30,
       `jr_jump_count` int NOT NULL DEFAULT 0,
       `jr_total_amount` int NOT NULL DEFAULT 0,
@@ -95,9 +100,10 @@ $jr_title_esc = sql_escape_string($title);
 $jr_subj_esc = sql_escape_string($subject_display);
 $mb_id_esc = sql_escape_string($member['mb_id']);
 $jr_end_sql = $end_date ? "'".$end_date."'" : 'NULL';
+$jr_ad_labels_esc = sql_escape_string($ad_labels);
 
-$sql = "INSERT INTO `{$jr_table}` (mb_id, jr_status, jr_nickname, jr_company, jr_title, jr_subject_display, jr_data, jr_ad_period, jr_jump_count, jr_total_amount, jr_datetime, jr_end_date) VALUES (
-  '{$mb_id_esc}', 'pending', '{$jr_nick_esc}', '{$jr_comp_esc}', '{$jr_title_esc}', '{$jr_subj_esc}', '{$jr_data_esc}', ".(int)$ad_period.", ".(int)$jump_count.", ".(int)$total_amount.", '".G5_TIME_YMDHIS."', {$jr_end_sql})";
+$sql = "INSERT INTO `{$jr_table}` (mb_id, jr_status, jr_nickname, jr_company, jr_title, jr_subject_display, jr_data, jr_ad_period, jr_jump_count, jr_total_amount, jr_datetime, jr_end_date, jr_ad_labels) VALUES (
+  '{$mb_id_esc}', 'pending', '{$jr_nick_esc}', '{$jr_comp_esc}', '{$jr_title_esc}', '{$jr_subj_esc}', '{$jr_data_esc}', ".(int)$ad_period.", ".(int)$jump_count.", ".(int)$total_amount.", '".G5_TIME_YMDHIS."', {$jr_end_sql}, '{$jr_ad_labels_esc}')";
 sql_query($sql);
 
 $jr_id = sql_insert_id();
