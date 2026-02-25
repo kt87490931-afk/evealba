@@ -1,4 +1,4 @@
-﻿<?php if (!defined('_GNUBOARD_')) exit; ?>
+<?php if (!defined('_GNUBOARD_')) exit; ?>
 
     <div class="page-title-bar">
       <h2 class="page-title">📝 채용정보등록</h2>
@@ -71,18 +71,6 @@
           <div class="form-cell"><input class="fi fi-sm" type="text" value="010-0000-0000"></div>
         </div>
 
-        <!-- 핸드폰/폰핀 선택 -->
-        <div class="form-row">
-          <div class="form-label">핸드폰/폰핀 선택</div>
-          <div class="form-cell">
-            <select class="fi-select">
-              <option>핸드폰번호만 사용</option>
-              <option>폰핀만 사용</option>
-              <option>핸드폰번호 + 폰핀 사용</option>
-            </select>
-          </div>
-        </div>
-
         <!-- 카카오톡 ID -->
         <div class="form-row">
           <div class="form-label">카카오톡 ID</div>
@@ -128,21 +116,6 @@
           <div class="form-cell" style="position:relative;">
             <input class="fi fi-full" type="text" placeholder="채용 제목을 입력해주세요" maxlength="40">
             <span style="position:absolute;right:22px;font-size:11px;color:#aaa;">40자 제한</span>
-          </div>
-        </div>
-
-        <!-- 대표이미지 -->
-        <div class="form-row">
-          <div class="form-label">대표이미지</div>
-          <div class="form-cell col">
-            <div class="file-row">
-              <button class="btn-file" onclick="triggerFile('main-img')">🖼 파일 선택</button>
-              <input type="file" id="main-img" accept="image/*" style="display:none" onchange="setFileName(this,'main-fn')">
-              <span class="file-name" id="main-fn">선택된 파일 없음</span>
-              <button class="btn-file-cancel" onclick="clearFile('main-img','main-fn')">✕ 취소</button>
-            </div>
-            <p class="hint">+ 권장 사이즈 : 가로 86px × 세로 46px (jpg, jpeg, png)</p>
-            <p class="hint">+ 로고이미지는 결제 완료후 결제순차적으로 작업하여 등록해 드립니다.</p>
           </div>
         </div>
 
@@ -253,17 +226,18 @@
     </div>
 
     <!-- =============================
-         5. 편의사항
+         5. 편의사항 (이력서등록과 동일)
     ============================= -->
     <div class="form-card sh-teal">
       <div class="sec-head open" onclick="toggleSec(this)">
         <span class="sec-head-icon">✅</span>
         <span class="sec-head-title">편의사항</span>
-        <span class="sec-head-sub">* 리스트에 출력되는 사항입니다. 2개이상 선택해주세요. 검색시 유리합니다.</span>
+        <span class="sec-head-sub">2개 이상 선택하면 매칭에 유리합니다.</span>
         <span class="sec-chevron">▼</span>
       </div>
       <div class="sec-body">
         <div class="amenity-grid">
+          <div class="chk-item"><input type="checkbox" id="am-0"><label for="am-0">당일지급</label></div>
           <div class="chk-item"><input type="checkbox" id="am-1"><label for="am-1">선불가능</label></div>
           <div class="chk-item"><input type="checkbox" id="am-2"><label for="am-2">순번확실</label></div>
           <div class="chk-item"><input type="checkbox" id="am-3"><label for="am-3">원룸제공</label></div>
@@ -279,28 +253,28 @@
           <div class="chk-item"><input type="checkbox" id="am-13"><label for="am-13">초이스없음</label></div>
           <div class="chk-item"><input type="checkbox" id="am-14"><label for="am-14">해외여행지원</label></div>
           <div class="chk-item"><input type="checkbox" id="am-15"><label for="am-15">뒷방없음</label></div>
-          <div class="chk-item"><input type="checkbox" id="am-16"><label for="am-16">딸당가능</label></div>
-          <div class="chk-item"><input type="checkbox" id="am-17"><label for="am-17">쭈쉬가능</label></div>
+          <div class="chk-item"><input type="checkbox" id="am-16"><label for="am-16">따당가능</label></div>
+          <div class="chk-item"><input type="checkbox" id="am-17"><label for="am-17">푸쉬가능</label></div>
           <div class="chk-item"><input type="checkbox" id="am-18"><label for="am-18">밀방없음</label></div>
           <div class="chk-item"><input type="checkbox" id="am-19"><label for="am-19">칼퇴보장</label></div>
-          <div class="chk-item"><input type="checkbox" id="am-20"><label for="am-20">텃세없음</label></div>
+          <div class="chk-item"><input type="checkbox" id="am-20"><label for="am-20">텃새없음</label></div>
           <div class="chk-item"><input type="checkbox" id="am-21"><label for="am-21">숙식제공</label></div>
         </div>
       </div>
     </div>
 
     <!-- =============================
-         6. 키워드
+         6. 키워드 (이력서등록과 동일)
     ============================= -->
     <div class="form-card sh-green">
       <div class="sec-head open" onclick="toggleSec(this)">
-        <span class="sec-head-icon">🏷</span>
+        <span class="sec-head-icon">🏷️</span>
         <span class="sec-head-title">키워드</span>
-        <span class="sec-head-sub">* 업소에서 보장하실 수 있는 사항을 선택하시면 검색시 유리합니다.</span>
+        <span class="sec-head-sub">해당하는 키워드를 선택하면 매칭에 유리합니다.</span>
         <span class="sec-chevron">▼</span>
       </div>
       <div class="sec-body">
-        <div class="amenity-grid" style="padding:14px 18px;">
+        <div class="amenity-grid">
           <div class="chk-item"><input type="checkbox" id="kw-1"><label for="kw-1">신규업소</label></div>
           <div class="chk-item"><input type="checkbox" id="kw-2"><label for="kw-2">초보가능</label></div>
           <div class="chk-item"><input type="checkbox" id="kw-3"><label for="kw-3">경력우대</label></div>
@@ -324,18 +298,136 @@
           <div class="chk-item"><input type="checkbox" id="kw-21"><label for="kw-21">타지역우대</label></div>
           <div class="chk-item"><input type="checkbox" id="kw-22"><label for="kw-22">에이스우대</label></div>
           <div class="chk-item"><input type="checkbox" id="kw-23"><label for="kw-23">업소</label></div>
-          <div class="chk-item"><input type="checkbox" id="kw-24"><label for="kw-24">기타 등등</label></div>
-        </div>
-        <!-- 키워드 직접입력 -->
-        <div class="form-row" style="border-top:2px solid var(--pale-pink);">
-          <div class="form-label" style="font-size:12px;">키워드 직접입력</div>
-          <div class="form-cell"><input class="fi fi-full" type="text" placeholder="직접 키워드를 입력하세요 (쉼표로 구분)"></div>
+          <div class="chk-item"><input type="checkbox" id="kw-24"><label for="kw-24">기타</label></div>
         </div>
       </div>
     </div>
 
     <!-- =============================
-         7. 업소이미지 등록
+         7. 선호하는 MBTI (다중선택)
+    ============================= -->
+    <div class="form-card" style="border:2px solid var(--pale-pink);">
+      <div class="sec-head open" style="background:linear-gradient(135deg,#6A1B9A,#AB47BC);" onclick="toggleSec(this)">
+        <span class="sec-head-icon">🧠</span>
+        <span class="sec-head-title" style="color:#fff;">선호하는 MBTI</span>
+        <span class="sec-head-sub" style="color:rgba(255,255,255,.8);">선호하는 MBTI를 선택하면 매칭에 유리합니다. (다중선택 가능)</span>
+        <span class="sec-chevron" style="color:#fff;">▼</span>
+      </div>
+      <div class="sec-body">
+        <!-- NT 분석가형 -->
+        <div class="mbti-group mbti-group-nt">
+          <div class="mbti-group-title">🔵 NT — 분석가형</div>
+          <div class="mbti-grid">
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="INTJ">
+              <div class="mbti-card-top"><span class="mbti-type">INTJ</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">고객 성향 빠른 분석, 장기 단골 전략 설계에 강함</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="INTP">
+              <div class="mbti-card-top"><span class="mbti-type">INTP</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">대화 주제 확장력 뛰어나고 지적 매력 어필 가능</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ENTJ">
+              <div class="mbti-card-top"><span class="mbti-type">ENTJ</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">목표 매출 설정·관리 능력 우수, 자기 브랜딩 강함</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ENTP">
+              <div class="mbti-card-top"><span class="mbti-type">ENTP</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">말 센스 좋고 토론·농담으로 분위기 반전 능력 탁월</div>
+            </label>
+          </div>
+        </div>
+        <!-- NF 외교관형 -->
+        <div class="mbti-group mbti-group-nf" style="border-top:1.5px solid var(--pale-pink);">
+          <div class="mbti-group-title">🟢 NF — 외교관형</div>
+          <div class="mbti-grid">
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="INFJ">
+              <div class="mbti-card-top"><span class="mbti-type">INFJ</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">깊은 공감 능력, 감정 상담형 고객에게 매우 강함</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="INFP">
+              <div class="mbti-card-top"><span class="mbti-type">INFP</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">순수·감성 매력, 특정 고객층에게 강한 팬층 형성</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ENFJ">
+              <div class="mbti-card-top"><span class="mbti-type">ENFJ</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">고객을 특별하게 만들어주는 능력, VIP 관리 최강</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ENFP">
+              <div class="mbti-card-top"><span class="mbti-type">ENFP</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">밝은 에너지와 리액션, 첫인상 흡입력 매우 높음</div>
+            </label>
+          </div>
+        </div>
+        <!-- SJ 관리자형 -->
+        <div class="mbti-group mbti-group-sj" style="border-top:1.5px solid var(--pale-pink);">
+          <div class="mbti-group-title">🟡 SJ — 관리자형</div>
+          <div class="mbti-grid">
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ISTJ">
+              <div class="mbti-card-top"><span class="mbti-type">ISTJ</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">시간·약속 철저, 안정적인 신뢰 구축형</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ISFJ">
+              <div class="mbti-card-top"><span class="mbti-type">ISFJ</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">섬세한 배려, 단골 관리 지속력 강함</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ESTJ">
+              <div class="mbti-card-top"><span class="mbti-type">ESTJ</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">실적 관리·목표 달성 집요함</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ESFJ">
+              <div class="mbti-card-top"><span class="mbti-type">ESFJ</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">친화력 최고 수준, 관계 유지 능력 뛰어남</div>
+            </label>
+          </div>
+        </div>
+        <!-- SP 탐험가형 -->
+        <div class="mbti-group mbti-group-sp" style="border-top:1.5px solid var(--pale-pink);">
+          <div class="mbti-group-title">🔴 SP — 탐험가형</div>
+          <div class="mbti-grid">
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ISTP">
+              <div class="mbti-card-top"><span class="mbti-type">ISTP</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">상황 판단 빠름, 감정 휘둘림 적음</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ISFP">
+              <div class="mbti-card-top"><span class="mbti-type">ISFP</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">자연스러운 매력, 부드러운 분위기 형성</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ESTP">
+              <div class="mbti-card-top"><span class="mbti-type">ESTP</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">밀당·텐션 조절 능숙, 현장 적응력 강함</div>
+            </label>
+            <label class="mbti-card mbti-multi">
+              <input type="checkbox" name="mbti_prefer[]" value="ESFP">
+              <div class="mbti-card-top"><span class="mbti-type">ESFP</span><span class="mbti-dot"></span></div>
+              <div class="mbti-desc">분위기 메이커, 고객 몰입도 상승 능력 탁월</div>
+            </label>
+          </div>
+        </div>
+        <div style="padding:0 18px 14px;">
+          <div style="background:#f9f5ff;border:1.5px dashed #CE93D8;border-radius:8px;padding:10px 14px;font-size:11px;color:#7B1FA2;line-height:1.8;">
+            💡 선호하는 MBTI를 여러 개 선택하면 AI 매칭 정확도가 높아집니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =============================
+         8. 업소이미지 등록
     ============================= -->
     <div class="form-card sh-dark">
       <div class="sec-head open" onclick="toggleSec(this)">
@@ -789,6 +881,16 @@
 
 
 <script>
+/* MBTI 다중선택: 체크박스 변경 시 카드 selected 클래스 동기화 */
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.mbti-multi input[type="checkbox"]').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      var card = this.closest('.mbti-card');
+      if (card) card.classList.toggle('selected', this.checked);
+    });
+  });
+});
+
 /* 섹션 열기/닫기 */
 function toggleSec(head) {
   head.classList.toggle('open');

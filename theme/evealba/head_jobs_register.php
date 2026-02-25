@@ -32,8 +32,9 @@ include G5_THEME_PATH.'/inc/head_top.php';
   </div>
 </div>
 
+<link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/css/resume_register.css?v=<?php echo @filemtime(G5_THEME_PATH.'/css/resume_register.css'); ?>">
 <!-- PAGE LAYOUT -->
-<div class="page-layout">
+<div class="page-layout jobs-register-page">
 
   <!-- 좌측 사이드바 (채용공고 등록용) -->
   <aside class="left-sidebar">

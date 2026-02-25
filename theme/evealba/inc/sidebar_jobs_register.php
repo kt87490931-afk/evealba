@@ -9,7 +9,7 @@ if (!defined('_GNUBOARD_')) exit;
   <div class="mypage-header">
     <span class="mypage-icon">👑</span>
     <div>
-      <div class="mypage-title">my PAGE</div>
+      <div class="mypage-title">MY PAGE</div>
       <div class="mypage-sub">마이페이지</div>
     </div>
   </div>

@@ -333,3 +333,30 @@
   .resume-register-page .sec-head{flex-wrap:wrap;}
   .resume-register-page .sec-head-sub{flex:1 1 100%;width:100%;margin-top:4px;}
 }
+
+/* 채용정보등록: MBTI 다중선택 (선호하는 MBTI) */
+.jobs-register-page .mbti-group{padding:14px 18px;}
+.jobs-register-page .mbti-group-title{font-size:13px;font-weight:900;color:var(--dark);margin-bottom:10px;display:flex;align-items:center;gap:6px;padding-bottom:7px;border-bottom:1.5px solid var(--pale-pink);}
+.jobs-register-page .mbti-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.jobs-register-page .mbti-card{border:2px solid #f0e0e8;border-radius:12px;padding:10px 12px;cursor:pointer;transition:all .2s;background:#fff;}
+.jobs-register-page .mbti-card:hover{border-color:var(--hot-pink);background:#fff8fb;}
+.jobs-register-page .mbti-card.selected{border-color:var(--hot-pink);background:linear-gradient(135deg,#fff5f8,#fff0f5);box-shadow:0 2px 8px rgba(255,27,107,.15);}
+.jobs-register-page .mbti-card input[type=checkbox]{display:none;}
+.jobs-register-page .mbti-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.jobs-register-page .mbti-type{font-size:15px;font-weight:900;color:var(--hot-pink);}
+.jobs-register-page .mbti-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--pale-pink);transition:all .2s;}
+.jobs-register-page .mbti-card.selected .mbti-dot{background:var(--hot-pink);border-color:var(--hot-pink);}
+.jobs-register-page .mbti-desc{font-size:10px;color:#888;line-height:1.6;}
+.jobs-register-page .mbti-group-nt .mbti-type{color:#1565C0;}
+.jobs-register-page .mbti-group-nt .mbti-card.selected{border-color:#1565C0;background:linear-gradient(135deg,#f0f4ff,#e8f0ff);}
+.jobs-register-page .mbti-group-nt .mbti-card.selected .mbti-dot{background:#1565C0;border-color:#1565C0;}
+.jobs-register-page .mbti-group-nf .mbti-type{color:#2E7D32;}
+.jobs-register-page .mbti-group-nf .mbti-card.selected{border-color:#2E7D32;background:linear-gradient(135deg,#f0fff4,#e8f5e9);}
+.jobs-register-page .mbti-group-nf .mbti-card.selected .mbti-dot{background:#2E7D32;border-color:#2E7D32;}
+.jobs-register-page .mbti-group-sj .mbti-type{color:#E65100;}
+.jobs-register-page .mbti-group-sj .mbti-card.selected{border-color:#E65100;background:linear-gradient(135deg,#fff8f0,#fff3e0);}
+.jobs-register-page .mbti-group-sj .mbti-card.selected .mbti-dot{background:#E65100;border-color:#E65100;}
+.jobs-register-page .mbti-group-sp .mbti-type{color:#AD1457;}
+.jobs-register-page .mbti-group-sp .mbti-card.selected{border-color:#AD1457;background:linear-gradient(135deg,#fdf0f5,#fce4ec);}
+.jobs-register-page .mbti-group-sp .mbti-card.selected .mbti-dot{background:#AD1457;border-color:#AD1457;}
+@media(max-width:900px){ .jobs-register-page .mbti-grid{grid-template-columns:repeat(2,1fr);} }
