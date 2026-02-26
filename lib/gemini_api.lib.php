@@ -66,38 +66,53 @@ if (!function_exists('generate_store_description_gemini')) {
         $base_prompt = isset($role['prompt']) ? $role['prompt'] : $gemini_roles['unnie']['prompt'];
 
         $nickname = isset($data['nickname']) ? trim($data['nickname']) : '';
+        $company = isset($data['company']) ? trim($data['company']) : '';
         $title = isset($data['title']) ? trim($data['title']) : '';
+        $employ_type = isset($data['employ_type']) ? trim($data['employ_type']) : '';
         $location = isset($data['location']) ? trim($data['location']) : '';
         $environment = isset($data['environment']) ? trim($data['environment']) : '';
         $benefits = isset($data['benefits']) ? trim($data['benefits']) : '';
+        $qualify = isset($data['qualify']) ? trim($data['qualify']) : '';
         $details = isset($data['details']) ? trim($data['details']) : '';
         $contact = isset($data['contact']) ? trim($data['contact']) : '';
         $sns = isset($data['sns']) ? trim($data['sns']) : '';
         $salary = isset($data['salary']) ? trim($data['salary']) : '';
         $region = isset($data['region']) ? trim($data['region']) : '';
         $jobtype = isset($data['jobtype']) ? trim($data['jobtype']) : '';
+        $amenity = isset($data['amenity']) ? (is_array($data['amenity']) ? $data['amenity'] : array_filter(explode(',', (string)$data['amenity']))) : array();
+        $keyword = isset($data['keyword']) ? (is_array($data['keyword']) ? $data['keyword'] : array_filter(explode(',', (string)$data['keyword']))) : array();
+        $mbti_prefer = isset($data['mbti_prefer']) ? (is_array($data['mbti_prefer']) ? $data['mbti_prefer'] : array_filter(explode(',', (string)$data['mbti_prefer']))) : array();
 
-        $fixed_parts = array_filter([$nickname, $contact, $sns, $salary, $region, $jobtype]);
+        $fixed_parts = array_filter([$nickname, $company, $contact, $sns, $title, $employ_type, $salary, $region, $jobtype]);
         $fixed_line = !empty($fixed_parts) ? implode(' | ', $fixed_parts) : '';
 
-        // 한 번에 1,500자 내외 다이렉트 생성
-        $data_block = "[업소 데이터]\n";
-        $data_block .= "상호/닉네임: {$nickname}\n";
-        $data_block .= "채용제목: {$title}\n";
-        $data_block .= "위치: {$location}\n";
-        $data_block .= "근무환경: {$environment}\n";
-        $data_block .= "혜택: {$benefits}\n";
-        $data_block .= "추가상세: {$details}\n";
+        // [고정 참고 데이터] 화면에 그대로 표시되므로 참고만 함. [작성할 데이터]로 생성
+        $data_block = "[고정 참고 데이터] (참고만 하고 생성 글에 넣지 마라)\n";
+        $data_block .= "닉네임: {$nickname}\n";
+        $data_block .= "상호: {$company}\n";
         $data_block .= "연락처: {$contact}\n";
         $data_block .= "SNS: {$sns}\n";
-        $data_block .= "급여: {$salary}\n";
+        $data_block .= "채용제목: {$title}\n";
+        $data_block .= "고용형태: {$employ_type}\n";
+        $data_block .= "급여조건: {$salary}\n";
         $data_block .= "근무지역: {$region}\n";
-        $data_block .= "업종: {$jobtype}";
+        $data_block .= "업종/직종: {$jobtype}\n\n";
+
+        $data_block .= "[작성할 데이터] (이 데이터를 바탕으로 1,500자 내외 업소소개글 작성)\n";
+        if (!empty($amenity)) $data_block .= "편의사항: " . implode(', ', $amenity) . "\n";
+        if (!empty($keyword)) $data_block .= "키워드: " . implode(', ', $keyword) . "\n";
+        if (!empty($mbti_prefer)) $data_block .= "선호 MBTI: " . implode(', ', $mbti_prefer) . "\n";
+        $data_block .= "업소 위치·소개: {$location}\n";
+        $data_block .= "근무환경: {$environment}\n";
+        $data_block .= "혜택·복리후생: {$benefits}\n";
+        $data_block .= "자격·우대사항: {$qualify}\n";
+        $data_block .= "추가 상세설명: {$details}";
 
         $json_instruction = '';
         if ($return_json) {
             $json_instruction = "\n\n반드시 다음 JSON 형식으로만 응답하세요. 설명 없이 JSON만 반환하세요.\n"
-                . '{"intro":"인사말/소개 (2~3문장, 이모지 포함)", "location":"업소 위치/교통 안내", "env":"근무환경 설명", "benefit":"지원 혜택/복리후생", "wrapup":"마무리/언니의 약속"}';
+                . "AI소개글 종합정리 순서: intro → location → env → benefit → wrapup\n"
+                . '{"intro":"인사말 및 편의사항·키워드·MBTI 요약", "location":"업소 위치·교통 안내", "env":"근무환경", "benefit":"혜택·복리후생", "wrapup":"마무리·언니의 약속"}';
         }
 
         $full_prompt = $base_prompt . "\n" . $data_block . $json_instruction;

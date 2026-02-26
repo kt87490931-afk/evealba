@@ -121,6 +121,17 @@ $banner_comp = $nick ?: $comp ?: '—';
 <link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/skin/board/eve_skin/style.css?v=<?php echo @filemtime(G5_THEME_PATH.'/skin/board/eve_skin/style.css'); ?>">
 
 <article id="bo_v" class="ev-view-wrap jobs-view-wrap jobs-ad-post-wrap" style="width:100%;max-width:680px;margin:0 auto;">
+  <?php
+  /* ═══ AI 생성 필드 매핑 (jr_data) ═══
+   * ai_intro      : 인사말
+   * ai_location   : 업소 위치 (포인트카드1 + 상세섹션)
+   * ai_env        : 근무환경 (포인트카드2 + 상세섹션)
+   * ai_benefit    : 지원 혜택/급여 (포인트카드3 + 상세섹션)
+   * ai_wrapup     : 언니 사장의 약속 (포인트카드4 + 별도블록)
+   * ai_welfare    : 복리후생 (상세섹션)
+   * ai_content    : 종합 답글(레거시)
+   * 폼 입력 필드  : job_nickname, job_company, job_title, job_contact, job_kakao, job_line, job_telegram, job_salary_*, job_work_region_*, job_job1/2, amenity
+   */ ?>
   <!-- eve_alba_ad_post 스타일 폼 -->
   <div class="jobs-ad-post" style="font-family:'Malgun Gothic','맑은 고딕',Apple SD Gothic Neo,sans-serif;color:#222;line-height:1.6;">
 
@@ -128,9 +139,9 @@ $banner_comp = $nick ?: $comp ?: '—';
     <div class="ad-banner" style="background:linear-gradient(135deg,#2D0020 0%,#FF1B6B 55%,#FF6BA8 100%);border-radius:16px 16px 0 0;padding:28px 30px 22px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,.08);border-radius:50%;"></div>
       <div style="position:absolute;bottom:-20px;right:60px;width:80px;height:80px;background:rgba(255,255,255,.06);border-radius:50%;"></div>
-      <div style="display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;letter-spacing:.5px;margin-bottom:10px;">🏮 <?php echo htmlspecialchars($jobtype ?: '업종'); ?></div>
-      <div style="font-size:26px;font-weight:900;color:#fff;letter-spacing:-0.5px;line-height:1.2;margin-bottom:6px;">🌸 <?php echo htmlspecialchars($banner_comp); ?></div>
-      <div style="font-size:14px;color:rgba(255,255,255,.85);font-weight:500;"><?php echo htmlspecialchars($title ?: $row['jr_subject_display']); ?></div>
+      <?php if ($jobtype) { ?><div style="display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;letter-spacing:.5px;margin-bottom:10px;">🏮 <?php echo htmlspecialchars($jobtype); ?></div><?php } ?>
+      <?php if ($banner_comp && $banner_comp !== '—') { ?><div style="font-size:26px;font-weight:900;color:#fff;letter-spacing:-0.5px;line-height:1.2;margin-bottom:6px;">🌸 <?php echo htmlspecialchars($banner_comp); ?></div><?php } ?>
+      <?php if ($title || $row['jr_subject_display']) { ?><div style="font-size:14px;color:rgba(255,255,255,.85);font-weight:500;"><?php echo htmlspecialchars($title ?: $row['jr_subject_display']); ?></div><?php } ?>
       <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
         <?php if ($region) { ?><span style="background:rgba(0,0,0,.25);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;">📍 <?php echo htmlspecialchars($region); ?></span><?php } ?>
         <?php if ($salary_disp) { ?><span style="background:rgba(255,215,0,.25);color:#FFD700;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;">💰 <?php echo htmlspecialchars($salary_disp); ?></span><?php } ?>
@@ -145,41 +156,101 @@ $banner_comp = $nick ?: $comp ?: '—';
         <?php if ($can_edit) { ?><button type="button" class="btn-edit btn-edit-basic" style="padding:4px 12px;background:linear-gradient(135deg,var(--ev-orange, #FF6B35),var(--ev-hot-pink, #FF1B6B));color:#fff;border:none;border-radius:14px;font-size:11px;font-weight:700;cursor:pointer;">✏️ 수정</button><?php } ?>
       </div>
       <table style="width:100%;border-collapse:collapse;">
-        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;">🏷️ 업소명</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;font-size:13px;font-weight:700;color:#222;"><?php echo htmlspecialchars($banner_comp); ?></td></tr>
-        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;">📞 연락처</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;font-size:13px;font-weight:700;color:#FF1B6B;"><?php echo htmlspecialchars($contact ?: '—'); ?></td></tr>
-        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;">💬 SNS</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;font-size:13px;color:#333;">
+        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;vertical-align:middle;white-space:nowrap;">🏷️ 업소명</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;font-size:13px;font-weight:700;color:#222;"><?php echo $banner_comp && $banner_comp !== '—' ? htmlspecialchars($banner_comp) : ''; ?></td></tr>
+        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;vertical-align:middle;white-space:nowrap;">📞 연락처</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;font-size:13px;font-weight:700;color:#FF1B6B;"><?php echo $contact ? htmlspecialchars($contact) : ''; ?></td></tr>
+        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;vertical-align:middle;white-space:nowrap;">💬 SNS</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;font-size:13px;color:#333;">
           <?php if ($sns_kakao) { ?><span style="display:inline-block;background:#FEE500;color:#333;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;margin-right:5px;">카카오 <?php echo htmlspecialchars($sns_kakao); ?></span><?php } ?>
           <?php if ($sns_line) { ?><span style="display:inline-block;background:#00B300;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;margin-right:5px;">라인 <?php echo htmlspecialchars($sns_line); ?></span><?php } ?>
           <?php if ($sns_telegram) { ?><span style="display:inline-block;background:#2AABEE;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;">텔레그램 <?php echo htmlspecialchars($sns_telegram); ?></span><?php } ?>
-          <?php if (!$sns_kakao && !$sns_line && !$sns_telegram) { ?>—<?php } ?>
         </td></tr>
-        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;">💰 급여조건</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;"><?php if ($salary_disp || $amenity) { ?><span style="display:inline-block;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-size:12px;font-weight:900;padding:4px 14px;border-radius:20px;"><?php echo htmlspecialchars($salary_disp ?: '급여협의'); if ($amenity) { echo ' · ' . htmlspecialchars(cut_str($amenity, 24)); } ?></span><?php } else { ?>—<?php } ?></td></tr>
-        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;">📍 근무지역</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;font-size:13px;color:#333;"><?php echo htmlspecialchars($region ?: '—'); ?></td></tr>
-        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;font-size:12px;font-weight:700;color:#888;">🏮 업종/직종</td><td style="padding:11px 18px;font-size:13px;color:#333;">
-          <?php if ($jobtype) { $jparts = array_filter(explode('/', str_replace(' / ', '/', $jobtype))); foreach ($jparts as $jp) { $jp = trim($jp); if ($jp) { ?><span style="display:inline-block;background:#FCE4EC;color:#C62828;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;margin-right:5px;"><?php echo htmlspecialchars($jp); ?></span><?php } } } else { ?>—<?php } ?>
+        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;vertical-align:middle;white-space:nowrap;">💰 급여조건</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;"><?php if ($salary_disp || $amenity) { ?><span style="display:inline-block;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-size:12px;font-weight:900;padding:4px 14px;border-radius:20px;"><?php echo htmlspecialchars($salary_disp ?: ''); if ($salary_disp && $amenity) echo ' · '; if ($amenity) echo htmlspecialchars(cut_str($amenity, 24)); ?></span><?php } ?></td></tr>
+        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;border-bottom:1px solid #fce8f0;font-size:12px;font-weight:700;color:#888;vertical-align:middle;white-space:nowrap;">📍 근무지역</td><td style="padding:11px 18px;border-bottom:1px solid #fce8f0;font-size:13px;color:#333;"><?php echo $region ? htmlspecialchars($region) : ''; ?></td></tr>
+        <tr><td style="width:110px;padding:11px 14px 11px 20px;background:#fdf5f8;font-size:12px;font-weight:700;color:#888;vertical-align:middle;white-space:nowrap;">🏮 업종/직종</td><td style="padding:11px 18px;font-size:13px;color:#333;">
+          <?php if ($jobtype) { $jparts = array_filter(explode('/', str_replace(' / ', '/', $jobtype))); foreach ($jparts as $jp) { $jp = trim($jp); if ($jp) { ?><span style="display:inline-block;background:#FCE4EC;color:#C62828;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;margin-right:5px;"><?php echo htmlspecialchars($jp); ?></span><?php } } } ?>
         </td></tr>
       </table>
     </div>
 
-    <?php if ($show_ai) { ?>
-    <?php if ($has_sections) {
-      $ai_intro_block = array('key' => 'ai_intro', 'label' => '인사말', 'val' => $ai_intro);
-      if (!empty($ai_intro_block['val'])) {
-    ?>
+    <?php if ($show_ai && !empty($ai_intro)) { ?>
+    <!-- [AI 생성] 인사말: ai_intro -->
     <div class="ad-intro jobs-ai-section" data-section="ai_intro" data-jr-id="<?php echo (int)$jr_id; ?>" style="background:#fff;border:1.5px solid #fce8f0;border-top:none;padding:22px 24px;">
-      <div class="jobs-ai-view-wrap"><div style="border-left:3px solid #FF1B6B;padding-left:14px;"><div class="viewContent" style="font-size:13px;color:#444;line-height:1.85;"><?php echo nl2br(htmlspecialchars($ai_intro)); ?></div></div></div>
+      <div class="jobs-ai-view-wrap">
+        <div style="border-left:3px solid #FF1B6B;padding-left:14px;margin-bottom:4px;">
+          <span style="font-size:13px;font-weight:900;color:#FF1B6B;">💖 안녕하세요, 예비 공주님들!</span>
+        </div>
+        <div class="viewContent" style="font-size:13px;color:#444;line-height:1.85;margin-top:10px;"><?php echo nl2br(htmlspecialchars($ai_intro)); ?></div>
+      </div>
       <div class="jobs-ai-edit-wrap" style="display:none;"><textarea class="jobs-ai-edit-ta" rows="6"><?php echo htmlspecialchars($ai_intro); ?></textarea><div class="jobs-ai-edit-actions"><button type="button" class="btn-save-ai">저장</button><button type="button" class="btn-cancel-ai">취소</button></div></div>
       <?php if ($can_edit) { ?><div class="jobs-ai-reply-actions" style="margin-top:12px;"><button type="button" class="btn-edit btn-edit-ai">✏️ 수정</button></div><?php } ?>
     </div>
+    <?php } ?>
+    <?php
+      // [AI 생성] 포인트 카드 4개: ai_location, ai_env, ai_benefit, ai_wrapup. 폼 데이터(region,amenity)로 보강 가능한 카드만 폼값 사용.
+      $pt1_ok = !empty($ai_location) || !empty($region);
+      $pt1_title = !empty($ai_location) ? '역에서 가까워요!' : ($region ? '접근이 편해요!' : '');
+      $pt1_desc = !empty($ai_location) ? cut_str($ai_location, 80) : ($region ? htmlspecialchars($region).' 인근에서 편하게 출퇴근하실 수 있어요.' : '');
+      $pt2_ok = !empty($ai_env);
+      $pt2_title = !empty($ai_env) ? '신규 인테리어' : '';
+      $pt2_desc = !empty($ai_env) ? cut_str($ai_env, 80) : '';
+      $pt3_ok = !empty($ai_benefit) || $salary_disp || $amenity;
+      $pt3_title = (!empty($ai_benefit) || $salary_disp || $amenity) ? '급여 시원하게!' : '';
+      $pt3_desc = !empty($ai_benefit) ? cut_str($ai_benefit, 80) : (($salary_disp || $amenity) ? trim(($salary_disp ? '급여 협의 가능해요. ' : '').($amenity ? htmlspecialchars($amenity) : '')) : '');
+      $pt4_ok = !empty($ai_wrapup);
+      $pt4_title = !empty($ai_wrapup) ? '텃세 NO! 친구와 함께!' : '';
+      $pt4_desc = !empty($ai_wrapup) ? cut_str($ai_wrapup, 80) : '';
+      $has_point_cards = $pt1_ok || $pt2_ok || $pt3_ok || $pt4_ok;
+    ?>
+    <?php if (($show_ai || $can_edit) && $has_point_cards) { ?>
+    <!-- [AI 생성] 포인트 카드 4개: ai_location, ai_env, ai_benefit, ai_wrapup (데이터 있을 때만 카드 표시) -->
+    <div style="background:#fff;border:1.5px solid #fce8f0;border-top:none;padding:20px 20px 16px;">
+      <div style="font-size:12px;font-weight:900;color:#FF1B6B;letter-spacing:.3px;margin-bottom:14px;padding-bottom:8px;border-bottom:1.5px dashed #fce8f0;">✨ 이런 점이 달라요</div>
+      <div style="display:table;width:100%;border-collapse:separate;border-spacing:8px;">
+        <div style="display:table-row;">
+          <div style="display:table-cell;width:50%;vertical-align:top;">
+            <?php if ($pt1_ok && ($pt1_title || $pt1_desc)) { ?><div style="background:linear-gradient(135deg,#fff0f6,#ffe8f2);border:1.5px solid #ffd6e7;border-radius:12px;padding:16px 14px;">
+              <div style="font-size:22px;margin-bottom:6px;">🚶‍♀️</div>
+              <?php if ($pt1_title) { ?><div style="font-size:12px;font-weight:900;color:#FF1B6B;margin-bottom:5px;"><?php echo htmlspecialchars($pt1_title); ?></div><?php } ?>
+              <?php if ($pt1_desc) { ?><div style="font-size:11px;color:#666;line-height:1.7;"><?php echo nl2br(htmlspecialchars($pt1_desc)); ?></div><?php } ?>
+            </div><?php } ?>
+          </div>
+          <div style="display:table-cell;width:50%;vertical-align:top;padding-left:8px;">
+            <?php if ($pt2_ok && ($pt2_title || $pt2_desc)) { ?><div style="background:linear-gradient(135deg,#fff8e8,#fff3d6);border:1.5px solid #ffe0a0;border-radius:12px;padding:16px 14px;">
+              <div style="font-size:22px;margin-bottom:6px;">💎</div>
+              <?php if ($pt2_title) { ?><div style="font-size:12px;font-weight:900;color:#D4840A;margin-bottom:5px;"><?php echo htmlspecialchars($pt2_title); ?></div><?php } ?>
+              <?php if ($pt2_desc) { ?><div style="font-size:11px;color:#666;line-height:1.7;"><?php echo nl2br(htmlspecialchars($pt2_desc)); ?></div><?php } ?>
+            </div><?php } ?>
+          </div>
+        </div>
+        <div style="display:table-row;">
+          <div style="display:table-cell;width:50%;vertical-align:top;padding-top:8px;">
+            <?php if ($pt3_ok && ($pt3_title || $pt3_desc)) { ?><div style="background:linear-gradient(135deg,#f0fff4,#e8f5e9);border:1.5px solid #b2dfdb;border-radius:12px;padding:16px 14px;">
+              <div style="font-size:22px;margin-bottom:6px;">💵</div>
+              <?php if ($pt3_title) { ?><div style="font-size:12px;font-weight:900;color:#2E7D32;margin-bottom:5px;"><?php echo htmlspecialchars($pt3_title); ?></div><?php } ?>
+              <?php if ($pt3_desc) { ?><div style="font-size:11px;color:#666;line-height:1.7;"><?php echo nl2br(htmlspecialchars($pt3_desc)); ?></div><?php } ?>
+            </div><?php } ?>
+          </div>
+          <div style="display:table-cell;width:50%;vertical-align:top;padding-top:8px;padding-left:8px;">
+            <?php if ($pt4_ok && ($pt4_title || $pt4_desc)) { ?><div style="background:linear-gradient(135deg,#f3e8ff,#ede0f5);border:1.5px solid #d4b0f0;border-radius:12px;padding:16px 14px;">
+              <div style="font-size:22px;margin-bottom:6px;">👯‍♀️</div>
+              <?php if ($pt4_title) { ?><div style="font-size:12px;font-weight:900;color:#7B1FA2;margin-bottom:5px;"><?php echo htmlspecialchars($pt4_title); ?></div><?php } ?>
+              <?php if ($pt4_desc) { ?><div style="font-size:11px;color:#666;line-height:1.7;"><?php echo nl2br(htmlspecialchars($pt4_desc)); ?></div><?php } ?>
+            </div><?php } ?>
+          </div>
+        </div>
+      </div>
+    </div>
     <?php }
-    <?php }
+      $ai_welfare = !empty($data['ai_welfare']) ? trim($data['ai_welfare']) : (!empty($desc_extra) ? $desc_extra : '');
+      /* [AI 생성] 상세 섹션: ai_location, ai_env, ai_benefit, ai_welfare(복리후생) */
       $ai_detail_sections = array(
         array('key' => 'ai_location', 'label' => '📍 업소 위치', 'val' => $ai_location),
         array('key' => 'ai_env', 'label' => '🏢 근무환경', 'val' => $ai_env),
         array('key' => 'ai_benefit', 'label' => '💰 지원 혜택 및 급여', 'val' => $ai_benefit),
+        array('key' => 'ai_welfare', 'label' => '🎀 복리후생', 'val' => $ai_welfare),
       );
-      foreach ($ai_detail_sections as $sec) {
-        if (empty($sec['val'])) continue;
+      if ($show_ai && $has_sections) {
+        foreach ($ai_detail_sections as $sec) {
+          if (empty($sec['val'])) continue;
     ?>
     <div class="ad-detail-section jobs-ai-section" data-section="<?php echo htmlspecialchars($sec['key']); ?>" data-jr-id="<?php echo (int)$jr_id; ?>" style="background:#fff;border:1.5px solid #fce8f0;border-top:none;padding:20px 24px;">
       <div style="margin-bottom:8px;"><span style="background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-size:10px;font-weight:900;padding:3px 9px;border-radius:10px;"><?php echo htmlspecialchars($sec['label']); ?></span></div>
@@ -188,8 +259,9 @@ $banner_comp = $nick ?: $comp ?: '—';
       <?php if ($can_edit) { ?><div class="jobs-ai-reply-actions" style="margin-top:12px;"><button type="button" class="btn-edit btn-edit-ai">✏️ 수정</button></div><?php } ?>
     </div>
     <?php }
-      if (!empty($ai_wrapup)) {
+        if (!empty($ai_wrapup)) {
     ?>
+    <!-- [AI 생성] 언니 사장의 약속: ai_wrapup -->
     <div class="ad-wrapup jobs-ai-section" data-section="ai_wrapup" data-jr-id="<?php echo (int)$jr_id; ?>" style="background:linear-gradient(135deg,#fff0f6,#fce8f2);border:1.5px solid #ffd6e7;border-top:none;padding:18px 24px;">
       <div style="font-size:12px;font-weight:900;color:#FF1B6B;margin-bottom:10px;">🎀 언니 사장의 약속</div>
       <div class="jobs-ai-view-wrap"><div class="viewContent" style="font-size:12.5px;color:#555;line-height:1.9;"><?php echo nl2br(htmlspecialchars($ai_wrapup)); ?></div></div>
@@ -197,7 +269,8 @@ $banner_comp = $nick ?: $comp ?: '—';
       <?php if ($can_edit) { ?><div class="jobs-ai-reply-actions" style="margin-top:12px;"><button type="button" class="btn-edit btn-edit-ai">✏️ 수정</button></div><?php } ?>
     </div>
     <?php }
-    } elseif ($ai_summary) { ?>
+      } elseif ($show_ai && $ai_summary) { ?>
+    <!-- [AI 생성] 종합 답글(레거시): ai_content -->
     <div class="jobs-ai-reply-block jobs-ai-section" data-section="ai_content" data-jr-id="<?php echo (int)$jr_id; ?>">
       <div class="jobs-ai-reply-head">
         <span class="jobs-ai-reply-badge">↳ 답글</span>
@@ -216,7 +289,7 @@ $banner_comp = $nick ?: $comp ?: '—';
         </div>
       </div>
     </div>
-    <?php } } ?>
+    <?php } ?>
     <?php if ($can_edit && !$show_ai && ($ai_queue_status === 'pending' || $ai_queue_status === 'processing')) { ?>
     <div class="ad-ai-loading" style="background:#fff;border:1.5px solid #fce8f0;border-top:none;padding:28px 24px;text-align:center;">
       <div style="font-size:14px;color:#FF1B6B;font-weight:700;">⏳ AI 소개글 생성 중입니다</div>
@@ -234,17 +307,21 @@ $banner_comp = $nick ?: $comp ?: '—';
     </div>
     <?php } ?>
 
-    <!-- 연락처 CTA -->
+    <!-- 연락처 CTA (eve_alba_ad_post.html 100% 일치 - table 레이아웃) -->
     <div class="ad-cta" style="background:linear-gradient(135deg,#2D0020,#FF1B6B);border-radius:0 0 16px 16px;padding:22px 24px;text-align:center;">
       <div style="font-size:13px;font-weight:900;color:#fff;margin-bottom:4px;">💌 지금 바로 연락주세요! 기다리고 있을게요~</div>
       <div style="font-size:11px;color:rgba(255,255,255,.75);margin-bottom:16px;">자다가 깨서 연락 주셔도 괜찮아요! 🌙 24시간 열려 있어요</div>
-      <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;">
-        <?php if ($sns_kakao) { ?><a href="https://open.kakao.com/o/s/<?php echo htmlspecialchars($sns_kakao); ?>" target="_blank" rel="noopener" style="display:inline-block;background:#FEE500;color:#333;font-size:12px;font-weight:900;padding:10px 20px;border-radius:12px;text-decoration:none;">💬 카카오 <?php echo htmlspecialchars($sns_kakao); ?></a><?php } ?>
-        <?php if ($sns_line) { ?><span style="display:inline-block;background:#00B300;color:#fff;font-size:12px;font-weight:900;padding:10px 20px;border-radius:12px;">💚 라인 <?php echo htmlspecialchars($sns_line); ?></span><?php } ?>
-        <?php if ($sns_telegram) { ?><span style="display:inline-block;background:#2AABEE;color:#fff;font-size:12px;font-weight:900;padding:10px 20px;border-radius:12px;">✈️ 텔레그램 <?php echo htmlspecialchars($sns_telegram); ?></span><?php } ?>
+      <?php if ($sns_kakao || $sns_line || $sns_telegram) { ?>
+      <div style="display:table;width:100%;border-collapse:separate;border-spacing:6px;">
+        <div style="display:table-row;">
+          <?php if ($sns_kakao) { ?><div style="display:table-cell;text-align:center;"><a href="https://open.kakao.com/o/s/<?php echo htmlspecialchars($sns_kakao); ?>" target="_blank" rel="noopener" style="display:inline-block;background:#FEE500;color:#333;font-size:12px;font-weight:900;padding:10px 0;border-radius:12px;width:100%;box-sizing:border-box;cursor:pointer;letter-spacing:.2px;text-decoration:none;">💬 카카오 <?php echo htmlspecialchars($sns_kakao); ?></a></div><?php } ?>
+          <?php if ($sns_line) { ?><div style="display:table-cell;text-align:center;padding-left:6px;"><div style="display:inline-block;background:#00B300;color:#fff;font-size:12px;font-weight:900;padding:10px 0;border-radius:12px;width:100%;box-sizing:border-box;cursor:pointer;letter-spacing:.2px;">💚 라인 <?php echo htmlspecialchars($sns_line); ?></div></div><?php } ?>
+          <?php if ($sns_telegram) { ?><div style="display:table-cell;text-align:center;padding-left:6px;"><div style="display:inline-block;background:#2AABEE;color:#fff;font-size:12px;font-weight:900;padding:10px 0;border-radius:12px;width:100%;box-sizing:border-box;cursor:pointer;letter-spacing:.2px;">✈️ 텔레그램 <?php echo htmlspecialchars($sns_telegram); ?></div></div><?php } ?>
+        </div>
       </div>
-      <?php if ($contact) { ?><div style="background:rgba(255,255,255,.15);border-radius:10px;padding:10px 16px;display:inline-block;"><a href="tel:<?php echo preg_replace('/[^0-9+]/','',$contact); ?>" style="font-size:15px;font-weight:900;color:#fff;letter-spacing:.5px;text-decoration:none;">📞 <?php echo htmlspecialchars($contact); ?></a></div><?php } ?>
-      <div style="margin-top:14px;font-size:10px;color:rgba(255,255,255,.4);">🌸 이브알바 EVE ALBA — <?php echo htmlspecialchars($banner_comp); ?></div>
+      <?php } ?>
+      <?php if ($contact) { ?><div style="margin-top:12px;background:rgba(255,255,255,.15);border-radius:10px;padding:10px 16px;display:inline-block;"><a href="tel:<?php echo preg_replace('/[^0-9+]/','',$contact); ?>" style="font-size:15px;font-weight:900;color:#fff;letter-spacing:.5px;text-decoration:none;">📞 <?php echo htmlspecialchars($contact); ?></a></div><?php } ?>
+      <?php if ($banner_comp && $banner_comp !== '—') { ?><div style="margin-top:14px;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.3px;">🌸 이브알바 EVE ALBA — <?php echo htmlspecialchars($banner_comp); ?></div><?php } ?>
     </div>
   </div>
 
