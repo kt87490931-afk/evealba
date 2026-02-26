@@ -19,6 +19,7 @@ if ($gemini_api_key === '') {
 }
 $gemini_model = 'gemini-3-flash-preview';
 
+// 톤별 역할: jobs_register_main 선택값 → jr_data.ai_tone → jobs_ai_queue_process → gemini_api.lib
 $gemini_roles = [
     'unnie' => [
         'name' => '친근한 언니 톤',

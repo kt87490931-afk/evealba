@@ -32,6 +32,8 @@ if (!empty($job_data)) {
 }
 if (!$data || !is_array($data)) {
     // JSON 실패 시 폼 필드에서 직접 추출 (fallback)
+    $ai_tone_val = isset($_POST['ai_tone']) ? trim((string)$_POST['ai_tone']) : '';
+    if (!in_array($ai_tone_val, array('unnie', 'boss_male', 'pro'))) $ai_tone_val = 'unnie';
     $data = array(
         'job_nickname' => isset($_POST['job_nickname']) ? stripslashes((string)$_POST['job_nickname']) : '',
         'job_company' => isset($_POST['job_company']) ? stripslashes((string)$_POST['job_company']) : '',
@@ -40,7 +42,8 @@ if (!$data || !is_array($data)) {
         'desc_env' => isset($_POST['desc_env']) ? stripslashes((string)$_POST['desc_env']) : '',
         'desc_benefit' => isset($_POST['desc_benefit']) ? stripslashes((string)$_POST['desc_benefit']) : '',
         'desc_qualify' => isset($_POST['desc_qualify']) ? stripslashes((string)$_POST['desc_qualify']) : '',
-        'desc_extra' => isset($_POST['desc_extra']) ? stripslashes((string)$_POST['desc_extra']) : ''
+        'desc_extra' => isset($_POST['desc_extra']) ? stripslashes((string)$_POST['desc_extra']) : '',
+        'ai_tone' => $ai_tone_val,
     );
 }
 

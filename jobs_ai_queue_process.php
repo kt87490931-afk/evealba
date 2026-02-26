@@ -111,6 +111,7 @@ for ($i = 0; $i < $limit; $i++) {
         'jobtype' => $jobtype_disp,
     );
     $ai_tone = isset($jr_data['ai_tone']) && in_array($jr_data['ai_tone'], array('unnie', 'boss_male', 'pro')) ? $jr_data['ai_tone'] : 'unnie';
+    _queue_log("AI_TONE jr_id={$jr_id} tone={$ai_tone}");
 
     $sections = generate_store_description_gemini_sections($formData, $ai_tone);
     $use_sections = is_array($sections) && !isset($sections['error']);
