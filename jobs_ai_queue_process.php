@@ -153,7 +153,7 @@ for ($i = 0; $i < $limit; $i++) {
         $retry = isset($ret_row['retry_count']) ? (int)$ret_row['retry_count'] : 0;
         $err_short = mb_substr($err_short ?: 'API 응답 없음', 0, 200);
         $err_esc = sql_escape_string($err_short);
-        $is_retryable = (strpos($err_short, '429') !== false || stripos($err_short, 'quota') !== false || stripos($err_short, 'RESOURCE_EXHAUSTED') !== false || strpos($err_short, '대기열') !== false || strpos($err_short, '큐 락') !== false);
+        $is_retryable = (strpos($err_short, '429') !== false || stripos($err_short, 'quota') !== false || stripos($err_short, 'RESOURCE_EXHAUSTED') !== false || stripos($err_short, 'high demand') !== false || stripos($err_short, 'experiencing') !== false || strpos($err_short, '대기열') !== false || strpos($err_short, '큐 락') !== false || strpos($err_short, 'try again later') !== false);
         if ($retry < 3 && $is_retryable) {
             sql_query("UPDATE g5_jobs_ai_queue SET status = 'pending', retry_count = retry_count + 1, error_msg = '{$err_esc}' WHERE id = '{$qid}'");
             _queue_log("RETRY id={$qid} jr_id={$jr_id} retry=".($retry+1)." msg={$err_short}");

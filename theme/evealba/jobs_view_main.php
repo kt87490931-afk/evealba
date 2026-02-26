@@ -1,14 +1,26 @@
 <?php if (!defined('_GNUBOARD_')) exit;
 
+function _jobs_view_msg($msg, $type = 'back') {
+    $html = '<div class="jobs-view-msg" style="padding:24px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin:16px 0;text-align:center;">';
+    $html .= '<p style="margin:0 0 12px;font-size:15px;color:#333;">'.$msg.'</p>';
+    if ($type === 'back') {
+        $html .= '<a href="javascript:history.back()" style="display:inline-block;padding:10px 20px;background:linear-gradient(135deg,#FF1B6B,#C90050);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;">이전으로</a>';
+    }
+    $html .= '</div>';
+    return $html;
+}
+
 $jr_id = isset($_GET['jr_id']) ? (int)$_GET['jr_id'] : 0;
 if (!$jr_id || !$is_member) {
+    echo _jobs_view_msg('잘못된 접근입니다. 로그인 후 다시 시도해 주세요.');
     echo '<script>alert("잘못된 접근입니다."); history.back();</script>';
     return;
 }
 
 $jr_table = 'g5_jobs_register';
 $tb_check = sql_query("SHOW TABLES LIKE 'g5_jobs_register'", false);
-if (!sql_num_rows($tb_check)) {
+if (!$tb_check || !sql_num_rows($tb_check)) {
+    echo _jobs_view_msg('데이터를 찾을 수 없습니다.');
     echo '<script>alert("데이터를 찾을 수 없습니다."); history.back();</script>';
     return;
 }
@@ -16,6 +28,7 @@ if (!sql_num_rows($tb_check)) {
 $mb_id_esc = addslashes($member['mb_id']);
 $row = sql_fetch("SELECT * FROM g5_jobs_register WHERE jr_id = '{$jr_id}' AND mb_id = '{$mb_id_esc}'");
 if (!$row) {
+    echo _jobs_view_msg('권한이 없거나 데이터가 없습니다. 본인의 채용정보만 열람할 수 있습니다.');
     echo '<script>alert("권한이 없거나 데이터가 없습니다."); history.back();</script>';
     return;
 }
@@ -32,11 +45,17 @@ $status_class = ($status === 'ongoing') ? 'ongoing' : ($payment_ok ? 'payment-ok
 
 // 입금대기중: 상세 열람 차단 (URL 직접 접근 포함)
 if ($status === 'pending' && !$payment_ok) {
+    echo '<div class="jobs-view-msg" style="padding:24px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin:16px 0;text-align:center;">';
+    echo '<p style="margin:0 0 12px;font-size:15px;color:#333;">입금확인 후 이용 가능합니다. 진행중인 채용정보에서 확인해 주세요.</p>';
+    echo '<a href="'.htmlspecialchars($jobs_ongoing_url).'" style="display:inline-block;padding:10px 20px;background:linear-gradient(135deg,#FF1B6B,#C90050);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;">진행중인 채용정보로 이동</a>';
+    echo '</div>';
     echo '<script>alert("입금확인 후 이용 가능합니다."); location.href="'.addslashes($jobs_ongoing_url).'";</script>';
+    echo '<noscript><meta http-equiv="refresh" content="2;url='.htmlspecialchars($jobs_ongoing_url).'"></noscript>';
     return;
 }
 
 $data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();
+if (!is_array($data)) $data = array();
 $nick = isset($data['job_nickname']) ? trim($data['job_nickname']) : $row['jr_nickname'];
 $comp = isset($data['job_company']) ? trim($data['job_company']) : $row['jr_company'];
 $title = isset($data['job_title']) ? trim($data['job_title']) : $row['jr_title'];
@@ -82,7 +101,7 @@ $ai_queue_status = '';
 $ai_queue_error = '';
 if (($status === 'ongoing' || $payment_ok) && !$ai_summary && !$has_sections) {
     $tbq = sql_query("SHOW TABLES LIKE 'g5_jobs_ai_queue'", false);
-    if (sql_num_rows($tbq)) {
+    if ($tbq && sql_num_rows($tbq)) {
         $q_row = sql_fetch("SELECT status, error_msg FROM g5_jobs_ai_queue WHERE jr_id = '".(int)$jr_id."' ORDER BY id DESC LIMIT 1", false);
         if ($q_row) {
             $ai_queue_status = $q_row['status'];
@@ -207,6 +226,11 @@ $banner_comp = $nick ?: $comp ?: '—';
     <div class="ad-ai-failed" style="background:#fff8f8;border:1.5px solid #ffd6d6;border-top:none;padding:24px 24px;text-align:center;">
       <div style="font-size:14px;color:#c62828;font-weight:700;">⚠️ AI 생성에 실패했습니다</div>
       <div style="font-size:12px;color:#888;margin-top:8px;">관리자에게 문의하세요. 또는 새로고침 후 다시 확인해 주세요.</div>
+    </div>
+    <?php } elseif ($can_edit && !$show_ai) { ?>
+    <div class="ad-ai-waiting" style="background:#fff;border:1.5px solid #fce8f0;border-top:none;padding:28px 24px;text-align:center;">
+      <div style="font-size:14px;color:#FF1B6B;font-weight:700;">⏳ AI 소개글 생성 대기 중입니다</div>
+      <div style="font-size:12px;color:#888;margin-top:8px;">입금확인 후 AI가 자동으로 생성됩니다. 잠시 후 새로고침 해주세요.</div>
     </div>
     <?php } ?>
 

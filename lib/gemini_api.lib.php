@@ -124,7 +124,8 @@ if (!function_exists('generate_store_description_gemini')) {
             return 'AI 생성 대기열이 많습니다. 2분 후 다시 시도해 주세요.';
         }
 
-        $url_base = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . $api_key;
+        // 공식 문서: https://ai.google.dev/gemini-api/docs/quickstart - x-goog-api-key 헤더 사용
+        $url_base = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent";
         $payload = array(
             'contents' => array(array('parts' => array(array('text' => $full_prompt)))),
             'generationConfig' => array(
@@ -135,7 +136,10 @@ if (!function_exists('generate_store_description_gemini')) {
         );
 
         $ch = curl_init($url_base);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'x-goog-api-key: ' . $api_key
+        ));
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload, JSON_UNESCAPED_UNICODE));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);

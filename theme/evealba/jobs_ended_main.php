@@ -8,7 +8,7 @@ $list = array();
 $total_count = 0;
 if ($is_member) {
     $tb_check = sql_query("SHOW TABLES LIKE 'g5_jobs_register'", false);
-    if (sql_num_rows($tb_check)) {
+    if ($tb_check && sql_num_rows($tb_check)) {
         $mb_id_esc = addslashes($member['mb_id']);
         $today = date('Y-m-d');
         $sql = "SELECT * FROM g5_jobs_register WHERE mb_id = '{$mb_id_esc}' AND (jr_status = 'ended' OR (jr_end_date IS NOT NULL AND jr_end_date < '{$today}')) ORDER BY jr_datetime DESC";

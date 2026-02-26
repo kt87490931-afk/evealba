@@ -184,6 +184,7 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
 <div class="btn_fixed_top">
     <button type="button" class="btn btn_02" onclick="fjobslist_do('입금확인')">선택입금확인</button>
     <button type="button" class="btn btn_01" onclick="fjobslist_do('취소')">선택취소</button>
+    <button type="button" class="btn btn_02" onclick="fjobslist_do('AI큐등록')">AI 생성 요청</button>
 </div>
 
 </form>
@@ -214,6 +215,11 @@ function fjobslist_do(act) {
     } else if (act === '취소') {
         if (!confirm(ids.length + '건 입금확인을 취소하여 입금대기중으로 변경하시겠습니까?')) return;
         url = './jobs_register_cancel_update.php?jr_ids=' + encodeURIComponent(idsStr);
+    } else if (act === 'AI큐등록') {
+        if (!confirm('선택한 ' + ids.length + '건을 AI 생성 큐에 등록하시겠습니까?')) return;
+        f.action = './jobs_ai_queue_add.php';
+        f.submit();
+        return;
     } else return;
     f.action = url;
     f.submit();

@@ -35,8 +35,9 @@ $start = microtime(true);
 $result = generate_store_description_gemini($testData, 'unnie');
 $elapsed = round((microtime(true) - $start) * 1000);
 
-if (strpos($result, '오류') !== false || strpos($result, '설정') !== false || strpos($result, '대기열') !== false) {
+if (strpos($result, '오류') !== false || strpos($result, '설정') !== false || strpos($result, '대기열') !== false || stripos($result, 'high demand') !== false) {
     echo "<p style='color:red;'>❌ 생성 실패: " . htmlspecialchars($result) . "</p>";
+    echo "<p style='color:#666;font-size:13px;'>※ 'high demand' 등은 Google API 서버 일시 혼잡입니다. <strong>잠시 후 새로고침</strong>하여 다시 시도해 주세요.</p>";
     echo "<hr><h3>📝 예시 (API 할당량 회복 시 이와 비슷한 스타일로 생성됨)</h3>";
     $sample = "안녕하세요~ 💕 소녀시대에서 같이 일해줄 언니들을 찾고 있어요!\n\n"
         . "📍 수서역 5번 출구에서 81m 거리에 있는 우리 업소는 신규 오픈한 곳이에요. 인테리어도 고급스럽고 최신 설비로 준비했답니다~ ✨\n\n"

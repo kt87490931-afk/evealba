@@ -10,7 +10,7 @@ $total_count = 0;
 if ($is_member) {
     $jr_table = 'g5_jobs_register';
     $tb_check = sql_query("SHOW TABLES LIKE 'g5_jobs_register'", false);
-    if (sql_num_rows($tb_check)) {
+    if ($tb_check && sql_num_rows($tb_check)) {
         $mb_id_esc = addslashes($member['mb_id']);
         $sql = "SELECT * FROM `g5_jobs_register` WHERE mb_id = '{$mb_id_esc}' AND jr_status IN ('pending','ongoing') ORDER BY jr_datetime DESC";
         $result = sql_query($sql);
