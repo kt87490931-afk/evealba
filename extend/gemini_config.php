@@ -5,9 +5,9 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 
-// API 키: 1) 환경변수 GEMINI_API_KEY, 2) extend/gemini_api_key.env 파일
+// API 키: 1) 환경변수 GEMINI_API_KEY (getenv 또는 $_SERVER), 2) extend/gemini_api_key.env 파일
 // 새 키 발급: https://aistudio.google.com/apikey
-$gemini_api_key = trim((string) (getenv('GEMINI_API_KEY') ?: ''));
+$gemini_api_key = trim((string) (getenv('GEMINI_API_KEY') ?: ($_SERVER['GEMINI_API_KEY'] ?? '')));
 if ($gemini_api_key === '') {
     $ext_dir = defined('G5_EXTEND_PATH') ? rtrim(G5_EXTEND_PATH, '/') : (defined('G5_PATH') ? G5_PATH . '/extend' : __DIR__);
     $key_file = $ext_dir . '/gemini_api_key.env';
