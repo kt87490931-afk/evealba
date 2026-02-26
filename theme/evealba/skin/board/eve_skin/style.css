@@ -114,6 +114,9 @@
 .jobs-ongoing-list .jobs-ongoing-wrap .board-td.td-extend { padding:6px; }
 .jobs-ongoing-list .btn-extend { padding:6px 14px; background:linear-gradient(135deg,var(--ev-orange),var(--ev-hot-pink)); color:#fff; border:none; border-radius:14px; font-size:12px; font-weight:700; cursor:pointer; }
 .jobs-ongoing-list .btn-extend:hover { opacity:.9; }
+.jobs-ongoing-list .board-row.row-blocked { opacity:.85; cursor:not-allowed; }
+.jobs-ongoing-list .board-row.row-blocked:hover { background:#fef8fa; }
+.jobs-ongoing-list .td-status .hint-blocked { display:block; font-size:10px; color:#999; margin-top:2px; }
 .jobs-ongoing-list .status-badge { display:inline-block; padding:2px 8px; border-radius:8px; font-size:11px; font-weight:700; }
 .jobs-ongoing-list .status-pending,
 .jobs-ongoing-list .status-payment-wait { background:#FFF3E0; color:#E65100; }

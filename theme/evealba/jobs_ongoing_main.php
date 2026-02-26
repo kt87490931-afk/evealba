@@ -55,6 +55,7 @@ if ($is_member) {
                     elseif (!empty($jr_data_arr['images'][0])) $thumb_url = is_string($jr_data_arr['images'][0]) ? $jr_data_arr['images'][0] : '';
                 }
             }
+            $can_view = ($status === 'ongoing') || $payment_ok;
             $list[] = array(
                 'jr_id' => $row['jr_id'],
                 'wr_id' => $row['jr_id'],
@@ -70,7 +71,8 @@ if ($is_member) {
                 'total_amount' => (int)($row['jr_total_amount'] ?? 0),
                 'nickname' => isset($row['jr_nickname']) ? trim($row['jr_nickname']) : '',
                 'thumb_url' => $thumb_url,
-                'view_href' => $jobs_view_url_base.'?jr_id='.$row['jr_id']
+                'view_href' => $can_view ? ($jobs_view_url_base.'?jr_id='.$row['jr_id']) : '#',
+                'can_view' => $can_view
             );
         }
         $total_count = count($list);
@@ -107,7 +109,7 @@ if ($is_member) {
         $thumb_url = isset($row['thumb_url']) ? trim($row['thumb_url']) : '';
         $thumb_full = ($thumb_url && (strpos($thumb_url, 'http') === 0 || strpos($thumb_url, '/') === 0)) ? $thumb_url : ($thumb_url ? (G5_DATA_URL . '/jobs/' . ltrim($thumb_url, '/')) : '');
     ?>
-    <a href="<?php echo isset($row['view_href']) ? $row['view_href'] : '#'; ?>" class="board-row jobs-ongoing-row">
+    <a href="<?php echo isset($row['view_href']) ? htmlspecialchars($row['view_href']) : '#'; ?>" class="board-row jobs-ongoing-row<?php echo empty($row['can_view']) ? ' row-blocked' : ''; ?>"<?php if (empty($row['can_view'])) { ?> onclick="event.preventDefault();alert('입금확인 후 이용 가능합니다.');return false;"<?php } ?>>
       <div class="board-td td-num"><?php echo $num--; ?></div>
       <div class="board-td td-thumb">
         <?php if ($thumb_full) { ?>
@@ -132,6 +134,7 @@ if ($is_member) {
       <div class="board-td td-remaining"><?php echo isset($row['remaining']) ? $row['remaining'] : '—'; ?></div>
       <div class="board-td td-status">
         <span class="status-badge status-<?php echo isset($row['status_class']) ? $row['status_class'] : 'payment-wait'; ?>"><?php echo isset($row['status_label']) ? htmlspecialchars($row['status_label']) : ''; ?></span>
+        <?php if (empty($row['can_view'])) { ?><span class="hint-blocked">입금확인 후 이용 가능</span><?php } ?>
       </div>
       <div class="board-td td-extend">
         <button type="button" class="btn-extend" onclick="event.preventDefault();event.stopPropagation();openExtendPopup('<?php echo $extend_url; ?>');">연장</button>

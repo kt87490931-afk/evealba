@@ -29,6 +29,12 @@ $payment_ok = !empty($row['jr_payment_confirmed']);
 $status_label = ($status === 'ongoing') ? '진행중' : ($payment_ok ? '입금확인' : '입금대기중');
 $status_class = ($status === 'ongoing') ? 'ongoing' : ($payment_ok ? 'payment-ok' : 'payment-wait');
 
+// 입금대기중: 상세 열람 차단 (URL 직접 접근 포함)
+if ($status === 'pending' && !$payment_ok) {
+    echo '<script>alert("입금확인 후 이용 가능합니다."); location.href="'.addslashes($jobs_ongoing_url).'";</script>';
+    return;
+}
+
 $data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();
 $nick = isset($data['job_nickname']) ? trim($data['job_nickname']) : $row['jr_nickname'];
 $comp = isset($data['job_company']) ? trim($data['job_company']) : $row['jr_company'];
