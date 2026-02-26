@@ -75,31 +75,25 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
         <!-- 담당자 연락처 -->
         <div class="form-row">
           <div class="form-label">담당자 연락처 <span class="req">*</span></div>
-          <div class="form-cell"><input class="fi fi-sm" type="text" value="010-0000-0000"></div>
+          <div class="form-cell"><input class="fi fi-sm" type="text" id="job_contact" name="job_contact" value="010-0000-0000" placeholder="연락처"></div>
         </div>
 
         <!-- 카카오톡 ID -->
         <div class="form-row">
           <div class="form-label">카카오톡 ID</div>
-          <div class="form-cell"><input class="fi fi-sm" type="text" placeholder="카카오톡 아이디"></div>
+          <div class="form-cell"><input class="fi fi-sm" type="text" id="job_kakao" name="job_kakao" placeholder="카카오톡 아이디"></div>
         </div>
 
         <!-- 라인 ID -->
         <div class="form-row">
           <div class="form-label">라인 ID</div>
-          <div class="form-cell"><input class="fi fi-sm" type="text" placeholder="라인 아이디"></div>
-        </div>
-
-        <!-- 위켓 ID -->
-        <div class="form-row">
-          <div class="form-label">위켓 ID</div>
-          <div class="form-cell"><input class="fi fi-sm" type="text" placeholder="위켓 아이디"></div>
+          <div class="form-cell"><input class="fi fi-sm" type="text" id="job_line" name="job_line" placeholder="라인 아이디"></div>
         </div>
 
         <!-- 텔레그램 ID -->
         <div class="form-row">
           <div class="form-label">텔레그램 ID</div>
-          <div class="form-cell"><input class="fi fi-sm" type="text" placeholder="텔레그램 아이디"></div>
+          <div class="form-cell"><input class="fi fi-sm" type="text" id="job_telegram" name="job_telegram" placeholder="텔레그램 아이디"></div>
         </div>
 
       </div>
@@ -535,18 +529,18 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
       </div>
     </div>
 
-    <!-- ===== AI업소소개글용 종합정리 (상세설명 ↔ 광고유료결제 사이) ===== -->
+    <!-- ===== AI소개글 종합정리 (상세설명 ↔ 광고유료결제 사이) ===== -->
     <div class="ai-preview-card jobs-ai-preview" id="jobs-ai-summary-card">
       <div class="ai-preview-header" onclick="toggleJobsAiPreview()">
         <div class="ai-preview-header-left">
           <div class="ai-preview-avatar">🏢</div>
           <div>
-            <div class="ai-preview-title">AI업소소개글용 종합정리</div>
+            <div class="ai-preview-title">AI소개글 종합정리</div>
             <div class="ai-preview-subtitle">실시간으로 입력한 내용이 반영됩니다</div>
           </div>
         </div>
         <div class="ai-preview-header-right">
-          <span class="ai-preview-badge">제출 전 확인 · AI 업소소개글 생성에 활용됩니다</span>
+          <span class="ai-preview-badge">제출 전 확인 · AI 소개글 생성에 활용됩니다</span>
           <button type="button" class="ai-preview-toggle-btn" id="jobsAiToggleBtn" aria-label="접기/펼치기">▲</button>
         </div>
       </div>
@@ -554,6 +548,14 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
         <div class="aip-row">
           <div class="aip-label">🏢 닉네임 · 상호</div>
           <div class="aip-value" id="job-summary-name"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row">
+          <div class="aip-label">📞 연락처</div>
+          <div class="aip-value" id="job-summary-contact"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row">
+          <div class="aip-label">💬 SNS</div>
+          <div class="aip-value" id="job-summary-sns"><span class="aip-empty">—</span></div>
         </div>
         <div class="aip-row">
           <div class="aip-label">📋 채용제목 · 고용형태</div>
@@ -606,6 +608,24 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
         <div class="aip-footer">
           <div class="aip-footer-icon">🤖</div>
           <div class="aip-footer-text">위 정보를 기준으로 <strong>AI</strong>가 업소소개글을 자동 작성합니다. 최대한 꼼꼼히 입력해주세요.</div>
+        </div>
+
+        <div class="ai-generator-section" style="margin-top:16px;padding-top:16px;border-top:1px solid #f0e0e8;">
+          <div class="form-row" style="margin-bottom:12px;">
+            <div class="form-label">AI 말투 선택</div>
+            <div class="form-cell">
+              <div class="ai-tone-radio-group" style="display:flex;gap:12px;flex-wrap:wrap;">
+                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="unnie" checked> 👩‍🦰친근한 언니 톤</label>
+                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="boss_male"> 👨‍🦱세심한 남사장님 톤</label>
+                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="pro"> 🧐전문가 톤</label>
+              </div>
+              <p class="hint" style="margin-top:8px;font-size:12px;color:#666;">모든 톤에서 이모지를 적극 활용합니다.</p>
+              <div id="ai-tone-example" style="margin-top:10px;padding:12px 14px;background:#fff8fb;border-radius:10px;border:1px solid #fae8f0;font-size:13px;color:#333;line-height:1.6;">
+                <span style="color:#888;font-size:11px;">예시 말투</span><br>
+                <span id="ai-tone-example-text">안녕하세요~ 저희 업소에 관심 가져주셔서 정말 감사해요! 💕 편하게 연락 주세요~</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1026,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(el && cnt){ el.addEventListener('input',function(){ cnt.textContent = this.value.length; }); }
   });
   /* AI 종합정리 자동 반영: 폼 변경 시 업데이트 */
-  var summaryFields = ['job_nickname','job_company','job_title','job_salary_type','job_salary_amt','job_work_region_1','job_work_region_detail_1','job_work_region_2','job_work_region_detail_2','job_work_region_3','job_work_region_detail_3','job_job1','job_job2','desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'];
+  var summaryFields = ['job_nickname','job_company','job_contact','job_kakao','job_line','job_telegram','job_title','job_salary_type','job_salary_amt','job_work_region_1','job_work_region_detail_1','job_work_region_2','job_work_region_detail_2','job_work_region_3','job_work_region_detail_3','job_job1','job_job2','desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'];
   summaryFields.forEach(function(id){
     var el = document.getElementById(id);
     if(el){ el.addEventListener('input', updateJobsAiSummary); el.addEventListener('change', updateJobsAiSummary); }
@@ -1036,6 +1056,18 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('[id^="kw-"]').forEach(function(c){ c.addEventListener('change', updateJobsAiSummary); });
   document.querySelectorAll('input[name="mbti_prefer[]"]').forEach(function(c){ c.addEventListener('change', updateJobsAiSummary); });
   updateJobsAiSummary();
+  /* AI 말투 예시 텍스트 업데이트 */
+  var toneExamples = {
+    unnie: '안녕하세요~ 저희 업소에 관심 가져주셔서 정말 감사해요! 💕 편하게 연락 주세요~',
+    boss_male: '안녕하세요. 세심하게 모시겠습니다. 😊 편안한 마음으로 문의해 주세요.',
+    pro: '체계적인 근무환경과 명확한 조건으로 신뢰를 드리겠습니다. 📋'
+  };
+  document.querySelectorAll('input[name="ai_tone"]').forEach(function(r){
+    r.addEventListener('change', function(){
+      var ex = document.getElementById('ai-tone-example-text');
+      if (ex) ex.textContent = toneExamples[this.value] || toneExamples.unnie;
+    });
+  });
 });
 
 function updateJobsAiSummary() {
@@ -1045,6 +1077,14 @@ function updateJobsAiSummary() {
   function set(id,v){ var e=document.getElementById(id); if(!e) return; var s=v||'—'; e.innerHTML = s==='—'?'<span class="aip-empty">—</span>':s.replace(/\n/g,'<br>'); }
   var nick = val('job_nickname'), comp = val('job_company');
   set('job-summary-name', nick || comp ? [nick,comp].filter(Boolean).join(' · ') : null);
+  var contact = val('job_contact');
+  set('job-summary-contact', contact || null);
+  var snsArr = [];
+  var k = val('job_kakao'), l = val('job_line'), t = val('job_telegram');
+  if (k) snsArr.push('카카오톡: '+k);
+  if (l) snsArr.push('라인: '+l);
+  if (t) snsArr.push('텔레그램: '+t);
+  set('job-summary-sns', snsArr.length ? snsArr.join(', ') : null);
   var title = val('job_title'), emp = document.querySelector('input[name="employ-type"]:checked');
   set('job-summary-title', title || emp ? [title, emp?emp.nextElementSibling.textContent:''].filter(Boolean).join(' · ') : null);
   var st = sel('job_salary_type'), sa = val('job_salary_amt');
@@ -1194,10 +1234,12 @@ function checkPayment() {
     return;
   }
   var data = {};
-  var ids = ['job_nickname','job_company','job_title','job_salary_type','job_salary_amt','job_work_region_1','job_work_region_detail_1','job_work_region_2','job_work_region_detail_2','job_work_region_3','job_work_region_detail_3','job_job1','job_job2','desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'];
+  var ids = ['job_nickname','job_company','job_contact','job_kakao','job_line','job_telegram','job_title','job_salary_type','job_salary_amt','job_work_region_1','job_work_region_detail_1','job_work_region_2','job_work_region_detail_2','job_work_region_3','job_work_region_detail_3','job_job1','job_job2','desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'];
   ids.forEach(function(id){ var e=document.getElementById(id); data[id]=e?e.value:''; });
   var emp = document.querySelector('input[name="employ-type"]:checked');
   data['employ_type'] = emp ? emp.value : '';
+  var aiTone = document.querySelector('input[name="ai_tone"]:checked');
+  data['ai_tone'] = aiTone ? aiTone.value : 'unnie';
   var total = 0;
   var adPeriod = 30;
   var adLabels = [];

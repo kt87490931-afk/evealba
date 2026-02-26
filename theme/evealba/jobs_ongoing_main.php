@@ -79,20 +79,12 @@ if ($is_member) {
 ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/skin/board/eve_skin/style.css?v=<?php echo @filemtime(G5_THEME_PATH.'/skin/board/eve_skin/style.css'); ?>">
 
-<div class="page-title-bar">
-  <h2 class="page-title">📋 진행중인 채용정보</h2>
-</div>
-
 <div id="bo_list" class="ev-board-list jobs-ongoing-list" style="width:100%;">
 
   <div class="board-topbar">
     <div class="board-topbar-left">
       <h2 class="board-page-title">진행중인 채용정보</h2>
       <span class="board-count">총 <strong><?php echo number_format($total_count); ?></strong>건</span>
-    </div>
-    <div class="board-btns">
-      <a href="<?php echo $jobs_register_url; ?>" class="btn-write">✏️ 채용공고 등록</a>
-      <a href="<?php echo $jobs_register_url; ?>" class="btn-list">📋 채용정보등록</a>
     </div>
   </div>
 
@@ -101,11 +93,10 @@ if ($is_member) {
       <div class="board-th">번호</div>
       <div class="board-th">썸네일</div>
       <div class="board-th th-title">제목</div>
-      <div class="board-th">등록인</div>
       <div class="board-th th-date">등록일</div>
       <div class="board-th">광고기간</div>
       <div class="board-th">남은기간</div>
-      <div class="board-th">점프</div>
+      <div class="board-th">상태</div>
       <div class="board-th">연장</div>
     </div>
 
@@ -129,7 +120,6 @@ if ($is_member) {
         <div class="td-title-inner">
           <div class="td-title-top">
             <span class="post-title-text"><?php echo isset($row['subject']) ? htmlspecialchars($row['subject']) : ''; ?></span>
-            <span class="status-badge status-<?php echo isset($row['status_class']) ? $row['status_class'] : 'payment-wait'; ?>"><?php echo isset($row['status_label']) ? htmlspecialchars($row['status_label']) : ''; ?></span>
           </div>
           <div class="td-title-bottom">
             <?php if (!empty($row['total_amount'])) { ?><span class="td-price"><?php echo number_format($row['total_amount']); ?>원</span><?php } ?>
@@ -137,11 +127,12 @@ if ($is_member) {
           </div>
         </div>
       </div>
-      <div class="board-td td-writer"><?php echo !empty($row['nickname']) ? htmlspecialchars($row['nickname']) : '—'; ?></div>
       <div class="board-td td-date"><?php echo isset($row['datetime2']) ? $row['datetime2'] : ''; ?></div>
       <div class="board-td td-period"><?php echo isset($row['ad_period']) ? $row['ad_period'] : '—'; ?></div>
       <div class="board-td td-remaining"><?php echo isset($row['remaining']) ? $row['remaining'] : '—'; ?></div>
-      <div class="board-td td-jump"><?php echo isset($row['jump_count']) ? number_format($row['jump_count']) : '—'; ?></div>
+      <div class="board-td td-status">
+        <span class="status-badge status-<?php echo isset($row['status_class']) ? $row['status_class'] : 'payment-wait'; ?>"><?php echo isset($row['status_label']) ? htmlspecialchars($row['status_label']) : ''; ?></span>
+      </div>
       <div class="board-td td-extend">
         <button type="button" class="btn-extend" onclick="event.preventDefault();event.stopPropagation();openExtendPopup('<?php echo $extend_url; ?>');">연장</button>
       </div>
@@ -154,15 +145,9 @@ if ($is_member) {
       <div class="board-td" style="grid-column:1/-1;text-align:center;padding:50px 20px;">
         <p style="font-size:15px;color:#888;margin-bottom:8px;">등록된 진행중인 채용정보가 없습니다.</p>
         <p style="font-size:13px;color:#aaa;">채용공고를 등록하고 결제하시면 여기에 표시됩니다.</p>
-        <a href="<?php echo $jobs_register_url; ?>" class="btn-write" style="margin-top:16px;display:inline-flex;">✏️ 채용공고 등록하기</a>
       </div>
     </div>
     <?php } ?>
-  </div>
-
-  <div class="board-bottom">
-    <a href="<?php echo $jobs_register_url; ?>" class="btn-write">✏️ 채용공고 등록</a>
-    <a href="<?php echo $jobs_register_url; ?>" class="btn-list">📋 채용정보등록</a>
   </div>
 
 </div>
