@@ -27,6 +27,26 @@ if (empty($jr_ids)) {
 }
 
 $confirm_ok = 0;
+$queued = 0;
+
+// g5_jobs_ai_queue 테이블 없으면 생성
+$tbq = sql_query("SHOW TABLES LIKE 'g5_jobs_ai_queue'", false);
+if (!sql_num_rows($tbq)) {
+    $create_sql = "CREATE TABLE IF NOT EXISTS `g5_jobs_ai_queue` (
+      `id` int unsigned NOT NULL AUTO_INCREMENT,
+      `jr_id` int unsigned NOT NULL,
+      `status` varchar(20) NOT NULL DEFAULT 'pending',
+      `retry_count` int NOT NULL DEFAULT 0,
+      `error_msg` varchar(500) NOT NULL DEFAULT '',
+      `created_at` datetime NOT NULL,
+      `processed_at` datetime DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      KEY `status` (`status`),
+      KEY `jr_id` (`jr_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+    sql_query($create_sql);
+}
+
 foreach ($jr_ids as $k => $v) {
     $id = (int)(is_array($v) ? $v : $v);
     if (!$id) continue;
@@ -39,19 +59,24 @@ foreach ($jr_ids as $k => $v) {
     sql_query("UPDATE g5_jobs_register SET jr_payment_confirmed = 1 WHERE jr_id = '{$id}'");
     $confirm_ok++;
 
-    // 입금확인 시 AI 소개글 생성 대기열에 등록 (크론이 순차 처리)
+    // 입금확인 시 AI 소개글 생성 대기열에 등록
     $jr_data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();
     $has_ai = !empty($jr_data['ai_content']) || !empty($jr_data['ai_intro']);
     if (is_array($jr_data) && !$has_ai) {
-        $tbq = sql_query("SHOW TABLES LIKE 'g5_jobs_ai_queue'", false);
-        if (sql_num_rows($tbq)) {
-            $q_check = sql_fetch("SELECT id FROM g5_jobs_ai_queue WHERE jr_id = '{$id}' AND status IN ('pending','processing') LIMIT 1", false);
-            if (!$q_check) {
-                sql_query("INSERT INTO g5_jobs_ai_queue (jr_id, status, created_at) VALUES ('{$id}', 'pending', '".G5_TIME_YMDHIS."')");
-            }
+        $q_check = sql_fetch("SELECT id FROM g5_jobs_ai_queue WHERE jr_id = '{$id}' AND status IN ('pending','processing') LIMIT 1", false);
+        if (!$q_check) {
+            sql_query("INSERT INTO g5_jobs_ai_queue (jr_id, status, created_at) VALUES ('{$id}', 'pending', '".G5_TIME_YMDHIS."')");
+            $queued++;
         }
     }
 }
 
-$msg = $confirm_ok ? $confirm_ok . '건 입금확인 완료. AI 소개글은 대기열에서 순차적으로 생성됩니다.' : '입금확인할 건이 없습니다.';
+// 큐 등록 건이 있으면 즉시 AI 생성 워커 실행 (백그라운드)
+if ($queued > 0) {
+    $base = dirname(__DIR__);
+    $php = defined('PHP_BINARY') ? PHP_BINARY : 'php';
+    @pclose(popen(sprintf('cd %s && %s jobs_ai_queue_process.php --limit=%d > /dev/null 2>&1 &', escapeshellarg($base), escapeshellarg($php), min($queued, 5)), 'r'));
+}
+
+$msg = $confirm_ok ? $confirm_ok . '건 입금확인 완료.' . ($queued ? ' AI 소개글 생성이 시작되었습니다.' : '') : '입금확인할 건이 없습니다.';
 alert($msg, './jobs_register_list.php');
