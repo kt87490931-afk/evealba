@@ -72,7 +72,7 @@ for ($i = 0; $i < $limit; $i++) {
     }
 
     $jr_data = $jr['jr_data'] ? json_decode($jr['jr_data'], true) : array();
-    if (!is_array($jr_data) || !empty($jr_data['ai_content'])) {
+    if (!is_array($jr_data) || !empty($jr_data['ai_content']) || !empty($jr_data['ai_intro'])) {
         sql_query("UPDATE g5_jobs_ai_queue SET status = 'done', processed_at = '".G5_TIME_YMDHIS."' WHERE id = '{$qid}'");
         _queue_log("SKIP id={$qid} jr_id={$jr_id} already_has_ai");
         continue;
@@ -112,23 +112,45 @@ for ($i = 0; $i < $limit; $i++) {
     );
     $ai_tone = isset($jr_data['ai_tone']) && in_array($jr_data['ai_tone'], array('unnie', 'boss_male', 'pro')) ? $jr_data['ai_tone'] : 'unnie';
 
-    $ai_content = generate_store_description_gemini($formData, $ai_tone);
+    $sections = generate_store_description_gemini_sections($formData, $ai_tone);
+    $use_sections = is_array($sections) && !isset($sections['error']);
+    $ai_title = $jr['jr_subject_display'];
+    $save_ok = false;
+    $err_short = '';
 
-    $is_err = (strpos($ai_content, '오류') !== false || strpos($ai_content, '설정') !== false || strpos($ai_content, '대기열') !== false || strpos($ai_content, '큐 락') !== false);
-    if ($ai_content && !$is_err) {
-        $jr_data['ai_content'] = $ai_content;
-        $first_line = strtok($ai_content, "\n");
+    if ($use_sections) {
+        $jr_data['ai_intro'] = $sections['ai_intro'];
+        $jr_data['ai_location'] = $sections['ai_location'];
+        $jr_data['ai_env'] = $sections['ai_env'];
+        $jr_data['ai_benefit'] = $sections['ai_benefit'];
+        $jr_data['ai_wrapup'] = $sections['ai_wrapup'];
+        $first_line = strtok($sections['ai_intro'], "\n");
         $ai_title = $first_line ? mb_substr(trim($first_line), 0, 80) : $jr['jr_subject_display'];
+        $save_ok = true;
+    } else {
+        $ai_content = generate_store_description_gemini($formData, $ai_tone);
+        $is_err = (strpos($ai_content, '오류') !== false || strpos($ai_content, '설정') !== false || strpos($ai_content, '대기열') !== false || strpos($ai_content, '큐 락') !== false);
+        if ($ai_content && !$is_err) {
+            $jr_data['ai_content'] = $ai_content;
+            $first_line = strtok($ai_content, "\n");
+            $ai_title = $first_line ? mb_substr(trim($first_line), 0, 80) : $jr['jr_subject_display'];
+            $save_ok = true;
+        } else {
+            $err_short = mb_substr(isset($sections['error']) ? $sections['error'] : ($ai_content ?: 'API 응답 없음'), 0, 200);
+        }
+    }
+
+    if ($save_ok) {
         $jr_data_esc = sql_escape_string(json_encode($jr_data, JSON_UNESCAPED_UNICODE));
         $ai_title_esc = sql_escape_string($ai_title);
         sql_query("UPDATE g5_jobs_register SET jr_data = '{$jr_data_esc}', jr_subject_display = '{$ai_title_esc}' WHERE jr_id = '{$jr_id}'");
         sql_query("UPDATE g5_jobs_ai_queue SET status = 'done', processed_at = '".G5_TIME_YMDHIS."' WHERE id = '{$qid}'");
-        _queue_log("OK id={$qid} jr_id={$jr_id}");
+        _queue_log("OK id={$qid} jr_id={$jr_id} sections=" . ($use_sections ? '1' : '0'));
         $processed++;
     } else {
         $ret_row = sql_fetch("SELECT retry_count FROM g5_jobs_ai_queue WHERE id = '{$qid}'");
         $retry = isset($ret_row['retry_count']) ? (int)$ret_row['retry_count'] : 0;
-        $err_short = mb_substr($ai_content ?: 'API 응답 없음', 0, 200);
+        $err_short = mb_substr($err_short ?: 'API 응답 없음', 0, 200);
         $err_esc = sql_escape_string($err_short);
         $is_retryable = (strpos($err_short, '429') !== false || stripos($err_short, 'quota') !== false || stripos($err_short, 'RESOURCE_EXHAUSTED') !== false || strpos($err_short, '대기열') !== false || strpos($err_short, '큐 락') !== false);
         if ($retry < 3 && $is_retryable) {

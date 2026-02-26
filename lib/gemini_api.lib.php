@@ -2,7 +2,7 @@
 /**
  * Gemini API를 이용한 업소 소개글 자동 생성
  * 역할(톤)별 프롬프트 지원: unnie, boss_male, pro
- * 단락별 생성: 고정(연락처,상호,닉네임,SNS,급여,근무지역,업종) + AI꾸밈(채용제목/위치, 근무환경, 혜택/우대/마무리)
+ * 한 번에 1,500자 내외 다이렉트 생성 (Tier 1 + Gemini 3 Flash)
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -16,7 +16,7 @@ if (!function_exists('_gemini_ai_debug_log')) {
 }
 
 if (!function_exists('generate_store_description_gemini')) {
-    function generate_store_description_gemini($data, $role_id = 'unnie') {
+    function generate_store_description_gemini($data, $role_id = 'unnie', $return_json = false) {
         @set_time_limit(180);
 
         $config_loaded = false;
@@ -80,27 +80,29 @@ if (!function_exists('generate_store_description_gemini')) {
         $fixed_parts = array_filter([$nickname, $contact, $sns, $salary, $region, $jobtype]);
         $fixed_line = !empty($fixed_parts) ? implode(' | ', $fixed_parts) : '';
 
-        $tone_unnie = "말투: ~해요, ~답니다. 이모지 2~3개 사용. 2~3문장만 작성해줘.";
-        $tone_boss = "말투: ~합니다 체. 이모지 2~3개 사용. 2~3문장만 작성해줘.";
-        $tone_pro = "말투: 간결 전문체. 이모지 2~3개 사용. 2~3문장만 작성해줘.";
-        $tone_guide = ($role_id === 'boss_male') ? $tone_boss : (($role_id === 'pro') ? $tone_pro : $tone_unnie);
+        // 한 번에 1,500자 내외 다이렉트 생성
+        $data_block = "[업소 데이터]\n";
+        $data_block .= "상호/닉네임: {$nickname}\n";
+        $data_block .= "채용제목: {$title}\n";
+        $data_block .= "위치: {$location}\n";
+        $data_block .= "근무환경: {$environment}\n";
+        $data_block .= "혜택: {$benefits}\n";
+        $data_block .= "추가상세: {$details}\n";
+        $data_block .= "연락처: {$contact}\n";
+        $data_block .= "SNS: {$sns}\n";
+        $data_block .= "급여: {$salary}\n";
+        $data_block .= "근무지역: {$region}\n";
+        $data_block .= "업종: {$jobtype}";
 
-        $paragraphs = array(
-            array(
-                'prompt' => "구인 인사 + 채용제목 느낌 + 업소 위치/소개를 친근하게 꾸며줘. {$tone_guide}\n[데이터] 채용제목: {$title}\n위치/소개: {$location}",
-                'maxTokens' => 200
-            ),
-            array(
-                'prompt' => "근무환경을 매력적으로 2~3문장으로 꾸며줘. {$tone_guide}\n[데이터] 근무환경: {$environment}",
-                'maxTokens' => 150
-            ),
-            array(
-                'prompt' => "지원 혜택·우대사항·마무리 인사를 2~3문장으로 꾸며줘. {$tone_guide}\n[데이터] 혜택: {$benefits}\n추가상세: {$details}",
-                'maxTokens' => 200
-            )
-        );
+        $json_instruction = '';
+        if ($return_json) {
+            $json_instruction = "\n\n반드시 다음 JSON 형식으로만 응답하세요. 설명 없이 JSON만 반환하세요.\n"
+                . '{"intro":"인사말/소개 (2~3문장, 이모지 포함)", "location":"업소 위치/교통 안내", "env":"근무환경 설명", "benefit":"지원 혜택/복리후생", "wrapup":"마무리/언니의 약속"}';
+        }
 
-        $model = isset($gemini_model) ? $gemini_model : 'gemini-2.0-flash-exp';
+        $full_prompt = $base_prompt . "\n" . $data_block . $json_instruction;
+
+        $model = isset($gemini_model) ? $gemini_model : 'gemini-3-flash-preview';
         $log_dir = defined('G5_DATA_PATH') ? G5_DATA_PATH . '/log' : (dirname(__DIR__) . '/data/log');
         $lock_file = $log_dir . '/gemini_ai_queue.lock';
         if (!is_dir($log_dir)) @mkdir($log_dir, 0755, true);
@@ -123,68 +125,67 @@ if (!function_exists('generate_store_description_gemini')) {
         }
 
         $url_base = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . $api_key;
-        $combined = array();
+        $payload = array(
+            'contents' => array(array('parts' => array(array('text' => $full_prompt)))),
+            'generationConfig' => array(
+                'temperature' => 0.8,
+                'maxOutputTokens' => 2000,
+                'topP' => 0.95
+            )
+        );
 
-        foreach ($paragraphs as $idx => $para) {
-            $payload = array(
-                'contents' => array(array('parts' => array(array('text' => $para['prompt'])))),
-                'generationConfig' => array(
-                    'temperature' => 0.8,
-                    'maxOutputTokens' => (int)$para['maxTokens'],
-                    'topP' => 0.95
-                )
-            );
-            $ch = curl_init($url_base);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload, JSON_UNESCAPED_UNICODE));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-            $response = curl_exec($ch);
-            $err = curl_error($ch);
-            curl_close($ch);
-            if ($err) {
-                flock($fp, LOCK_UN);
-                fclose($fp);
-                return 'API 연결 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
-            }
-            $result = json_decode($response, true);
-            if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-                $combined[] = trim($result['candidates'][0]['content']['parts'][0]['text']);
-            } else {
-                $err_msg = isset($result['error']['message']) ? $result['error']['message'] : '알 수 없는 오류';
-                if (strpos($err_msg, '429') !== false || strpos($err_msg, 'quota') !== false || strpos($err_msg, 'RESOURCE_EXHAUSTED') !== false) {
-                    sleep(15);
-                    $ch = curl_init($url_base);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload, JSON_UNESCAPED_UNICODE));
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                    $response = curl_exec($ch);
-                    curl_close($ch);
-                    $result = json_decode($response, true);
-                    if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-                        $combined[] = trim($result['candidates'][0]['content']['parts'][0]['text']);
-                    } else {
-                        flock($fp, LOCK_UN);
-                        fclose($fp);
-                        return '글 생성 중 오류가 발생했습니다. (' . $err_msg . ')';
-                    }
-                } else {
-                    flock($fp, LOCK_UN);
-                    fclose($fp);
-                    return '글 생성 중 오류가 발생했습니다. (' . $err_msg . ')';
-                }
-            }
-            if ($idx < count($paragraphs) - 1) {
-                sleep(5);
-            }
-        }
+        $ch = curl_init($url_base);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload, JSON_UNESCAPED_UNICODE));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        $response = curl_exec($ch);
+        $err = curl_error($ch);
+        curl_close($ch);
 
         flock($fp, LOCK_UN);
         fclose($fp);
-        $body = implode("\n\n", $combined);
-        return $fixed_line ? ($fixed_line . "\n\n" . $body) : $body;
+
+        if ($err) {
+            return 'API 연결 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+        }
+
+        $result = json_decode($response, true);
+        if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+            $body = trim($result['candidates'][0]['content']['parts'][0]['text']);
+            if ($return_json) return $body;
+            return $fixed_line ? ($fixed_line . "\n\n" . $body) : $body;
+        }
+
+        $err_msg = isset($result['error']['message']) ? $result['error']['message'] : '알 수 없는 오류';
+        return '글 생성 중 오류가 발생했습니다. (' . $err_msg . ')';
+    }
+
+    /**
+     * 섹션별 AI 생성 (Option A) — ai_intro, ai_location, ai_env, ai_benefit, ai_wrapup
+     * JSON 형식으로 응답받아 파싱
+     */
+    if (!function_exists('generate_store_description_gemini_sections')) {
+        function generate_store_description_gemini_sections($data, $role_id = 'unnie') {
+            $body = generate_store_description_gemini($data, $role_id, true);
+            if (strpos($body, '오류') !== false || strpos($body, '설정') !== false || strpos($body, '대기열') !== false || strpos($body, '큐 락') !== false) {
+                return array('error' => $body);
+            }
+            $raw = trim($body);
+            $raw = preg_replace('/^```(?:json)?\s*/i', '', $raw);
+            $raw = preg_replace('/\s*```\s*$/', '', $raw);
+            $dec = @json_decode($raw, true);
+            if (is_array($dec) && (isset($dec['intro']) || isset($dec['location']) || isset($dec['env']) || isset($dec['benefit']) || isset($dec['wrapup']))) {
+                return array(
+                    'ai_intro' => isset($dec['intro']) ? trim($dec['intro']) : '',
+                    'ai_location' => isset($dec['location']) ? trim($dec['location']) : '',
+                    'ai_env' => isset($dec['env']) ? trim($dec['env']) : '',
+                    'ai_benefit' => isset($dec['benefit']) ? trim($dec['benefit']) : '',
+                    'ai_wrapup' => isset($dec['wrapup']) ? trim($dec['wrapup']) : '',
+                );
+            }
+            return array('error' => 'AI 응답 형식 오류. JSON 파싱 실패.');
+        }
     }
 }

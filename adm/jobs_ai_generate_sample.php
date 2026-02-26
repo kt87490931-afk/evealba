@@ -8,7 +8,7 @@ require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'r');
 
-@set_time_limit(120);
+@set_time_limit(90);
 header('Content-Type: text/html; charset=utf-8');
 
 $testData = [

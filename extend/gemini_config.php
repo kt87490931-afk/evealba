@@ -5,8 +5,19 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 
-$gemini_api_key = 'AIzaSyARsCy4V5OSuz6flP6Vjqg0Dg1mmbsYjs4';
-$gemini_model = 'gemini-2.0-flash-exp';
+// API 키: 1) 환경변수 GEMINI_API_KEY, 2) extend/gemini_api_key.env 파일
+// 새 키 발급: https://aistudio.google.com/apikey
+$gemini_api_key = trim((string) (getenv('GEMINI_API_KEY') ?: ''));
+if ($gemini_api_key === '') {
+    $ext_dir = defined('G5_EXTEND_PATH') ? rtrim(G5_EXTEND_PATH, '/') : (defined('G5_PATH') ? G5_PATH . '/extend' : __DIR__);
+    $key_file = $ext_dir . '/gemini_api_key.env';
+    if (file_exists($key_file) && is_readable($key_file)) {
+        $gemini_api_key = trim((string) file_get_contents($key_file));
+    } else {
+        $gemini_api_key = '';
+    }
+}
+$gemini_model = 'gemini-3-flash-preview';
 
 $gemini_roles = [
     'unnie' => [
