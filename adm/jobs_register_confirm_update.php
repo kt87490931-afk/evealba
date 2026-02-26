@@ -41,7 +41,8 @@ foreach ($jr_ids as $k => $v) {
 
     // 입금확인 시 AI 소개글 생성 대기열에 등록 (크론이 순차 처리)
     $jr_data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();
-    if (is_array($jr_data) && empty($jr_data['ai_content'])) {
+    $has_ai = !empty($jr_data['ai_content']) || !empty($jr_data['ai_intro']);
+    if (is_array($jr_data) && !$has_ai) {
         $tbq = sql_query("SHOW TABLES LIKE 'g5_jobs_ai_queue'", false);
         if (sql_num_rows($tbq)) {
             $q_check = sql_fetch("SELECT id FROM g5_jobs_ai_queue WHERE jr_id = '{$id}' AND status IN ('pending','processing') LIMIT 1", false);

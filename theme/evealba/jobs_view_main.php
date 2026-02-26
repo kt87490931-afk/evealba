@@ -76,6 +76,20 @@ $ai_wrapup = isset($data['ai_wrapup']) ? trim($data['ai_wrapup']) : '';
 $has_sections = !empty($ai_intro) || !empty($ai_location) || !empty($ai_env) || !empty($ai_benefit) || !empty($ai_wrapup);
 $show_ai = ($status === 'ongoing' || $payment_ok) && ($ai_summary || $has_sections);
 $can_edit = ($status === 'ongoing' || $payment_ok);
+
+// AI 큐 상태 (입금확인 후 AI 미완성 시 로딩/실패 UI용)
+$ai_queue_status = '';
+$ai_queue_error = '';
+if (($status === 'ongoing' || $payment_ok) && !$ai_summary && !$has_sections) {
+    $tbq = sql_query("SHOW TABLES LIKE 'g5_jobs_ai_queue'", false);
+    if (sql_num_rows($tbq)) {
+        $q_row = sql_fetch("SELECT status, error_msg FROM g5_jobs_ai_queue WHERE jr_id = '".(int)$jr_id."' ORDER BY id DESC LIMIT 1", false);
+        if ($q_row) {
+            $ai_queue_status = $q_row['status'];
+            $ai_queue_error = isset($q_row['error_msg']) ? trim($q_row['error_msg']) : '';
+        }
+    }
+}
 $title_employ = $title ? $title . ' · ' . $employ_type : $employ_type;
 $amenity_arr = is_array($data['amenity'] ?? null) ? array_map('trim', $data['amenity']) : (trim($amenity ?? '') ? explode(',', $amenity) : array());
 ?>
@@ -184,6 +198,17 @@ $banner_comp = $nick ?: $comp ?: '—';
       </div>
     </div>
     <?php } } ?>
+    <?php if ($can_edit && !$show_ai && ($ai_queue_status === 'pending' || $ai_queue_status === 'processing')) { ?>
+    <div class="ad-ai-loading" style="background:#fff;border:1.5px solid #fce8f0;border-top:none;padding:28px 24px;text-align:center;">
+      <div style="font-size:14px;color:#FF1B6B;font-weight:700;">⏳ AI 소개글 생성 중입니다</div>
+      <div style="font-size:12px;color:#888;margin-top:8px;">잠시만 기다려 주세요. 생성이 완료되면 새로고침 해주세요.</div>
+    </div>
+    <?php } elseif ($can_edit && !$show_ai && $ai_queue_status === 'failed') { ?>
+    <div class="ad-ai-failed" style="background:#fff8f8;border:1.5px solid #ffd6d6;border-top:none;padding:24px 24px;text-align:center;">
+      <div style="font-size:14px;color:#c62828;font-weight:700;">⚠️ AI 생성에 실패했습니다</div>
+      <div style="font-size:12px;color:#888;margin-top:8px;">관리자에게 문의하세요. 또는 새로고침 후 다시 확인해 주세요.</div>
+    </div>
+    <?php } ?>
 
     <!-- 연락처 CTA -->
     <div class="ad-cta" style="background:linear-gradient(135deg,#2D0020,#FF1B6B);border-radius:0 0 16px 16px;padding:22px 24px;text-align:center;">
