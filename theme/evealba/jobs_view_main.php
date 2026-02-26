@@ -22,6 +22,7 @@ if (!$row) {
 
 $jobs_base_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
 $jobs_ongoing_url = $jobs_base_url ? $jobs_base_url.'/jobs_ongoing.php' : '/jobs_ongoing.php';
+$jobs_ai_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_ai_section_save.php' : '/jobs_ai_section_save.php';
 
 $status = $row['jr_status'];
 $payment_ok = !empty($row['jr_payment_confirmed']);
@@ -60,7 +61,15 @@ $desc_benefit = isset($data['desc_benefit']) ? trim($data['desc_benefit']) : '';
 $desc_qualify = isset($data['desc_qualify']) ? trim($data['desc_qualify']) : '';
 $desc_extra = isset($data['desc_extra']) ? trim($data['desc_extra']) : '';
 $ai_summary = isset($data['ai_content']) ? trim($data['ai_content']) : '';
+$ai_intro = isset($data['ai_intro']) ? trim($data['ai_intro']) : '';
+$ai_location = isset($data['ai_location']) ? trim($data['ai_location']) : '';
+$ai_env = isset($data['ai_env']) ? trim($data['ai_env']) : '';
+$ai_benefit = isset($data['ai_benefit']) ? trim($data['ai_benefit']) : '';
+$ai_wrapup = isset($data['ai_wrapup']) ? trim($data['ai_wrapup']) : '';
+$has_sections = !empty($ai_intro) || !empty($ai_location) || !empty($ai_env) || !empty($ai_benefit) || !empty($ai_wrapup);
+$show_ai = ($status === 'ongoing' || $payment_ok) && ($ai_summary || $has_sections);
 $title_employ = $title ? $title . ' · ' . $employ_type : $employ_type;
+$amenity_arr = is_array($data['amenity'] ?? null) ? array_map('trim', $data['amenity']) : (trim($amenity ?? '') ? explode(',', $amenity) : array());
 ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/skin/board/eve_skin/style.css?v=<?php echo @filemtime(G5_THEME_PATH.'/skin/board/eve_skin/style.css'); ?>">
 
@@ -127,19 +136,61 @@ $title_employ = $title ? $title . ' · ' . $employ_type : $employ_type;
       </div>
     </div>
 
-    <?php if (($status === 'ongoing' || $payment_ok) && $ai_summary) { ?>
-    <div class="jobs-ai-reply-block">
+    <?php if ($show_ai) { ?>
+    <?php if ($has_sections) {
+      $ai_sections = array(
+        array('key' => 'ai_intro', 'label' => '인사말', 'val' => $ai_intro),
+        array('key' => 'ai_location', 'label' => '업소 위치', 'val' => $ai_location),
+        array('key' => 'ai_env', 'label' => '근무환경', 'val' => $ai_env),
+        array('key' => 'ai_benefit', 'label' => '혜택·복리후생', 'val' => $ai_benefit),
+        array('key' => 'ai_wrapup', 'label' => '언니의 약속', 'val' => $ai_wrapup),
+      );
+      foreach ($ai_sections as $sec) {
+        if (empty($sec['val'])) continue;
+    ?>
+    <div class="jobs-ai-reply-block jobs-ai-section" data-section="<?php echo htmlspecialchars($sec['key']); ?>" data-jr-id="<?php echo (int)$jr_id; ?>">
+      <div class="jobs-ai-reply-head">
+        <span class="jobs-ai-reply-badge"><?php echo htmlspecialchars($sec['label']); ?></span>
+      </div>
+      <div class="jobs-ai-reply-body">
+        <div class="jobs-ai-view-wrap">
+          <div class="viewContent"><?php echo nl2br(htmlspecialchars($sec['val'])); ?></div>
+          <div class="jobs-ai-reply-actions">
+            <button type="button" class="btn-edit btn-edit-ai">✏️ 수정</button>
+          </div>
+        </div>
+        <div class="jobs-ai-edit-wrap" style="display:none;">
+          <textarea class="jobs-ai-edit-ta" rows="6"><?php echo htmlspecialchars($sec['val']); ?></textarea>
+          <div class="jobs-ai-edit-actions">
+            <button type="button" class="btn-save-ai">저장</button>
+            <button type="button" class="btn-cancel-ai">취소</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php }
+    } elseif ($ai_summary) { ?>
+    <div class="jobs-ai-reply-block jobs-ai-section" data-section="ai_content" data-jr-id="<?php echo (int)$jr_id; ?>">
       <div class="jobs-ai-reply-head">
         <span class="jobs-ai-reply-badge">↳ 답글</span>
       </div>
       <div class="jobs-ai-reply-body">
-        <div id="viewContent"><?php echo nl2br(htmlspecialchars($ai_summary)); ?></div>
-        <div class="jobs-ai-reply-actions">
-          <a href="<?php echo $jobs_base_url ? $jobs_base_url.'/jobs_register.php?jr_id='.$jr_id : '#'; ?>" class="btn-edit">✏️ 수정</a>
+        <div class="jobs-ai-view-wrap">
+          <div class="viewContent"><?php echo nl2br(htmlspecialchars($ai_summary)); ?></div>
+          <div class="jobs-ai-reply-actions">
+            <button type="button" class="btn-edit btn-edit-ai">✏️ 수정</button>
+          </div>
+        </div>
+        <div class="jobs-ai-edit-wrap" style="display:none;">
+          <textarea class="jobs-ai-edit-ta" rows="6"><?php echo htmlspecialchars($ai_summary); ?></textarea>
+          <div class="jobs-ai-edit-actions">
+            <button type="button" class="btn-save-ai">저장</button>
+            <button type="button" class="btn-cancel-ai">취소</button>
+          </div>
         </div>
       </div>
     </div>
-    <?php } ?>
+    <?php } } ?>
 
     <div class="view-notices" style="margin:0 0 16px;width:100%;">
       <p>* 커뮤니티 정책과 맞지 않는 게시물의 경우 블라인드 또는 삭제될 수 있습니다.</p>
@@ -149,3 +200,50 @@ $title_employ = $title ? $title . ' · ' . $employ_type : $employ_type;
     </div>
   </div>
 </article>
+<script>
+(function(){
+  var saveUrl = <?php echo json_encode($jobs_ai_save_url); ?>;
+  document.querySelectorAll('.jobs-ai-section').forEach(function(block){
+    var viewWrap = block.querySelector('.jobs-ai-view-wrap');
+    var editWrap = block.querySelector('.jobs-ai-edit-wrap');
+    var ta = block.querySelector('.jobs-ai-edit-ta');
+    var btnEdit = block.querySelector('.btn-edit-ai');
+    var btnSave = block.querySelector('.btn-save-ai');
+    var btnCancel = block.querySelector('.btn-cancel-ai');
+    var viewContent = block.querySelector('.viewContent');
+    if (!viewWrap || !editWrap || !ta || !btnEdit || !btnSave || !btnCancel || !viewContent) return;
+    var jrId = block.getAttribute('data-jr-id');
+    var sectionKey = block.getAttribute('data-section');
+    if (!jrId || !sectionKey) return;
+    function esc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+    function showView(){ viewWrap.style.display=''; editWrap.style.display='none'; }
+    function showEdit(){ viewWrap.style.display='none'; editWrap.style.display=''; ta.value = viewContent.textContent || ''; ta.focus(); }
+    btnEdit.onclick = function(){ showEdit(); };
+    btnCancel.onclick = function(){ ta.value = viewContent.textContent || ''; showView(); };
+    btnSave.onclick = function(){
+      var v = ta.value;
+      btnSave.disabled = true;
+      var fd = new FormData();
+      fd.append('jr_id', jrId);
+      fd.append('section_key', sectionKey);
+      fd.append('value', v);
+      fetch(saveUrl, { method:'POST', body:fd, credentials:'same-origin' })
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+          btnSave.disabled = false;
+          if (res.ok){
+            viewContent.innerHTML = esc(res.value||v).replace(/\n/g,'<br>');
+            showView();
+            if (typeof alert === 'function') alert('저장되었습니다.');
+          } else {
+            alert(res.msg || '저장에 실패했습니다.');
+          }
+        })
+        .catch(function(){
+          btnSave.disabled = false;
+          alert('저장 중 오류가 발생했습니다.');
+        });
+    };
+  });
+})();
+</script>
