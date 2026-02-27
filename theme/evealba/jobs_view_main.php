@@ -215,9 +215,9 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 .premium-color-wrap{margin-bottom:16px}
 .premium-title{font-size:11px;font-weight:900;color:#666;margin-bottom:7px;display:flex;align-items:center;gap:5px}
 .premium-color-wrap .color-grid{margin-bottom:0}
-/* 유리막 오버레이 */
+/* 유리막(frosted glass) 오버레이 — 아이폰 스타일 */
 #tg-pv-card.pv-border-glass{position:relative}
-#tg-pv-card.pv-border-glass::after{content:'';position:absolute;inset:0;border-radius:12px;z-index:5;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.3) 0%,rgba(255,255,255,.08) 35%,transparent 55%,rgba(255,255,255,.12) 80%,rgba(255,255,255,.25) 100%);backdrop-filter:blur(.5px);-webkit-backdrop-filter:blur(.5px)}
+#tg-pv-card.pv-border-glass::after{content:'';position:absolute;inset:0;border-radius:12px;z-index:5;pointer-events:none;background:rgba(255,255,255,.18);backdrop-filter:blur(8px) saturate(1.6);-webkit-backdrop-filter:blur(8px) saturate(1.6);border:1.5px solid rgba(255,255,255,.35);box-shadow:inset 0 0 20px rgba(255,255,255,.12),inset 0 1px 0 rgba(255,255,255,.3)}
 /* 텍스트 컬러 */
 .txt-color-opts{display:flex;gap:8px}
 .txt-color-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:2px solid #eee;font-size:12px;font-weight:700;cursor:pointer;background:#f5f5f5;font-family:inherit;transition:all .18s;color:#555}
@@ -269,12 +269,14 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 @keyframes motion-soft-blink{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes motion-glow-pulse{0%,100%{text-shadow:none}50%{text-shadow:0 0 10px #fff,0 0 25px #fff,0 0 50px rgba(255,255,255,.7),0 0 80px rgba(255,255,255,.4)}}
 @keyframes motion-bounce{0%,100%{transform:translateY(0)}25%{transform:translateY(-10px)}50%{transform:translateY(0)}65%{transform:translateY(-5px)}80%{transform:translateY(0)}90%{transform:translateY(-2px)}}
-@keyframes wave-flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes wave-flow{0%{background-position:0% 50%}25%{background-position:50% 75%}50%{background-position:100% 50%}75%{background-position:50% 25%}100%{background-position:0% 50%}}
 .pv-motion-shimmer{animation:motion-pulse-scale 1.4s ease-in-out infinite!important;display:inline-block!important}
 .pv-motion-soft-blink{animation:motion-soft-blink 1.8s ease-in-out infinite!important}
 .pv-motion-glow{animation:motion-glow-pulse 2s ease-in-out infinite!important}
 .pv-motion-bounce{animation:motion-bounce 1.2s ease infinite!important}
-.pv-wave-active{animation:wave-flow 3s ease infinite!important}
+.pv-wave-active{animation:wave-flow 4s ease-in-out infinite!important;background-size:400% 400%!important;position:relative}
+.pv-wave-active::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(255,255,255,.18) 0%,transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(255,255,255,.12) 0%,transparent 50%);animation:wave-shimmer 3s ease-in-out infinite;pointer-events:none;z-index:1}
+@keyframes wave-shimmer{0%,100%{opacity:.6;transform:translateX(-8%) scaleX(1.1)}50%{opacity:1;transform:translateX(8%) scaleX(.9)}}
 /* 반응형 */
 @media(max-width:768px){
   .thumb-body{grid-template-columns:1fr}
@@ -472,14 +474,20 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       $pv_title_line1 = $thumb_title ?: $nick ?: $comp ?: '업소명';
       $pv_title_line2 = $thumb_text ?: '';
       $pv_desc = $biz_title ?: '광고제목';
-      $pv_grad = $gradients[(int)($saved_grad ?: 1)] ?? $gradients[1];
+      $all_grads_php = $gradients;
+      $all_grads_php['P1'] = 'linear-gradient(135deg,#7D5A00,#FFD700,#C8960C,#FFE566,#A67C00)';
+      $all_grads_php['P2'] = 'linear-gradient(135deg,#8e9eab,#c8d6df,#eef2f3,#b0bec5,#78909c)';
+      $all_grads_php['P3'] = 'linear-gradient(135deg,#1c1c1c,#4a4a4a,#2e2e2e,#707070,#1a1a1a)';
+      $all_grads_php['P4'] = 'linear-gradient(135deg,#a18cd1,#fbc2eb,#a1c4fd,#c2e9fb,#d4a1f5)';
+      $pv_grad = isset($all_grads_php[$saved_grad]) ? $all_grads_php[$saved_grad] : (isset($gradients[(int)($saved_grad ?: 1)]) ? $gradients[(int)($saved_grad ?: 1)] : $gradients[1]);
       $pv_banner_style = '';
       if ($thumb_wave) {
-          preg_match_all('/rgb\([^)]+\)/', $pv_grad, $pv_m);
+          preg_match_all('/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/', $pv_grad, $pv_m);
           if (!empty($pv_m[0]) && count($pv_m[0]) >= 2) {
-              $pv_banner_style = 'background:linear-gradient(135deg,'.$pv_m[0][0].','.$pv_m[0][1].','.$pv_m[0][0].','.$pv_m[0][1].');background-size:300% 300%';
+              $c1 = $pv_m[0][0]; $c2 = $pv_m[0][1]; $c3 = isset($pv_m[0][2]) ? $pv_m[0][2] : $c1;
+              $pv_banner_style = 'background:linear-gradient(135deg,'.$c1.','.$c2.','.$c3.','.$c1.','.$c2.');background-size:400% 400%';
           } else {
-              $pv_banner_style = 'background:'.$pv_grad;
+              $pv_banner_style = 'background:'.$pv_grad.';background-size:400% 400%';
           }
       } else {
           $pv_banner_style = 'background:'.$pv_grad;
@@ -1314,12 +1322,14 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     if(!banner || !_thumbGrads[_thumbSelected]) return;
     var g = _thumbGrads[_thumbSelected];
     if(_thumbWave){
-      var m = g.match(/rgb\([^)]+\)/g);
+      var m = g.match(/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/g);
       if(m && m.length >= 2){
-        banner.style.background = 'linear-gradient(135deg,'+m[0]+','+m[1]+','+m[0]+','+m[1]+')';
-        banner.style.backgroundSize = '300% 300%';
+        var c1 = m[0], c2 = m[1], c3 = m.length >= 3 ? m[2] : m[0];
+        banner.style.background = 'linear-gradient(135deg,'+c1+','+c2+','+c3+','+c1+','+c2+')';
+        banner.style.backgroundSize = '400% 400%';
       } else {
         banner.style.background = g;
+        banner.style.backgroundSize = '400% 400%';
       }
       banner.classList.add('pv-wave-active');
     } else {
