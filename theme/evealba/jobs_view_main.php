@@ -460,6 +460,9 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
           <button type="button" class="border-btn border-btn-none<?php echo !$thumb_border ? ' selected' : ''; ?>" title="없음" data-border="" onclick="selectBorder(this)">없음</button>
           <button type="button" class="border-btn<?php echo $thumb_border==='gold' ? ' selected' : ''; ?>" title="골드" data-border="gold" onclick="selectBorder(this)" style="background:linear-gradient(135deg,#FFD700,#FFA500);border:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.3)"></button>
           <button type="button" class="border-btn<?php echo $thumb_border==='pink' ? ' selected' : ''; ?>" title="핫핑크" data-border="pink" onclick="selectBorder(this)" style="background:#FF1B6B;border:none"></button>
+          <button type="button" class="border-btn<?php echo $thumb_border==='charcoal' ? ' selected' : ''; ?>" title="차콜" data-border="charcoal" onclick="selectBorder(this)" style="background:linear-gradient(135deg,#2c2c2c,#4a4a4a);border:none"></button>
+          <button type="button" class="border-btn<?php echo $thumb_border==='royalblue' ? ' selected' : ''; ?>" title="로얄블루" data-border="royalblue" onclick="selectBorder(this)" style="background:linear-gradient(135deg,#1a3a8a,#4169E1);border:none"></button>
+          <button type="button" class="border-btn<?php echo $thumb_border==='royalpurple' ? ' selected' : ''; ?>" title="로얄퍼플" data-border="royalpurple" onclick="selectBorder(this)" style="background:linear-gradient(135deg,#4B0082,#7B2FBE);border:none"></button>
         </div>
         <div class="tg-period-row" id="tg-border-period" style="<?php echo $thumb_border ? '' : 'display:none'; ?>">
           <label><input type="radio" name="border-period" value="0" checked onchange="calcThumbTotal()"><span>선택안함</span></label>
@@ -1356,6 +1359,12 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       card.style.boxShadow = '0 0 0 4px #FFD700, 0 6px 24px rgba(0,0,0,.18)';
     } else if(_thumbBorder === 'pink'){
       card.style.boxShadow = '0 0 0 4px #FF1B6B, 0 6px 24px rgba(0,0,0,.18)';
+    } else if(_thumbBorder === 'charcoal'){
+      card.style.boxShadow = '0 0 0 4px #3a3a3a, 0 6px 24px rgba(0,0,0,.18)';
+    } else if(_thumbBorder === 'royalblue'){
+      card.style.boxShadow = '0 0 0 4px #4169E1, 0 6px 24px rgba(0,0,0,.18)';
+    } else if(_thumbBorder === 'royalpurple'){
+      card.style.boxShadow = '0 0 0 4px #7B2FBE, 0 6px 24px rgba(0,0,0,.18)';
     }
   }
   window.selectGrad = function(btn){
@@ -1481,7 +1490,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     var brp = document.querySelector('input[name="border-period"]:checked');
     if(brp && parseInt(brp.value)){
       var v4=parseInt(brp.value);
-      var borderNames = {'gold':'골드 테두리','pink':'핫핑크 테두리'};
+      var borderNames = {'gold':'골드 테두리','pink':'핫핑크 테두리','charcoal':'차콜 테두리','royalblue':'로얄블루 테두리','royalpurple':'로얄퍼플 테두리'};
       var borderLabel = borderNames[_thumbBorder] || '테두리';
       items.push({name: borderLabel+'('+_periodLabel(brp.value)+')', price:v4});
       total+=v4;
