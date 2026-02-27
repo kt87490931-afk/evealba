@@ -215,9 +215,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 .premium-color-wrap{margin-bottom:16px}
 .premium-title{font-size:11px;font-weight:900;color:#666;margin-bottom:7px;display:flex;align-items:center;gap:5px}
 .premium-color-wrap .color-grid{margin-bottom:0}
-/* 유리막(frosted glass) 오버레이 — 아이폰 스타일 */
-#tg-pv-card.pv-border-glass{position:relative}
-#tg-pv-card.pv-border-glass::after{content:'';position:absolute;inset:0;border-radius:12px;z-index:5;pointer-events:none;background:rgba(255,255,255,.18);backdrop-filter:blur(8px) saturate(1.6);-webkit-backdrop-filter:blur(8px) saturate(1.6);border:1.5px solid rgba(255,255,255,.35);box-shadow:inset 0 0 20px rgba(255,255,255,.12),inset 0 1px 0 rgba(255,255,255,.3)}
+/* (유리막 효과 제거됨) */
 /* 텍스트 컬러 */
 .txt-color-opts{display:flex;gap:8px}
 .txt-color-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:2px solid #eee;font-size:12px;font-weight:700;cursor:pointer;background:#f5f5f5;font-family:inherit;transition:all .18s;color:#555}
@@ -245,6 +243,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 /* 미리보기 카드 border-radius 유지 */
 #tg-pv-card.job-card{cursor:default;transition:box-shadow .2s,outline .2s;border-radius:12px!important;overflow:hidden}
 #tg-pv-card.job-card:hover{transform:none;box-shadow:none;border-color:#f0e0e8}
+#tg-pv-card .job-card-banner{height:auto;aspect-ratio:16/9;padding:16px}
 #tg-pv-card .job-card-banner span{position:relative;z-index:1;line-height:1.4;transition:font-size .15s}
 #tg-pv-card .tpc-sub{display:block;font-size:12px;font-weight:500;margin-top:2px;opacity:.9;transition:font-size .15s}
 .pv-icon-badge{position:absolute;top:7px;right:7px;font-size:10px;font-weight:900;padding:2px 7px;border-radius:9px;z-index:10;color:#fff}
@@ -269,14 +268,12 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 @keyframes motion-soft-blink{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes motion-glow-pulse{0%,100%{text-shadow:none}50%{text-shadow:0 0 10px #fff,0 0 25px #fff,0 0 50px rgba(255,255,255,.7),0 0 80px rgba(255,255,255,.4)}}
 @keyframes motion-bounce{0%,100%{transform:translateY(0)}25%{transform:translateY(-10px)}50%{transform:translateY(0)}65%{transform:translateY(-5px)}80%{transform:translateY(0)}90%{transform:translateY(-2px)}}
-@keyframes wave-flow{0%{background-position:0% 50%}25%{background-position:50% 75%}50%{background-position:100% 50%}75%{background-position:50% 25%}100%{background-position:0% 50%}}
+@keyframes wave-diag{0%{background-position:0% 0%}50%{background-position:100% 100%}100%{background-position:0% 0%}}
 .pv-motion-shimmer{animation:motion-pulse-scale 1.4s ease-in-out infinite!important;display:inline-block!important}
 .pv-motion-soft-blink{animation:motion-soft-blink 1.8s ease-in-out infinite!important}
 .pv-motion-glow{animation:motion-glow-pulse 2s ease-in-out infinite!important}
 .pv-motion-bounce{animation:motion-bounce 1.2s ease infinite!important}
-.pv-wave-active{animation:wave-flow 4s ease-in-out infinite!important;background-size:400% 400%!important;position:relative}
-.pv-wave-active::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(255,255,255,.18) 0%,transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(255,255,255,.12) 0%,transparent 50%);animation:wave-shimmer 3s ease-in-out infinite;pointer-events:none;z-index:1}
-@keyframes wave-shimmer{0%,100%{opacity:.6;transform:translateX(-8%) scaleX(1.1)}50%{opacity:1;transform:translateX(8%) scaleX(.9)}}
+.pv-wave-active{animation:wave-diag 4s ease-in-out infinite!important;background-size:400% 400%!important}
 /* 반응형 */
 @media(max-width:768px){
   .thumb-body{grid-template-columns:1fr}
@@ -454,7 +451,6 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
           <button type="button" class="border-btn border-btn-none<?php echo !$thumb_border ? ' selected' : ''; ?>" title="없음" data-border="" onclick="selectBorder(this)">없음</button>
           <button type="button" class="border-btn<?php echo $thumb_border==='gold' ? ' selected' : ''; ?>" title="골드" data-border="gold" onclick="selectBorder(this)" style="background:linear-gradient(135deg,#FFD700,#FFA500);border:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.3)"></button>
           <button type="button" class="border-btn<?php echo $thumb_border==='pink' ? ' selected' : ''; ?>" title="핫핑크" data-border="pink" onclick="selectBorder(this)" style="background:#FF1B6B;border:none"></button>
-          <button type="button" class="border-btn<?php echo $thumb_border==='glass' ? ' selected' : ''; ?>" title="유리막" data-border="glass" onclick="selectBorder(this)" style="background:linear-gradient(135deg,rgba(255,255,255,.45),rgba(200,220,255,.3));border:2px solid rgba(255,255,255,.6);backdrop-filter:blur(2px)"></button>
         </div>
         <div class="tg-period-row" id="tg-border-period" style="<?php echo $thumb_border ? '' : 'display:none'; ?>">
           <label><input type="radio" name="border-period" value="0" checked onchange="calcThumbTotal()"><span>선택안함</span></label>
@@ -1345,13 +1341,10 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     card.style.outline = 'none';
     card.style.outlineOffset = '';
     card.style.boxShadow = '0 6px 24px rgba(0,0,0,.18)';
-    card.classList.remove('pv-border-glass');
     if(_thumbBorder === 'gold'){
       card.style.boxShadow = '0 0 0 4px #FFD700, 0 6px 24px rgba(0,0,0,.18)';
     } else if(_thumbBorder === 'pink'){
       card.style.boxShadow = '0 0 0 4px #FF1B6B, 0 6px 24px rgba(0,0,0,.18)';
-    } else if(_thumbBorder === 'glass'){
-      card.classList.add('pv-border-glass');
     }
   }
   window.selectGrad = function(btn){
