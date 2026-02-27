@@ -866,34 +866,6 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
           </div>
         </div>
 
-        <!-- 아이콘 추가 -->
-        <div class="icon-section">
-          <div style="background:linear-gradient(135deg,var(--dark2),#5C0040);padding:10px 16px;border-radius:8px;margin-bottom:12px;">
-            <p style="font-size:13px;color:var(--gold);font-weight:700;">⭐ 아이콘 추가</p>
-            <p style="font-size:11px;color:rgba(255,255,255,.8);margin-top:4px;">줄광고 옵션을 사용할 경우에 부가적으로 추가 가능한 옵션입니다. 단독으로 옵션사용시 채용광고가 노출되지 않습니다.</p>
-          </div>
-          <p style="font-size:13px;font-weight:700;color:#555;margin-bottom:10px;">📱 아이콘출력 결제</p>
-          <div class="icon-options-grid">
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-none" checked><label for="ip-none">광고하지않음</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-beginner"><label for="ip-beginner"><span class="icon-badge" style="background:#FF1B6B;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">💖 초보환영</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-room"><label for="ip-room"><span class="icon-badge" style="background:#FF6B35;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">🏡 원룸제공</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-luxury"><label for="ip-luxury"><span class="icon-badge" style="background:#8B00FF;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">💎 고급시설</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-black"><label for="ip-black"><span class="icon-badge" style="background:#333;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">📋 블랙 관리</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-phone"><label for="ip-phone"><span class="icon-badge" style="background:#0077B6;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">📱 폰비지급</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-size"><label for="ip-size"><span class="icon-badge" style="background:#E91E63;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">👗 사이즈X</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-set"><label for="ip-set"><span class="icon-badge" style="background:#FF9800;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">🎀 세트환영</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-pickup"><label for="ip-pickup"><span class="icon-badge" style="background:#4CAF50;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">🚗 픽업가능</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-member"><label for="ip-member"><span class="icon-badge" style="background:#7B1FA2;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">🙋 1회원제운영</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-kkongbi"><label for="ip-kkongbi"><span class="icon-badge" style="background:#00897B;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">💰 꽁비지급</span></label></div>
-          </div>
-          <div class="icon-period-box" style="margin-top:10px;padding:10px;background:#f9f9f9;border-radius:10px;">
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-opt-no" checked data-price="0" onchange="calcTotal()"><label for="ip-opt-no" style="font-size:12px;">광고하지않음</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-opt-30" data-price="30000" onchange="calcTotal()"><label for="ip-opt-30" style="font-size:12px;color:var(--hot-pink);">기간별 30일 30,000원</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-opt-60" data-price="55000" onchange="calcTotal()"><label for="ip-opt-60" style="font-size:12px;color:var(--hot-pink);">기간별 60일 55,000원</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-opt-90" data-price="70000" onchange="calcTotal()"><label for="ip-opt-90" style="font-size:12px;color:var(--hot-pink);">기간별 90일 70,000원</label></div>
-          </div>
-        </div>
-
         <!-- 하단 총액 -->
         <div class="total-bottom-bar">
           <span class="tbb-label">💳 총 신청 금액</span>
