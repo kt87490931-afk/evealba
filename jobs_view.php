@@ -5,9 +5,7 @@ define('_JOBS_VIEW_', true);
 define('_JOBS_', true);
 if (!defined('_GNUBOARD_')) exit;
 
-if (!$is_member) {
-    goto_url(G5_BBS_URL.'/login.php?url='.urlencode(G5_URL.'/jobs_view.php'));
-}
+/* 비회원도 채용정보 열람 가능 */
 
 if(defined('G5_THEME_PATH')) {
     require_once(G5_THEME_PATH.'/jobs_view.php');
