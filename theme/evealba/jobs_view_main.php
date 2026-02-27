@@ -316,15 +316,16 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       $saved_grad = $thumb_gradient ?: '1';
       $icons = array(
         '' => array('label' => '없음', 'bg' => '#ccc'),
-        'beginner' => array('label' => '💝 초보환영', 'bg' => '#FF1B6B'),
-        'room' => array('label' => '🏠 원동제공', 'bg' => '#FF6B35'),
+        'beginner' => array('label' => '💖 초보환영', 'bg' => '#FF1B6B'),
+        'room' => array('label' => '🏡 원룸제공', 'bg' => '#FF6B35'),
         'luxury' => array('label' => '💎 고급시설', 'bg' => '#8B00FF'),
-        'black' => array('label' => '📋 본점 관리', 'bg' => '#333'),
-        'phone' => array('label' => '💵 폰비지급', 'bg' => '#0077B6'),
+        'black' => array('label' => '📋 블랙 관리', 'bg' => '#333'),
+        'phone' => array('label' => '📱 폰비지급', 'bg' => '#0077B6'),
         'size' => array('label' => '👗 사이즈X', 'bg' => '#E91E63'),
-        'set' => array('label' => '🎁 세트환영', 'bg' => '#FF9800'),
-        'pickup' => array('label' => '✅ 확입가능', 'bg' => '#4CAF50'),
-        'member' => array('label' => '🔄 1회원제운영', 'bg' => '#E91E63'),
+        'set' => array('label' => '🎀 세트환영', 'bg' => '#FF9800'),
+        'pickup' => array('label' => '🚗 픽업가능', 'bg' => '#4CAF50'),
+        'member' => array('label' => '🙋 1회원제운영', 'bg' => '#7B1FA2'),
+        'kkongbi' => array('label' => '💰 꽁비지급', 'bg' => '#00897B'),
       );
       ?>
       <!-- 무료 컬러 20종 -->
@@ -355,6 +356,12 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
               echo '<div class="color-swatch'.$psel.'" data-grad="'.$pc['num'].'" style="background:'.$pc['bg'].'" onclick="selectGrad(this)" title="'.$pc['name'].' (유료)"><span class="color-swatch-num">'.$pc['num'].'</span></div>';
             }
             ?>
+          </div>
+          <div class="tg-period-row" id="tg-premium-period" style="display:none">
+            <label><input type="radio" name="premium-period" value="0" checked onchange="calcThumbTotal()"><span>선택안함</span></label>
+            <label><input type="radio" name="premium-period" value="50000" onchange="calcThumbTotal()"><span>30일 50,000원</span></label>
+            <label><input type="radio" name="premium-period" value="95000" onchange="calcThumbTotal()"><span>60일 95,000원</span></label>
+            <label><input type="radio" name="premium-period" value="140000" onchange="calcThumbTotal()"><span>90일 140,000원</span></label>
           </div>
         </div>
       </div>
@@ -1353,6 +1360,13 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     btn.classList.add('selected');
     _thumbSelected = btn.getAttribute('data-grad');
     _applyBannerBg();
+    var isPremium = _thumbSelected && _thumbSelected.charAt(0) === 'P';
+    var pp = document.getElementById('tg-premium-period');
+    if(pp){
+      pp.style.display = isPremium ? '' : 'none';
+      if(!isPremium){ var r=pp.querySelector('input[value="0"]'); if(r) r.checked=true; }
+    }
+    calcThumbTotal();
   };
   window.updatePreview = function(){
     var t = document.getElementById('tg-title');
@@ -1463,10 +1477,18 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     var brp = document.querySelector('input[name="border-period"]:checked');
     if(brp && parseInt(brp.value)){
       var v4=parseInt(brp.value);
-      var borderNames = {'gold':'골드 테두리','pink':'핫핑크 테두리','glass':'네온화이트 테두리','silver':'실버 테두리'};
+      var borderNames = {'gold':'골드 테두리','pink':'핫핑크 테두리'};
       var borderLabel = borderNames[_thumbBorder] || '테두리';
       items.push({name: borderLabel+'('+_periodLabel(brp.value)+')', price:v4});
       total+=v4;
+    }
+    var prp = document.querySelector('input[name="premium-period"]:checked');
+    if(prp && parseInt(prp.value)){
+      var v5=parseInt(prp.value);
+      var premNames = {'P1':'메탈릭골드','P2':'메탈릭실버','P3':'티타늄','P4':'오로라'};
+      var premLabel = premNames[_thumbSelected] || '프리미엄 컬러';
+      items.push({name: premLabel+'('+_periodLabel(prp.value)+')', price:v5});
+      total+=v5;
     }
     var amtEl = document.getElementById('tg-total-amount');
     if(amtEl) amtEl.textContent = total.toLocaleString('ko-KR') + ' 원';
