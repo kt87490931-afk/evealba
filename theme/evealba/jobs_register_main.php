@@ -164,18 +164,18 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
     </div>
 
     <!-- =============================
-         3. 근무지역
+         3. 근무&광고 지역
     ============================= -->
     <div class="form-card sh-purple">
       <div class="sec-head open" onclick="toggleSec(this)">
         <span class="sec-head-icon">📍</span>
-        <span class="sec-head-title">근무지역</span>
-        <span class="sec-head-sub">근무 지역을 선택해주세요</span>
+        <span class="sec-head-title">근무&광고 지역</span>
+        <span class="sec-head-sub">근무지역 및 광고 노출 지역을 선택해주세요</span>
         <span class="sec-chevron">▼</span>
       </div>
       <div class="sec-body">
         <div class="form-row">
-          <div class="form-label">1순위 <span class="req">*</span></div>
+          <div class="form-label">1순위 <span class="req">*</span><br><span style="font-size:11px;color:#888;font-weight:400;">(근무지역)</span></div>
           <div class="form-cell">
             <select class="fi-select" id="job_work_region_1">
               <option value="">1순위 지역선택</option>
@@ -192,7 +192,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
           </div>
         </div>
         <div class="form-row">
-          <div class="form-label">2순위</div>
+          <div class="form-label">2순위<br><span style="font-size:11px;color:#888;font-weight:400;">(추가 광고지역)</span></div>
           <div class="form-cell">
             <select class="fi-select" id="job_work_region_2">
               <option value="">2순위 지역선택</option>
@@ -209,7 +209,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
           </div>
         </div>
         <div class="form-row">
-          <div class="form-label">3순위</div>
+          <div class="form-label">3순위<br><span style="font-size:11px;color:#888;font-weight:400;">(추가 광고지역)</span></div>
           <div class="form-cell">
             <select class="fi-select" id="job_work_region_3">
               <option value="">3순위 지역선택</option>
@@ -566,7 +566,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
           <div class="aip-value" id="job-summary-salary"><span class="aip-empty">—</span></div>
         </div>
         <div class="aip-row">
-          <div class="aip-label">📍 근무지역</div>
+          <div class="aip-label">📍 근무&광고 지역</div>
           <div class="aip-value" id="job-summary-region"><span class="aip-empty">—</span></div>
         </div>
         <div class="aip-row">
@@ -614,12 +614,15 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
           <div class="form-row" style="margin-bottom:12px;">
             <div class="form-label">AI 말투 선택</div>
             <div class="form-cell">
-              <div class="ai-tone-radio-group" style="display:flex;gap:12px;flex-wrap:wrap;">
-                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="unnie" checked> 👩‍🦰친근한 언니 톤</label>
-                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="boss_male"> 👨‍🦱세심한 남사장님 톤</label>
-                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="pro"> 🧐전문가 톤</label>
+              <div class="ai-tone-radio-group" style="display:flex;gap:10px;flex-wrap:wrap;">
+                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="unnie" checked> 🌸친근한 언니 톤</label>
+                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="boss_male"> ☕세심한 남사장님 톤</label>
+                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="pro"> 💎전문가 톤</label>
+                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="tough_unnie"> 🔥화끈한 왕언니 톤</label>
+                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="idol_style"> 🍭화사한 아이돌 톤</label>
+                <label class="ai-tone-option" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #f0e0e8;border-radius:12px;cursor:pointer;font-size:13px;"><input type="radio" name="ai_tone" value="partner_pro"> 🤝듬직한 파트너 톤</label>
               </div>
-              <p class="hint" style="margin-top:8px;font-size:12px;color:#666;">모든 톤에서 이모지를 적극 활용합니다.</p>
+              <p class="hint" style="margin-top:8px;font-size:12px;color:#666;"></p>
               <div id="ai-tone-example" style="margin-top:10px;padding:12px 14px;background:#fff8fb;border-radius:10px;border:1px solid #fae8f0;font-size:13px;color:#333;line-height:1.6;">
                 <span style="color:#888;font-size:11px;">예시 말투</span><br>
                 <span id="ai-tone-example-text">안녕하세요~ 저희 업소에 관심 가져주셔서 정말 감사해요! 💕 편하게 연락 주세요~</span>
@@ -867,76 +870,27 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
         <div class="icon-section">
           <div style="background:linear-gradient(135deg,var(--dark2),#5C0040);padding:10px 16px;border-radius:8px;margin-bottom:12px;">
             <p style="font-size:13px;color:var(--gold);font-weight:700;">⭐ 아이콘 추가</p>
-            <p style="font-size:11px;color:rgba(255,255,255,.8);margin-top:4px;">7개 줄광고 옵션을 사용할 경우에 부가적으로 추가 가능한 옵션입니다. 단독으로 옵션사용시 채용광고가 노출되지 않습니다.</p>
+            <p style="font-size:11px;color:rgba(255,255,255,.8);margin-top:4px;">줄광고 옵션을 사용할 경우에 부가적으로 추가 가능한 옵션입니다. 단독으로 옵션사용시 채용광고가 노출되지 않습니다.</p>
           </div>
-
-          <!-- 아이콘 출력 결제 -->
           <p style="font-size:13px;font-weight:700;color:#555;margin-bottom:10px;">📱 아이콘출력 결제</p>
           <div class="icon-options-grid">
             <div class="radio-item"><input type="radio" name="icon-pay" id="ip-none" checked><label for="ip-none">광고하지않음</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-free"><label for="ip-free"><span class="icon-badge icon-badge-1">💖 초보환영</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-room"><label for="ip-room"><span class="icon-badge icon-badge-2">🏡 원룸제공</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-earn"><label for="ip-earn"><span class="icon-badge icon-badge-3">💎 고급시설</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-blk"><label for="ip-blk"><span class="icon-badge icon-badge-4">블랙 관리</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-pay"><label for="ip-pay"><span class="icon-badge icon-badge-5">📱 폰비지급</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-size"><label for="ip-size"><span class="icon-badge icon-badge-6">사이즈✘</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-set"><label for="ip-set"><span class="icon-badge icon-badge-7">🎀 세트환영</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-car"><label for="ip-car"><span class="icon-badge icon-badge-8">🚗 픽업가능</span></label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-mem"><label for="ip-mem"><span class="icon-badge icon-badge-9">🙋 1회원제운영</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-beginner"><label for="ip-beginner"><span class="icon-badge" style="background:#FF1B6B;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">💖 초보환영</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-room"><label for="ip-room"><span class="icon-badge" style="background:#FF6B35;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">🏡 원룸제공</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-luxury"><label for="ip-luxury"><span class="icon-badge" style="background:#8B00FF;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">💎 고급시설</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-black"><label for="ip-black"><span class="icon-badge" style="background:#333;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">📋 블랙 관리</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-phone"><label for="ip-phone"><span class="icon-badge" style="background:#0077B6;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">📱 폰비지급</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-size"><label for="ip-size"><span class="icon-badge" style="background:#E91E63;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">👗 사이즈X</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-set"><label for="ip-set"><span class="icon-badge" style="background:#FF9800;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">🎀 세트환영</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-pickup"><label for="ip-pickup"><span class="icon-badge" style="background:#4CAF50;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">🚗 픽업가능</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-member"><label for="ip-member"><span class="icon-badge" style="background:#7B1FA2;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">🙋 1회원제운영</span></label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay" id="ip-kkongbi"><label for="ip-kkongbi"><span class="icon-badge" style="background:#00897B;color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">💰 꽁비지급</span></label></div>
           </div>
-          <div class="icon-period-box">
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-no" checked data-price="0" onchange="calcTotal()"><label for="ip-no" style="font-size:12px;">광고하지않음</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-30" data-price="30000" onchange="calcTotal()"><label for="ip-30" style="font-size:12px;color:var(--hot-pink);">기간별 30일 30,000원</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-60" data-price="55000" onchange="calcTotal()"><label for="ip-60" style="font-size:12px;color:var(--hot-pink);">기간별 60일 55,000원</label></div>
-            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-90" data-price="70000" onchange="calcTotal()"><label for="ip-90" style="font-size:12px;color:var(--hot-pink);">기간별 90일 70,000원</label></div>
-          </div>
-        </div>
-
-        <!-- 형광펜 선택 -->
-        <div class="highlight-section">
-          <p class="hl-title">🖊 형광펜 선택  <span style="font-size:11px;color:#aaa;">사용할 형광색을 설정하세요</span></p>
-          <div style="padding:10px;background:#f9f9f9;border-radius:10px;margin-bottom:10px;">
-            <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:8px;">형광펜 채용정보</div>
-            <div class="hl-price-row">
-              <div class="hl-price-item"><input type="checkbox" id="hl-30" data-price="30000" onchange="calcTotal()"><label for="hl-30" class="hl-price-label">기간별 30일</label><span class="hl-price-val">30,000원</span></div>
-              <div class="hl-price-item"><input type="checkbox" id="hl-60" data-price="55000" onchange="calcTotal()"><label for="hl-60" class="hl-price-label">기간별 60일</label><span class="hl-price-val">55,000원</span></div>
-              <div class="hl-price-item"><input type="checkbox" id="hl-90" data-price="70000" onchange="calcTotal()"><label for="hl-90" class="hl-price-label">기간별 90일</label><span class="hl-price-val">70,000원</span></div>
-            </div>
-          </div>
-          <!-- 형광펜 컬러 8종 -->
-          <div class="hl-colors-grid">
-            <div class="hl-option" style="padding:5px;border:1.5px solid #f0e0e8;border-radius:7px;cursor:pointer;">
-              <input type="radio" name="hl-color" id="hc1">
-              <label for="hc1"><div class="hl-swatch" style="background:#FFE000;color:#333;">1번</div></label>
-            </div>
-            <div class="hl-option" style="padding:5px;border:1.5px solid #f0e0e8;border-radius:7px;cursor:pointer;">
-              <input type="radio" name="hl-color" id="hc2">
-              <label for="hc2"><div class="hl-swatch" style="background:#00FF90;color:#333;">2번</div></label>
-            </div>
-            <div class="hl-option" style="padding:5px;border:1.5px solid #f0e0e8;border-radius:7px;cursor:pointer;">
-              <input type="radio" name="hl-color" id="hc3">
-              <label for="hc3"><div class="hl-swatch" style="background:#FF69B4;color:#fff;">3번</div></label>
-            </div>
-            <div class="hl-option" style="padding:5px;border:1.5px solid #f0e0e8;border-radius:7px;cursor:pointer;">
-              <input type="radio" name="hl-color" id="hc4">
-              <label for="hc4"><div class="hl-swatch" style="background:#99CCFF;color:#333;">4번</div></label>
-            </div>
-            <div class="hl-option" style="padding:5px;border:1.5px solid #f0e0e8;border-radius:7px;cursor:pointer;">
-              <input type="radio" name="hl-color" id="hc5">
-              <label for="hc5"><div class="hl-swatch" style="background:#FF8C00;color:#fff;">5번</div></label>
-            </div>
-            <div class="hl-option" style="padding:5px;border:1.5px solid #f0e0e8;border-radius:7px;cursor:pointer;">
-              <input type="radio" name="hl-color" id="hc6">
-              <label for="hc6"><div class="hl-swatch" style="background:#DA70D6;color:#fff;">6번</div></label>
-            </div>
-            <div class="hl-option" style="padding:5px;border:1.5px solid #f0e0e8;border-radius:7px;cursor:pointer;">
-              <input type="radio" name="hl-color" id="hc7">
-              <label for="hc7"><div class="hl-swatch" style="background:#20B2AA;color:#fff;">7번</div></label>
-            </div>
-            <div class="hl-option" style="padding:5px;border:1.5px solid #f0e0e8;border-radius:7px;cursor:pointer;">
-              <input type="radio" name="hl-color" id="hc8">
-              <label for="hc8"><div class="hl-swatch" style="background:#FF4500;color:#fff;">8번</div></label>
-            </div>
+          <div class="icon-period-box" style="margin-top:10px;padding:10px;background:#f9f9f9;border-radius:10px;">
+            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-opt-no" checked data-price="0" onchange="calcTotal()"><label for="ip-opt-no" style="font-size:12px;">광고하지않음</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-opt-30" data-price="30000" onchange="calcTotal()"><label for="ip-opt-30" style="font-size:12px;color:var(--hot-pink);">기간별 30일 30,000원</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-opt-60" data-price="55000" onchange="calcTotal()"><label for="ip-opt-60" style="font-size:12px;color:var(--hot-pink);">기간별 60일 55,000원</label></div>
+            <div class="radio-item"><input type="radio" name="icon-pay-opt" id="ip-opt-90" data-price="70000" onchange="calcTotal()"><label for="ip-opt-90" style="font-size:12px;color:var(--hot-pink);">기간별 90일 70,000원</label></div>
           </div>
         </div>
 
@@ -1058,9 +1012,12 @@ document.addEventListener('DOMContentLoaded', function() {
   updateJobsAiSummary();
   /* AI 말투 예시 텍스트 업데이트 */
   var toneExamples = {
-    unnie: '안녕하세요~ 저희 업소에 관심 가져주셔서 정말 감사해요! 💕 편하게 연락 주세요~',
-    boss_male: '안녕하세요. 세심하게 모시겠습니다. 😊 편안한 마음으로 문의해 주세요.',
-    pro: '체계적인 근무환경과 명확한 조건으로 신뢰를 드리겠습니다. 📋'
+    unnie: '언니가 딱 좋은 자리 하나 알려줄게~ 🌸 여기 진짜 괜찮아요! 🎀 편하게 연락 주세요~ 💖',
+    boss_male: '안녕하세요. 세심하게 모시겠습니다. ☕ 안전하고 편안한 환경을 약속드립니다. 🛡️',
+    pro: '체계적인 근무환경과 명확한 조건으로 신뢰를 드리겠습니다. 💎📊',
+    tough_unnie: '야 이리 와봐! 🔥 언니가 확실하게 챙겨줄게! 💰 걱정 말고 한번 와봐! 👊',
+    idol_style: '어머~ 여기 진짜 최고예요!! 💖✨ 꽃길만 걸을 수 있게 해드릴게요~ 🌸🍭',
+    partner_pro: '귀하의 역량에 걸맞은 최적의 조건을 제안드립니다. 🤝💼 프라이버시를 최우선으로 보장합니다. 🔒'
   };
   document.querySelectorAll('input[name="ai_tone"]').forEach(function(r){
     r.addEventListener('change', function(){
@@ -1178,10 +1135,6 @@ function clearFile(inputId, spanId) {
 function calcTotal() {
   var total = 0;
   document.querySelectorAll('[data-price]').forEach(function(chk){
-    if(chk.checked) total += parseInt(chk.dataset.price);
-  });
-  // 형광펜
-  document.querySelectorAll('#hl-30,#hl-60,#hl-90').forEach(function(chk){
     if(chk.checked) total += parseInt(chk.dataset.price);
   });
   var fmt = total.toLocaleString('ko-KR') + ' 원';
