@@ -215,7 +215,8 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 .premium-color-wrap{margin-bottom:16px}
 .premium-title{font-size:11px;font-weight:900;color:#666;margin-bottom:7px;display:flex;align-items:center;gap:5px}
 .premium-color-wrap .color-grid{margin-bottom:0}
-/* (유리막 효과 제거됨) */
+/* 카본 파이버 패턴 (P3) */
+.carbon-bg{background:linear-gradient(160deg,rgba(45,45,55,.45) 0%,transparent 40%,rgba(55,55,65,.3) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='8' height='8' fill='%230d0d12'/%3E%3Crect width='2' height='2' fill='%2318181f'/%3E%3Crect x='2' width='2' height='2' fill='%2318181f'/%3E%3Crect x='2' y='2' width='2' height='2' fill='%2318181f'/%3E%3Crect x='4' y='2' width='2' height='2' fill='%2318181f'/%3E%3Crect x='4' y='4' width='2' height='2' fill='%2318181f'/%3E%3Crect x='6' y='4' width='2' height='2' fill='%2318181f'/%3E%3Crect x='6' y='6' width='2' height='2' fill='%2318181f'/%3E%3Crect y='6' width='2' height='2' fill='%2318181f'/%3E%3C/svg%3E") repeat!important;background-size:100% 100%,8px 8px!important}
 /* 텍스트 컬러 */
 .txt-color-opts{display:flex;gap:8px}
 .txt-color-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:2px solid #eee;font-size:12px;font-weight:700;cursor:pointer;background:#f5f5f5;font-family:inherit;transition:all .18s;color:#555}
@@ -348,12 +349,13 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
             $premium_colors = array(
               array('num'=>'P1','name'=>'메탈릭골드','bg'=>'linear-gradient(135deg,#7D5A00,#FFD700,#C8960C,#FFE566,#A67C00)'),
               array('num'=>'P2','name'=>'메탈릭실버','bg'=>'linear-gradient(135deg,#8e9eab,#c8d6df,#eef2f3,#b0bec5,#78909c)'),
-              array('num'=>'P3','name'=>'티타늄','bg'=>'linear-gradient(135deg,#1c1c1c,#4a4a4a,#2e2e2e,#707070,#1a1a1a)'),
+              array('num'=>'P3','name'=>'카본','bg'=>'linear-gradient(135deg,#0d0d12,#18181f,#0d0d12,#18181f,#0d0d12)'),
               array('num'=>'P4','name'=>'오로라','bg'=>'linear-gradient(135deg,#a18cd1,#fbc2eb,#a1c4fd,#c2e9fb,#d4a1f5)'),
             );
             foreach ($premium_colors as $pc) {
               $psel = ($thumb_grad === $pc['num']) ? ' selected' : '';
-              echo '<div class="color-swatch'.$psel.'" data-grad="'.$pc['num'].'" style="background:'.$pc['bg'].'" onclick="selectGrad(this)" title="'.$pc['name'].' (유료)"><span class="color-swatch-num">'.$pc['num'].'</span></div>';
+              $extra_cls = ($pc['num'] === 'P3') ? ' carbon-bg' : '';
+              echo '<div class="color-swatch'.$psel.$extra_cls.'" data-grad="'.$pc['num'].'" style="background:'.$pc['bg'].'" onclick="selectGrad(this)" title="'.$pc['name'].' (유료)"><span class="color-swatch-num">'.$pc['num'].'</span></div>';
             }
             ?>
           </div>
@@ -480,7 +482,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       $all_grads_php = $gradients;
       $all_grads_php['P1'] = 'linear-gradient(135deg,#7D5A00,#FFD700,#C8960C,#FFE566,#A67C00)';
       $all_grads_php['P2'] = 'linear-gradient(135deg,#8e9eab,#c8d6df,#eef2f3,#b0bec5,#78909c)';
-      $all_grads_php['P3'] = 'linear-gradient(135deg,#1c1c1c,#4a4a4a,#2e2e2e,#707070,#1a1a1a)';
+      $all_grads_php['P3'] = 'linear-gradient(135deg,#0d0d12,#18181f,#0d0d12,#18181f,#0d0d12)';
       $all_grads_php['P4'] = 'linear-gradient(135deg,#a18cd1,#fbc2eb,#a1c4fd,#c2e9fb,#d4a1f5)';
       $pv_grad = isset($all_grads_php[$saved_grad]) ? $all_grads_php[$saved_grad] : (isset($gradients[(int)($saved_grad ?: 1)]) ? $gradients[(int)($saved_grad ?: 1)] : $gradients[1]);
       $pv_banner_style = '';
@@ -497,7 +499,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       }
       ?>
       <div class="job-card" id="tg-pv-card" style="width:100%">
-        <div class="job-card-banner<?php echo $thumb_wave ? ' pv-wave-active' : ''; ?>" id="tg-pv-banner" style="<?php echo $pv_banner_style; ?>">
+        <div class="job-card-banner<?php echo $thumb_wave ? ' pv-wave-active' : ''; ?><?php echo ($saved_grad === 'P3' && !$thumb_wave) ? ' carbon-bg' : ''; ?>" id="tg-pv-banner" style="<?php echo $pv_banner_style; ?>">
           <span id="tpc-title" class="<?php echo $thumb_motion ? 'pv-motion-'.htmlspecialchars($thumb_motion) : ''; ?>" style="color:<?php echo htmlspecialchars($thumb_text_color); ?>"><?php echo htmlspecialchars($pv_title_line1, ENT_QUOTES); ?><span class="tpc-sub" id="tpc-text"><?php echo htmlspecialchars($pv_title_line2, ENT_QUOTES); ?></span></span>
         </div>
         <?php if ($thumb_icon && isset($icons[$thumb_icon])) { ?>
@@ -1309,7 +1311,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     $all_grads = $gradients;
     $all_grads['P1'] = 'linear-gradient(135deg,#7D5A00,#FFD700,#C8960C,#FFE566,#A67C00)';
     $all_grads['P2'] = 'linear-gradient(135deg,#8e9eab,#c8d6df,#eef2f3,#b0bec5,#78909c)';
-    $all_grads['P3'] = 'linear-gradient(135deg,#1c1c1c,#4a4a4a,#2e2e2e,#707070,#1a1a1a)';
+    $all_grads['P3'] = 'linear-gradient(135deg,#0d0d12,#18181f,#0d0d12,#18181f,#0d0d12)';
     $all_grads['P4'] = 'linear-gradient(135deg,#a18cd1,#fbc2eb,#a1c4fd,#c2e9fb,#d4a1f5)';
     echo json_encode($all_grads, JSON_UNESCAPED_UNICODE);
   ?>;
@@ -1324,6 +1326,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     var banner = document.getElementById('tg-pv-banner');
     if(!banner || !_thumbGrads[_thumbSelected]) return;
     var g = _thumbGrads[_thumbSelected];
+    banner.classList.remove('carbon-bg');
     if(_thumbWave){
       var m = g.match(/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/g);
       if(m && m.length >= 2){
@@ -1339,6 +1342,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       banner.style.background = g;
       banner.style.backgroundSize = '';
       banner.classList.remove('pv-wave-active');
+      if(_thumbSelected === 'P3') banner.classList.add('carbon-bg');
     }
   }
   function _applyBorder(){
@@ -1485,7 +1489,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     var prp = document.querySelector('input[name="premium-period"]:checked');
     if(prp && parseInt(prp.value)){
       var v5=parseInt(prp.value);
-      var premNames = {'P1':'메탈릭골드','P2':'메탈릭실버','P3':'티타늄','P4':'오로라'};
+      var premNames = {'P1':'메탈릭골드','P2':'메탈릭실버','P3':'카본','P4':'오로라'};
       var premLabel = premNames[_thumbSelected] || '프리미엄 컬러';
       items.push({name: premLabel+'('+_periodLabel(prp.value)+')', price:v5});
       total+=v5;
