@@ -1,5 +1,6 @@
 <?php if (!defined('_GNUBOARD_')) exit;
 include_once(G5_LIB_PATH . '/jobs_ai_content.lib.php');
+include_once(G5_EXTEND_PATH . '/gemini_config.php');
 
 function _jobs_view_msg($msg, $type = 'back') {
     $html = '<div class="jobs-view-msg" style="padding:24px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin:16px 0;text-align:center;">';
@@ -853,10 +854,15 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     </div>
 
 
-    <!-- CTA 하단 연락처 (eve_alba_ad_editor_3 cta-footer 100% 일치) -->
+    <!-- CTA 하단 연락처 (톤별 마무리 인사말) -->
+    <?php
+      $_cta_tone = isset($data['ai_tone']) ? $data['ai_tone'] : 'unnie';
+      $_cta_default = ['title' => '💌 지금 바로 연락주세요! 기다리고 있을게요~', 'sub' => '자다가 깨서 연락 주셔도 괜찮아요! 🌙 24시간 열려 있어요'];
+      $_cta = isset($gemini_closing[$_cta_tone]) ? $gemini_closing[$_cta_tone] : $_cta_default;
+    ?>
     <div class="section cta-footer">
-      <div class="cta-title">💌 지금 바로 연락주세요! 기다리고 있을게요~</div>
-      <div class="cta-sub">자다가 깨서 연락 주셔도 괜찮아요! 🌙 24시간 열려 있어요</div>
+      <div class="cta-title"><?php echo $_cta['title']; ?></div>
+      <div class="cta-sub"><?php echo $_cta['sub']; ?></div>
       <?php if ($sns_kakao || $sns_line || $sns_telegram) { ?>
       <div class="cta-btns">
         <?php if ($sns_kakao) { ?><a href="https://open.kakao.com/o/s/<?php echo htmlspecialchars($sns_kakao); ?>" target="_blank" rel="noopener" class="cta-btn cta-kakao">💬 카카오 <?php echo htmlspecialchars($sns_kakao); ?></a><?php } ?>
@@ -865,7 +871,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       </div>
       <?php } ?>
       <?php if ($contact) { ?><a href="tel:<?php echo preg_replace('/[^0-9+]/','',$contact); ?>" class="cta-phone">📞 <?php echo htmlspecialchars($contact); ?></a><?php } ?>
-      <?php if ($banner_comp && $banner_comp !== '—') { ?><div class="cta-watermark">🌸 이브알바 EVE ALBA — <?php echo htmlspecialchars($banner_comp); ?></div><?php } ?>
+      <?php if ($nick && $nick !== '—') { ?><div class="cta-watermark">🌸 이브알바 EVE ALBA — <?php echo htmlspecialchars($nick); ?></div><?php } ?>
     </div>
   </div>
 
