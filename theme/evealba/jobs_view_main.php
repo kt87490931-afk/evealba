@@ -1564,22 +1564,20 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       }
     }
   };
-  window._thumbState = { grad: _thumbSelected, icon: _thumbIcon, motion: _thumbMotion, wave: _thumbWave, textColor: _thumbTextColor, border: _thumbBorder };
   window.saveThumb = function(){
     var btn = document.getElementById('tg-save-btn');
     if(btn) btn.disabled = true;
-    var s = window._thumbState || {};
     var fd = new FormData();
-    fd.append('jr_id', '<?php echo (int)$jr_id; ?>');
-    fd.append('thumb_gradient', s.grad || '1');
+    fd.append('jr_id', jrId);
+    fd.append('thumb_gradient', _thumbSelected || '1');
     fd.append('thumb_title', (document.getElementById('tg-title') || {}).value || '');
     fd.append('thumb_text', (document.getElementById('tg-text') || {}).value || '');
-    fd.append('thumb_icon', s.icon || '');
-    fd.append('thumb_motion', s.motion || '');
-    fd.append('thumb_wave', s.wave ? '1' : '0');
-    fd.append('thumb_text_color', s.textColor || 'rgb(255,255,255)');
-    fd.append('thumb_border', s.border || '');
-    fetch('<?php echo $jobs_basic_save_url; ?>', {method:'POST',body:fd})
+    fd.append('thumb_icon', _thumbIcon || '');
+    fd.append('thumb_motion', _thumbMotion || '');
+    fd.append('thumb_wave', _thumbWave ? '1' : '0');
+    fd.append('thumb_text_color', _thumbTextColor || 'rgb(255,255,255)');
+    fd.append('thumb_border', _thumbBorder || '');
+    fetch(basicSaveUrl, {method:'POST', body:fd, credentials:'same-origin'})
     .then(function(r){return r.json();})
     .then(function(res){
       if(btn) btn.disabled = false;
@@ -1771,12 +1769,12 @@ if(typeof window.saveThumb !== 'function'){
   window.saveThumb = function(){
     var btn = document.getElementById('tg-save-btn');
     if(btn) btn.disabled = true;
-    var gradBtn = document.querySelector('.grad-btn.selected');
-    var iconBtn = document.querySelector('#tg-icon-grid .badge-opt.selected');
-    var motionBtn = document.querySelector('#tg-motion-grid .motion-btn.selected');
+    var gradBtn = document.querySelector('.color-swatch.selected');
+    var iconBtn = document.querySelector('.badge-opt.selected');
+    var motionBtn = document.querySelector('.motion-btn.selected');
     var waveChk = document.getElementById('tg-wave-chk');
-    var txtBtn = document.querySelector('#tg-textcolor-grid .txt-color-btn.selected');
-    var borderBtn = document.querySelector('#tg-border-grid .border-btn.selected');
+    var txtBtn = document.querySelector('.txt-color-btn.selected');
+    var borderBtn = document.querySelector('.border-btn.selected');
     var fd = new FormData();
     fd.append('jr_id', '<?php echo (int)$jr_id; ?>');
     fd.append('thumb_gradient', gradBtn ? gradBtn.getAttribute('data-grad') : '1');
@@ -1787,7 +1785,7 @@ if(typeof window.saveThumb !== 'function'){
     fd.append('thumb_wave', waveChk && waveChk.checked ? '1' : '0');
     fd.append('thumb_text_color', txtBtn ? (txtBtn.getAttribute('data-tcolor')||'rgb(255,255,255)') : 'rgb(255,255,255)');
     fd.append('thumb_border', borderBtn ? (borderBtn.getAttribute('data-border')||'') : '');
-    fetch('<?php echo $jobs_basic_save_url; ?>', {method:'POST',body:fd})
+    fetch('<?php echo $jobs_basic_save_url; ?>', {method:'POST',body:fd,credentials:'same-origin'})
     .then(function(r){return r.json();})
     .then(function(res){ if(btn) btn.disabled=false; if(res.ok) alert('썸네일이 저장되었습니다.'); else alert(res.msg||'저장에 실패했습니다.'); })
     .catch(function(e){ if(btn) btn.disabled=false; alert('저장 중 오류: '+(e.message||'')); });
