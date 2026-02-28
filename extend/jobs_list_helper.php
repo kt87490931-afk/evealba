@@ -149,15 +149,7 @@ function render_job_card($row) {
         $wage_disp = '급여협의';
     }
 
-    $jump_count = (int)($row['jr_jump_count'] ?? 0);
-    $ad_period = (int)($row['jr_ad_period'] ?? 30);
     $carbon_class = ($grad_key === 'P3') ? ' carbon-bg' : '';
-
-    $badge_html = '';
-    if ($jump_count > 0) {
-        $crown = $jump_count >= 10 ? '<span class="crown-gold">👑</span>' : ($jump_count >= 3 ? '<span class="crown-bronze">🥉</span>' : '<span class="crown-silver">🥈</span>');
-        $badge_html = '<span class="job-badge">' . $crown . $jump_count . '회 ' . ($jump_count * $ad_period) . '일</span>';
-    }
 
     $border_style = '';
     if ($thumb_border === 'gold') $border_style = 'border:2.5px solid transparent;background-clip:padding-box;box-shadow:0 0 0 2.5px #FFD700,0 4px 15px rgba(255,215,0,.35);';
@@ -191,7 +183,7 @@ function render_job_card($row) {
     echo '<div class="job-card-body">';
     if ($region_name) echo '<div class="job-card-location"><span class="job-loc-badge">' . htmlspecialchars($region_name) . '</span>' . htmlspecialchars($loc_detail) . '</div>';
     if ($desc) echo '<div class="job-desc">' . $desc . '</div>';
-    echo '<div class="job-card-footer"><span class="job-wage">' . htmlspecialchars($wage_disp) . '</span>' . $badge_html . '</div>';
+    echo '<div class="job-card-footer"><span class="job-wage">' . htmlspecialchars($wage_disp) . '</span></div>';
     echo '</div>';
     echo '</a>';
     echo '</div>';
