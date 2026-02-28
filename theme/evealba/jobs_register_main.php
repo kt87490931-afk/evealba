@@ -23,11 +23,12 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
       </div>
       <div class="sec-body">
 
-        <!-- 닉네임 -->
+        <!-- 닉네임 (회원가입 시 등록한 닉네임 자동표시) -->
         <div class="form-row">
           <div class="form-label">닉네임 <span class="req">*</span></div>
-          <div class="form-cell">
-            <input class="fi fi-md" type="text" id="job_nickname" name="job_nickname" placeholder="닉네임을 입력해주세요">
+          <div class="form-cell col">
+            <input class="fi fi-md fi-readonly" type="text" id="job_nickname" name="job_nickname" value="<?php echo htmlspecialchars($member['mb_nick'] ?? '', ENT_QUOTES); ?>" readonly>
+            <span class="fi-hint" style="color:#999;">회원가입 시 등록한 닉네임입니다. (변경: 회원정보 수정)</span>
           </div>
         </div>
 
@@ -1153,7 +1154,7 @@ function checkPayment() {
   }
   var nick = document.getElementById('job_nickname');
   if(!nick || !nick.value.trim()){
-    alert('닉네임을 입력해주세요.');
+    alert('닉네임이 설정되지 않았습니다. 회원정보 수정에서 닉네임을 등록해주세요.');
     if(nick) nick.focus();
     return;
   }
