@@ -71,7 +71,7 @@ if (!is_array($data)) $data = array();
 $_opt_end_date = $row['jr_end_date'] ?? '';
 $_opt_remaining_days = 0;
 if ($_opt_end_date) {
-    $_opt_remaining_days = max(0, (int)((strtotime($_opt_end_date . ' 23:59:59') - time()) / 86400) + 1);
+    $_opt_remaining_days = max(0, (int)((strtotime($_opt_end_date . ' 23:59:59') - time()) / 86400));
 }
 $_opt_daily_rates = array(
     'premium' => 1667,
