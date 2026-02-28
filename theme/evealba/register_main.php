@@ -1,5 +1,4 @@
 <?php if (!defined('_GNUBOARD_')) exit; ?>
-<!-- PAGE (footer-info 섹션 제외, 원본 100% 동일) -->
 <div class="page-wrap register-page-wrap">
 
   <!-- ===== STEP BAR ===== -->
@@ -35,7 +34,6 @@
   ================================================================ -->
   <div id="screen-step1">
 
-    <!-- 회원가입 & 약관동의 헤더 -->
     <div class="form-card sh-pink">
       <div class="sec-head">
         <span class="sec-head-icon">📜</span>
@@ -44,7 +42,6 @@
       </div>
     </div>
 
-    <!-- 이용약관 -->
     <div class="form-card">
       <div class="terms-box-wrap">
         <div class="terms-box-title">📋 이용약관</div>
@@ -74,7 +71,6 @@
       </div>
     </div>
 
-    <!-- 개인정보 보호정책 -->
     <div class="form-card">
       <div class="terms-box-wrap">
         <div class="terms-box-title">🔒 개인정보 보호정책</div>
@@ -99,7 +95,6 @@
       </div>
     </div>
 
-    <!-- 본인인증 섹션 -->
     <div class="form-card">
       <div style="padding:12px 20px 10px;border-bottom:2px solid var(--pale-pink);">
         <div style="display:flex;align-items:center;gap:8px;">
@@ -127,7 +122,6 @@
       </div>
     </div>
 
-    <!-- 회원 유형 선택 버튼 -->
     <div class="join-type-btns" id="type-btns" style="display:none;">
       <button class="btn-type-biz" type="button" onclick="goStep2('biz')">
         🏢 기업회원 가입하기
@@ -140,25 +134,21 @@
     </div>
 
   </div>
-  <!-- /STEP 1 -->
 
   <!-- ================================================================
        STEP 2 : 회원정보 입력
   ================================================================ -->
   <div id="screen-step2" style="display:none;">
 
-    <!-- 폼 카드 -->
     <div class="form-card">
 
-      <!-- 폼 헤더 -->
       <div class="reg-form-header">
         <span class="reg-form-title">📝 회원가입 정보입력</span>
         <span class="reg-form-type-badge badge-biz" id="member-type-badge">🏢 기업회원</span>
       </div>
 
-      <!-- 필수항목 안내 + 재인증 -->
       <div class="reg-notice">
-        <span class="reg-notice-text">✅ <strong>체크된 필수항목만 작성하시면 회원가입 가능합니다.</strong></span>
+        <span class="reg-notice-text">✅ <strong>모든 항목은 필수 입력사항입니다.</strong></span>
         <button class="btn-re-verify" type="button" onclick="reVerify()">📲 휴대폰 재인증</button>
       </div>
 
@@ -167,7 +157,7 @@
         <div class="form-label">아이디 <span class="req">*</span></div>
         <div class="form-cell col">
           <div style="display:flex;gap:8px;width:100%;">
-            <input class="fi fi-md" id="inp-id" type="text" placeholder="아이디를 입력해주세요" oninput="checkIdFormat()">
+            <input class="fi fi-md" id="inp-id" name="mb_id" type="text" placeholder="아이디를 입력해주세요" oninput="checkIdFormat()" required>
             <button class="btn-id-check" type="button" onclick="checkIdDuplicate()">중복확인</button>
           </div>
           <span class="fi-hint" id="id-hint">4자 이상 15자이하로 입력해주세요.</span>
@@ -179,7 +169,7 @@
         <div class="form-label">비밀번호 <span class="req">*</span></div>
         <div class="form-cell col">
           <div class="pw-wrap" style="max-width:280px;">
-            <input class="fi" id="inp-pw" type="password" placeholder="비밀번호 입력" oninput="checkPw()">
+            <input class="fi" id="inp-pw" name="mb_password" type="password" placeholder="비밀번호 입력" oninput="checkPw()" required>
             <span class="pw-toggle" onclick="togglePw('inp-pw','eye1')" id="eye1">👁</span>
           </div>
           <span class="fi-hint" id="pw-hint">4자 이상 12자이하로 입력해 주세요.</span>
@@ -191,7 +181,7 @@
         <div class="form-label">비밀번호 확인 <span class="req">*</span></div>
         <div class="form-cell col">
           <div class="pw-wrap" style="max-width:280px;">
-            <input class="fi" id="inp-pw2" type="password" placeholder="비밀번호를 다시 입력해주세요" oninput="checkPw2()">
+            <input class="fi" id="inp-pw2" name="mb_password_re" type="password" placeholder="비밀번호를 다시 입력해주세요" oninput="checkPw2()" required>
             <span class="pw-toggle" onclick="togglePw('inp-pw2','eye2')" id="eye2">👁</span>
           </div>
           <span class="fi-hint" id="pw2-hint">비밀번호를 다시 한 번 입력해주세요.</span>
@@ -200,50 +190,51 @@
 
       <!-- 이름 -->
       <div class="form-row">
-        <div class="form-label">이름</div>
-        <div class="form-cell">
-          <input class="fi fi-sm fi-readonly" id="inp-name" type="text" value="차정호" readonly>
-          <span style="font-size:11px;color:var(--hot-pink);font-weight:600;">✅ 실명인증 이용시 자동입력됩니다.</span>
+        <div class="form-label">이름 <span class="req">*</span></div>
+        <div class="form-cell col">
+          <input class="fi fi-md" id="inp-name" name="mb_name" type="text" placeholder="이름을 입력해주세요" required>
+          <span class="fi-hint" id="name-hint">실명인증 이용시 자동입력됩니다.</span>
         </div>
       </div>
 
       <!-- 닉네임 -->
       <div class="form-row">
-        <div class="form-label">닉네임</div>
+        <div class="form-label">닉네임 <span class="req">*</span></div>
         <div class="form-cell col">
-          <input class="fi fi-md" type="text" placeholder="닉네임 입력 (게시판에서 표시됩니다)">
+          <input class="fi fi-md" id="inp-nick" name="mb_nick" type="text" placeholder="닉네임 입력 (게시판에서 표시됩니다)" required>
           <span class="fi-hint">게시판에서 이름을 대신하여 사용되며, 1일 1회 수정가능합니다.</span>
         </div>
       </div>
 
       <!-- 생년월일 -->
       <div class="form-row">
-        <div class="form-label">생년월일</div>
+        <div class="form-label">생년월일 <span class="req">*</span></div>
         <div class="form-cell">
           <div class="date-group">
-            <select class="fi-select">
-              <option>1988</option><option>1990</option><option>1992</option><option>1995</option><option>1998</option><option>2000</option><option>2002</option><option>2004</option>
+            <select class="fi-select" id="inp-birth-y" name="mb_birth_y" required>
+              <option value="">년도</option>
+              <?php for($y=2008; $y>=1950; $y--) echo '<option value="'.$y.'">'.$y.'</option>'; ?>
             </select><span>년</span>
-            <select class="fi-select" style="width:76px;">
-              <option>03</option><option>01</option><option>02</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option>
+            <select class="fi-select" style="width:76px;" id="inp-birth-m" name="mb_birth_m" required>
+              <option value="">월</option>
+              <?php for($m=1; $m<=12; $m++) echo '<option value="'.str_pad($m,2,'0',STR_PAD_LEFT).'">'.str_pad($m,2,'0',STR_PAD_LEFT).'</option>'; ?>
             </select><span>월</span>
-            <select class="fi-select" style="width:76px;">
-              <option>01</option><option>05</option><option>10</option><option>15</option><option>20</option><option>25</option><option>28</option><option>30</option>
+            <select class="fi-select" style="width:76px;" id="inp-birth-d" name="mb_birth_d" required>
+              <option value="">일</option>
+              <?php for($d=1; $d<=31; $d++) echo '<option value="'.str_pad($d,2,'0',STR_PAD_LEFT).'">'.str_pad($d,2,'0',STR_PAD_LEFT).'</option>'; ?>
             </select><span>일</span>
           </div>
-          <span style="font-size:11px;color:var(--hot-pink);">▼</span>
         </div>
       </div>
 
       <!-- 성별 -->
       <div class="form-row">
-        <div class="form-label">성별</div>
+        <div class="form-label">성별 <span class="req">*</span></div>
         <div class="form-cell">
           <div class="radio-group">
-            <div class="radio-item"><input type="radio" name="gender" id="g-m" checked><label for="g-m">남자</label></div>
-            <div class="radio-item"><input type="radio" name="gender" id="g-f"><label for="g-f">여자</label></div>
+            <div class="radio-item"><input type="radio" name="mb_sex" id="g-m" value="M" checked><label for="g-m">남자</label></div>
+            <div class="radio-item"><input type="radio" name="mb_sex" id="g-f" value="F"><label for="g-f">여자</label></div>
           </div>
-          <span style="font-size:11px;color:var(--hot-pink);">▼</span>
         </div>
       </div>
 
@@ -252,9 +243,9 @@
         <div class="form-label">이메일 <span class="req">*</span></div>
         <div class="form-cell">
           <div class="email-row">
-            <input class="fi fi-sm" type="text" placeholder="이메일 아이디" id="email-id">
+            <input class="fi fi-sm" type="text" placeholder="이메일 아이디" id="email-id" required>
             <span class="email-at">@</span>
-            <input class="fi" style="width:140px;" type="text" id="email-domain" placeholder="도메인">
+            <input class="fi" style="width:140px;" type="text" id="email-domain" placeholder="도메인" required>
             <select class="fi-select" onchange="setEmailDomain(this)">
               <option value="">직접입력</option>
               <option value="gmail.com">gmail.com</option>
@@ -265,29 +256,35 @@
               <option value="yahoo.com">yahoo.com</option>
             </select>
           </div>
-          <span style="font-size:11px;color:var(--hot-pink);">▼</span>
         </div>
       </div>
 
       <!-- 업종 -->
       <div class="form-row">
-        <div class="form-label">업종</div>
+        <div class="form-label">업종 <span class="req">*</span></div>
         <div class="form-cell">
-          <select class="fi-select-full" style="max-width:280px;">
-            <option>룸싸롱</option>
-            <option>단란주점</option><option>가라오케</option><option>노래방</option>
-            <option>클럽</option><option>바(Bar)</option><option>퍼블릭</option>
-            <option>마사지</option><option>풀살롱</option><option>기타</option>
+          <select class="fi-select-full" style="max-width:280px;" id="inp-job-type" name="mb_9" required>
+            <option value="">업종 선택</option>
+            <option value="룸싸롱">룸싸롱</option>
+            <option value="단란주점">단란주점</option>
+            <option value="가라오케">가라오케</option>
+            <option value="노래방">노래방</option>
+            <option value="클럽">클럽</option>
+            <option value="바(Bar)">바(Bar)</option>
+            <option value="퍼블릭">퍼블릭</option>
+            <option value="마사지">마사지</option>
+            <option value="풀살롱">풀살롱</option>
+            <option value="기타">기타</option>
           </select>
         </div>
       </div>
 
       <!-- 핸드폰 -->
       <div class="form-row">
-        <div class="form-label">핸드폰</div>
-        <div class="form-cell">
-          <input class="fi fi-sm fi-readonly" type="text" value="010-0000-0000" readonly>
-          <span style="font-size:11px;color:var(--hot-pink);">▼</span>
+        <div class="form-label">핸드폰 <span class="req">*</span></div>
+        <div class="form-cell col">
+          <input class="fi fi-md" id="inp-hp" name="mb_hp" type="tel" placeholder="010-0000-0000" required>
+          <span class="fi-hint">'-' 포함하여 입력해주세요.</span>
         </div>
       </div>
 
@@ -296,21 +293,88 @@
         <div class="form-label">SMS수신동의</div>
         <div class="form-cell">
           <div class="sms-row">
-            <input type="checkbox" id="sms-agree" checked>
+            <input type="checkbox" id="sms-agree" name="mb_sms" value="1" checked>
             <label for="sms-agree">SMS수신에 동의합니다. &nbsp;<span>수신허용을 하시면 인재분들이 문자보내기 관리해집니다</span></label>
           </div>
         </div>
       </div>
 
-      <!-- 하단 버튼 -->
+      <!-- ============================================================
+           기업회원 전용 섹션
+      ============================================================ -->
+      <div id="biz-section" style="display:none;">
+        <div style="padding:16px 20px 10px;border-top:3px solid var(--hot-pink);margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:18px;">🏢</span>
+            <span style="font-size:15px;font-weight:900;color:var(--dark);">기업회원 추가정보</span>
+            <span style="font-size:12px;color:#aaa;margin-left:4px;">사업자 정보를 입력해주세요.</span>
+          </div>
+        </div>
+
+        <!-- 확인문서 첨부 -->
+        <div class="form-row">
+          <div class="form-label">확인문서첨부 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <div style="margin-bottom:6px;font-size:12px;color:#666;line-height:1.6;">
+              첨부 서류 : <strong>사업자등록증, 직업소개사업등록증, 영업허가증</strong> 中 택1<br>
+              <span style="color:var(--hot-pink);">* jpg, png, gif, webp / 최대 10MB</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <input type="file" id="inp-biz-doc" name="biz_doc" accept="image/jpeg,image/png,image/gif,image/webp" style="font-size:13px;" onchange="onBizDocChange(this)">
+              <button type="button" class="btn-ocr-scan" id="btn-ocr" onclick="doOcrScan()" style="display:none;padding:6px 16px;border:none;border-radius:8px;background:linear-gradient(135deg,#4285f4,#34a853);color:#fff;font-size:12px;font-weight:700;cursor:pointer;">
+                🔍 AI 자동인식
+              </button>
+            </div>
+            <div id="ocr-status" style="margin-top:6px;font-size:12px;display:none;"></div>
+            <div id="biz-doc-preview" style="margin-top:8px;max-width:300px;display:none;">
+              <img id="biz-doc-img" src="" style="width:100%;border-radius:8px;border:2px solid #eee;">
+            </div>
+          </div>
+        </div>
+
+        <!-- 사업자번호 -->
+        <div class="form-row">
+          <div class="form-label">사업자번호 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <input class="fi fi-md" id="inp-biz-num" name="mb_2" type="text" maxlength="10" placeholder="숫자 10자리 (- 자동제거)" oninput="formatBizNum(this)" required>
+            <span class="fi-hint" id="biz-num-hint">'-'를 포함해도 자동으로 숫자만 입력됩니다.</span>
+          </div>
+        </div>
+
+        <!-- 상호 -->
+        <div class="form-row">
+          <div class="form-label">상호 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <input class="fi fi-md" id="inp-biz-name" name="mb_3" type="text" placeholder="상호명 입력" required>
+          </div>
+        </div>
+
+        <!-- 대표자 -->
+        <div class="form-row">
+          <div class="form-label">대표자 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <input class="fi fi-md" id="inp-biz-rep" name="mb_4" type="text" placeholder="대표자명 입력" required>
+          </div>
+        </div>
+
+        <!-- 주소 -->
+        <div class="form-row">
+          <div class="form-label">주소 <span class="req">*</span></div>
+          <div class="form-cell col">
+            <input class="fi" id="inp-biz-addr" name="mb_5" type="text" placeholder="사업장 주소 입력" style="width:100%;" required>
+            <span class="fi-hint" style="color:#999;">사업자등록증에 기재된 주소를 입력해주세요.</span>
+          </div>
+        </div>
+      </div>
+      <!-- /기업회원 전용 -->
+
       <div class="form-btns">
         <button class="btn-cancel" type="button" onclick="goStep1()">← 이전으로</button>
-        <button class="btn-join" type="button" onclick="doJoin()">🌸 회원가입 완료</button>
+        <button class="btn-join" type="button" id="btn-submit" onclick="doJoin()">🌸 회원가입 완료</button>
       </div>
     </div>
 
   </div>
-  <!-- /STEP 2 -->
 
   <!-- ================================================================
        STEP 3 : 가입완료
@@ -323,7 +387,7 @@
       <div class="complete-info-box">
         <div class="ci-row"><span class="ci-label">아이디</span><span class="ci-val pink" id="ci-id">—</span></div>
         <div class="ci-row"><span class="ci-label">회원유형</span><span class="ci-val" id="ci-type">—</span></div>
-        <div class="ci-row"><span class="ci-label">이름</span><span class="ci-val" id="ci-name">차정호</span></div>
+        <div class="ci-row"><span class="ci-label">이름</span><span class="ci-val" id="ci-name">—</span></div>
         <div class="ci-row"><span class="ci-label">가입일</span><span class="ci-val" id="ci-date">—</span></div>
       </div>
       <div class="complete-btns">
@@ -332,16 +396,15 @@
       </div>
     </div>
   </div>
-  <!-- /STEP 3 -->
 
-</div><!-- /page-wrap -->
+</div>
 
 <script>
-/* ============================================================
-   회원가입 STEP 상태 관리 (eve_alba_register.html 동일)
-============================================================ */
 var currentMemberType = 'biz';
 var verifyDone = false;
+var idChecked = false;
+var checkedId = '';
+var _baseUrl = <?php echo json_encode(rtrim(G5_URL, '/')); ?>;
 
 function setStep(n) {
   [1,2,3].forEach(function(i){
@@ -384,12 +447,17 @@ function goStep2(type) {
   if(!verifyDone) { alert('본인인증을 완료해주세요.'); return; }
   currentMemberType = type;
   var badge = document.getElementById('member-type-badge');
+  var bizSec = document.getElementById('biz-section');
   if(type === 'biz') {
     badge.textContent = '🏢 기업회원';
     badge.className = 'reg-form-type-badge badge-biz';
+    bizSec.style.display = 'block';
+    bizSec.querySelectorAll('input[required]').forEach(function(el){ el.disabled = false; });
   } else {
     badge.textContent = '👤 개인회원';
     badge.className = 'reg-form-type-badge badge-personal';
+    bizSec.style.display = 'none';
+    bizSec.querySelectorAll('input[required]').forEach(function(el){ el.disabled = true; });
   }
   showScreen('step2');
   setStep(2);
@@ -415,19 +483,43 @@ function reVerify() {
 }
 
 function checkIdFormat() {
+  idChecked = false; checkedId = '';
   var val = document.getElementById('inp-id').value;
   var hint = document.getElementById('id-hint');
   if(val.length === 0) { hint.textContent = '4자 이상 15자이하로 입력해주세요.'; hint.className = 'fi-hint'; }
   else if(val.length < 4) { hint.textContent = '⚠ 4자 이상 입력해주세요.'; hint.className = 'fi-hint err'; }
   else if(val.length > 15) { hint.textContent = '⚠ 15자 이하로 입력해주세요.'; hint.className = 'fi-hint err'; }
+  else if(!/^[a-z0-9_]+$/.test(val)) { hint.textContent = '⚠ 영문소문자, 숫자, _만 사용 가능합니다.'; hint.className = 'fi-hint err'; }
   else { hint.textContent = '✅ 사용 가능한 형식입니다. 중복확인을 해주세요.'; hint.className = 'fi-hint ok'; }
 }
 
 function checkIdDuplicate() {
-  var val = document.getElementById('inp-id').value;
-  if(!val || val.length < 4) { alert('아이디를 먼저 입력해주세요.'); return; }
-  document.getElementById('id-hint').textContent = '✅ 사용 가능한 아이디입니다.';
-  document.getElementById('id-hint').className = 'fi-hint ok';
+  var val = document.getElementById('inp-id').value.trim();
+  if(!val || val.length < 4) { alert('아이디를 먼저 입력해주세요 (4자 이상).'); return; }
+  var hint = document.getElementById('id-hint');
+  hint.textContent = '⏳ 확인중...'; hint.className = 'fi-hint';
+  fetch(_baseUrl + '/eve_check_id.php', {
+    method: 'POST',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body: 'mb_id=' + encodeURIComponent(val)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if(d.available) {
+      hint.textContent = '✅ 사용 가능한 아이디입니다.';
+      hint.className = 'fi-hint ok';
+      idChecked = true;
+      checkedId = val;
+    } else {
+      hint.textContent = '⚠ ' + (d.msg || '이미 사용중인 아이디입니다.');
+      hint.className = 'fi-hint err';
+      idChecked = false;
+    }
+  })
+  .catch(function(){
+    hint.textContent = '⚠ 확인 실패. 다시 시도해주세요.';
+    hint.className = 'fi-hint err';
+  });
 }
 
 function checkPw() {
@@ -460,25 +552,171 @@ function setEmailDomain(sel) {
   if(sel.value) document.getElementById('email-domain').value = sel.value;
 }
 
+/* === 사업자번호 자동 포맷 (- 제거, 숫자만) === */
+function formatBizNum(el) {
+  var v = el.value.replace(/[^0-9]/g, '');
+  if(v.length > 10) v = v.substring(0, 10);
+  el.value = v;
+  var hint = document.getElementById('biz-num-hint');
+  if(v.length === 0) { hint.textContent = "'-'를 포함해도 자동으로 숫자만 입력됩니다."; hint.className = 'fi-hint'; }
+  else if(v.length < 10) { hint.textContent = '⚠ 10자리를 입력해주세요. (현재 '+v.length+'자리)'; hint.className = 'fi-hint err'; }
+  else { hint.textContent = '✅ 올바른 형식입니다.'; hint.className = 'fi-hint ok'; }
+}
+
+/* === 문서 업로드 미리보기 === */
+function onBizDocChange(input) {
+  var preview = document.getElementById('biz-doc-preview');
+  var img = document.getElementById('biz-doc-img');
+  var ocrBtn = document.getElementById('btn-ocr');
+  if(input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      img.src = e.target.result;
+      preview.style.display = 'block';
+      ocrBtn.style.display = 'inline-block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  } else {
+    preview.style.display = 'none';
+    ocrBtn.style.display = 'none';
+  }
+}
+
+/* === Gemini OCR 자동인식 === */
+function doOcrScan() {
+  var fileInput = document.getElementById('inp-biz-doc');
+  if(!fileInput.files || !fileInput.files[0]) { alert('문서를 먼저 첨부해주세요.'); return; }
+
+  var btn = document.getElementById('btn-ocr');
+  var status = document.getElementById('ocr-status');
+  btn.disabled = true;
+  btn.textContent = '⏳ AI 분석중...';
+  status.style.display = 'block';
+  status.innerHTML = '<span style="color:#4285f4;font-weight:600;">🤖 Gemini AI가 문서를 분석하고 있습니다... (약 5~10초 소요)</span>';
+
+  var fd = new FormData();
+  fd.append('biz_doc', fileInput.files[0]);
+
+  fetch(_baseUrl + '/eve_ocr_scan.php', { method: 'POST', body: fd })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    btn.disabled = false;
+    btn.textContent = '🔍 AI 자동인식';
+    if(d.ok) {
+      status.innerHTML = '<span style="color:#2E7D32;font-weight:600;">✅ AI 자동인식 완료! 아래 정보를 확인해주세요.</span>';
+      if(d.biz_num) document.getElementById('inp-biz-num').value = d.biz_num.replace(/[^0-9]/g,'').substring(0,10);
+      if(d.biz_name) document.getElementById('inp-biz-name').value = d.biz_name;
+      if(d.biz_rep) document.getElementById('inp-biz-rep').value = d.biz_rep;
+      if(d.biz_addr) document.getElementById('inp-biz-addr').value = d.biz_addr;
+      if(d.biz_num) formatBizNum(document.getElementById('inp-biz-num'));
+    } else {
+      status.innerHTML = '<span style="color:#c00;font-weight:600;">⚠ ' + (d.msg || 'AI 인식에 실패했습니다. 직접 입력해주세요.') + '</span>';
+    }
+  })
+  .catch(function(err){
+    btn.disabled = false;
+    btn.textContent = '🔍 AI 자동인식';
+    status.innerHTML = '<span style="color:#c00;font-weight:600;">⚠ 네트워크 오류. 직접 입력해주세요.</span>';
+  });
+}
+
+/* === 회원가입 제출 === */
 function doJoin() {
-  var id = document.getElementById('inp-id').value;
+  var id = document.getElementById('inp-id').value.trim();
   var pw = document.getElementById('inp-pw').value;
   var pw2 = document.getElementById('inp-pw2').value;
+  var name = document.getElementById('inp-name').value.trim();
+  var nick = document.getElementById('inp-nick').value.trim();
+  var birthY = document.getElementById('inp-birth-y').value;
+  var birthM = document.getElementById('inp-birth-m').value;
+  var birthD = document.getElementById('inp-birth-d').value;
+  var emailId = document.getElementById('email-id').value.trim();
+  var emailDomain = document.getElementById('email-domain').value.trim();
+  var hp = document.getElementById('inp-hp').value.trim();
+  var jobType = document.getElementById('inp-job-type').value;
+
   if(!id || id.length < 4) { alert('아이디를 입력해주세요 (4자 이상).'); return; }
+  if(!idChecked || checkedId !== id) { alert('아이디 중복확인을 해주세요.'); return; }
   if(!pw || pw.length < 4) { alert('비밀번호를 입력해주세요 (4자 이상).'); return; }
   if(pw !== pw2) { alert('비밀번호가 일치하지 않습니다.'); return; }
+  if(!name) { alert('이름을 입력해주세요.'); return; }
+  if(!nick) { alert('닉네임을 입력해주세요.'); return; }
+  if(!birthY || !birthM || !birthD) { alert('생년월일을 선택해주세요.'); return; }
+  if(!emailId || !emailDomain) { alert('이메일을 입력해주세요.'); return; }
+  if(!hp) { alert('핸드폰 번호를 입력해주세요.'); return; }
+  if(!jobType) { alert('업종을 선택해주세요.'); return; }
 
-  document.getElementById('ci-id').textContent = id;
-  document.getElementById('ci-type').textContent = currentMemberType === 'biz' ? '🏢 기업회원' : '👤 개인회원';
-  var now = new Date();
-  document.getElementById('ci-date').textContent =
-    now.getFullYear() + '.' + String(now.getMonth()+1).padStart(2,'0') + '.' + String(now.getDate()).padStart(2,'0');
-  document.getElementById('complete-msg').innerHTML =
-    (currentMemberType === 'biz'
-      ? '🏢 기업회원 가입이 완료되었습니다.<br>채용공고 등록 및 다양한 광고 서비스를 이용해보세요!'
-      : '👤 개인회원 가입이 완료되었습니다.<br>이력서 등록으로 원하는 일자리를 찾아보세요!');
+  if(currentMemberType === 'biz') {
+    var docFile = document.getElementById('inp-biz-doc');
+    var bizNum = document.getElementById('inp-biz-num').value.trim();
+    var bizName = document.getElementById('inp-biz-name').value.trim();
+    var bizRep = document.getElementById('inp-biz-rep').value.trim();
+    var bizAddr = document.getElementById('inp-biz-addr').value.trim();
+    if(!docFile.files || !docFile.files[0]) { alert('확인문서를 첨부해주세요.'); return; }
+    if(!bizNum || bizNum.length !== 10) { alert('사업자번호 10자리를 입력해주세요.'); return; }
+    if(!bizName) { alert('상호를 입력해주세요.'); return; }
+    if(!bizRep) { alert('대표자를 입력해주세요.'); return; }
+    if(!bizAddr) { alert('주소를 입력해주세요.'); return; }
+  }
 
-  showScreen('step3');
-  setStep(3);
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = '⏳ 가입 처리중...';
+
+  var fd = new FormData();
+  fd.append('mb_id', id);
+  fd.append('mb_password', pw);
+  fd.append('mb_password_re', pw2);
+  fd.append('mb_name', name);
+  fd.append('mb_nick', nick);
+  fd.append('mb_birth', birthY + '-' + birthM + '-' + birthD);
+  fd.append('mb_sex', document.querySelector('input[name="mb_sex"]:checked').value);
+  fd.append('mb_email', emailId + '@' + emailDomain);
+  fd.append('mb_hp', hp);
+  fd.append('mb_sms', document.getElementById('sms-agree').checked ? '1' : '0');
+  fd.append('mb_1', currentMemberType);
+  fd.append('mb_9', jobType);
+
+  if(currentMemberType === 'biz') {
+    fd.append('mb_2', document.getElementById('inp-biz-num').value);
+    fd.append('mb_3', document.getElementById('inp-biz-name').value);
+    fd.append('mb_4', document.getElementById('inp-biz-rep').value);
+    fd.append('mb_5', document.getElementById('inp-biz-addr').value);
+    fd.append('biz_doc', document.getElementById('inp-biz-doc').files[0]);
+  }
+
+  fetch(_baseUrl + '/eve_register_update.php', { method: 'POST', body: fd })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    btn.disabled = false;
+    btn.textContent = '🌸 회원가입 완료';
+    if(d.ok) {
+      document.getElementById('ci-id').textContent = id;
+      document.getElementById('ci-name').textContent = name;
+      var now = new Date();
+      document.getElementById('ci-date').textContent =
+        now.getFullYear() + '.' + String(now.getMonth()+1).padStart(2,'0') + '.' + String(now.getDate()).padStart(2,'0');
+      if(currentMemberType === 'biz') {
+        document.getElementById('ci-type').textContent = '🏢 기업회원';
+        document.getElementById('complete-msg').innerHTML =
+          '🏢 기업회원 가입 신청이 완료되었습니다.<br>'
+          + '<strong style="color:var(--hot-pink);">관리자 승인 후 로그인이 가능합니다.</strong><br>'
+          + '승인까지 영업일 기준 1~2일 소요됩니다.';
+      } else {
+        document.getElementById('ci-type').textContent = '👤 개인회원';
+        document.getElementById('complete-msg').innerHTML =
+          '👤 개인회원 가입이 완료되었습니다.<br>이력서 등록으로 원하는 일자리를 찾아보세요!';
+      }
+      showScreen('step3');
+      setStep(3);
+    } else {
+      alert(d.msg || '가입에 실패했습니다. 다시 시도해주세요.');
+    }
+  })
+  .catch(function(err){
+    btn.disabled = false;
+    btn.textContent = '🌸 회원가입 완료';
+    alert('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+  });
 }
 </script>
