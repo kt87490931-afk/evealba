@@ -40,9 +40,10 @@ $online_window = isset($cfg['cf_online_window']) ? (int)$cfg['cf_online_window']
 if ($online_window < 30) $online_window = 300;
 $freeze = (isset($cfg['cf_freeze']) && (int)$cfg['cf_freeze'] === 1) ? 1 : 0;
 
-// 이브알바 채팅 권한: 일반회원(여성)만
+// 이브알바 채팅 권한: 일반회원(여성) + 관리자
 function eve_chat_can_chat($member){
     if (!$member || !isset($member['mb_id']) || !$member['mb_id']) return false;
+    if (isset($GLOBALS['is_admin']) && $GLOBALS['is_admin']) return true;
     $type = isset($member['mb_1']) ? $member['mb_1'] : '';
     $sex  = isset($member['mb_sex']) ? $member['mb_sex'] : '';
     return ($type === 'normal' && $sex === 'F');

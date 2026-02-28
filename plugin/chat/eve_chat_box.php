@@ -10,6 +10,8 @@ $_chat_can   = false;
 $_chat_deny  = '';
 if (!$_chat_member) {
     $_chat_deny = 'login';
+} else if ($_chat_admin) {
+    $_chat_can = true;
 } else {
     $type = isset($member['mb_1']) ? $member['mb_1'] : '';
     $sex  = isset($member['mb_sex']) ? $member['mb_sex'] : '';
