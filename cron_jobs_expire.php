@@ -1,9 +1,7 @@
 <?php
-/**
- * 채용광고 자동 마감 크론잡
- * 매일 0시 5분 실행 권장: */5 * * * * php /var/www/evealba/cron_jobs_expire.php
- * jr_end_date가 지난 ongoing 건을 ended로 변경
- */
+// 채용광고 자동 마감 크론잡
+// 매일 0시 5분 실행 권장: 5 0 * * * php /var/www/evealba/cron_jobs_expire.php
+// jr_end_date가 지난 ongoing 건을 ended로 변경
 define('_GNUBOARD_', true);
 
 $g5_path = __DIR__;
