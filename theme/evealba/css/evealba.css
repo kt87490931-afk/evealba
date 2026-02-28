@@ -430,6 +430,7 @@ nav::before {
 }
 .td-region { font-size:11px; color:#888; white-space:nowrap; }
 .td-type { font-size:11px; color:#888; white-space:nowrap; }
+.td-gender { white-space:nowrap; font-size:11px; text-align:center; }
 .list-title-cell { min-width:200px; }
 .list-job-title {
   font-size:13px; font-weight:700; color:#222;
@@ -1391,10 +1392,12 @@ footer {
   .kakao-btn { display:none; }
   .nav-scroll { padding:0; justify-content:flex-start; }
   .nav-item { flex:0 0 auto; }
-  /* 채용정보 테이블: 업소명 숨김 */
-  .col-benefits { display:none; }
-  .list-table thead th:nth-child(4),
-  .list-table tbody td:nth-child(4) { display:none; }
+  /* 채용정보 테이블: 성별·업소명 숨김 */
+  .col-gender,.col-benefits { display:none; }
+  .list-table thead th:nth-child(3),
+  .list-table tbody td:nth-child(3),
+  .list-table thead th:nth-child(5),
+  .list-table tbody td:nth-child(5) { display:none; }
 }
 
 /* RESPONSIVE — MOBILE (≤600px) */

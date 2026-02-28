@@ -266,6 +266,7 @@ function render_job_list_row($row) {
     echo '<tr class="job-list-row">';
     echo '<td class="td-region">' . ($f['region'] ?: '-') . ($f['subregion'] ? '<br>' . htmlspecialchars($f['subregion']) : '') . '</td>';
     echo '<td class="td-type">' . ($f['job1'] ?: '-') . ($f['job2'] ? '<br>' . $f['job2'] : '') . '</td>';
+    echo '<td class="col-gender td-gender">여<br>-</td>';
     echo '<td class="list-title-cell">';
     echo '<a href="' . $f['link'] . '" class="list-job-title">' . $f['title'] . '</a>';
     if ($benefit_html || $tags_html) {
