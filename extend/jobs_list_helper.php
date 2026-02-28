@@ -96,21 +96,40 @@ function get_jobs_by_type($ad_type, $limit = 20, $region = '') {
 }
 
 /**
- * 우대 카드형 썸네일 렌더링
+ * 우대 카드형 썸네일 렌더링 - 에디터 미리보기와 동일하게
  */
 function render_job_card($row) {
+    static $icon_map = null;
+    if ($icon_map === null) {
+        $icon_map = array(
+            'beginner' => array('label' => '💖 초보환영', 'bg' => '#FF1B6B'),
+            'room' => array('label' => '🏡 원룸제공', 'bg' => '#FF6B35'),
+            'luxury' => array('label' => '💎 고급시설', 'bg' => '#8B00FF'),
+            'black' => array('label' => '📋 블랙 관리', 'bg' => '#333'),
+            'phone' => array('label' => '📱 폰비지급', 'bg' => '#0077B6'),
+            'size' => array('label' => '👗 사이즈X', 'bg' => '#E91E63'),
+            'set' => array('label' => '🎀 세트환영', 'bg' => '#FF9800'),
+            'pickup' => array('label' => '🚗 픽업가능', 'bg' => '#4CAF50'),
+            'member' => array('label' => '🙋 1회원제운영', 'bg' => '#7B1FA2'),
+            'kkongbi' => array('label' => '💰 꽁비지급', 'bg' => '#00897B'),
+        );
+    }
+
     $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
     $grad_key = isset($jr_data['thumb_gradient']) ? $jr_data['thumb_gradient'] : '1';
     $grad = _jlh_get_gradient($grad_key);
     $title = htmlspecialchars($jr_data['thumb_title'] ?? $row['jr_nickname'] ?? $row['jr_company'] ?? '');
     $text = htmlspecialchars($jr_data['thumb_text'] ?? '');
     $text_color = $jr_data['thumb_text_color'] ?? 'rgb(255,255,255)';
+    $thumb_icon = isset($jr_data['thumb_icon']) ? trim($jr_data['thumb_icon']) : '';
+    $thumb_border = isset($jr_data['thumb_border']) ? trim($jr_data['thumb_border']) : '';
+    $thumb_motion = isset($jr_data['thumb_motion']) ? trim($jr_data['thumb_motion']) : '';
+    $thumb_wave = !empty($jr_data['thumb_wave']);
     $jr_id = (int)$row['jr_id'];
     $link = _jlh_clean_url($row, $jr_data);
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
     $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 30, 'UTF-8'));
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
-    $is_new = (strtotime($row['jr_datetime']) > strtotime('-3 days'));
     $jump_count = (int)($row['jr_jump_count'] ?? 0);
     $ad_period = (int)($row['jr_ad_period'] ?? 30);
     $carbon_class = ($grad_key === 'P3') ? ' carbon-bg' : '';
@@ -121,10 +140,36 @@ function render_job_card($row) {
         $badge_html = '<span class="job-badge">' . $crown . $jump_count . '회 ' . ($jump_count * $ad_period) . '일</span>';
     }
 
-    echo '<div class="job-card">';
+    $border_style = '';
+    if ($thumb_border === 'gold') $border_style = 'border:2.5px solid transparent;background-clip:padding-box;box-shadow:0 0 0 2.5px #FFD700,0 4px 15px rgba(255,215,0,.35);';
+    elseif ($thumb_border === 'pink') $border_style = 'border:2.5px solid #FF1B6B;box-shadow:0 4px 15px rgba(255,27,107,.35);';
+    elseif ($thumb_border === 'charcoal') $border_style = 'border:2.5px solid #444;box-shadow:0 4px 15px rgba(0,0,0,.25);';
+    elseif ($thumb_border === 'royalblue') $border_style = 'border:2.5px solid #4169E1;box-shadow:0 4px 15px rgba(65,105,225,.35);';
+    elseif ($thumb_border === 'royalpurple') $border_style = 'border:2.5px solid #7B2FBE;box-shadow:0 4px 15px rgba(123,47,190,.35);';
+
+    $banner_bg = $grad;
+    if ($thumb_wave) {
+        preg_match_all('/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/', $grad, $m);
+        if (!empty($m[0]) && count($m[0]) >= 2) {
+            $c1 = $m[0][0]; $c2 = $m[0][1]; $c3 = isset($m[0][2]) ? $m[0][2] : $m[0][0];
+            $banner_bg = "linear-gradient(135deg,{$c1},{$c2},{$c3},{$c1},{$c2})";
+        }
+    }
+
+    $motion_class = $thumb_motion ? ' pv-motion-' . $thumb_motion : '';
+
+    $card_style = $border_style ? ' style="' . $border_style . 'border-radius:14px;overflow:hidden;"' : '';
+
+    echo '<div class="job-card"' . $card_style . '>';
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
-    echo '<div class="job-card-banner' . $carbon_class . '" style="background:' . $grad . ';color:' . $text_color . '"><span>' . $title . '<br>' . $text . '</span></div>';
-    if ($is_new) echo '<div class="new-badge">NEW</div>';
+    $wave_anim = $thumb_wave ? 'animation:wave-shift 6s ease-in-out infinite;background-size:400% 400%;' : '';
+    echo '<div class="job-card-banner' . $carbon_class . '" style="background:' . $banner_bg . ';color:' . $text_color . ';' . $wave_anim . '">';
+    echo '<span class="' . trim($motion_class) . '">' . $title . '<br>' . $text . '</span>';
+    echo '</div>';
+    if ($thumb_icon && isset($icon_map[$thumb_icon])) {
+        $ic = $icon_map[$thumb_icon];
+        echo '<div class="pv-icon-badge" style="position:absolute;top:7px;right:7px;font-size:10px;font-weight:900;padding:2px 7px;border-radius:9px;z-index:10;color:#fff;background:' . $ic['bg'] . '">' . $ic['label'] . '</div>';
+    }
     echo '<div class="job-card-body">';
     if ($location) echo '<div class="job-card-location"><span class="job-loc-badge">' . mb_substr($location, 0, 2, 'UTF-8') . '</span>' . $location . '</div>';
     if ($desc) echo '<div class="job-desc">' . $desc . '</div>';
@@ -135,22 +180,49 @@ function render_job_card($row) {
 }
 
 /**
- * 프리미엄/스페셜 카드 렌더링
+ * 프리미엄/스페셜 카드 렌더링 - 에디터 미리보기와 동일하게
  */
 function render_premium_card($row, $card_class = 'premium-card') {
     $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
     $grad_key = isset($jr_data['thumb_gradient']) ? $jr_data['thumb_gradient'] : '1';
     $grad = _jlh_get_gradient($grad_key);
     $title = htmlspecialchars($jr_data['thumb_title'] ?? $row['jr_nickname'] ?? $row['jr_company'] ?? '');
+    $text = htmlspecialchars($jr_data['thumb_text'] ?? '');
+    $text_color = $jr_data['thumb_text_color'] ?? 'rgb(255,255,255)';
+    $thumb_border = isset($jr_data['thumb_border']) ? trim($jr_data['thumb_border']) : '';
+    $thumb_wave = !empty($jr_data['thumb_wave']);
+    $thumb_motion = isset($jr_data['thumb_motion']) ? trim($jr_data['thumb_motion']) : '';
     $jr_id = (int)$row['jr_id'];
     $link = _jlh_clean_url($row, $jr_data);
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
     $carbon_class = ($grad_key === 'P3') ? ' carbon-bg' : '';
 
-    echo '<div class="' . $card_class . '">';
+    $border_style = '';
+    if ($thumb_border === 'gold') $border_style = 'border:2.5px solid transparent;box-shadow:0 0 0 2.5px #FFD700,0 4px 15px rgba(255,215,0,.35);';
+    elseif ($thumb_border === 'pink') $border_style = 'border:2.5px solid #FF1B6B;box-shadow:0 4px 15px rgba(255,27,107,.35);';
+    elseif ($thumb_border === 'charcoal') $border_style = 'border:2.5px solid #444;box-shadow:0 4px 15px rgba(0,0,0,.25);';
+    elseif ($thumb_border === 'royalblue') $border_style = 'border:2.5px solid #4169E1;box-shadow:0 4px 15px rgba(65,105,225,.35);';
+    elseif ($thumb_border === 'royalpurple') $border_style = 'border:2.5px solid #7B2FBE;box-shadow:0 4px 15px rgba(123,47,190,.35);';
+
+    $banner_bg = $grad;
+    if ($thumb_wave) {
+        preg_match_all('/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/', $grad, $m);
+        if (!empty($m[0]) && count($m[0]) >= 2) {
+            $c1 = $m[0][0]; $c2 = $m[0][1]; $c3 = isset($m[0][2]) ? $m[0][2] : $m[0][0];
+            $banner_bg = "linear-gradient(135deg,{$c1},{$c2},{$c3},{$c1},{$c2})";
+        }
+    }
+    $wave_anim = $thumb_wave ? 'animation:wave-shift 6s ease-in-out infinite;background-size:400% 400%;' : '';
+    $motion_class = $thumb_motion ? ' pv-motion-' . $thumb_motion : '';
+    $card_style = $border_style ? ' style="' . $border_style . 'border-radius:14px;overflow:hidden;"' : '';
+
+    echo '<div class="' . $card_class . '"' . $card_style . '>';
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
-    echo '<div class="premium-banner' . $carbon_class . '" style="background:' . $grad . '">' . $title . '</div>';
+    echo '<div class="premium-banner' . $carbon_class . '" style="background:' . $banner_bg . ';color:' . $text_color . ';' . $wave_anim . '">';
+    echo '<span class="' . trim($motion_class) . '">' . $title . '</span>';
+    if ($text) echo '<br><span class="' . trim($motion_class) . '" style="font-size:11px;opacity:.85">' . $text . '</span>';
+    echo '</div>';
     echo '<div class="premium-body">';
     echo '<div class="premium-name">' . $nickname . '</div>';
     if ($location) echo '<div class="premium-area">' . $location . '</div>';
@@ -246,7 +318,6 @@ function _jlh_extract_fields($row) {
     $f['grad'] = _jlh_get_gradient($f['grad_key']);
     $f['jump_count'] = (int)($row['jr_jump_count'] ?? 0);
     $f['ad_period'] = (int)($row['jr_ad_period'] ?? 30);
-    $f['is_new'] = (strtotime($row['jr_datetime']) > strtotime('-3 days'));
     $f['ad_labels'] = $row['jr_ad_labels'] ?? '';
 
     $sal = $f['salary_type'];
@@ -285,8 +356,6 @@ function render_job_list_row($row) {
         $tc = isset($tag_map[$kw]) ? $tag_map[$kw] : 'tag-init';
         $tags_html .= '<span class="list-tag ' . $tc . '">' . htmlspecialchars($kw) . '</span>';
     }
-    if ($f['is_new'] && !$tags_html) $tags_html .= '<span class="list-tag tag-init">NEW</span>';
-
     echo '<tr class="job-list-row">';
     echo '<td class="td-region">' . ($f['region'] ?: '-') . ($f['subregion'] ? '<br>' . htmlspecialchars($f['subregion']) : '') . '</td>';
     echo '<td class="td-type">' . ($f['job1'] ?: '-') . ($f['job2'] ? '<br>' . $f['job2'] : '') . '</td>';

@@ -1412,6 +1412,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     document.querySelectorAll('.premium-swatch').forEach(function(b){b.classList.remove('selected');});
     btn.classList.add('selected');
     _thumbSelected = btn.getAttribute('data-grad');
+    if(window._thumbState) window._thumbState.grad = _thumbSelected;
     _applyBannerBg();
     var isPremium = _thumbSelected && _thumbSelected.charAt(0) === 'P';
     var pp = document.getElementById('tg-premium-period');
@@ -1449,6 +1450,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     document.querySelectorAll('#tg-textcolor-grid .txt-color-btn').forEach(function(b){b.classList.remove('selected');});
     btn.classList.add('selected');
     _thumbTextColor = btn.getAttribute('data-tcolor') || 'rgb(255,255,255)';
+    if(window._thumbState) window._thumbState.textColor = _thumbTextColor;
     var pt = document.getElementById('tpc-title');
     if(pt) pt.style.color = _thumbTextColor;
   };
@@ -1456,6 +1458,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     document.querySelectorAll('#tg-icon-grid .badge-opt').forEach(function(b){b.classList.remove('selected');});
     btn.classList.add('selected');
     _thumbIcon = btn.getAttribute('data-icon') || '';
+    if(window._thumbState) window._thumbState.icon = _thumbIcon;
     var pvIcon = document.getElementById('tg-pv-icon');
     if(pvIcon){
       if(_thumbIcon){
@@ -1475,6 +1478,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     document.querySelectorAll('#tg-motion-grid .motion-btn').forEach(function(b){b.classList.remove('selected');});
     btn.classList.add('selected');
     _thumbMotion = btn.getAttribute('data-motion') || '';
+    if(window._thumbState) window._thumbState.motion = _thumbMotion;
     var pt = document.getElementById('tpc-title');
     if(pt) pt.className = _thumbMotion ? 'pv-motion-' + _thumbMotion : '';
     var mp = document.getElementById('tg-motion-period');
@@ -1484,6 +1488,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
   };
   window.toggleWave = function(checked){
     _thumbWave = checked;
+    if(window._thumbState) window._thumbState.wave = _thumbWave;
     _applyBannerBg();
     var wp = document.getElementById('tg-wave-period');
     if(wp) wp.style.display = checked ? '' : 'none';
@@ -1494,6 +1499,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     document.querySelectorAll('#tg-border-grid .border-btn').forEach(function(b){b.classList.remove('selected');});
     btn.classList.add('selected');
     _thumbBorder = btn.getAttribute('data-border') || '';
+    if(window._thumbState) window._thumbState.border = _thumbBorder;
     _applyBorder();
     var brp = document.getElementById('tg-border-period');
     if(brp) brp.style.display = _thumbBorder ? '' : 'none';
@@ -1558,19 +1564,21 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       }
     }
   };
+  window._thumbState = { grad: _thumbSelected, icon: _thumbIcon, motion: _thumbMotion, wave: _thumbWave, textColor: _thumbTextColor, border: _thumbBorder };
   window.saveThumb = function(){
     var btn = document.getElementById('tg-save-btn');
     if(btn) btn.disabled = true;
+    var s = window._thumbState || {};
     var fd = new FormData();
     fd.append('jr_id', '<?php echo (int)$jr_id; ?>');
-    fd.append('thumb_gradient', _thumbSelected);
-    fd.append('thumb_title', document.getElementById('tg-title').value);
-    fd.append('thumb_text', document.getElementById('tg-text').value);
-    fd.append('thumb_icon', _thumbIcon);
-    fd.append('thumb_motion', _thumbMotion);
-    fd.append('thumb_wave', _thumbWave ? '1' : '0');
-    fd.append('thumb_text_color', _thumbTextColor);
-    fd.append('thumb_border', _thumbBorder);
+    fd.append('thumb_gradient', s.grad || '1');
+    fd.append('thumb_title', (document.getElementById('tg-title') || {}).value || '');
+    fd.append('thumb_text', (document.getElementById('tg-text') || {}).value || '');
+    fd.append('thumb_icon', s.icon || '');
+    fd.append('thumb_motion', s.motion || '');
+    fd.append('thumb_wave', s.wave ? '1' : '0');
+    fd.append('thumb_text_color', s.textColor || 'rgb(255,255,255)');
+    fd.append('thumb_border', s.border || '');
     fetch('<?php echo $jobs_basic_save_url; ?>', {method:'POST',body:fd})
     .then(function(r){return r.json();})
     .then(function(res){
@@ -1578,9 +1586,9 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       if(res.ok) alert('썸네일이 저장되었습니다.');
       else alert(res.msg || '저장에 실패했습니다.');
     })
-    .catch(function(){
+    .catch(function(e){
       if(btn) btn.disabled = false;
-      alert('저장 중 오류가 발생했습니다.');
+      alert('저장 중 오류가 발생했습니다: ' + (e.message || ''));
     });
   };
   _applyBorder();
@@ -1757,4 +1765,32 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
   filterRegDetail('inp-reg2','inp-regd2');
   filterRegDetail('inp-reg3','inp-regd3');
 })();
+</script>
+<script>
+if(typeof window.saveThumb !== 'function'){
+  window.saveThumb = function(){
+    var btn = document.getElementById('tg-save-btn');
+    if(btn) btn.disabled = true;
+    var gradBtn = document.querySelector('.grad-btn.selected');
+    var iconBtn = document.querySelector('#tg-icon-grid .badge-opt.selected');
+    var motionBtn = document.querySelector('#tg-motion-grid .motion-btn.selected');
+    var waveChk = document.getElementById('tg-wave-chk');
+    var txtBtn = document.querySelector('#tg-textcolor-grid .txt-color-btn.selected');
+    var borderBtn = document.querySelector('#tg-border-grid .border-btn.selected');
+    var fd = new FormData();
+    fd.append('jr_id', '<?php echo (int)$jr_id; ?>');
+    fd.append('thumb_gradient', gradBtn ? gradBtn.getAttribute('data-grad') : '1');
+    fd.append('thumb_title', (document.getElementById('tg-title')||{}).value||'');
+    fd.append('thumb_text', (document.getElementById('tg-text')||{}).value||'');
+    fd.append('thumb_icon', iconBtn ? (iconBtn.getAttribute('data-icon')||'') : '');
+    fd.append('thumb_motion', motionBtn ? (motionBtn.getAttribute('data-motion')||'') : '');
+    fd.append('thumb_wave', waveChk && waveChk.checked ? '1' : '0');
+    fd.append('thumb_text_color', txtBtn ? (txtBtn.getAttribute('data-tcolor')||'rgb(255,255,255)') : 'rgb(255,255,255)');
+    fd.append('thumb_border', borderBtn ? (borderBtn.getAttribute('data-border')||'') : '');
+    fetch('<?php echo $jobs_basic_save_url; ?>', {method:'POST',body:fd})
+    .then(function(r){return r.json();})
+    .then(function(res){ if(btn) btn.disabled=false; if(res.ok) alert('썸네일이 저장되었습니다.'); else alert(res.msg||'저장에 실패했습니다.'); })
+    .catch(function(e){ if(btn) btn.disabled=false; alert('저장 중 오류: '+(e.message||'')); });
+  };
+}
 </script>
