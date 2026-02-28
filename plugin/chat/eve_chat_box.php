@@ -1,20 +1,21 @@
 <?php
 // /plugin/chat/eve_chat_box.php — 이브알바 실시간 채팅 프론트엔드
 if (!defined('_GNUBOARD_')) exit;
-include_once(G5_PLUGIN_PATH.'/chat/_common.php');
+@include_once(G5_PLUGIN_PATH.'/chat/_common.php');
 
-$_chat_admin = (isset($is_admin) && $is_admin) ? true : false;
-$_chat_ajax  = G5_PLUGIN_URL.'/chat/chat_ajax.php';
-$_chat_member = (isset($member) && isset($member['mb_id']) && $member['mb_id']);
-$_chat_can   = false;
-$_chat_deny  = '';
+$_chat_admin  = (isset($is_admin) && $is_admin) ? true : false;
+$_chat_ajax   = G5_PLUGIN_URL.'/chat/chat_ajax.php';
+$_chat_member = (isset($member) && is_array($member) && isset($member['mb_id']) && $member['mb_id']) ? true : false;
+$_chat_can    = false;
+$_chat_deny   = '';
+
 if (!$_chat_member) {
     $_chat_deny = 'login';
-} else if ($_chat_admin) {
+} elseif ($_chat_admin) {
     $_chat_can = true;
 } else {
-    $type = isset($member['mb_1']) ? $member['mb_1'] : '';
-    $sex  = isset($member['mb_sex']) ? $member['mb_sex'] : '';
+    $type = (isset($member['mb_1']) && $member['mb_1']) ? $member['mb_1'] : '';
+    $sex  = (isset($member['mb_sex']) && $member['mb_sex']) ? $member['mb_sex'] : '';
     if ($type === 'normal' && $sex === 'F') {
         $_chat_can = true;
     } else {
@@ -23,11 +24,11 @@ if (!$_chat_member) {
 }
 
 $_chat_my_id   = $_chat_member ? $member['mb_id'] : '';
-$_chat_my_nick = $_chat_member ? $member['mb_nick'] : '손님';
+$_chat_my_nick = $_chat_member ? (isset($member['mb_nick']) ? $member['mb_nick'] : '') : '';
 
-$_chat_cfg = sql_fetch(" SELECT * FROM {$g5['chat_config_table']} LIMIT 1 ");
+$_chat_cfg = @sql_fetch(" SELECT * FROM {$g5['chat_config_table']} LIMIT 1 ");
 $_chat_notice = '';
-if (isset($_chat_cfg['cf_notice_text']) && $_chat_cfg['cf_notice_text'] !== '') {
+if ($_chat_cfg && isset($_chat_cfg['cf_notice_text']) && $_chat_cfg['cf_notice_text'] !== '') {
     $_chat_notice = $_chat_cfg['cf_notice_text'];
 }
 ?>

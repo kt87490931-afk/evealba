@@ -1,6 +1,19 @@
 <?php
 // /plugin/chat/chat_ajax.php — 이브알바 채팅 백엔드
-include_once('../../common.php');
+@error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
+@ini_set('display_errors', '0');
+
+$_chat_ajax_dir = __DIR__;
+$_common_path = $_chat_ajax_dir.'/../../common.php';
+if (!is_file($_common_path)) {
+    $_common_path = $_SERVER['DOCUMENT_ROOT'].'/common.php';
+}
+if (!is_file($_common_path)) {
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(array('ok'=>0,'msg'=>'common.php not found','path'=>$_common_path));
+    exit;
+}
+include_once($_common_path);
 include_once(G5_PLUGIN_PATH.'/chat/_common.php');
 
 @set_time_limit(20);
