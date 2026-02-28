@@ -95,6 +95,16 @@ if (!sql_num_rows($tb_check)) {
     sql_query($create_sql);
 }
 
+if (is_array($data) && empty($data['thumb_gradient'])) {
+    $data['thumb_gradient'] = (string)rand(1, 20);
+    $data['thumb_title'] = mb_substr($nickname ?: $company ?: '업소명', 0, 20, 'UTF-8');
+    $data['thumb_text'] = '안녕하세요';
+    $data['thumb_text_color'] = 'rgb(255,255,255)';
+    $data['thumb_icon'] = '';
+    $data['thumb_motion'] = '';
+    $data['thumb_wave'] = 0;
+    $data['thumb_border'] = '';
+}
 $job_data_to_store = (is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE) : $job_data);
 $jr_data_esc = sql_escape_string($job_data_to_store);
 $jr_nick_esc = sql_escape_string($nickname);

@@ -1,7 +1,7 @@
 <?php
 /**
- * 채용정보 메인 영역
- * - DB 연동: ongoing 광고를 유형별로 조회하여 표시
+ * 지역별채용 메인 영역
+ * - 채용정보 페이지와 동일 구조, 지역 필터 적용
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -9,22 +9,33 @@ if (!function_exists('get_jobs_by_type')) {
     @include_once(G5_PATH.'/extend/jobs_list_helper.php');
 }
 
-$_jobs_udae    = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 8) : array();
-$_jobs_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 5) : array();
-$_jobs_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 6) : array();
-$_jobs_urgent  = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', 3) : array();
-$_jobs_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', 4) : array();
-$_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광고', 20) : array();
+$_rf = isset($region_filter) ? $region_filter : '';
+$_jobs_udae    = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 8, $_rf) : array();
+$_jobs_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 5, $_rf) : array();
+$_jobs_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 6, $_rf) : array();
+$_jobs_urgent  = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', 3, $_rf) : array();
+$_jobs_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', 4, $_rf) : array();
+$_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광고', 20, $_rf) : array();
+
+$_region_list = array('서울','경기','인천','부산','대구','대전','광주','울산','세종','강원','충북','충남','전북','전남','경북','경남','제주');
 ?>
     <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
 
     <!-- 검색 필터 박스 -->
     <?php
     $jf = isset($job_filters) ? $job_filters : array('er_id'=>0,'erd_id'=>0,'ei_id'=>0,'ej_id'=>0,'ec_id'=>0,'stx'=>'');
-    $jobs_form_action = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : 'jobs.php';
+    $jobs_form_action = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_region.php' : 'jobs_region.php';
     ?>
+    <!-- 지역 선택 탭 -->
+    <div class="region-tab-bar" style="display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px;padding:10px 12px;background:#1a1a2e;border-radius:10px;">
+      <a href="<?php echo htmlspecialchars($jobs_form_action); ?>" style="padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;<?php echo !$_rf ? 'background:var(--hot-pink);color:#fff;' : 'background:#2a2a3e;color:#aaa;'; ?>">전체</a>
+      <?php foreach ($_region_list as $_rn) { ?>
+      <a href="<?php echo htmlspecialchars($jobs_form_action); ?>?region=<?php echo urlencode($_rn); ?>" style="padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;<?php echo ($_rf === $_rn) ? 'background:var(--hot-pink);color:#fff;' : 'background:#2a2a3e;color:#aaa;'; ?>"><?php echo htmlspecialchars($_rn); ?></a>
+      <?php } ?>
+    </div>
     <form method="get" action="<?php echo htmlspecialchars($jobs_form_action); ?>" id="jobs-search-form" class="filter-box">
-      <div class="filter-title">채용정보 검색하기 &nbsp;<small style="font-size:11px;font-weight:500;color:#aaa">조건 하나만 선택해도 검색이 가능합니다!</small></div>
+      <?php if ($_rf) { ?><input type="hidden" name="region" value="<?php echo htmlspecialchars($_rf); ?>"><?php } ?>
+      <div class="filter-title">지역별채용 검색하기 &nbsp;<small style="font-size:11px;font-weight:500;color:#aaa"><?php echo $_rf ? htmlspecialchars($_rf) . ' 지역' : '전체 지역'; ?> | 조건 하나만 선택해도 검색이 가능합니다!</small></div>
       <div class="filter-rows">
         <div class="filter-row">
           <span class="filter-label">▸ 지역</span>
@@ -87,7 +98,7 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
     <!-- 우대채용정보 -->
     <div class="section-wrap">
       <div class="section-header">
-        <h2 class="section-title">💎 우대등록 채용정보</h2>
+        <h2 class="section-title">💎 우대등록 채용정보<?php if($_rf) echo ' - '.htmlspecialchars($_rf); ?></h2>
         <div class="section-actions">
           <a href="#" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>

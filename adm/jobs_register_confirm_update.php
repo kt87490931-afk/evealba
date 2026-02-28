@@ -56,13 +56,27 @@ foreach ($jr_ids as $k => $v) {
     if ($row['jr_payment_confirmed']) continue;
     if ($row['jr_status'] !== 'pending') continue;
 
-    sql_query("UPDATE g5_jobs_register SET jr_payment_confirmed = 1 WHERE jr_id = '{$id}'");
+    $ad_period = (int)$row['jr_ad_period'] ?: 30;
+    $end_date = date('Y-m-d', strtotime("+{$ad_period} days"));
+    sql_query("UPDATE g5_jobs_register SET 
+        jr_payment_confirmed = 1, 
+        jr_approved = 1, 
+        jr_status = 'ongoing',
+        jr_approved_datetime = '".G5_TIME_YMDHIS."',
+        jr_end_date = '{$end_date}'
+        WHERE jr_id = '{$id}'");
     $confirm_ok++;
 
     // 입금확인 시 AI 소개글 생성 대기열에 등록
-    $jr_data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();
-    $has_ai = !empty($jr_data['ai_content']) || !empty($jr_data['ai_intro']);
-    if (is_array($jr_data) && !$has_ai) {
+    if (!function_exists('aic_get_active')) {
+        @include_once(G5_LIB_PATH . '/jobs_ai_content.lib.php');
+    }
+    $has_ai = function_exists('aic_get_active') ? (bool)aic_get_active($id) : false;
+    if (!$has_ai) {
+        $jr_data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();
+        $has_ai = !empty($jr_data['ai_content']) || !empty($jr_data['ai_intro']);
+    }
+    if (!$has_ai) {
         $q_check = sql_fetch("SELECT id FROM g5_jobs_ai_queue WHERE jr_id = '{$id}' AND status IN ('pending','processing') LIMIT 1", false);
         if (!$q_check) {
             sql_query("INSERT INTO g5_jobs_ai_queue (jr_id, status, created_at) VALUES ('{$id}', 'pending', '".G5_TIME_YMDHIS."')");

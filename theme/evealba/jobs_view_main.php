@@ -1062,7 +1062,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     </div>
     <?php } ?>
 
-    <?php if ($can_edit) { ?><div class="deploy-bar"><button type="button" class="btn-deploy" onclick="deployPost()">🚀 광고글 배포하기</button></div><?php } ?>
+    <?php if ($can_edit) { ?><div class="deploy-bar"><button type="button" class="btn-deploy" onclick="deployPost()">💾 수정사항 저장</button></div><?php } ?>
     <div class="view-notices" style="margin:0 0 16px;width:100%;">
       <p>* 커뮤니티 정책과 맞지 않는 게시물의 경우 블라인드 또는 삭제될 수 있습니다.</p>
     </div>
@@ -1172,7 +1172,35 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     }).catch(function(){ alert('저장 중 오류가 발생했습니다.'); });
   }
 
-  function deployPost(){ if(confirm('광고글을 배포하시겠습니까?')){ var btn=document.querySelector('.btn-deploy'); if(btn){ btn.textContent='✅ 배포 완료!'; btn.style.background='linear-gradient(135deg,#2E7D32,#43A047)'; setTimeout(function(){ btn.textContent='🚀 광고글 배포하기'; btn.style.background=''; },3000); } } }
+  function deployPost(){
+    if(!confirm('수정사항을 저장하시겠습니까?')) return;
+    var btn=document.querySelector('.btn-deploy');
+    if(btn){ btn.textContent='저장 중...'; btn.disabled=true; }
+    var payload={jr_id:jrId};
+    var thumbEl=document.getElementById('thumb-preview');
+    if(thumbEl){
+      payload.thumb_gradient=_thumbSelected||'1';
+      payload.thumb_title=document.getElementById('thumb-title')?document.getElementById('thumb-title').value:'';
+      payload.thumb_text=document.getElementById('thumb-text')?document.getElementById('thumb-text').value:'';
+      payload.thumb_text_color=_thumbTextColor||'rgb(255,255,255)';
+      payload.thumb_icon=_thumbIcon||'';
+      payload.thumb_motion=_thumbMotion||'';
+      payload.thumb_wave=_thumbWave?1:0;
+      payload.thumb_border=_thumbBorder||'';
+    }
+    fetch(bulkSaveUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(btn){ btn.textContent='✅ 저장 완료!'; btn.style.background='linear-gradient(135deg,#2E7D32,#43A047)'; btn.disabled=false;
+        setTimeout(function(){ btn.textContent='💾 수정사항 저장'; btn.style.background=''; },3000);
+      }
+    }).catch(function(){
+      if(btn){ btn.textContent='❌ 저장 실패'; btn.disabled=false;
+        setTimeout(function(){ btn.textContent='💾 수정사항 저장'; btn.style.background=''; },3000);
+      }
+      alert('저장 중 오류가 발생했습니다.');
+    });
+  }
 
   function buildBenefitChecks(){
     var wrap=document.getElementById('benefit-checks'); if(!wrap)return;

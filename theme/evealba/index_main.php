@@ -1,9 +1,20 @@
 <?php
 /**
- * 이브알바 메인 영역 (eve_alba_responsive_1.html 기준 100% 동일)
- * - 디자인/레이아웃만 구현, 기능 연동은 추후 진행
+ * 이브알바 메인 영역
+ * - DB 연동: ongoing 광고를 유형별로 조회하여 표시
+ * - DB에 건이 없으면 기존 더미 HTML 유지
  */
 if (!defined('_GNUBOARD_')) exit;
+
+if (!function_exists('get_jobs_by_type')) {
+    @include_once(G5_PATH.'/extend/jobs_list_helper.php');
+}
+
+$_idx_udae   = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 8) : array();
+$_idx_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 5) : array();
+$_idx_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 6) : array();
+$_idx_urgent  = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', 3) : array();
+$_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', 4) : array();
 ?>
 <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
 
@@ -88,6 +99,7 @@ if (!defined('_GNUBOARD_')) exit;
     <a href="#" class="section-more">더보기 →</a>
   </div>
   <div class="featured-grid">
+<?php if (!empty($_idx_udae)) { foreach ($_idx_udae as $_u) { render_job_card($_u); } } else { ?>
     <div class="job-card">
       <div class="job-card-banner g1"><span>👑 강남 하이퍼블릭<br>아우라</span></div>
       <div class="hot-badge">HOT</div>
@@ -136,52 +148,7 @@ if (!defined('_GNUBOARD_')) exit;
         </div>
       </div>
     </div>
-    <div class="job-card">
-      <div class="job-card-banner g5"><span>🌟 웨이브<br>대전</span></div>
-      <div class="job-card-body">
-        <div class="job-card-location"><span class="job-loc-badge">대전</span>유성구 룸싸롱</div>
-        <div class="job-desc">▶2시간26 ◀ ▶물방 약속.</div>
-        <div class="job-card-footer">
-          <span class="job-wage">130,000원</span>
-          <span class="job-badge"><span class="crown-silver">🥈</span>6회 540일</span>
-        </div>
-      </div>
-    </div>
-    <div class="job-card">
-      <div class="job-card-banner g6"><span>🔥 동탄위너<br>경기</span></div>
-      <div class="hot-badge">HOT</div>
-      <div class="job-card-body">
-        <div class="job-card-location"><span class="job-loc-badge">경기</span>화성시 노래주점</div>
-        <div class="job-desc">동탄1등 위너타 가모노 하이퍼블릭.</div>
-        <div class="job-card-footer">
-          <span class="job-wage">150,000원</span>
-          <span class="job-badge"><span class="crown-bronze">🥉</span>3회 90일</span>
-        </div>
-      </div>
-    </div>
-    <div class="job-card">
-      <div class="job-card-banner g7"><span>✨ 분당 이대표<br>경기 성남</span></div>
-      <div class="job-card-body">
-        <div class="job-card-location"><span class="job-loc-badge">경기</span>성남시 룸싸롱</div>
-        <div class="job-desc">♥로얄퍼블릭 1시간 T.C25만원이.</div>
-        <div class="job-card-footer">
-          <span class="job-wage">200,000원</span>
-          <span class="job-badge"><span class="crown-gold">👑</span>9회 270일</span>
-        </div>
-      </div>
-    </div>
-    <div class="job-card">
-      <div class="job-card-banner g8"><span>💫 강남 VIP룸<br>경기</span></div>
-      <div class="new-badge">NEW</div>
-      <div class="job-card-body">
-        <div class="job-card-location"><span class="job-loc-badge">경기</span>강남 VIP룸</div>
-        <div class="job-desc">★★★ 정통 하이캠오 ★</div>
-        <div class="job-card-footer">
-          <span class="job-wage">65,000원</span>
-          <span class="job-badge"><span class="crown-bronze">🥉</span>59회 1770일</span>
-        </div>
-      </div>
-    </div>
+<?php } ?>
   </div>
 </div>
 
@@ -191,7 +158,11 @@ if (!defined('_GNUBOARD_')) exit;
     <h2 class="section-title">프리미엄채용정보</h2>
     <a href="#" class="section-more">더보기 →</a>
   </div>
-  <?php include_once dirname(__FILE__).'/inc/ads_premium.php'; ?>
+<?php if (!empty($_idx_premium)) { ?>
+  <div class="premium-grid">
+    <?php foreach ($_idx_premium as $_p) { render_premium_card($_p); } ?>
+  </div>
+<?php } else { include_once dirname(__FILE__).'/inc/ads_premium.php'; } ?>
 </div>
 
 <!-- 커뮤니티 + 인재정보 -->
@@ -284,7 +255,11 @@ if (!defined('_GNUBOARD_')) exit;
     <h2 class="section-title">스페셜채용정보</h2>
     <a href="#" class="section-more">더보기 →</a>
   </div>
-  <?php include_once dirname(__FILE__).'/inc/ads_special.php'; ?>
+<?php if (!empty($_idx_special)) { ?>
+  <div class="special-grid">
+    <?php foreach ($_idx_special as $_s) { render_premium_card($_s, 'special-card'); } ?>
+  </div>
+<?php } else { include_once dirname(__FILE__).'/inc/ads_special.php'; } ?>
 </div>
 
 <!-- 급구채용 + 추천채용 -->
@@ -294,6 +269,7 @@ if (!defined('_GNUBOARD_')) exit;
       <h2 class="section-title" style="font-size:16px">급구채용</h2>
     </div>
     <div class="urgency-list">
+<?php if (!empty($_idx_urgent)) { foreach ($_idx_urgent as $_ug) { render_urgency_card($_ug); } } else { ?>
       <div class="urgency-card">
         <div class="urgency-name">♥화류지옥♥</div>
         <div class="urgency-area">서울</div>
@@ -312,6 +288,7 @@ if (!defined('_GNUBOARD_')) exit;
         <div class="urgency-desc">♥철산1등 타가게/고정/반고정.</div>
         <div class="urgency-wage">130,000원 <span>· 1회 60일</span></div>
       </div>
+<?php } ?>
     </div>
   </div>
   <div>
@@ -319,6 +296,7 @@ if (!defined('_GNUBOARD_')) exit;
       <h2 class="section-title" style="font-size:16px">추천채용</h2>
     </div>
     <div class="recommend-list">
+<?php if (!empty($_idx_recomm)) { foreach ($_idx_recomm as $_rc) { render_recommend_card($_rc); } } else { ?>
       <div class="recommend-card">
         <div>
           <div class="rec-name">♥파주최고TC♥ <span class="rec-area">경기 파주시</span></div>
@@ -359,6 +337,7 @@ if (!defined('_GNUBOARD_')) exit;
           <div class="rec-meta">노래주점 · 3회 540일</div>
         </div>
       </div>
+<?php } ?>
     </div>
   </div>
 </div>
