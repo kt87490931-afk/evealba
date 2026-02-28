@@ -34,641 +34,718 @@ if ($_chat_cfg && isset($_chat_cfg['cf_notice_text']) && $_chat_cfg['cf_notice_t
 ?>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
-/* ===================== CHAT WINDOW ===================== */
-.chat-window {
-  width: 360px;
-  max-width: calc(100vw - 24px);
-  max-height: calc(100vh - 110px);
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  display: none;
-  flex-direction: column;
-  border: 1.5px solid var(--border);
-  animation: slideUpIn .3s ease both;
-  position: fixed;
-  bottom: 90px;
-  right: 28px;
-  z-index: 1100;
+/* ===================== CSS VARIABLE 보완 ===================== */
+:root {
+  --white: #ffffff;
+  --border: #F0E0E8;
+  --chat-bg: #FDF5F9;
+  --shadow: 0 8px 32px rgba(255,27,107,.15);
+  --shadow-sm: 0 2px 12px rgba(255,27,107,.1);
+  --radius: 16px;
 }
-.chat-window.eve-open { display: flex; }
+
+/* ===================== ELEMENT RESET (격리) ===================== */
+#eveChatWrap,
+#eveChatWrap *,
+#eveChatWrap *::before,
+#eveChatWrap *::after {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  text-decoration: none !important;
+  list-style: none !important;
+  float: none !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  text-indent: 0 !important;
+  text-shadow: none !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+#eveChatWrap button,
+#eveChatWrap textarea {
+  font-family: 'Noto Sans KR', sans-serif !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* ===================== CHAT WINDOW ===================== */
+#eveChatWrap .chat-window {
+  width: 360px !important;
+  max-width: calc(100vw - 24px) !important;
+  max-height: calc(100vh - 110px) !important;
+  background: #ffffff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(255,27,107,.15) !important;
+  overflow: hidden !important;
+  display: none !important;
+  flex-direction: column !important;
+  border: 1.5px solid #F0E0E8 !important;
+  animation: slideUpIn .3s ease both !important;
+  position: fixed !important;
+  bottom: 90px !important;
+  right: 28px !important;
+  z-index: 1100 !important;
+  font-family: 'Noto Sans KR', sans-serif !important;
+  font-size: 14px !important;
+  color: #1A0010 !important;
+  line-height: 1.5 !important;
+}
+#eveChatWrap .chat-window.eve-open { display: flex !important; }
 @keyframes slideUpIn {
   from { opacity:0; transform:translateY(20px) scale(.97); }
   to   { opacity:1; transform:translateY(0)    scale(1); }
 }
 
 /* -------- CHAT HEADER -------- */
-.chat-header {
-  background: linear-gradient(135deg, var(--dark2), var(--hot-pink));
-  padding: 14px 16px 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  position: relative;
-  overflow: hidden;
+#eveChatWrap .chat-header {
+  background: linear-gradient(135deg, #2D0020, #FF1B6B) !important;
+  padding: 14px 16px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: none !important;
 }
-.chat-header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
-  animation: shimmer-h 3s linear infinite;
+#eveChatWrap .chat-header::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent) !important;
+  animation: shimmer-h 3s linear infinite !important;
+  margin: 0 !important; padding: 0 !important;
 }
 @keyframes shimmer-h {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
-.chat-header-icon { font-size: 22px; flex-shrink: 0; position:relative; z-index:1; }
-.chat-header-info { flex: 1; min-width: 0; position:relative; z-index:1; }
-.chat-header-title {
-  color: var(--white);
-  font-size: 15px;
-  font-weight: 900;
-  line-height: 1.2;
-  display: flex;
-  align-items: center;
-  gap: 7px;
+#eveChatWrap .chat-header-icon {
+  font-size: 22px !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 1 !important;
+  line-height: 1 !important;
 }
-.chat-header-region {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(255,255,255,.25);
-  border-radius: 10px;
-  padding: 2px 9px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--white);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,.3);
-  cursor: pointer;
-  transition: background .2s;
-  white-space: nowrap;
+#eveChatWrap .chat-header-info {
+  flex: 1 !important;
+  min-width: 0 !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
-.chat-header-region:hover { background: rgba(255,255,255,.35); }
-.chat-header-region .arrow {
-  font-size: 9px;
-  margin-left: 2px;
-  transition: transform .25s;
-  display: inline-block;
+#eveChatWrap .chat-header-title {
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  line-height: 1.2 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
 }
-.chat-header-region.open .arrow { transform: rotate(180deg); }
-.chat-header-sub {
-  color: rgba(255,255,255,.75);
-  font-size: 11px;
-  margin-top: 3px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  position: relative;
-  z-index: 1;
+#eveChatWrap .chat-header-region {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: rgba(255,255,255,.25) !important;
+  border-radius: 10px !important;
+  padding: 2px 9px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(4px) !important;
+  border: 1px solid rgba(255,255,255,.3) !important;
+  cursor: pointer !important;
+  transition: background .2s !important;
+  white-space: nowrap !important;
+  width: auto !important;
+  height: auto !important;
+  box-shadow: none !important;
 }
-.online-dot {
-  width: 7px;
-  height: 7px;
-  background: #4ADE80;
-  border-radius: 50%;
-  animation: blink-dot 1.5s ease-in-out infinite;
-  flex-shrink: 0;
+#eveChatWrap .chat-header-region:hover { background: rgba(255,255,255,.35) !important; }
+#eveChatWrap .chat-header-region .arrow {
+  font-size: 9px !important;
+  margin-left: 2px !important;
+  transition: transform .25s !important;
+  display: inline-block !important;
+}
+#eveChatWrap .chat-header-region.open .arrow { transform: rotate(180deg) !important; }
+#eveChatWrap .chat-header-sub {
+  color: rgba(255,255,255,.75) !important;
+  font-size: 11px !important;
+  margin-top: 3px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+#eveChatWrap .online-dot {
+  width: 7px !important;
+  height: 7px !important;
+  background: #4ADE80 !important;
+  border-radius: 50% !important;
+  animation: blink-dot 1.5s ease-in-out infinite !important;
+  flex-shrink: 0 !important;
 }
 @keyframes blink-dot {
   0%,100% { opacity:1; }
   50% { opacity:.3; }
 }
-.chat-header-actions {
-  display: flex;
-  gap: 6px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
+#eveChatWrap .chat-header-actions {
+  display: flex !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
-.chat-icon-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.18);
+#eveChatWrap .chat-icon-btn {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,.18) !important;
   border: 1px solid rgba(255,255,255,.25) !important;
-  color: var(--white);
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .2s;
-  backdrop-filter: blur(4px);
-  cursor: pointer;
-  padding: 0;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background .2s !important;
+  backdrop-filter: blur(4px) !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  line-height: 1 !important;
 }
-.chat-icon-btn:hover { background: rgba(255,255,255,.32); }
-.chat-icon-btn--text {
-  width: auto;
-  border-radius: 14px;
-  padding: 0 10px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .3px;
-  white-space: nowrap;
+#eveChatWrap .chat-icon-btn:hover { background: rgba(255,255,255,.32) !important; }
+#eveChatWrap .chat-icon-btn--text {
+  width: auto !important;
+  border-radius: 14px !important;
+  padding: 0 10px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .3px !important;
+  white-space: nowrap !important;
 }
-.chat-close-btn {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.18);
+#eveChatWrap .chat-close-btn {
+  width: 28px !important; height: 28px !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,.18) !important;
   border: 1px solid rgba(255,255,255,.25) !important;
-  color: var(--white);
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
-  padding: 0;
+  color: #ffffff !important;
+  font-size: 15px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 1 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  line-height: 1 !important;
 }
-.chat-close-btn:hover { background: rgba(255,255,255,.35); }
+#eveChatWrap .chat-close-btn:hover { background: rgba(255,255,255,.35) !important; }
 
 /* -------- REGION DROPDOWN -------- */
-.region-dropdown {
-  background: var(--white);
-  border-bottom: 2px solid var(--border);
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height .3s cubic-bezier(.4,0,.2,1), padding .3s;
-  flex-shrink: 0;
+#eveChatWrap .region-dropdown {
+  background: #ffffff !important;
+  border-bottom: 2px solid #F0E0E8 !important;
+  overflow: hidden !important;
+  max-height: 0 !important;
+  transition: max-height .3s cubic-bezier(.4,0,.2,1), padding .3s !important;
+  flex-shrink: 0 !important;
+  border-top: none !important; border-left: none !important; border-right: none !important;
 }
-.region-dropdown.open { max-height: 200px; }
-.region-dropdown-inner { padding: 12px 14px 14px; }
-.rd-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--gray);
-  margin-bottom: 9px;
-  letter-spacing: .5px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+#eveChatWrap .region-dropdown.open { max-height: 200px !important; }
+#eveChatWrap .region-dropdown-inner { padding: 12px 14px 14px !important; }
+#eveChatWrap .rd-title {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #888 !important;
+  margin-bottom: 9px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
 }
-.region-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-.region-chip {
-  padding: 5px 12px;
-  border-radius: 20px;
-  border: 1.5px solid var(--border);
-  background: var(--white);
-  font-size: 12px;
-  font-weight: 700;
-  color: #666;
-  cursor: pointer;
-  transition: all .18s;
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
+#eveChatWrap .region-grid { display: flex !important; flex-wrap: wrap !important; gap: 6px !important; }
+#eveChatWrap .region-chip {
+  padding: 5px 12px !important;
+  border-radius: 20px !important;
+  border: 1.5px solid #F0E0E8 !important;
+  background: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #666 !important;
+  cursor: pointer !important;
+  transition: all .18s !important;
+  white-space: nowrap !important;
+  position: relative !important;
+  overflow: hidden !important;
+  width: auto !important; height: auto !important;
+  box-shadow: none !important;
+  line-height: 1.4 !important;
 }
-.region-chip::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--orange), var(--hot-pink));
-  opacity: 0;
-  transition: opacity .18s;
+#eveChatWrap .region-chip::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(135deg, #FF6B35, #FF1B6B) !important;
+  opacity: 0 !important;
+  transition: opacity .18s !important;
 }
-.region-chip span { position: relative; z-index: 1; }
-.region-chip:hover { border-color: var(--light-pink); color: var(--hot-pink); }
-.region-chip.active {
-  border-color: transparent;
-  color: var(--white);
-  box-shadow: 0 2px 8px rgba(255,27,107,.3);
+#eveChatWrap .region-chip span { position: relative !important; z-index: 1 !important; }
+#eveChatWrap .region-chip:hover { border-color: #FF6BA8 !important; color: #FF1B6B !important; }
+#eveChatWrap .region-chip.active {
+  border-color: transparent !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(255,27,107,.3) !important;
 }
-.region-chip.active::before { opacity: 1; }
-.region-chip-all {
-  background: linear-gradient(135deg, var(--dark2), var(--hot-pink));
-  color: var(--white);
-  border-color: transparent;
-  box-shadow: 0 2px 8px rgba(255,27,107,.3);
+#eveChatWrap .region-chip.active::before { opacity: 1 !important; }
+#eveChatWrap .region-chip-all {
+  background: linear-gradient(135deg, #2D0020, #FF1B6B) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 8px rgba(255,27,107,.3) !important;
 }
-.region-chip-all::before { display: none; }
-.region-chip-all.active { box-shadow: 0 3px 14px rgba(255,27,107,.5); }
-.rd-user-count {
-  margin-top: 10px;
-  padding: 7px 12px;
-  background: linear-gradient(135deg, #fff5f8, #fff0f5);
-  border-radius: 10px;
-  border: 1.5px solid var(--pale-pink);
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  color: #666;
+#eveChatWrap .region-chip-all::before { display: none !important; }
+#eveChatWrap .region-chip-all.active { box-shadow: 0 3px 14px rgba(255,27,107,.5) !important; }
+#eveChatWrap .rd-user-count {
+  margin-top: 10px !important;
+  padding: 7px 12px !important;
+  background: linear-gradient(135deg, #fff5f8, #fff0f5) !important;
+  border-radius: 10px !important;
+  border: 1.5px solid #FFD6E7 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  font-size: 12px !important;
+  color: #666 !important;
 }
-.rd-user-count strong { color: var(--hot-pink); font-weight: 900; font-family: 'Outfit', sans-serif; font-size: 14px; }
+#eveChatWrap .rd-user-count strong { color: #FF1B6B !important; font-weight: 900 !important; font-family: 'Outfit', sans-serif !important; font-size: 14px !important; }
 
 /* -------- CHAT MESSAGES AREA -------- */
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 14px 12px;
-  background: var(--chat-bg);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-height: 200px;
-  scroll-behavior: smooth;
+#eveChatWrap .chat-messages {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 14px 12px !important;
+  background: #FDF5F9 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  min-height: 200px !important;
+  scroll-behavior: smooth !important;
 }
-.chat-messages::-webkit-scrollbar { width: 4px; }
-.chat-messages::-webkit-scrollbar-track { background: transparent; }
-.chat-messages::-webkit-scrollbar-thumb { background: var(--pale-pink); border-radius: 2px; }
+#eveChatWrap .chat-messages::-webkit-scrollbar { width: 4px; }
+#eveChatWrap .chat-messages::-webkit-scrollbar-track { background: transparent; }
+#eveChatWrap .chat-messages::-webkit-scrollbar-thumb { background: #FFD6E7; border-radius: 2px; }
 
-.chat-date-divider {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 8px 0 4px;
+#eveChatWrap .chat-date-divider {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 8px 0 4px !important;
 }
-.chat-date-divider::before, .chat-date-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
+#eveChatWrap .chat-date-divider::before, #eveChatWrap .chat-date-divider::after {
+  content: '' !important;
+  flex: 1 !important;
+  height: 1px !important;
+  background: #F0E0E8 !important;
 }
-.chat-date-text {
-  font-size: 10px;
-  color: var(--gray);
-  font-weight: 600;
-  padding: 2px 8px;
-  background: #f5e8f0;
-  border-radius: 10px;
-  white-space: nowrap;
-}
-
-.chat-system {
-  text-align: center;
-  font-size: 11px;
-  color: var(--gray);
-  padding: 4px 12px;
-  background: rgba(255,255,255,.7);
-  border-radius: 10px;
-  align-self: center;
-  border: 1px solid var(--border);
-  margin: 2px 0;
+#eveChatWrap .chat-date-text {
+  font-size: 10px !important;
+  color: #888 !important;
+  font-weight: 600 !important;
+  padding: 2px 8px !important;
+  background: #f5e8f0 !important;
+  border-radius: 10px !important;
+  white-space: nowrap !important;
 }
 
-.msg-row {
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
-  animation: msgIn .2s ease both;
+#eveChatWrap .chat-system {
+  text-align: center !important;
+  font-size: 11px !important;
+  color: #888 !important;
+  padding: 4px 12px !important;
+  background: rgba(255,255,255,.7) !important;
+  border-radius: 10px !important;
+  align-self: center !important;
+  border: 1px solid #F0E0E8 !important;
+  margin: 2px 0 !important;
+}
+
+#eveChatWrap .msg-row {
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 6px !important;
+  animation: msgIn .2s ease both !important;
 }
 @keyframes msgIn {
   from { opacity:0; transform:translateY(6px); }
   to   { opacity:1; transform:translateY(0); }
 }
-.msg-row.me { flex-direction: row-reverse; }
-.msg-row.cont .msg-avatar { visibility: hidden; }
+#eveChatWrap .msg-row.me { flex-direction: row-reverse !important; }
+#eveChatWrap .msg-row.cont .msg-avatar { visibility: hidden !important; }
 
-.msg-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--pale-pink), var(--light-pink));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
-  border: 2px solid var(--white);
-  box-shadow: 0 2px 8px rgba(255,27,107,.15);
-  align-self: flex-end;
+#eveChatWrap .msg-avatar {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #FFD6E7, #FF6BA8) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 18px !important;
+  flex-shrink: 0 !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 2px 8px rgba(255,27,107,.15) !important;
+  align-self: flex-end !important;
 }
-.msg-avatar.admin-avatar { background: linear-gradient(135deg, var(--dark2), var(--hot-pink)); }
-.msg-avatar.me-avatar { background: linear-gradient(135deg, var(--orange), var(--hot-pink)); }
+#eveChatWrap .msg-avatar.admin-avatar { background: linear-gradient(135deg, #2D0020, #FF1B6B) !important; }
+#eveChatWrap .msg-avatar.me-avatar { background: linear-gradient(135deg, #FF6B35, #FF1B6B) !important; }
 
-.msg-content { max-width: 230px; display: flex; flex-direction: column; gap: 3px; }
-.msg-row.me .msg-content { align-items: flex-end; }
-.msg-name {
-  font-size: 11px;
-  font-weight: 700;
-  color: #666;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 0 4px;
-  cursor: pointer;
+#eveChatWrap .msg-content { max-width: 230px !important; display: flex !important; flex-direction: column !important; gap: 3px !important; }
+#eveChatWrap .msg-row.me .msg-content { align-items: flex-end !important; }
+#eveChatWrap .msg-name {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #666 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 0 4px !important;
+  cursor: pointer !important;
 }
-.msg-name .region-tag {
-  background: var(--pale-pink);
-  color: var(--hot-pink);
-  border-radius: 6px;
-  padding: 1px 6px;
-  font-size: 10px;
-  font-weight: 700;
+#eveChatWrap .msg-name .region-tag {
+  background: #FFD6E7 !important;
+  color: #FF1B6B !important;
+  border-radius: 6px !important;
+  padding: 1px 6px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
 }
-.msg-name .admin-tag {
-  background: linear-gradient(135deg, var(--dark2), var(--hot-pink));
-  color: var(--white);
-  border-radius: 6px;
-  padding: 1px 6px;
-  font-size: 10px;
-  font-weight: 700;
+#eveChatWrap .msg-name .admin-tag {
+  background: linear-gradient(135deg, #2D0020, #FF1B6B) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 1px 6px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
 }
-.msg-bubble {
-  padding: 9px 13px;
-  border-radius: 16px;
-  font-size: 13px;
-  line-height: 1.6;
-  word-break: break-word;
-  position: relative;
-  max-width: 100%;
+#eveChatWrap .msg-bubble {
+  padding: 9px 13px !important;
+  border-radius: 16px !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  word-break: break-word !important;
+  position: relative !important;
+  max-width: 100% !important;
+  border: none !important;
 }
-.msg-bubble.other {
-  background: var(--white);
-  color: var(--dark);
-  border-radius: 4px 16px 16px 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
-  border: 1.5px solid var(--border);
+#eveChatWrap .msg-bubble.other {
+  background: #ffffff !important;
+  color: #1A0010 !important;
+  border-radius: 4px 16px 16px 16px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06) !important;
+  border: 1.5px solid #F0E0E8 !important;
 }
-.msg-bubble.me-bubble {
-  background: linear-gradient(135deg, var(--orange), var(--hot-pink));
-  color: var(--white);
-  border-radius: 16px 4px 16px 16px;
-  box-shadow: 0 3px 12px rgba(255,27,107,.3);
+#eveChatWrap .msg-bubble.me-bubble {
+  background: linear-gradient(135deg, #FF6B35, #FF1B6B) !important;
+  color: #ffffff !important;
+  border-radius: 16px 4px 16px 16px !important;
+  box-shadow: 0 3px 12px rgba(255,27,107,.3) !important;
 }
-.msg-meta {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 0 4px;
+#eveChatWrap .msg-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 0 4px !important;
 }
-.msg-time { font-size: 10px; color: #bbb; white-space: nowrap; }
-.msg-read { font-size: 10px; color: var(--orange); font-weight: 700; }
+#eveChatWrap .msg-time { font-size: 10px !important; color: #bbb !important; white-space: nowrap !important; }
+#eveChatWrap .msg-read { font-size: 10px !important; color: #FF6B35 !important; font-weight: 700 !important; }
 
 /* 공지 배너 */
-.chat-notice-wrap { padding: 10px 12px 0; background: var(--chat-bg); flex-shrink: 0; }
-.chat-notice {
-  background: linear-gradient(135deg, #fff8f0, #fff0e8);
-  border: 1.5px solid #FFD0AA;
-  border-radius: 10px;
-  padding: 8px 12px;
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  margin-bottom: 4px;
+#eveChatWrap .chat-notice-wrap { padding: 10px 12px 0 !important; background: #FDF5F9 !important; flex-shrink: 0 !important; }
+#eveChatWrap .chat-notice {
+  background: linear-gradient(135deg, #fff8f0, #fff0e8) !important;
+  border: 1.5px solid #FFD0AA !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 7px !important;
+  margin-bottom: 4px !important;
 }
-.notice-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-.notice-text { font-size: 11px; color: #AA5500; line-height: 1.6; }
-.notice-text strong { font-weight: 700; }
+#eveChatWrap .notice-icon { font-size: 14px !important; flex-shrink: 0 !important; margin-top: 1px !important; }
+#eveChatWrap .notice-text { font-size: 11px !important; color: #AA5500 !important; line-height: 1.6 !important; }
+#eveChatWrap .notice-text strong { font-weight: 700 !important; }
 
 /* -------- CHAT INPUT -------- */
-.chat-input-area {
-  border-top: 2px solid var(--border);
-  background: var(--white);
-  padding: 10px 12px;
-  flex-shrink: 0;
+#eveChatWrap .chat-input-area {
+  border-top: 2px solid #F0E0E8 !important;
+  background: #ffffff !important;
+  padding: 10px 12px !important;
+  flex-shrink: 0 !important;
+  border-bottom: none !important; border-left: none !important; border-right: none !important;
 }
-.chat-input-row {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  background: #fdf5f9;
-  border: 1.5px solid var(--border);
-  border-radius: 24px;
-  padding: 8px 8px 8px 14px;
-  transition: border-color .2s, box-shadow .2s;
+#eveChatWrap .chat-input-row {
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 8px !important;
+  background: #fdf5f9 !important;
+  border: 1.5px solid #F0E0E8 !important;
+  border-radius: 24px !important;
+  padding: 8px 8px 8px 14px !important;
+  transition: border-color .2s, box-shadow .2s !important;
 }
-.chat-input-row:focus-within {
-  border-color: var(--hot-pink);
-  box-shadow: 0 0 0 3px rgba(255,27,107,.08);
+#eveChatWrap .chat-input-row:focus-within {
+  border-color: #FF1B6B !important;
+  box-shadow: 0 0 0 3px rgba(255,27,107,.08) !important;
 }
-.chat-input {
-  flex: 1;
+#eveChatWrap .chat-input {
+  flex: 1 !important;
   border: none !important;
   background: transparent !important;
-  font-size: 13px;
-  color: var(--dark);
-  resize: none;
+  font-size: 13px !important;
+  color: #1A0010 !important;
+  resize: none !important;
   outline: none !important;
-  max-height: 80px;
-  min-height: 22px;
-  line-height: 1.5;
-  font-family: 'Noto Sans KR', sans-serif;
+  max-height: 80px !important;
+  min-height: 22px !important;
+  line-height: 1.5 !important;
+  font-family: 'Noto Sans KR', sans-serif !important;
   padding: 0 !important;
-  margin: 0;
+  margin: 0 !important;
   box-shadow: none !important;
+  width: auto !important;
+  height: auto !important;
 }
-.chat-input::placeholder { color: #bbb; }
-.chat-send-btn {
-  width: 38px;
-  height: 38px;
+#eveChatWrap .chat-input::placeholder { color: #bbb !important; }
+#eveChatWrap .chat-send-btn {
+  width: 38px !important;
+  height: 38px !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg, var(--orange), var(--hot-pink)) !important;
+  background: linear-gradient(135deg, #FF6B35, #FF1B6B) !important;
   border: none !important;
-  color: var(--white) !important;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: transform .2s, box-shadow .2s;
-  box-shadow: 0 3px 10px rgba(255,27,107,.3);
-  cursor: pointer;
-  padding: 0;
+  color: #ffffff !important;
+  font-size: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  transition: transform .2s, box-shadow .2s !important;
+  box-shadow: 0 3px 10px rgba(255,27,107,.3) !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  line-height: 1 !important;
 }
-.chat-send-btn:hover { transform: scale(1.08); box-shadow: 0 5px 16px rgba(255,27,107,.45); }
-.chat-send-btn:active { transform: scale(.95); }
-.chat-send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
-.chat-input-hint {
-  margin-top: 6px;
-  font-size: 10px;
-  color: #ccc;
-  text-align: center;
+#eveChatWrap .chat-send-btn:hover { transform: scale(1.08) !important; box-shadow: 0 5px 16px rgba(255,27,107,.45) !important; }
+#eveChatWrap .chat-send-btn:active { transform: scale(.95) !important; }
+#eveChatWrap .chat-send-btn:disabled { opacity: .5 !important; cursor: not-allowed !important; transform: none !important; box-shadow: none !important; }
+#eveChatWrap .chat-input-hint {
+  margin-top: 6px !important;
+  font-size: 10px !important;
+  color: #ccc !important;
+  text-align: center !important;
 }
 
-.chat-status {
-  display: none;
-  padding: 6px 10px;
-  font-size: 11px;
-  color: #e53935;
-  background: #fff5f5;
-  border-top: 1px solid var(--border);
-  text-align: center;
+#eveChatWrap .chat-status {
+  display: none !important;
+  padding: 6px 10px !important;
+  font-size: 11px !important;
+  color: #e53935 !important;
+  background: #fff5f5 !important;
+  border-top: 1px solid #F0E0E8 !important;
+  text-align: center !important;
+}
+#eveChatWrap .chat-status[style*="display: block"],
+#eveChatWrap .chat-status[style*="display:block"] {
+  display: block !important;
 }
 
 /* -------- LOGIN / DENY WALL -------- */
-.chat-login-wall {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 20px;
-  text-align: center;
-  background: var(--chat-bg);
-  gap: 14px;
+#eveChatWrap .chat-login-wall {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 32px 20px !important;
+  text-align: center !important;
+  background: #FDF5F9 !important;
+  gap: 14px !important;
 }
-.clw-icon { font-size: 48px; margin-bottom: 4px; }
-.clw-title { font-size: 16px; font-weight: 900; color: var(--dark); }
-.clw-sub { font-size: 13px; color: var(--gray); line-height: 1.7; }
-.btn-clw-login {
-  padding: 11px 28px;
-  background: linear-gradient(135deg, var(--orange), var(--hot-pink)) !important;
-  color: var(--white) !important;
+#eveChatWrap .clw-icon { font-size: 48px !important; margin-bottom: 4px !important; }
+#eveChatWrap .clw-title { font-size: 16px !important; font-weight: 900 !important; color: #1A0010 !important; }
+#eveChatWrap .clw-sub { font-size: 13px !important; color: #888 !important; line-height: 1.7 !important; }
+#eveChatWrap .btn-clw-login {
+  padding: 11px 28px !important;
+  background: linear-gradient(135deg, #FF6B35, #FF1B6B) !important;
+  color: #ffffff !important;
   border: none !important;
-  border-radius: 24px;
-  font-size: 14px;
-  font-weight: 900;
-  box-shadow: 0 4px 14px rgba(255,27,107,.3);
-  animation: pulse-glow 2s infinite;
-  transition: transform .2s;
-  cursor: pointer;
+  border-radius: 24px !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  box-shadow: 0 4px 14px rgba(255,27,107,.3) !important;
+  animation: pulse-glow 2s infinite !important;
+  transition: transform .2s !important;
+  cursor: pointer !important;
 }
-.btn-clw-login:hover { transform: scale(1.04); }
+#eveChatWrap .btn-clw-login:hover { transform: scale(1.04) !important; }
 @keyframes pulse-glow { 0%,100%{box-shadow:0 4px 14px rgba(255,27,107,.3)}50%{box-shadow:0 6px 22px rgba(255,27,107,.55)} }
 
 /* -------- MODAL OVERLAY -------- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  z-index: 2000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
+#eveChatWrap .modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0,0,0,.45) !important;
+  z-index: 2000 !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  border: none !important;
 }
-.modal-overlay.show { display: flex; }
-.modal-box {
-  background: var(--white);
-  border-radius: 18px;
-  width: 100%;
-  max-width: 360px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,.25);
-  animation: modalIn .25s ease both;
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
+#eveChatWrap .modal-overlay.show { display: flex !important; }
+#eveChatWrap .modal-box {
+  background: #ffffff !important;
+  border-radius: 18px !important;
+  width: 100% !important;
+  max-width: 360px !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25) !important;
+  animation: modalIn .25s ease both !important;
+  max-height: 85vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border: none !important;
 }
 @keyframes modalIn {
   from { opacity:0; transform:scale(.94) translateY(12px); }
   to   { opacity:1; transform:scale(1)   translateY(0); }
 }
-.modal-head {
-  background: linear-gradient(135deg, var(--dark2), var(--hot-pink));
-  padding: 16px 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
+#eveChatWrap .modal-head {
+  background: linear-gradient(135deg, #2D0020, #FF1B6B) !important;
+  padding: 16px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-shrink: 0 !important;
 }
-.modal-head-icon { font-size: 22px; }
-.modal-head-title { color: var(--white); font-size: 15px; font-weight: 900; flex: 1; }
-.modal-close {
-  width: 28px; height: 28px;
-  border-radius: 50%;
+#eveChatWrap .modal-head-icon { font-size: 22px !important; }
+#eveChatWrap .modal-head-title { color: #ffffff !important; font-size: 15px !important; font-weight: 900 !important; flex: 1 !important; }
+#eveChatWrap .modal-close {
+  width: 28px !important; height: 28px !important;
+  border-radius: 50% !important;
   background: rgba(255,255,255,.2) !important;
   border: 1px solid rgba(255,255,255,.3) !important;
-  color: var(--white) !important;
-  font-size: 13px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: background .2s;
-  flex-shrink: 0;
-  padding: 0;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  cursor: pointer !important;
+  transition: background .2s !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
 }
-.modal-close:hover { background: rgba(255,255,255,.38) !important; }
-.modal-body { padding: 18px; overflow-y: auto; flex: 1; }
-.modal-body::-webkit-scrollbar { width: 4px; }
-.modal-body::-webkit-scrollbar-thumb { background: var(--pale-pink); border-radius: 2px; }
+#eveChatWrap .modal-close:hover { background: rgba(255,255,255,.38) !important; }
+#eveChatWrap .modal-body { padding: 18px !important; overflow-y: auto !important; flex: 1 !important; }
+#eveChatWrap .modal-body::-webkit-scrollbar { width: 4px; }
+#eveChatWrap .modal-body::-webkit-scrollbar-thumb { background: #FFD6E7; border-radius: 2px; }
 
-.rules-list { display: flex; flex-direction: column; gap: 10px; }
-.rule-item {
-  display: flex; gap: 10px; align-items: flex-start;
-  padding: 11px 13px; border-radius: 12px;
-  background: #fff8fb; border: 1.5px solid var(--border);
-  transition: border-color .2s;
+#eveChatWrap .rules-list { display: flex !important; flex-direction: column !important; gap: 10px !important; }
+#eveChatWrap .rule-item {
+  display: flex !important; gap: 10px !important; align-items: flex-start !important;
+  padding: 11px 13px !important; border-radius: 12px !important;
+  background: #fff8fb !important; border: 1.5px solid #F0E0E8 !important;
+  transition: border-color .2s !important;
 }
-.rule-item:hover { border-color: var(--pale-pink); }
-.rule-num {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--orange), var(--hot-pink));
-  color: var(--white); font-size: 11px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; font-family: 'Outfit', sans-serif;
+#eveChatWrap .rule-item:hover { border-color: #FFD6E7 !important; }
+#eveChatWrap .rule-num {
+  width: 22px !important; height: 22px !important; border-radius: 50% !important;
+  background: linear-gradient(135deg, #FF6B35, #FF1B6B) !important;
+  color: #ffffff !important; font-size: 11px !important; font-weight: 900 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  flex-shrink: 0 !important; font-family: 'Outfit', sans-serif !important;
 }
-.rule-text { font-size: 12px; color: #444; line-height: 1.7; }
-.rule-text strong { color: var(--hot-pink); font-weight: 700; }
-.rules-footer {
-  margin-top: 14px; padding: 10px 13px;
-  background: linear-gradient(135deg, #fff0e8, #fff8f0);
-  border: 1.5px solid #FFD0AA; border-radius: 10px;
-  font-size: 11px; color: #AA5500; line-height: 1.7; text-align: center;
+#eveChatWrap .rule-text { font-size: 12px !important; color: #444 !important; line-height: 1.7 !important; }
+#eveChatWrap .rule-text strong { color: #FF1B6B !important; font-weight: 700 !important; }
+#eveChatWrap .rules-footer {
+  margin-top: 14px !important; padding: 10px 13px !important;
+  background: linear-gradient(135deg, #fff0e8, #fff8f0) !important;
+  border: 1.5px solid #FFD0AA !important; border-radius: 10px !important;
+  font-size: 11px !important; color: #AA5500 !important; line-height: 1.7 !important; text-align: center !important;
 }
 
 /* 무시목록 */
-.ignore-empty { text-align: center; padding: 32px 20px; color: var(--gray); }
-.ignore-empty-icon { font-size: 44px; margin-bottom: 10px; opacity: .5; }
-.ignore-empty-title { font-size: 14px; font-weight: 700; color: #bbb; margin-bottom: 5px; }
-.ignore-empty-sub { font-size: 12px; color: #ccc; }
-.ignore-list { display: flex; flex-direction: column; gap: 8px; }
-.ignore-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 13px; border-radius: 12px;
-  background: #fff8fb; border: 1.5px solid var(--border);
+#eveChatWrap .ignore-empty { text-align: center !important; padding: 32px 20px !important; color: #888 !important; }
+#eveChatWrap .ignore-empty-icon { font-size: 44px !important; margin-bottom: 10px !important; opacity: .5 !important; }
+#eveChatWrap .ignore-empty-title { font-size: 14px !important; font-weight: 700 !important; color: #bbb !important; margin-bottom: 5px !important; }
+#eveChatWrap .ignore-empty-sub { font-size: 12px !important; color: #ccc !important; }
+#eveChatWrap .ignore-list { display: flex !important; flex-direction: column !important; gap: 8px !important; }
+#eveChatWrap .ignore-item {
+  display: flex !important; align-items: center !important; gap: 10px !important;
+  padding: 10px 13px !important; border-radius: 12px !important;
+  background: #fff8fb !important; border: 1.5px solid #F0E0E8 !important;
 }
-.ignore-avatar {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--pale-pink), var(--light-pink));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
+#eveChatWrap .ignore-avatar {
+  width: 34px !important; height: 34px !important; border-radius: 50% !important;
+  background: linear-gradient(135deg, #FFD6E7, #FF6BA8) !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  font-size: 18px !important; flex-shrink: 0 !important;
 }
-.ignore-info { flex: 1; min-width: 0; }
-.ignore-nick { font-size: 13px; font-weight: 700; color: var(--dark); }
-.ignore-nick span { font-size: 11px; font-weight: 400; color: var(--gray); margin-left: 5px; }
-.ignore-since { font-size: 11px; color: #bbb; margin-top: 1px; }
-.btn-unignore {
-  padding: 5px 12px; border-radius: 10px;
-  border: 1.5px solid #ffcdd2; background: #ffebee;
-  color: #e53935; font-size: 11px; font-weight: 700;
-  cursor: pointer; transition: all .18s; white-space: nowrap; flex-shrink: 0;
+#eveChatWrap .ignore-info { flex: 1 !important; min-width: 0 !important; }
+#eveChatWrap .ignore-nick { font-size: 13px !important; font-weight: 700 !important; color: #1A0010 !important; }
+#eveChatWrap .ignore-nick span { font-size: 11px !important; font-weight: 400 !important; color: #888 !important; margin-left: 5px !important; }
+#eveChatWrap .ignore-since { font-size: 11px !important; color: #bbb !important; margin-top: 1px !important; }
+#eveChatWrap .btn-unignore {
+  padding: 5px 12px !important; border-radius: 10px !important;
+  border: 1.5px solid #ffcdd2 !important; background: #ffebee !important;
+  color: #e53935 !important; font-size: 11px !important; font-weight: 700 !important;
+  cursor: pointer !important; transition: all .18s !important; white-space: nowrap !important; flex-shrink: 0 !important;
 }
-.btn-unignore:hover { background: #e53935; color: white; border-color: #e53935; }
-.ignore-header-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1.5px solid var(--border);
+#eveChatWrap .btn-unignore:hover { background: #e53935 !important; color: white !important; border-color: #e53935 !important; }
+#eveChatWrap .ignore-header-bar {
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  margin-bottom: 12px !important; padding-bottom: 10px !important; border-bottom: 1.5px solid #F0E0E8 !important;
 }
-.ignore-count { font-size: 12px; color: var(--gray); }
-.ignore-count strong { color: var(--hot-pink); font-weight: 900; font-family: 'Outfit', sans-serif; font-size: 15px; }
+#eveChatWrap .ignore-count { font-size: 12px !important; color: #888 !important; }
+#eveChatWrap .ignore-count strong { color: #FF1B6B !important; font-weight: 900 !important; font-family: 'Outfit', sans-serif !important; font-size: 15px !important; }
 
 /* 신고 */
-.report-reasons { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
-.report-reason {
-  padding: 10px 14px; border-radius: 10px;
-  border: 1.5px solid var(--border); background: var(--white);
-  cursor: pointer; font-size: 13px; transition: all .15s; color: #333;
+#eveChatWrap .report-reasons { display: flex !important; flex-direction: column !important; gap: 6px !important; margin: 12px 0 !important; }
+#eveChatWrap .report-reason {
+  padding: 10px 14px !important; border-radius: 10px !important;
+  border: 1.5px solid #F0E0E8 !important; background: #ffffff !important;
+  cursor: pointer !important; font-size: 13px !important; transition: all .15s !important; color: #333 !important;
 }
-.report-reason:hover { border-color: var(--hot-pink); background: #fff5f8; }
-.report-reason.selected { border-color: var(--hot-pink); background: #fff0f5; font-weight: 700; color: var(--hot-pink); }
+#eveChatWrap .report-reason:hover { border-color: #FF1B6B !important; background: #fff5f8 !important; }
+#eveChatWrap .report-reason.selected { border-color: #FF1B6B !important; background: #fff0f5 !important; font-weight: 700 !important; color: #FF1B6B !important; }
 
 /* 닉네임 클릭 메뉴 */
-.nick-menu {
-  position: fixed; z-index: 2100;
-  min-width: 140px; background: var(--white);
-  border: 1.5px solid var(--border); border-radius: 12px;
-  box-shadow: 0 6px 24px rgba(0,0,0,.18);
-  padding: 6px; display: none; font-size: 12px;
+#eveChatWrap .nick-menu {
+  position: fixed !important; z-index: 2100 !important;
+  min-width: 140px !important; background: #ffffff !important;
+  border: 1.5px solid #F0E0E8 !important; border-radius: 12px !important;
+  box-shadow: 0 6px 24px rgba(0,0,0,.18) !important;
+  padding: 6px !important; display: none !important; font-size: 12px !important;
 }
-.nick-menu-item {
-  padding: 8px 12px; border-radius: 8px; cursor: pointer;
-  display: flex; align-items: center; gap: 6px; transition: background .15s; color: #333;
+#eveChatWrap .nick-menu-item {
+  padding: 8px 12px !important; border-radius: 8px !important; cursor: pointer !important;
+  display: flex !important; align-items: center !important; gap: 6px !important; transition: background .15s !important; color: #333 !important;
 }
-.nick-menu-item:hover { background: #fff0f5; }
-.nick-menu-item.danger { color: #e53935; }
-.nick-menu-item.danger:hover { background: #ffebee; }
+#eveChatWrap .nick-menu-item:hover { background: #fff0f5 !important; }
+#eveChatWrap .nick-menu-item.danger { color: #e53935 !important; }
+#eveChatWrap .nick-menu-item.danger:hover { background: #ffebee !important; }
 
 /* -------- MOBILE -------- */
 @media (max-width: 768px) {
-  .chat-window { width: calc(100vw - 16px); right: 8px; bottom: 80px; max-height: calc(100vh - 100px); }
+  #eveChatWrap .chat-window { width: calc(100vw - 16px) !important; right: 8px !important; bottom: 80px !important; max-height: calc(100vh - 100px) !important; }
 }
 </style>
+
+<!-- ============== CHAT WRAP (CSS 격리) ============== -->
+<div id="eveChatWrap">
 
 <!-- ============== CHAT WINDOW ============== -->
 <div class="chat-window" id="eveChatWindow">
@@ -840,6 +917,8 @@ if ($_chat_cfg && isset($_chat_cfg['cf_notice_text']) && $_chat_cfg['cf_notice_t
   <div class="nick-menu-item danger" id="menuReport">🚨 신고하기</div>
 </div>
 
+</div><!-- /eveChatWrap -->
+
 <?php if ($_chat_can) { ?>
 <script>
 (function(){
@@ -882,8 +961,8 @@ if ($_chat_cfg && isset($_chat_cfg['cf_notice_text']) && $_chat_cfg['cf_notice_t
   function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function setStatus(t){
     if(!el.status) return;
-    if(!t){el.status.style.display='none';el.status.textContent='';return;}
-    el.status.textContent=t;el.status.style.display='block';
+    if(!t){el.status.style.cssText='display:none !important';el.status.textContent='';return;}
+    el.status.textContent=t;el.status.style.cssText='display:block !important;padding:6px 10px !important;font-size:11px !important;color:#e53935 !important;background:#fff5f5 !important;border-top:1px solid #F0E0E8 !important;text-align:center !important';
   }
   function fmtTime(dt){
     if(!dt) return '';
@@ -1128,23 +1207,23 @@ if ($_chat_cfg && isset($_chat_cfg['cf_notice_text']) && $_chat_cfg['cf_notice_t
   // Nick menu
   function showNickMenu(x,y,mbid,nick){
     menuTarget.mb_id=mbid;menuTarget.nick=nick;
-    var m=el.nickMenu;m.style.display='block';
+    var m=el.nickMenu;m.style.cssText='display:block !important;position:fixed !important;z-index:2100 !important';
     var w=m.offsetWidth,h=m.offsetHeight;
     m.style.left=Math.min(x,window.innerWidth-w-8)+'px';
     m.style.top=Math.min(y,window.innerHeight-h-8)+'px';
     $('menuIgnore').textContent=isIgnored(mbid)?'🙈 무시해제':'🙈 무시하기';
   }
-  document.addEventListener('click',function(e){if(!el.nickMenu.contains(e.target)) el.nickMenu.style.display='none';},true);
+  document.addEventListener('click',function(e){if(!el.nickMenu.contains(e.target)) el.nickMenu.style.cssText='display:none !important';},true);
 
   $('menuIgnore').addEventListener('click',function(){
     if(!menuTarget.mb_id) return;
     var ign=toggleIgnore(menuTarget.mb_id);
     addSystemMsg(ign?'🙈 '+menuTarget.nick+'님을 무시합니다.':'✅ '+menuTarget.nick+'님의 무시를 해제했습니다.');
-    el.nickMenu.style.display='none';
+    el.nickMenu.style.cssText='display:none !important';
   });
   $('menuReport').addEventListener('click',function(){
     if(!menuTarget.mb_id) return;
-    el.nickMenu.style.display='none';
+    el.nickMenu.style.cssText='display:none !important';
     reportReason='';
     $('reportTarget').textContent=menuTarget.nick;
     document.querySelectorAll('.report-reason').forEach(function(r){r.classList.remove('selected');});
