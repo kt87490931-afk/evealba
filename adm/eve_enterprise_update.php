@@ -79,9 +79,10 @@ if ($action === 'approve') {
     $image_data = file_get_contents($doc_path);
     $base64_image = base64_encode($image_data);
 
-    $prompt = "이 이미지는 한국의 사업자등록증, 직업소개사업등록증, 또는 영업허가증입니다.\n"
-        . "다음 4가지 정보를 정확히 추출하여 JSON 형식으로만 응답해주세요.\n"
-        . "{\"biz_num\": \"사업자등록번호(숫자만)\", \"biz_name\": \"상호\", \"biz_rep\": \"대표자\", \"biz_addr\": \"주소\"}";
+    $prompt = "이 이미지는 한국의 사업자등록증입니다.\n"
+        . "다음 6가지 정보를 정확히 추출하여 JSON 형식으로만 응답해주세요. 다른 설명 없이 JSON만 반환하세요.\n"
+        . "{\"biz_num\": \"사업자등록번호(숫자만)\", \"biz_name\": \"상호\", \"biz_rep\": \"대표자\", \"biz_addr\": \"주소\", \"biz_type\": \"업태\", \"biz_item\": \"종목\"}\n"
+        . "업태/종목이 여러 개인 경우 쉼표로 구분하여 모두 추출하세요.";
 
     $api_url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $gemini_model . ':generateContent?key=' . $gemini_api_key;
     $request_body = array(
@@ -133,7 +134,9 @@ if ($action === 'approve') {
         'biz_num' => isset($ocr_result['biz_num']) ? preg_replace('/[^0-9]/', '', $ocr_result['biz_num']) : '',
         'biz_name' => isset($ocr_result['biz_name']) ? trim($ocr_result['biz_name']) : '',
         'biz_rep' => isset($ocr_result['biz_rep']) ? trim($ocr_result['biz_rep']) : '',
-        'biz_addr' => isset($ocr_result['biz_addr']) ? trim($ocr_result['biz_addr']) : ''
+        'biz_addr' => isset($ocr_result['biz_addr']) ? trim($ocr_result['biz_addr']) : '',
+        'biz_type' => isset($ocr_result['biz_type']) ? trim($ocr_result['biz_type']) : '',
+        'biz_item' => isset($ocr_result['biz_item']) ? trim($ocr_result['biz_item']) : ''
     );
     $existing_data['ocr_scanned_at'] = date('Y-m-d H:i:s');
 

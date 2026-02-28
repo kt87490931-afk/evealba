@@ -45,22 +45,27 @@ if (empty($gemini_api_key)) {
 }
 
 $prompt = <<<PROMPT
-이 이미지는 한국의 사업자등록증, 직업소개사업등록증, 또는 영업허가증입니다.
-다음 4가지 정보를 정확히 추출하여 JSON 형식으로만 응답해주세요.
+이 이미지는 한국의 사업자등록증입니다.
+다음 6가지 정보를 정확히 추출하여 JSON 형식으로만 응답해주세요.
 다른 설명 없이 JSON만 반환하세요.
 
 {
   "biz_num": "사업자등록번호 (숫자만, 하이픈 제거)",
   "biz_name": "상호 (사업장 이름)",
   "biz_rep": "대표자 성명",
-  "biz_addr": "사업장 소재지 (전체 주소)"
+  "biz_addr": "사업장 소재지 (전체 주소)",
+  "biz_type": "업태 (예: 숙박 및 음식점업, 서비스업 등)",
+  "biz_item": "종목 (예: 유흥주점, 단란주점, 노래연습장 등)"
 }
 
 주의사항:
 - 사업자등록번호는 하이픈(-) 없이 숫자 10자리만 추출
-- 상호는 정확한 상호명만 추출 (예: "(주)이브알바" 처럼)
+- 상호는 정확한 상호명만 추출
 - 대표자는 성명만 추출
 - 주소는 문서에 기재된 전체 주소를 추출
+- 업태는 사업자등록증의 "업태" 항목을 그대로 추출
+- 종목은 사업자등록증의 "종목" 또는 "업종" 항목을 그대로 추출
+- 업태/종목이 여러 개인 경우 쉼표(,)로 구분하여 모두 추출
 - 정보를 찾을 수 없는 경우 해당 필드를 빈 문자열("")로 설정
 PROMPT;
 
@@ -135,6 +140,8 @@ $biz_num = isset($ocr_result['biz_num']) ? preg_replace('/[^0-9]/', '', $ocr_res
 $biz_name = isset($ocr_result['biz_name']) ? trim($ocr_result['biz_name']) : '';
 $biz_rep = isset($ocr_result['biz_rep']) ? trim($ocr_result['biz_rep']) : '';
 $biz_addr = isset($ocr_result['biz_addr']) ? trim($ocr_result['biz_addr']) : '';
+$biz_type = isset($ocr_result['biz_type']) ? trim($ocr_result['biz_type']) : '';
+$biz_item = isset($ocr_result['biz_item']) ? trim($ocr_result['biz_item']) : '';
 
 $res['ok'] = 1;
 $res['msg'] = 'AI 자동인식 완료';
@@ -142,4 +149,6 @@ $res['biz_num'] = $biz_num;
 $res['biz_name'] = $biz_name;
 $res['biz_rep'] = $biz_rep;
 $res['biz_addr'] = $biz_addr;
+$res['biz_type'] = $biz_type;
+$res['biz_item'] = $biz_item;
 echo json_encode($res, JSON_UNESCAPED_UNICODE);

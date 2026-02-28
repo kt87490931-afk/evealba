@@ -161,6 +161,8 @@ if ($mb_1 === 'biz') {
     $mb_6 = 'data/member_biz_doc/' . $filename;
     $mb_7 = 'pending';
 
+    $ocr_from_front = isset($_POST['ocr_data']) ? json_decode($_POST['ocr_data'], true) : null;
+
     $ocr_data = array(
         'user_input' => array(
             'biz_num' => $mb_2,
@@ -171,6 +173,19 @@ if ($mb_1 === 'biz') {
         'doc_file' => $mb_6,
         'submitted_at' => date('Y-m-d H:i:s')
     );
+
+    if ($ocr_from_front && is_array($ocr_from_front)) {
+        $ocr_data['ocr_result'] = array(
+            'biz_num'  => isset($ocr_from_front['biz_num']) ? preg_replace('/[^0-9]/', '', $ocr_from_front['biz_num']) : '',
+            'biz_name' => isset($ocr_from_front['biz_name']) ? trim($ocr_from_front['biz_name']) : '',
+            'biz_rep'  => isset($ocr_from_front['biz_rep']) ? trim($ocr_from_front['biz_rep']) : '',
+            'biz_addr' => isset($ocr_from_front['biz_addr']) ? trim($ocr_from_front['biz_addr']) : '',
+            'biz_type' => isset($ocr_from_front['biz_type']) ? trim($ocr_from_front['biz_type']) : '',
+            'biz_item' => isset($ocr_from_front['biz_item']) ? trim($ocr_from_front['biz_item']) : ''
+        );
+        $ocr_data['ocr_scanned_at'] = date('Y-m-d H:i:s');
+    }
+
     $mb_8 = json_encode($ocr_data, JSON_UNESCAPED_UNICODE);
 }
 

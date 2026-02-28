@@ -594,6 +594,7 @@ function onBizDocChange(input) {
 }
 
 /* === Gemini OCR 자동인식 === */
+var _ocrResult = null;
 function doOcrScan() {
   var fileInput = document.getElementById('inp-biz-doc');
   if(!fileInput.files || !fileInput.files[0]) { alert('문서를 먼저 첨부해주세요.'); return; }
@@ -614,19 +615,25 @@ function doOcrScan() {
     btn.disabled = false;
     btn.textContent = '🔍 AI 자동인식';
     if(d.ok) {
-      status.innerHTML = '<span style="color:#2E7D32;font-weight:600;">✅ AI 자동인식 완료! 아래 정보를 확인해주세요.</span>';
+      _ocrResult = { biz_num: d.biz_num||'', biz_name: d.biz_name||'', biz_rep: d.biz_rep||'', biz_addr: d.biz_addr||'', biz_type: d.biz_type||'', biz_item: d.biz_item||'' };
+      var info = '✅ AI 자동인식 완료!';
+      if(d.biz_type) info += ' | 업태: <strong>'+d.biz_type+'</strong>';
+      if(d.biz_item) info += ' | 종목: <strong>'+d.biz_item+'</strong>';
+      status.innerHTML = '<span style="color:#2E7D32;font-weight:600;">'+info+'</span>';
       if(d.biz_num) document.getElementById('inp-biz-num').value = d.biz_num.replace(/[^0-9]/g,'').substring(0,10);
       if(d.biz_name) document.getElementById('inp-biz-name').value = d.biz_name;
       if(d.biz_rep) document.getElementById('inp-biz-rep').value = d.biz_rep;
       if(d.biz_addr) document.getElementById('inp-biz-addr').value = d.biz_addr;
       if(d.biz_num) formatBizNum(document.getElementById('inp-biz-num'));
     } else {
+      _ocrResult = null;
       status.innerHTML = '<span style="color:#c00;font-weight:600;">⚠ ' + (d.msg || 'AI 인식에 실패했습니다. 직접 입력해주세요.') + '</span>';
     }
   })
   .catch(function(err){
     btn.disabled = false;
     btn.textContent = '🔍 AI 자동인식';
+    _ocrResult = null;
     status.innerHTML = '<span style="color:#c00;font-weight:600;">⚠ 네트워크 오류. 직접 입력해주세요.</span>';
   });
 }
@@ -696,6 +703,7 @@ function doJoin() {
     fd.append('mb_4', document.getElementById('inp-biz-rep').value);
     fd.append('mb_5', document.getElementById('inp-biz-addr').value);
     fd.append('biz_doc', document.getElementById('inp-biz-doc').files[0]);
+    if(_ocrResult) fd.append('ocr_data', JSON.stringify(_ocrResult));
   }
 
   fetch(_baseUrl + '/eve_register_update.php', { method: 'POST', body: fd })

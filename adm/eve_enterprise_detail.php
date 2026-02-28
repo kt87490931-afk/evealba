@@ -1,7 +1,7 @@
 <?php
 /**
  * 어드민 - 기업회원 상세 정보 (AJAX HTML 반환)
- * 사용자 입력 vs OCR 추출 비교, 문서 이미지 표시
+ * 사용자 입력 vs OCR 추출 비교 + 업태/종목 승인가능 판단
  */
 $sub_menu = '910300';
 require_once './_common.php';
@@ -56,7 +56,42 @@ function eve_sim_badge($pct) {
     return '<span style="color:#C62828;font-weight:700;">'.$pct.'% ❌</span>';
 }
 
+$allowed_types = array();
+$allowed_items = array();
+$tb_cat = 'g5_eve_biz_category';
+$tb_check = sql_query("SHOW TABLES LIKE '{$tb_cat}'", false);
+if ($tb_check && sql_num_rows($tb_check)) {
+    $cat_res = sql_query("SELECT cat_type, cat_name FROM `{$tb_cat}` WHERE cat_enabled = 1");
+    while ($cat = sql_fetch_array($cat_res)) {
+        if ($cat['cat_type'] === 'type') $allowed_types[] = $cat['cat_name'];
+        else $allowed_items[] = $cat['cat_name'];
+    }
+}
+
+function eve_check_biz_allowed($ocr_value, $allowed_list) {
+    if (!$ocr_value || empty($allowed_list)) return array('match' => false, 'matched' => '');
+    $ocr_value = trim($ocr_value);
+    $ocr_parts = preg_split('/[,，、\/\s]+/', $ocr_value);
+    foreach ($ocr_parts as $part) {
+        $part = trim($part);
+        if (!$part) continue;
+        foreach ($allowed_list as $allowed) {
+            if (mb_strpos($part, $allowed, 0, 'UTF-8') !== false || mb_strpos($allowed, $part, 0, 'UTF-8') !== false) {
+                return array('match' => true, 'matched' => $allowed);
+            }
+        }
+    }
+    return array('match' => false, 'matched' => '');
+}
+
 $doc_url = $mb['mb_6'] ? G5_URL . '/' . $mb['mb_6'] : '';
+
+$ocr_biz_type = isset($ocr_result['biz_type']) ? $ocr_result['biz_type'] : '';
+$ocr_biz_item = isset($ocr_result['biz_item']) ? $ocr_result['biz_item'] : '';
+
+$type_check = eve_check_biz_allowed($ocr_biz_type, $allowed_types);
+$item_check = eve_check_biz_allowed($ocr_biz_item, $allowed_items);
+$biz_approvable = ($type_check['match'] || $item_check['match']);
 
 $fields = array(
     array('label' => '사업자번호', 'user' => $mb['mb_2'], 'ocr' => isset($ocr_result['biz_num']) ? $ocr_result['biz_num'] : '', 'type' => 'normal'),
@@ -85,10 +120,45 @@ $fields = array(
 </div>
 <?php } ?>
 
+<?php if ($ocr_biz_type || $ocr_biz_item) { ?>
+<h4 style="margin:16px 0 8px;font-size:15px;">🏷️ 업태/종목 승인 판단</h4>
+<div style="background:<?php echo $biz_approvable ? '#E8F5E9' : '#FFEBEE'; ?>;border-radius:10px;padding:14px 18px;margin-bottom:16px;border:2px solid <?php echo $biz_approvable ? '#4CAF50' : '#F44336'; ?>;">
+    <div style="font-size:16px;font-weight:900;margin-bottom:8px;color:<?php echo $biz_approvable ? '#2E7D32' : '#C62828'; ?>;">
+        <?php echo $biz_approvable ? '✅ 승인 가능 업종' : '❌ 승인 불가 (관련없는 업종)'; ?>
+    </div>
+    <table style="width:100%;border-collapse:collapse;">
+    <tr>
+        <td style="padding:4px 0;font-size:13px;width:60px;font-weight:700;">업태</td>
+        <td style="padding:4px 0;font-size:13px;"><?php echo htmlspecialchars($ocr_biz_type ?: '—'); ?></td>
+        <td style="padding:4px 0;font-size:13px;width:120px;text-align:right;">
+            <?php if ($ocr_biz_type) {
+                if ($type_check['match']) echo '<span style="color:#2E7D32;font-weight:700;">✅ 허용 ('.$type_check['matched'].')</span>';
+                else echo '<span style="color:#C62828;font-weight:700;">❌ 미등록</span>';
+            } else echo '<span style="color:#999;">—</span>'; ?>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:4px 0;font-size:13px;font-weight:700;">종목</td>
+        <td style="padding:4px 0;font-size:13px;"><?php echo htmlspecialchars($ocr_biz_item ?: '—'); ?></td>
+        <td style="padding:4px 0;font-size:13px;text-align:right;">
+            <?php if ($ocr_biz_item) {
+                if ($item_check['match']) echo '<span style="color:#2E7D32;font-weight:700;">✅ 허용 ('.$item_check['matched'].')</span>';
+                else echo '<span style="color:#C62828;font-weight:700;">❌ 미등록</span>';
+            } else echo '<span style="color:#999;">—</span>'; ?>
+        </td>
+    </tr>
+    </table>
+</div>
+<?php } elseif (!empty($ocr_result)) { ?>
+<div style="background:#FFF3E0;border-radius:10px;padding:14px 18px;margin-bottom:16px;border:2px solid #FF9800;">
+    <span style="font-size:13px;color:#E65100;font-weight:600;">⚠ 업태/종목 정보가 없습니다. AI 재스캔을 실행해주세요.</span>
+</div>
+<?php } ?>
+
 <h4 style="margin:16px 0 8px;font-size:15px;">📊 사용자 입력 vs AI 인식 비교</h4>
 
 <?php if (empty($ocr_result)) { ?>
-<p style="color:#999;font-size:13px;">AI OCR 인식 결과가 없습니다. (문서 재스캔이 필요할 수 있습니다)</p>
+<p style="color:#999;font-size:13px;">AI OCR 인식 결과가 없습니다. 아래 "AI 재스캔" 버튼을 눌러주세요.</p>
 <?php } ?>
 
 <table class="eve-cmp-table">
@@ -114,6 +184,18 @@ $fields = array(
     <td><?php echo $f['ocr'] ? eve_sim_badge($sim) : '—'; ?></td>
 </tr>
 <?php } ?>
+<?php if ($ocr_biz_type || $ocr_biz_item) { ?>
+<tr>
+    <th>업태</th>
+    <td colspan="2"><?php echo htmlspecialchars($ocr_biz_type ?: '—'); ?></td>
+    <td><?php echo $type_check['match'] ? '<span style="color:#2E7D32;font-weight:700;">✅</span>' : ($ocr_biz_type ? '<span style="color:#C62828;font-weight:700;">❌</span>' : '—'); ?></td>
+</tr>
+<tr>
+    <th>종목</th>
+    <td colspan="2"><?php echo htmlspecialchars($ocr_biz_item ?: '—'); ?></td>
+    <td><?php echo $item_check['match'] ? '<span style="color:#2E7D32;font-weight:700;">✅</span>' : ($ocr_biz_item ? '<span style="color:#C62828;font-weight:700;">❌</span>' : '—'); ?></td>
+</tr>
+<?php } ?>
 </tbody>
 </table>
 
@@ -124,8 +206,6 @@ $fields = array(
 </div>
 <?php } ?>
 
-<?php if (!empty($ocr_result) || $doc_url) { ?>
 <div style="margin-top:12px;text-align:center;">
     <button type="button" style="padding:6px 16px;border:1px solid #4285f4;border-radius:6px;background:#fff;color:#4285f4;font-size:12px;cursor:pointer;" onclick="eveRescanOcr('<?php echo $mb['mb_id']; ?>')">🔄 AI 재스캔</button>
 </div>
-<?php } ?>

@@ -66,6 +66,31 @@ function eve_addr_similarity($a, $b) {
     similar_text($na, $nb, $pct);
     return round($pct);
 }
+
+$_allowed_types = array();
+$_allowed_items = array();
+$_tb_cat = 'g5_eve_biz_category';
+$_tb_chk = sql_query("SHOW TABLES LIKE '{$_tb_cat}'", false);
+if ($_tb_chk && sql_num_rows($_tb_chk)) {
+    $_cat_res = sql_query("SELECT cat_type, cat_name FROM `{$_tb_cat}` WHERE cat_enabled = 1");
+    while ($_cat = sql_fetch_array($_cat_res)) {
+        if ($_cat['cat_type'] === 'type') $_allowed_types[] = $_cat['cat_name'];
+        else $_allowed_items[] = $_cat['cat_name'];
+    }
+}
+
+function eve_list_check_biz($val, $list) {
+    if (!$val || empty($list)) return false;
+    $parts = preg_split('/[,，、\/\s]+/', trim($val));
+    foreach ($parts as $p) {
+        $p = trim($p);
+        if (!$p) continue;
+        foreach ($list as $a) {
+            if (mb_strpos($p, $a, 0, 'UTF-8') !== false || mb_strpos($a, $p, 0, 'UTF-8') !== false) return true;
+        }
+    }
+    return false;
+}
 ?>
 
 <style>
@@ -129,6 +154,7 @@ function eve_addr_similarity($a, $b) {
     <th scope="col">대표자</th>
     <th scope="col">주소</th>
     <th scope="col">문서</th>
+    <th scope="col">업종판단</th>
     <th scope="col">상태</th>
     <th scope="col">관리</th>
 </tr>
@@ -169,6 +195,16 @@ while ($mb = sql_fetch_array($result)) {
         <img src="<?php echo $doc_url; ?>" class="eve-doc-thumb" onclick="eveShowDetail('<?php echo $mb['mb_id']; ?>')" title="클릭하여 상세보기">
         <?php } else { echo '—'; } ?>
     </td>
+    <td><?php
+        $ocr_biz_type = isset($ocr_ai['biz_type']) ? $ocr_ai['biz_type'] : '';
+        $ocr_biz_item = isset($ocr_ai['biz_item']) ? $ocr_ai['biz_item'] : '';
+        if ($ocr_biz_type || $ocr_biz_item) {
+            $t_ok = eve_list_check_biz($ocr_biz_type, $_allowed_types);
+            $i_ok = eve_list_check_biz($ocr_biz_item, $_allowed_items);
+            if ($t_ok || $i_ok) echo '<span class="eve-ent-badge approved">승인가능</span>';
+            else echo '<span class="eve-ent-badge rejected">승인불가</span>';
+        } else echo '<span style="color:#999;font-size:11px;">미스캔</span>';
+    ?></td>
     <td><span class="eve-ent-badge <?php echo $status_class; ?>"><?php echo $status_label; ?></span></td>
     <td>
         <button type="button" class="eve-act-btn" style="background:#4285f4;color:#fff;" onclick="eveShowDetail('<?php echo $mb['mb_id']; ?>')">상세</button>
