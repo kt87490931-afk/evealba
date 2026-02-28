@@ -167,14 +167,15 @@ function render_job_card($row) {
         }
     }
 
-    $motion_class = $thumb_motion ? ' pv-motion-' . $thumb_motion : '';
+    $motion_data = $thumb_motion ? ' data-motion="pv-motion-' . $thumb_motion . '"' : '';
     $card_style = $border_style ? ' style="' . $border_style . 'border-radius:14px;overflow:hidden;"' : '';
+    $has_anim = ($thumb_wave || $thumb_motion) ? ' data-lazy-anim="1"' : '';
 
-    echo '<div class="job-card"' . $card_style . '>';
+    echo '<div class="job-card"' . $card_style . $has_anim . '>';
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
-    $wave_anim = $thumb_wave ? 'animation:wave-shift 6s ease-in-out infinite;background-size:400% 400%;' : '';
-    echo '<div class="job-card-banner' . $carbon_class . '" style="background:' . $banner_bg . ';color:' . $text_color . ';' . $wave_anim . '">';
-    echo '<span class="' . trim($motion_class) . '">' . $title . '<br>' . $text . '</span>';
+    $wave_data = $thumb_wave ? ' data-wave="animation:wave-shift 6s ease-in-out infinite;background-size:400% 400%;"' : '';
+    echo '<div class="job-card-banner' . $carbon_class . '" style="background:' . $banner_bg . ';color:' . $text_color . ';"' . $wave_data . '>';
+    echo '<span' . $motion_data . '>' . $title . '<br>' . $text . '</span>';
     echo '</div>';
     if ($thumb_icon && isset($icon_map[$thumb_icon])) {
         $ic = $icon_map[$thumb_icon];
@@ -240,15 +241,16 @@ function render_premium_card($row, $card_class = 'premium-card') {
             $banner_bg = "linear-gradient(135deg,{$c1},{$c2},{$c3},{$c1},{$c2})";
         }
     }
-    $wave_anim = $thumb_wave ? 'animation:wave-shift 6s ease-in-out infinite;background-size:400% 400%;' : '';
-    $motion_class = $thumb_motion ? ' pv-motion-' . $thumb_motion : '';
+    $motion_data = $thumb_motion ? ' data-motion="pv-motion-' . $thumb_motion . '"' : '';
     $card_style = $border_style ? ' style="' . $border_style . 'border-radius:14px;overflow:hidden;"' : '';
+    $has_anim = ($thumb_wave || $thumb_motion) ? ' data-lazy-anim="1"' : '';
 
-    echo '<div class="' . $card_class . '"' . $card_style . '>';
+    echo '<div class="' . $card_class . '"' . $card_style . $has_anim . '>';
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
-    echo '<div class="premium-banner' . $carbon_class . '" style="background:' . $banner_bg . ';color:' . $text_color . ';' . $wave_anim . '">';
-    echo '<span class="' . trim($motion_class) . '">' . $title . '</span>';
-    if ($text) echo '<br><span class="' . trim($motion_class) . '" style="font-size:11px;opacity:.85">' . $text . '</span>';
+    $wave_data = $thumb_wave ? ' data-wave="animation:wave-shift 6s ease-in-out infinite;background-size:400% 400%;"' : '';
+    echo '<div class="premium-banner' . $carbon_class . '" style="background:' . $banner_bg . ';color:' . $text_color . ';"' . $wave_data . '>';
+    echo '<span' . $motion_data . '>' . $title . '</span>';
+    if ($text) echo '<br><span' . $motion_data . ' style="font-size:11px;opacity:.85">' . $text . '</span>';
     echo '</div>';
     echo '<div class="premium-body">';
     if ($loc_line) echo '<div class="premium-area"><span class="job-loc-badge" style="font-size:10px;padding:1px 5px;border-radius:4px;margin-right:3px">' . htmlspecialchars($region_name) . '</span>' . htmlspecialchars(trim($detail_name . ' ' . $job1)) . '</div>';

@@ -807,3 +807,4 @@ $_region_list = array('서울','경기','인천','부산','대구','대전','광
       <input class="filter-input" type="text" placeholder="키워드 입력">
       <button type="button" class="btn-bottom-search">🔍 검색</button>
     </div>
+<script src="<?php echo G5_THEME_URL; ?>/js/lazy_anim.js?v=<?php echo G5_CSS_VER; ?>"></script>

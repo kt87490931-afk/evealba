@@ -831,3 +831,4 @@ if ($_show_all_sections) {
       <button type="button" class="btn-bottom-search">🔍 검색</button>
     </div>
 <?php } ?>
+<script src="<?php echo G5_THEME_URL; ?>/js/lazy_anim.js?v=<?php echo G5_CSS_VER; ?>"></script>

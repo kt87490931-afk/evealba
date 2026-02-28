@@ -1131,10 +1131,12 @@ nav::before {
 @keyframes motion-soft-blink{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes motion-glow-pulse{0%,100%{text-shadow:none}50%{text-shadow:0 0 10px #fff,0 0 25px #fff,0 0 50px rgba(255,255,255,.7),0 0 80px rgba(255,255,255,.4)}}
 @keyframes motion-bounce{0%,100%{transform:translateY(0)}25%{transform:translateY(-10px)}50%{transform:translateY(0)}65%{transform:translateY(-5px)}80%{transform:translateY(0)}90%{transform:translateY(-2px)}}
-.pv-motion-shimmer{animation:motion-pulse-scale 1.4s ease-in-out infinite!important;display:inline-block!important}
-.pv-motion-soft-blink{animation:motion-soft-blink 1.8s ease-in-out infinite!important}
-.pv-motion-glow{animation:motion-glow-pulse 2s ease-in-out infinite!important}
-.pv-motion-bounce{animation:motion-bounce 1.2s ease infinite!important}
+.pv-motion-shimmer{animation:motion-pulse-scale 1.4s ease-in-out infinite!important;display:inline-block!important;will-change:transform}
+.pv-motion-soft-blink{animation:motion-soft-blink 1.8s ease-in-out infinite!important;will-change:opacity}
+.pv-motion-glow{animation:motion-glow-pulse 2s ease-in-out infinite!important;will-change:text-shadow}
+.pv-motion-bounce{animation:motion-bounce 1.2s ease infinite!important;will-change:transform}
+.job-card-banner[data-wave],.premium-banner[data-wave]{will-change:background-position;transform:translateZ(0)}
+.job-card[data-lazy-anim],.premium-card[data-lazy-anim],.special-card[data-lazy-anim]{contain:layout style paint}
 
 /* PREMIUM CARDS */
 .premium-grid {
