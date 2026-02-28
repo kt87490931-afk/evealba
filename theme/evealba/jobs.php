@@ -17,6 +17,7 @@ $job_filters = array(
     'ec_id' => isset($_GET['ec_id']) ? (int)$_GET['ec_id'] : 0,
     'stx' => isset($_GET['stx']) ? trim($_GET['stx']) : ''
 );
+$_ad_type_filter = isset($_GET['ad_type']) ? trim($_GET['ad_type']) : '';
 ?>
 
 <?php include(G5_THEME_PATH.'/jobs_main.php'); ?>

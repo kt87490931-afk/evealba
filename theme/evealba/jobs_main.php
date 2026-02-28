@@ -9,12 +9,35 @@ if (!function_exists('get_jobs_by_type')) {
     @include_once(G5_PATH.'/extend/jobs_list_helper.php');
 }
 
-$_jobs_udae    = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 8) : array();
-$_jobs_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 5) : array();
-$_jobs_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 6) : array();
-$_jobs_urgent  = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', 3) : array();
-$_jobs_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', 4) : array();
-$_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광고', 20) : array();
+$_atf = isset($_ad_type_filter) ? $_ad_type_filter : '';
+$_show_all_sections = empty($_atf);
+
+if ($_show_all_sections || $_atf === '우대') {
+    $_jobs_udae = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 0) : array();
+} else { $_jobs_udae = array(); }
+
+if ($_show_all_sections || $_atf === '프리미엄') {
+    $_jobs_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 0) : array();
+} else { $_jobs_premium = array(); }
+
+if ($_show_all_sections || $_atf === '스페셜') {
+    $_lim_special = $_show_all_sections ? 6 : 0;
+    $_jobs_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', $_lim_special) : array();
+} else { $_jobs_special = array(); }
+
+if ($_show_all_sections || $_atf === '급구') {
+    $_lim_urgent = $_show_all_sections ? 5 : 0;
+    $_jobs_urgent = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', $_lim_urgent) : array();
+} else { $_jobs_urgent = array(); }
+
+if ($_show_all_sections || $_atf === '추천') {
+    $_lim_recomm = $_show_all_sections ? 10 : 0;
+    $_jobs_recomm = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', $_lim_recomm) : array();
+} else { $_jobs_recomm = array(); }
+
+if ($_show_all_sections) {
+    $_jobs_list = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광고', 20) : array();
+} else { $_jobs_list = array(); }
 ?>
     <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
 
@@ -85,11 +108,12 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
     </form>
 
     <!-- 우대채용정보 -->
+<?php if ($_show_all_sections || $_atf === '우대') { ?>
     <div class="section-wrap">
       <div class="section-header">
         <h2 class="section-title">💎 우대등록 채용정보</h2>
         <div class="section-actions">
-          <a href="#" class="section-more">더보기 →</a>
+          <a href="/jobs.php?ad_type=우대" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
@@ -146,13 +170,15 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
 <?php } ?>
       </div>
     </div>
+<?php } ?>
 
     <!-- 프리미엄 채용정보 -->
+<?php if ($_show_all_sections || $_atf === '프리미엄') { ?>
     <div class="section-wrap">
       <div class="section-header">
         <h2 class="section-title">✨ 프리미엄 채용정보</h2>
         <div class="section-actions">
-          <a href="#" class="section-more">더보기 →</a>
+          <a href="/jobs.php?ad_type=프리미엄" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
@@ -162,13 +188,15 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
       </div>
 <?php } else { include_once dirname(__FILE__).'/inc/ads_premium.php'; } ?>
     </div>
+<?php } ?>
 
     <!-- 스페셜 채용정보 -->
+<?php if ($_show_all_sections || $_atf === '스페셜') { ?>
     <div class="section-wrap">
       <div class="section-header">
         <h2 class="section-title">⭐ 스페셜채용정보</h2>
         <div class="section-actions">
-          <a href="#" class="section-more">더보기 →</a>
+          <a href="/jobs.php?ad_type=스페셜" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
@@ -178,14 +206,16 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
       </div>
 <?php } else { include_once dirname(__FILE__).'/inc/ads_special.php'; } ?>
     </div>
+<?php } ?>
 
     <!-- 급구 + 추천 -->
     <div class="urgency-recommend-row">
+<?php if ($_show_all_sections || $_atf === '급구') { ?>
       <div>
         <div class="section-header">
           <h2 class="section-title" style="font-size:16px">🚨 급구채용</h2>
           <div class="section-actions">
-            <a href="#" class="section-more">더보기</a>
+            <a href="/jobs.php?ad_type=급구" class="section-more">더보기</a>
             <button type="button" class="btn-post-ad">광고신청</button>
           </div>
         </div>
@@ -212,11 +242,13 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
 <?php } ?>
         </div>
       </div>
+<?php } ?>
+<?php if ($_show_all_sections || $_atf === '추천') { ?>
       <div>
         <div class="section-header">
           <h2 class="section-title" style="font-size:16px">💖 추천채용</h2>
           <div class="section-actions">
-            <a href="#" class="section-more">더보기</a>
+            <a href="/jobs.php?ad_type=추천" class="section-more">더보기</a>
             <button type="button" class="btn-post-ad">광고신청</button>
           </div>
         </div>
@@ -255,8 +287,10 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
 <?php } ?>
         </div>
       </div>
+<?php } ?>
     </div>
 
+<?php if ($_show_all_sections) { ?>
     <!-- 채용정보 리스트 테이블 -->
     <div class="section-wrap">
       <div class="section-header">
@@ -799,3 +833,4 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
       <input class="filter-input" type="text" placeholder="키워드 입력">
       <button type="button" class="btn-bottom-search">🔍 검색</button>
     </div>
+<?php } ?>
