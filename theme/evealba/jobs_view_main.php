@@ -81,7 +81,8 @@ $_opt_daily_rates = array(
     'wave'    => 1667,
     'border'  => 1000,
 );
-$nick = isset($data['job_nickname']) ? trim($data['job_nickname']) : $row['jr_nickname'];
+$_author_mb = sql_fetch("SELECT mb_nick FROM g5_member WHERE mb_id = '".addslashes($row['mb_id'])."'");
+$nick = $_author_mb['mb_nick'] ?: (isset($data['job_nickname']) ? trim($data['job_nickname']) : $row['jr_nickname']);
 $comp = isset($data['job_company']) ? trim($data['job_company']) : $row['jr_company'];
 $title = isset($data['job_title']) ? trim($data['job_title']) : $row['jr_title'];
 $contact = isset($data['job_contact']) ? trim($data['job_contact']) : '';
@@ -635,7 +636,8 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       </div>
       <table class="info-table">
         <tbody>
-          <tr><td class="lbl">🏷️ 닉네임·상호</td><td class="val" id="disp-name"><?php echo htmlspecialchars($nick ?: $banner_comp); ?></td></tr>
+          <tr><td class="lbl">🏷️ 닉네임</td><td class="val" id="disp-nick"><?php echo htmlspecialchars($nick ?: '—'); ?></td></tr>
+          <tr><td class="lbl">🏪 상호</td><td class="val" id="disp-comp"><?php echo htmlspecialchars($comp ?: '—'); ?></td></tr>
           <tr><td class="lbl">📞 연락처</td><td class="val val-pink" id="disp-tel"><?php echo htmlspecialchars($contact); ?></td></tr>
           <tr><td class="lbl">💬 SNS</td><td class="val" id="disp-sns"><?php
             $sns_chips = array();
@@ -884,7 +886,8 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
           <button type="button" class="modal-close" onclick="closeModal('basic')">✕</button>
         </div>
         <div class="modal-body">
-          <div class="modal-field"><label class="modal-label">🏷️ 닉네임 · 상호</label><input type="text" class="modal-input" id="inp-name" value="<?php echo htmlspecialchars($nick ?: ''); ?>" readonly disabled style="background:#f0f0f0;color:#999;cursor:not-allowed;" /></div>
+          <div class="modal-field"><label class="modal-label">🏷️ 닉네임</label><input type="text" class="modal-input" id="inp-nick" value="<?php echo htmlspecialchars($nick ?: ''); ?>" readonly disabled style="background:#f0f0f0;color:#999;cursor:not-allowed;" /><span style="font-size:11px;color:#aaa;">회원가입 시 등록한 닉네임 (변경: 회원정보 수정)</span></div>
+          <div class="modal-field"><label class="modal-label">🏪 상호</label><input type="text" class="modal-input" id="inp-comp" value="<?php echo htmlspecialchars($comp ?: ''); ?>" readonly disabled style="background:#f0f0f0;color:#999;cursor:not-allowed;" /><span style="font-size:11px;color:#aaa;">채용등록 시 입력한 상호 (변경: 채용정보 수정)</span></div>
           <div class="modal-field"><label class="modal-label">📞 연락처</label><input type="text" class="modal-input" id="inp-tel" value="<?php echo htmlspecialchars($contact); ?>" /></div>
           <div class="modal-field"><label class="modal-label">💬 카카오 ID</label><input type="text" class="modal-input" id="inp-kakao" value="<?php echo htmlspecialchars($sns_kakao); ?>" /></div>
           <div class="modal-field"><label class="modal-label">💬 라인 ID</label><input type="text" class="modal-input" id="inp-line" value="<?php echo htmlspecialchars($sns_line); ?>" /></div>
@@ -1119,7 +1122,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     if(curSel&&curSel.style.display==='none')detail.value='';
   }
   function saveBasic(){
-    var name=((document.getElementById('inp-name')||{}).value||'').trim();
+    var name=((document.getElementById('inp-nick')||{}).value||'').trim();
     var tel=((document.getElementById('inp-tel')||{}).value||'').trim();
     var kakao=((document.getElementById('inp-kakao')||{}).value||'').trim();
     var line=((document.getElementById('inp-line')||{}).value||'').trim();
@@ -1151,7 +1154,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     fd.append('job_title',biztitle);
     fetch(basicSaveUrl,{method:'POST',body:fd,credentials:'same-origin'}).then(function(r){return r.json();}).then(function(res){
       if(res.ok){
-        var disp=document.getElementById('disp-name'); if(disp)disp.textContent=name||'—';
+        var disp=document.getElementById('disp-nick'); if(disp)disp.textContent=name||'—';
         disp=document.getElementById('disp-tel'); if(disp)disp.textContent=tel||'—';
         var snsHtml=''; if(kakao)snsHtml+='<span class="sns-chip" style="background:#FEE500;color:#333;">카카오 '+kakao+'</span> ';
         if(line)snsHtml+='<span class="sns-chip" style="background:#00B300;color:#fff;">라인 '+line+'</span> ';
