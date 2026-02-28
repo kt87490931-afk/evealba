@@ -1067,12 +1067,12 @@ nav::before {
 .job-card {
   background:#fff; border-radius:13px;
   overflow:hidden; border:1.5px solid #f0e0e8;
-  transition:all .25s; cursor:pointer;
+  transition:transform .25s, border-color .25s; cursor:pointer;
   position:relative;
 }
+.job-card > a { display:block; text-decoration:none; color:inherit; position:relative; }
 .job-card:hover {
   transform:translateY(-4px);
-  box-shadow:0 10px 28px rgba(255,27,107,.2);
   border-color:var(--light-pink);
 }
 .job-card-banner {
@@ -1082,9 +1082,17 @@ nav::before {
   color:#fff; text-align:center; padding:8px;
   position:relative; overflow:hidden;
 }
+.job-card-banner > span { position:relative; z-index:2; }
 .job-card-banner::after {
-  content:''; position:absolute; inset:0;
+  content:''; position:absolute; inset:0; z-index:1;
   background:linear-gradient(135deg,rgba(255,255,255,.1) 0%,transparent 50%,rgba(0,0,0,.1) 100%);
+  pointer-events:none;
+}
+.pv-icon-badge {
+  position:absolute; top:7px; right:7px;
+  font-size:10px; font-weight:900;
+  padding:2px 7px; border-radius:9px;
+  z-index:10; color:#fff;
 }
 .job-card-body { padding:9px 11px; }
 .job-card-location { font-size:11px; color:var(--gray); margin-bottom:3px; }
