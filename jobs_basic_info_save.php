@@ -10,18 +10,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 $result = array('ok' => 0, 'msg' => '');
 
-if (isset($_GET['debug'])) {
-    $raw = file_get_contents('php://input');
-    echo json_encode(array(
-        'post_keys' => array_keys($_POST),
-        'post_data' => $_POST,
-        'raw_length' => strlen($raw),
-        'raw_preview' => substr($raw, 0, 500),
-        'content_type' => isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : 'none',
-        'request_method' => $_SERVER['REQUEST_METHOD']
-    ), JSON_UNESCAPED_UNICODE);
-    exit;
-}
+@file_put_contents('/tmp/save_debug.log', date('Y-m-d H:i:s') . " POST=" . json_encode($_POST) . " RAW_LEN=" . strlen(file_get_contents('php://input')) . " CT=" . ($_SERVER['CONTENT_TYPE'] ?? 'none') . " METHOD=" . $_SERVER['REQUEST_METHOD'] . "\n", FILE_APPEND);
 
 if (!$is_member) {
     $result['msg'] = '로그인 후 이용해 주세요.';
