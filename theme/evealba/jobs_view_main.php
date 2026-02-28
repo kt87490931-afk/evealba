@@ -1577,25 +1577,16 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     fd.append('thumb_wave', _thumbWave ? '1' : '0');
     fd.append('thumb_text_color', _thumbTextColor || 'rgb(255,255,255)');
     fd.append('thumb_border', _thumbBorder || '');
-    var debugInfo = [];
-    fd.forEach(function(v,k){ debugInfo.push(k+'='+v); });
-    console.log('[saveThumb] URL:', basicSaveUrl, 'Data:', debugInfo.join(', '));
     fetch(basicSaveUrl, {method:'POST', body:fd, credentials:'same-origin'})
-    .then(function(r){return r.text();})
-    .then(function(txt){
+    .then(function(r){return r.json();})
+    .then(function(res){
       if(btn) btn.disabled = false;
-      console.log('[saveThumb] Response:', txt);
-      try {
-        var res = JSON.parse(txt);
-        if(res.ok) alert('썸네일이 저장되었습니다.');
-        else alert('[DEBUG]\nSent: '+debugInfo.join(', ')+'\nURL: '+basicSaveUrl+'\nResponse: '+txt);
-      } catch(e) {
-        alert('[DEBUG] Parse error\nURL: '+basicSaveUrl+'\nResponse: '+txt.substring(0,500));
-      }
+      if(res.ok) alert('썸네일이 저장되었습니다.');
+      else alert(res.msg || '저장에 실패했습니다.');
     })
     .catch(function(e){
       if(btn) btn.disabled = false;
-      alert('[DEBUG] Fetch error: '+(e.message||'')+'\nURL: '+basicSaveUrl);
+      alert('저장 중 오류가 발생했습니다: ' + (e.message || ''));
     });
   };
   _applyBorder();

@@ -127,9 +127,28 @@ function render_job_card($row) {
     $thumb_wave = !empty($jr_data['thumb_wave']);
     $jr_id = (int)$row['jr_id'];
     $link = _jlh_clean_url($row, $jr_data);
-    $location = htmlspecialchars($jr_data['desc_location'] ?? '');
-    $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 30, 'UTF-8'));
-    $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
+
+    $r1 = isset($jr_data['job_work_region_1']) ? trim($jr_data['job_work_region_1']) : '';
+    $rd1 = isset($jr_data['job_work_region_detail_1']) ? trim($jr_data['job_work_region_detail_1']) : '';
+    $region_name = $r1 ? _jlh_region_name($r1) : '';
+    $detail_name = $rd1 ? _jlh_region_detail_name($rd1) : '';
+    $job1 = isset($jr_data['job_job1']) ? trim($jr_data['job_job1']) : '';
+    $loc_detail = trim($detail_name . ' ' . $job1);
+
+    $desc = htmlspecialchars(mb_substr($jr_data['job_title'] ?? $row['jr_title'] ?? '', 0, 30, 'UTF-8'));
+
+    $sal_type = $jr_data['job_salary_type'] ?? '';
+    $sal_amt = $jr_data['job_salary_amt'] ?? '';
+    if ($sal_type === '급여협의') {
+        $wage_disp = '급여협의';
+    } elseif ($sal_type && $sal_amt) {
+        $wage_disp = $sal_type . ' ' . number_format((int)preg_replace('/[^0-9]/', '', $sal_amt)) . '원';
+    } elseif ($sal_type) {
+        $wage_disp = $sal_type;
+    } else {
+        $wage_disp = '급여협의';
+    }
+
     $jump_count = (int)($row['jr_jump_count'] ?? 0);
     $ad_period = (int)($row['jr_ad_period'] ?? 30);
     $carbon_class = ($grad_key === 'P3') ? ' carbon-bg' : '';
@@ -157,7 +176,6 @@ function render_job_card($row) {
     }
 
     $motion_class = $thumb_motion ? ' pv-motion-' . $thumb_motion : '';
-
     $card_style = $border_style ? ' style="' . $border_style . 'border-radius:14px;overflow:hidden;"' : '';
 
     echo '<div class="job-card"' . $card_style . '>';
@@ -171,9 +189,9 @@ function render_job_card($row) {
         echo '<div class="pv-icon-badge" style="position:absolute;top:7px;right:7px;font-size:10px;font-weight:900;padding:2px 7px;border-radius:9px;z-index:10;color:#fff;background:' . $ic['bg'] . '">' . $ic['label'] . '</div>';
     }
     echo '<div class="job-card-body">';
-    if ($location) echo '<div class="job-card-location"><span class="job-loc-badge">' . mb_substr($location, 0, 2, 'UTF-8') . '</span>' . $location . '</div>';
+    if ($region_name) echo '<div class="job-card-location"><span class="job-loc-badge">' . htmlspecialchars($region_name) . '</span>' . htmlspecialchars($loc_detail) . '</div>';
     if ($desc) echo '<div class="job-desc">' . $desc . '</div>';
-    echo '<div class="job-card-footer"><span class="job-wage">' . $nickname . '</span>' . $badge_html . '</div>';
+    echo '<div class="job-card-footer"><span class="job-wage">' . htmlspecialchars($wage_disp) . '</span>' . $badge_html . '</div>';
     echo '</div>';
     echo '</a>';
     echo '</div>';
@@ -194,9 +212,26 @@ function render_premium_card($row, $card_class = 'premium-card') {
     $thumb_motion = isset($jr_data['thumb_motion']) ? trim($jr_data['thumb_motion']) : '';
     $jr_id = (int)$row['jr_id'];
     $link = _jlh_clean_url($row, $jr_data);
-    $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
-    $location = htmlspecialchars($jr_data['desc_location'] ?? '');
     $carbon_class = ($grad_key === 'P3') ? ' carbon-bg' : '';
+
+    $r1 = isset($jr_data['job_work_region_1']) ? trim($jr_data['job_work_region_1']) : '';
+    $rd1 = isset($jr_data['job_work_region_detail_1']) ? trim($jr_data['job_work_region_detail_1']) : '';
+    $region_name = $r1 ? _jlh_region_name($r1) : '';
+    $detail_name = $rd1 ? _jlh_region_detail_name($rd1) : '';
+    $job1 = isset($jr_data['job_job1']) ? trim($jr_data['job_job1']) : '';
+    $loc_line = trim($region_name . ' ' . $detail_name . ' ' . $job1);
+
+    $sal_type = $jr_data['job_salary_type'] ?? '';
+    $sal_amt = $jr_data['job_salary_amt'] ?? '';
+    if ($sal_type === '급여협의') {
+        $wage_disp = '급여협의';
+    } elseif ($sal_type && $sal_amt) {
+        $wage_disp = $sal_type . ' ' . number_format((int)preg_replace('/[^0-9]/', '', $sal_amt)) . '원';
+    } elseif ($sal_type) {
+        $wage_disp = $sal_type;
+    } else {
+        $wage_disp = '급여협의';
+    }
 
     $border_style = '';
     if ($thumb_border === 'gold') $border_style = 'border:2.5px solid transparent;box-shadow:0 0 0 2.5px #FFD700,0 4px 15px rgba(255,215,0,.35);';
@@ -224,8 +259,8 @@ function render_premium_card($row, $card_class = 'premium-card') {
     if ($text) echo '<br><span class="' . trim($motion_class) . '" style="font-size:11px;opacity:.85">' . $text . '</span>';
     echo '</div>';
     echo '<div class="premium-body">';
-    echo '<div class="premium-name">' . $nickname . '</div>';
-    if ($location) echo '<div class="premium-area">' . $location . '</div>';
+    if ($loc_line) echo '<div class="premium-area"><span class="job-loc-badge" style="font-size:10px;padding:1px 5px;border-radius:4px;margin-right:3px">' . htmlspecialchars($region_name) . '</span>' . htmlspecialchars(trim($detail_name . ' ' . $job1)) . '</div>';
+    echo '<div class="premium-name">' . htmlspecialchars($wage_disp) . '</div>';
     echo '</div>';
     echo '</a>';
     echo '</div>';
