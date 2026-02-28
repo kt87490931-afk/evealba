@@ -25,9 +25,30 @@ if (!$jr_id) {
 
 $allowed_keys = array(
     'job_nickname', 'job_company', 'job_contact', 'job_kakao', 'job_line', 'job_telegram',
-    'job_salary_type', 'job_salary_amt', 'job_work_region_1', 'job_work_region_detail_1',
-    'job_job1', 'job_job2'
+    'job_salary_type', 'job_salary_amt',
+    'job_work_region_1', 'job_work_region_detail_1',
+    'job_work_region_2', 'job_work_region_detail_2',
+    'job_work_region_3', 'job_work_region_detail_3',
+    'job_job1', 'job_job2', 'job_title',
+    'thumb_gradient', 'thumb_title', 'thumb_text',
+    'thumb_icon', 'thumb_motion', 'thumb_wave',
+    'thumb_text_color',
+    'thumb_border'
 );
+
+if (isset($_GET['debug'])) {
+    $raw = file_get_contents('php://input');
+    echo json_encode(array(
+        'post_keys' => array_keys($_POST),
+        'post_data' => $_POST,
+        'raw_length' => strlen($raw),
+        'raw_preview' => substr($raw, 0, 500),
+        'content_type' => isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : 'none',
+        'request_method' => $_SERVER['REQUEST_METHOD']
+    ), JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $updates = array();
 foreach ($allowed_keys as $k) {
     if (isset($_POST[$k])) {
