@@ -176,80 +176,120 @@ function render_recommend_card($row) {
 }
 
 /**
- * 줄광고 리스트 행 렌더링 (채용정보 테이블)
+ * jr_data에서 공통 필드 추출
+ */
+function _jlh_extract_fields($row) {
+    $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
+    $f = array();
+    $f['jr_id'] = (int)$row['jr_id'];
+    $f['link'] = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $f['jr_id'];
+    $f['nickname'] = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
+    $f['location'] = htmlspecialchars($jr_data['desc_location'] ?? '');
+    $f['title'] = htmlspecialchars($row['jr_title'] ?: ($jr_data['job_title'] ?? ''));
+    $f['job1'] = htmlspecialchars($jr_data['job_job1'] ?? '');
+    $f['job2'] = htmlspecialchars($jr_data['job_job2'] ?? '');
+    $f['salary_type'] = $jr_data['job_salary_type'] ?? '';
+    $f['salary_amt'] = $jr_data['job_salary_amt'] ?? '';
+    $f['employ_type'] = $jr_data['employ_type'] ?? '';
+    $f['amenity'] = isset($jr_data['amenity']) && is_array($jr_data['amenity']) ? $jr_data['amenity'] : array();
+    $f['keyword'] = isset($jr_data['keyword']) && is_array($jr_data['keyword']) ? $jr_data['keyword'] : array();
+    $f['grad_key'] = isset($jr_data['thumb_gradient']) ? $jr_data['thumb_gradient'] : '1';
+    $f['grad'] = _jlh_get_gradient($f['grad_key']);
+    $f['jump_count'] = (int)($row['jr_jump_count'] ?? 0);
+    $f['ad_period'] = (int)($row['jr_ad_period'] ?? 30);
+    $f['is_new'] = (strtotime($row['jr_datetime']) > strtotime('-3 days'));
+    $f['ad_labels'] = $row['jr_ad_labels'] ?? '';
+
+    $sal = $f['salary_type'];
+    if ($f['salary_amt']) {
+        $f['wage_display'] = number_format((int)$f['salary_amt']) . '원';
+    } else {
+        $f['wage_display'] = ($sal && $sal !== '급여협의') ? $sal : '면접 후 협의';
+    }
+    $wb_map = array('일급'=>'wb-ilbul', '월급'=>'wb-wolbul', '시급'=>'wb-sigan', '급여협의'=>'wb-hyup');
+    $f['wage_badge_class'] = isset($wb_map[$sal]) ? $wb_map[$sal] : 'wb-hyup';
+    $f['wage_badge_label'] = $sal ?: '협의';
+
+    return $f;
+}
+
+/**
+ * 줄광고 리스트 행 렌더링 (채용정보 테이블) - 원본 디자인 일치
  */
 function render_job_list_row($row) {
-    $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
-    $jr_id = (int)$row['jr_id'];
-    $link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $jr_id;
-    $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
-    $location = htmlspecialchars($jr_data['desc_location'] ?? '');
-    $loc_parts = array_filter(explode(' ', str_replace(',', ' ', $location)));
-    $region = isset($loc_parts[0]) ? $loc_parts[0] : '-';
-    $subregion = isset($loc_parts[1]) ? $loc_parts[1] : '';
-    $title_text = htmlspecialchars($row['jr_title'] ?: ($jr_data['job_title'] ?? ''));
-    $grad_key = isset($jr_data['thumb_gradient']) ? $jr_data['thumb_gradient'] : '1';
-    $grad = _jlh_get_gradient($grad_key);
-    $thumb_title = htmlspecialchars($jr_data['thumb_title'] ?? $nickname);
-    $nick_short = mb_substr($nickname, 0, 5, 'UTF-8');
-    $jump_count = (int)($row['jr_jump_count'] ?? 0);
-    $ad_period = (int)($row['jr_ad_period'] ?? 30);
-    $jump_icon = $jump_count >= 10 ? '🔥' : ($jump_count >= 3 ? '🥉' : '🥈');
-    $is_new = (strtotime($row['jr_datetime']) > strtotime('-3 days'));
+    $f = _jlh_extract_fields($row);
+    $nick_short = mb_substr($f['nickname'], 0, 5, 'UTF-8');
+    $jump_icon = $f['jump_count'] >= 10 ? '🔥' : ($f['jump_count'] >= 3 ? '🥉' : '🥈');
 
-    $ad_labels = $row['jr_ad_labels'] ?? '';
+    $benefit_html = '';
+    foreach (array_slice($f['amenity'], 0, 4) as $i => $am) {
+        $cls = $i < 2 ? 'benefit-tag b-hot' : 'benefit-tag';
+        $benefit_html .= '<span class="' . $cls . '">' . htmlspecialchars($am) . '</span>';
+    }
+
+    $tag_map = array('급구'=>'tag-urgent','초보가능'=>'tag-init','당일지급'=>'tag-bonus','선불가능'=>'tag-pink',
+        '출퇴근지원'=>'tag-bonus','원룸제공'=>'tag-pink','인센티브'=>'tag-pay','숙식제공'=>'tag-pink',
+        '만근비지원'=>'tag-bonus','갯수보장'=>'tag-pink','지명우대'=>'tag-pink','성형지원'=>'tag-bonus');
     $tags_html = '';
-    if (strpos($ad_labels, '급구') !== false) $tags_html .= '<span class="list-tag tag-urgent">급구</span>';
-    if ($is_new) $tags_html .= '<span class="list-tag tag-init">NEW</span>';
+    if (strpos($f['ad_labels'], '급구') !== false) $tags_html .= '<span class="list-tag tag-urgent">급구</span>';
+    foreach (array_slice($f['keyword'], 0, 3) as $kw) {
+        $tc = isset($tag_map[$kw]) ? $tag_map[$kw] : 'tag-init';
+        $tags_html .= '<span class="list-tag ' . $tc . '">' . htmlspecialchars($kw) . '</span>';
+    }
+    if ($f['is_new'] && !$tags_html) $tags_html .= '<span class="list-tag tag-init">NEW</span>';
 
     echo '<tr class="job-list-row">';
-    echo '<td class="td-region">' . $region . ($subregion ? '<br>' . $subregion : '') . '</td>';
-    echo '<td class="td-type">-</td>';
+    echo '<td class="td-region">' . htmlspecialchars($f['location']) . '</td>';
+    echo '<td class="td-type">' . ($f['job1'] ?: '-') . ($f['job2'] ? '<br>' . $f['job2'] : '') . '</td>';
     echo '<td class="col-gender td-gender">-</td>';
     echo '<td class="list-title-cell">';
-    echo '<a href="' . $link . '" class="list-job-title">' . $title_text . '</a>';
-    if ($tags_html) echo '<div class="list-title-bottom"><div class="list-tags">' . $tags_html . '</div></div>';
+    echo '<a href="' . $f['link'] . '" class="list-job-title">' . $f['title'] . '</a>';
+    if ($benefit_html || $tags_html) {
+        echo '<div class="list-title-bottom">';
+        if ($benefit_html) echo '<div class="benefit-tags">' . $benefit_html . '</div>';
+        if ($tags_html) echo '<div class="list-tags">' . $tags_html . '</div>';
+        echo '</div>';
+    }
     echo '</td>';
     echo '<td class="col-benefits td-shop">';
-    echo '<div class="shop-name">' . $nickname . '</div>';
-    echo '<div class="shop-mini-banner" style="background:' . $grad . '">' . $nick_short . '</div>';
-    if ($jump_count > 0) echo '<div class="shop-jump">' . $jump_icon . ' ' . $jump_count . '회 ' . ($jump_count * $ad_period) . '일</div>';
+    echo '<div class="shop-name">' . $f['nickname'] . '</div>';
+    echo '<div class="shop-mini-banner" style="background:' . $f['grad'] . '">' . $nick_short . '</div>';
+    if ($f['jump_count'] > 0) echo '<div class="shop-jump">' . $jump_icon . ' ' . $f['jump_count'] . '회 ' . ($f['jump_count'] * $f['ad_period']) . '일</div>';
     echo '</td>';
-    echo '<td class="td-wage"><span class="wage-amount">면접 후 협의</span></td>';
+    echo '<td class="td-wage">';
+    echo '<span class="wage-badge ' . $f['wage_badge_class'] . '">' . htmlspecialchars($f['wage_badge_label']) . '</span><br>';
+    echo '<span class="wage-amount">' . htmlspecialchars($f['wage_display']) . '</span>';
+    echo '</td>';
     echo '</tr>';
 }
 
 /**
- * 모바일 줄광고 카드 렌더링
+ * 모바일 줄광고 카드 렌더링 - 원본 디자인 일치
  */
 function render_job_list_mobile($row) {
-    $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
-    $jr_id = (int)$row['jr_id'];
-    $link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $jr_id;
-    $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
-    $location = htmlspecialchars($jr_data['desc_location'] ?? '');
-    $loc_parts = array_filter(explode(' ', str_replace(',', ' ', $location)));
-    $region = isset($loc_parts[0]) ? $loc_parts[0] : '-';
-    $subregion = isset($loc_parts[1]) ? $loc_parts[1] : '';
-    $title_text = htmlspecialchars($row['jr_title'] ?: ($jr_data['job_title'] ?? ''));
-    $jump_count = (int)($row['jr_jump_count'] ?? 0);
-    $ad_period = (int)($row['jr_ad_period'] ?? 30);
-    $jump_icon = $jump_count >= 10 ? '🔥' : ($jump_count >= 3 ? '🥉' : '🥈');
-    $is_new = (strtotime($row['jr_datetime']) > strtotime('-3 days'));
+    $f = _jlh_extract_fields($row);
+    $jump_icon = $f['jump_count'] >= 10 ? '🔥' : ($f['jump_count'] >= 3 ? '🥉' : '🥈');
 
-    $ad_labels = $row['jr_ad_labels'] ?? '';
+    $tag_map = array('급구'=>'tag-urgent','초보가능'=>'tag-init','당일지급'=>'tag-bonus','선불가능'=>'tag-pink',
+        '출퇴근지원'=>'tag-bonus','원룸제공'=>'tag-pink','인센티브'=>'tag-pay','숙식제공'=>'tag-pink',
+        '만근비지원'=>'tag-bonus','갯수보장'=>'tag-pink');
     $tags_html = '';
-    if (strpos($ad_labels, '급구') !== false) $tags_html .= '<span class="list-tag tag-urgent">급구</span>';
-    if ($is_new) $tags_html .= '<span class="list-tag tag-init">NEW</span>';
+    if (strpos($f['ad_labels'], '급구') !== false) $tags_html .= '<span class="list-tag tag-urgent">급구</span>';
+    foreach (array_slice($f['keyword'], 0, 3) as $kw) {
+        $tc = isset($tag_map[$kw]) ? $tag_map[$kw] : 'tag-init';
+        $tags_html .= '<span class="list-tag ' . $tc . '">' . htmlspecialchars($kw) . '</span>';
+    }
 
-    echo '<a href="' . $link . '" class="job-card-m">';
-    echo '<div class="job-card-m-row row-1"><span class="job-card-m-region">' . $region . '</span><span class="job-card-m-title">' . $title_text . '</span></div>';
-    echo '<div class="job-card-m-row row-2"><span class="job-card-m-region2">' . $subregion . '</span>';
+    $job_type = ($f['job1'] ?: '-') . ($f['job2'] ? ' ' . $f['job2'] : '');
+
+    echo '<a href="' . $f['link'] . '" class="job-card-m">';
+    echo '<div class="job-card-m-row row-1"><span class="job-card-m-region">' . mb_substr($f['location'], 0, 4, 'UTF-8') . '</span><span class="job-card-m-title">' . $f['title'] . '</span></div>';
+    echo '<div class="job-card-m-row row-2"><span class="job-card-m-region2">' . htmlspecialchars($f['location']) . '</span>';
     if ($tags_html) echo '<span class="job-card-m-tags">' . $tags_html . '</span>';
     echo '</div>';
-    echo '<div class="job-card-m-row row-3"><span class="job-card-m-type">-</span><span class="job-card-m-wage">면접 후 협의</span></div>';
-    echo '<div class="job-card-m-row row-4"><span class="job-card-m-left"></span><span class="job-card-m-shop">' . $nickname;
-    if ($jump_count > 0) echo ' ' . $jump_icon . $jump_count . '회 ' . ($jump_count * $ad_period) . '일';
+    echo '<div class="job-card-m-row row-3"><span class="job-card-m-type">' . $job_type . '</span><span class="job-card-m-wage">[' . htmlspecialchars($f['wage_badge_label']) . '] ' . htmlspecialchars($f['wage_display']) . '</span></div>';
+    echo '<div class="job-card-m-row row-4"><span class="job-card-m-left"></span><span class="job-card-m-shop">' . $f['nickname'];
+    if ($f['jump_count'] > 0) echo ' ' . $jump_icon . $f['jump_count'] . '회 ' . ($f['jump_count'] * $f['ad_period']) . '일';
     echo '</span></div>';
     echo '</a>';
 }
