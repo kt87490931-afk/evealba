@@ -150,7 +150,7 @@ if (is_file($head_sub)) {
 
 <div class="sp-shell">
   <aside class="sp-side">
-    <div class="sp-brand">SCOREPOINT</div>
+    <div class="sp-brand">이브알바</div>
     <nav class="sp-nav">
       <a class="<?php echo ($tab==='manage'?'on':''); ?>" href="<?php echo G5_PLUGIN_URL; ?>/chat/chat_admin.php?tab=manage">채팅관리</a>
 <a href="<?php echo G5_PLUGIN_URL; ?>/chat/chat_notice.php" class="<?php echo ($tab==="notice"?"on":""); ?>">공지/규정/금칙어</a>
@@ -449,14 +449,14 @@ if ($ban_row && (int)$ban_row['is_active'] === 1) {
   if (btnClear) {
     btnClear.addEventListener('click', function(){
       if(!confirm('전체 채팅을 삭제할까요? (복구 불가)')) return;
-      post('act=admin_clear_chat').then(function(j){
+      post('act=admin_clear').then(function(j){
         if(!j || j.ok!==1) return alert(j && j.msg ? j.msg : '실패');
         alert('삭제 완료');
       });
     });
   }
 
-  var btnSave = document.getElementById('adm-save-config');
+  var btnSave = document.getElementById('adm-config-save');
   if (btnSave) {
     btnSave.addEventListener('click', function(){
       var spamSec = document.getElementById('adm-spam-sec').value||'2';

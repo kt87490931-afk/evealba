@@ -37,25 +37,13 @@ if(G5_COMMUNITY_USE === false) {
   </div>
 </footer>
 
-<!-- CHAT PANEL -->
-<div class="chat-panel-overlay" id="chatOverlay"></div>
-<div class="chat-panel" id="chatPanel">
-  <div class="chat-panel-header">
-    <h3>💬 실시간 채팅</h3>
-    <button type="button" class="chat-panel-close" id="chatClose">×</button>
-  </div>
-  <div class="chat-panel-body">
-    <div class="chat-placeholder">
-      <span class="icon">💭</span>
-      <p>이브알바 실시간 채팅방입니다.<br>로그인 후 이용해 주세요.</p>
-    </div>
-  </div>
-</div>
+<!-- EVE CHAT -->
+<?php include_once(G5_PLUGIN_PATH.'/chat/eve_chat_box.php'); ?>
 
 <!-- FLOATING CTA -->
 <div class="floating-cta">
   <a href="#" class="float-btn float-kakao" title="카카오톡 문의">💬</a>
-  <button type="button" class="float-btn float-chat" id="chatOpen" title="채팅">💭</button>
+  <button type="button" class="float-btn float-chat" id="chatOpen" title="실시간 채팅" onclick="if(typeof toggleEveChat==='function')toggleEveChat();return false;">💭</button>
   <a href="#" class="float-btn float-top" title="맨 위로" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">▲</a>
 </div>
 
@@ -69,23 +57,6 @@ document.querySelectorAll('.tab-btn').forEach(function(btn) {
     }
   });
 });
-(function(){
-  var overlay = document.getElementById('chatOverlay');
-  var panel = document.getElementById('chatPanel');
-  var openBtn = document.getElementById('chatOpen');
-  var closeBtn = document.getElementById('chatClose');
-  function openChat() {
-    if (overlay) overlay.classList.add('is-open');
-    if (panel) panel.classList.add('is-open');
-  }
-  function closeChat() {
-    if (overlay) overlay.classList.remove('is-open');
-    if (panel) panel.classList.remove('is-open');
-  }
-  if (openBtn) openBtn.addEventListener('click', function(e) { e.preventDefault(); openChat(); });
-  if (closeBtn) closeBtn.addEventListener('click', closeChat);
-  if (overlay) overlay.addEventListener('click', closeChat);
-})();
 /* 인재정보: 업직종 탭 전환 */
 function setTab(el, type) {
   var cards = document.querySelectorAll('.type-tab-card');
