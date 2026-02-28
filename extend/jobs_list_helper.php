@@ -59,7 +59,8 @@ function get_jobs_by_type($ad_type, $limit = 20, $region = '') {
         $where .= " AND (jr_data LIKE '%\"desc_location\":\"%{$region_esc}%' OR jr_nickname LIKE '%{$region_esc}%' OR jr_company LIKE '%{$region_esc}%')";
     }
     $limit = (int)$limit;
-    $sql = "SELECT * FROM g5_jobs_register WHERE {$where} ORDER BY jr_id DESC LIMIT {$limit}";
+    $limit_sql = $limit > 0 ? " LIMIT {$limit}" : '';
+    $sql = "SELECT * FROM g5_jobs_register WHERE {$where} ORDER BY jr_id DESC{$limit_sql}";
     $result = sql_query($sql, false);
     $rows = array();
     if ($result) {
@@ -86,8 +87,15 @@ function render_job_card($row) {
     $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 30, 'UTF-8'));
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
     $is_new = (strtotime($row['jr_datetime']) > strtotime('-3 days'));
-
+    $jump_count = (int)($row['jr_jump_count'] ?? 0);
+    $ad_period = (int)($row['jr_ad_period'] ?? 30);
     $carbon_class = ($grad_key === 'P3') ? ' carbon-bg' : '';
+
+    $badge_html = '';
+    if ($jump_count > 0) {
+        $crown = $jump_count >= 10 ? '<span class="crown-gold">👑</span>' : ($jump_count >= 3 ? '<span class="crown-bronze">🥉</span>' : '<span class="crown-silver">🥈</span>');
+        $badge_html = '<span class="job-badge">' . $crown . $jump_count . '회 ' . ($jump_count * $ad_period) . '일</span>';
+    }
 
     echo '<div class="job-card">';
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
@@ -96,7 +104,7 @@ function render_job_card($row) {
     echo '<div class="job-card-body">';
     if ($location) echo '<div class="job-card-location"><span class="job-loc-badge">' . mb_substr($location, 0, 2, 'UTF-8') . '</span>' . $location . '</div>';
     if ($desc) echo '<div class="job-desc">' . $desc . '</div>';
-    echo '<div class="job-card-footer"><span class="job-wage">' . $nickname . '</span></div>';
+    echo '<div class="job-card-footer"><span class="job-wage">' . $nickname . '</span>' . $badge_html . '</div>';
     echo '</div>';
     echo '</a>';
     echo '</div>';
@@ -176,20 +184,38 @@ function render_job_list_row($row) {
     $link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $jr_id;
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
-    $loc_short = mb_substr($location, 0, 2, 'UTF-8') ?: '-';
+    $loc_parts = array_filter(explode(' ', str_replace(',', ' ', $location)));
+    $region = isset($loc_parts[0]) ? $loc_parts[0] : '-';
+    $subregion = isset($loc_parts[1]) ? $loc_parts[1] : '';
     $title_text = htmlspecialchars($row['jr_title'] ?: ($jr_data['job_title'] ?? ''));
-    $desc = htmlspecialchars(mb_substr($title_text, 0, 50, 'UTF-8'));
     $grad_key = isset($jr_data['thumb_gradient']) ? $jr_data['thumb_gradient'] : '1';
     $grad = _jlh_get_gradient($grad_key);
+    $thumb_title = htmlspecialchars($jr_data['thumb_title'] ?? $nickname);
+    $nick_short = mb_substr($nickname, 0, 5, 'UTF-8');
+    $jump_count = (int)($row['jr_jump_count'] ?? 0);
+    $ad_period = (int)($row['jr_ad_period'] ?? 30);
+    $jump_icon = $jump_count >= 10 ? '🔥' : ($jump_count >= 3 ? '🥉' : '🥈');
+    $is_new = (strtotime($row['jr_datetime']) > strtotime('-3 days'));
+
+    $ad_labels = $row['jr_ad_labels'] ?? '';
+    $tags_html = '';
+    if (strpos($ad_labels, '급구') !== false) $tags_html .= '<span class="list-tag tag-urgent">급구</span>';
+    if ($is_new) $tags_html .= '<span class="list-tag tag-init">NEW</span>';
 
     echo '<tr class="job-list-row">';
-    echo '<td class="td-region">' . $loc_short . '</td>';
+    echo '<td class="td-region">' . $region . ($subregion ? '<br>' . $subregion : '') . '</td>';
     echo '<td class="td-type">-</td>';
     echo '<td class="col-gender td-gender">-</td>';
-    echo '<td class="list-title-cell"><a href="' . $link . '" class="list-job-title">' . $desc . '</a></td>';
-    echo '<td class="col-benefits td-shop"><div class="shop-name">' . $nickname . '</div>';
-    echo '<div class="shop-mini-banner" style="background:' . $grad . '">' . mb_substr($nickname, 0, 4, 'UTF-8') . '</div></td>';
-    echo '<td class="td-wage"><span class="wage-amount">-</span></td>';
+    echo '<td class="list-title-cell">';
+    echo '<a href="' . $link . '" class="list-job-title">' . $title_text . '</a>';
+    if ($tags_html) echo '<div class="list-title-bottom"><div class="list-tags">' . $tags_html . '</div></div>';
+    echo '</td>';
+    echo '<td class="col-benefits td-shop">';
+    echo '<div class="shop-name">' . $nickname . '</div>';
+    echo '<div class="shop-mini-banner" style="background:' . $grad . '">' . $nick_short . '</div>';
+    if ($jump_count > 0) echo '<div class="shop-jump">' . $jump_icon . ' ' . $jump_count . '회 ' . ($jump_count * $ad_period) . '일</div>';
+    echo '</td>';
+    echo '<td class="td-wage"><span class="wage-amount">면접 후 협의</span></td>';
     echo '</tr>';
 }
 
@@ -202,13 +228,28 @@ function render_job_list_mobile($row) {
     $link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $jr_id;
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
-    $loc_short = mb_substr($location, 0, 2, 'UTF-8') ?: '-';
+    $loc_parts = array_filter(explode(' ', str_replace(',', ' ', $location)));
+    $region = isset($loc_parts[0]) ? $loc_parts[0] : '-';
+    $subregion = isset($loc_parts[1]) ? $loc_parts[1] : '';
     $title_text = htmlspecialchars($row['jr_title'] ?: ($jr_data['job_title'] ?? ''));
+    $jump_count = (int)($row['jr_jump_count'] ?? 0);
+    $ad_period = (int)($row['jr_ad_period'] ?? 30);
+    $jump_icon = $jump_count >= 10 ? '🔥' : ($jump_count >= 3 ? '🥉' : '🥈');
+    $is_new = (strtotime($row['jr_datetime']) > strtotime('-3 days'));
+
+    $ad_labels = $row['jr_ad_labels'] ?? '';
+    $tags_html = '';
+    if (strpos($ad_labels, '급구') !== false) $tags_html .= '<span class="list-tag tag-urgent">급구</span>';
+    if ($is_new) $tags_html .= '<span class="list-tag tag-init">NEW</span>';
 
     echo '<a href="' . $link . '" class="job-card-m">';
-    echo '<div class="job-card-m-row row-1"><span class="job-card-m-region">' . $loc_short . '</span><span class="job-card-m-title">' . $title_text . '</span></div>';
-    echo '<div class="job-card-m-row row-2"><span class="job-card-m-region2">' . $location . '</span></div>';
-    echo '<div class="job-card-m-row row-3"><span class="job-card-m-type">-</span><span class="job-card-m-wage">-</span></div>';
-    echo '<div class="job-card-m-row row-4"><span class="job-card-m-left"></span><span class="job-card-m-shop">' . $nickname . '</span></div>';
+    echo '<div class="job-card-m-row row-1"><span class="job-card-m-region">' . $region . '</span><span class="job-card-m-title">' . $title_text . '</span></div>';
+    echo '<div class="job-card-m-row row-2"><span class="job-card-m-region2">' . $subregion . '</span>';
+    if ($tags_html) echo '<span class="job-card-m-tags">' . $tags_html . '</span>';
+    echo '</div>';
+    echo '<div class="job-card-m-row row-3"><span class="job-card-m-type">-</span><span class="job-card-m-wage">면접 후 협의</span></div>';
+    echo '<div class="job-card-m-row row-4"><span class="job-card-m-left"></span><span class="job-card-m-shop">' . $nickname;
+    if ($jump_count > 0) echo ' ' . $jump_icon . $jump_count . '회 ' . ($jump_count * $ad_period) . '일';
+    echo '</span></div>';
     echo '</a>';
 }
