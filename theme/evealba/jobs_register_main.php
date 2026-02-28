@@ -101,7 +101,37 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
     </div>
 
     <!-- =============================
-         2. 채용 정보
+         2. 업종/직종
+    ============================= -->
+    <div class="form-card sh-blue">
+      <div class="sec-head open" onclick="toggleSec(this)">
+        <span class="sec-head-icon">💼</span>
+        <span class="sec-head-title">업종/직종</span>
+        <span class="sec-head-sub">해당하는 업종과 직종을 선택해주세요</span>
+        <span class="sec-chevron">▼</span>
+      </div>
+      <div class="sec-body">
+        <div class="form-row">
+          <div class="form-label">업종/직종 <span class="req">*</span></div>
+          <div class="form-cell">
+            <select class="fi-select" id="job_job1">
+              <option>-1차 직종선택-</option>
+              <option>단란주점</option><option>룸살롱</option><option>가라오케</option>
+              <option>노래방</option><option>클럽</option><option>바(Bar)</option>
+              <option>퍼블릭</option><option>마사지</option>
+            </select>
+            <select class="fi-select" id="job_job2">
+              <option>-2차 직종선택-</option>
+              <option>서빙</option><option>도우미</option><option>아가씨</option>
+              <option>TC</option><option>미시</option><option>초미시</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =============================
+         3. 채용 정보
     ============================= -->
     <div class="form-card sh-orange">
       <div class="sec-head open" onclick="toggleSec(this)">
@@ -156,7 +186,8 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
               </select>
               <input class="fi fi-xs" type="text" id="job_salary_amt" placeholder="금액 입력">
               <span class="fi-unit">원</span>
-              <button class="btn-salary-guide">💰 급여 기준표</button>
+              <button type="button" class="btn-salary-guide" onclick="openSalaryGuide()">💰 급여 기준표</button>
+              <div class="salary-warn" id="salary-warn" style="display:none;color:#FF1B6B;font-size:11px;font-weight:700;margin-top:4px;"></div>
             </div>
           </div>
         </div>
@@ -229,35 +260,6 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
       </div>
     </div>
 
-    <!-- =============================
-         4. 업종/직종
-    ============================= -->
-    <div class="form-card sh-blue">
-      <div class="sec-head open" onclick="toggleSec(this)">
-        <span class="sec-head-icon">💼</span>
-        <span class="sec-head-title">업종/직종</span>
-        <span class="sec-head-sub">해당하는 업종과 직종을 선택해주세요</span>
-        <span class="sec-chevron">▼</span>
-      </div>
-      <div class="sec-body">
-        <div class="form-row">
-          <div class="form-label">업종/직종 <span class="req">*</span></div>
-          <div class="form-cell">
-            <select class="fi-select" id="job_job1">
-              <option>-1차 직종선택-</option>
-              <option>단란주점</option><option>룸살롱</option><option>가라오케</option>
-              <option>노래방</option><option>클럽</option><option>바(Bar)</option>
-              <option>퍼블릭</option><option>마사지</option><option>풀살롱</option>
-            </select>
-            <select class="fi-select" id="job_job2">
-              <option>-2차 직종선택-</option>
-              <option>서빙</option><option>도우미</option><option>아가씨</option>
-              <option>TC</option><option>미시</option><option>초미시</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- =============================
          5. 편의사항 (이력서등록과 동일)
@@ -1164,6 +1166,8 @@ function checkPayment() {
     if(title) title.focus();
     return;
   }
+  var salaryErr = checkSalaryLimit();
+  if(salaryErr){ alert(salaryErr); return; }
   var data = {};
   var ids = ['job_nickname','job_company','job_contact','job_kakao','job_line','job_telegram','job_title','job_salary_type','job_salary_amt','job_work_region_1','job_work_region_detail_1','job_work_region_2','job_work_region_detail_2','job_work_region_3','job_work_region_detail_3','job_job1','job_job2','desc_location','desc_env','desc_benefit','desc_qualify','desc_extra'];
   ids.forEach(function(id){ var e=document.getElementById(id); data[id]=e?e.value:''; });
@@ -1206,4 +1210,90 @@ function checkPayment() {
   document.getElementById('ad_labels_hidden').value = adLabels.join(',');
   document.getElementById('fjobregister').submit();
 }
+
+var _salaryLimits = {
+  '단란주점':{시급:150000,일급:500000,주급:3000000,월급:12000000},
+  '룸살롱':{시급:150000,일급:500000,주급:3000000,월급:12000000},
+  '가라오케':{시급:150000,일급:500000,주급:3000000,월급:12000000},
+  '노래방':{시급:150000,일급:500000,주급:3000000,월급:12000000},
+  '퍼블릭':{시급:150000,일급:500000,주급:3000000,월급:12000000},
+  '클럽':{시급:150000,일급:500000,주급:3000000,월급:12000000},
+  '바(Bar)':{시급:150000,일급:500000,주급:3000000,월급:12000000},
+  '마사지':{시급:120000,일급:400000,주급:2500000,월급:8400000}
+};
+function checkSalaryLimit(){
+  var j1El=document.getElementById('job_job1');
+  var stEl=document.getElementById('job_salary_type');
+  var amtEl=document.getElementById('job_salary_amt');
+  if(!j1El||!stEl||!amtEl) return '';
+  var j1=j1El.value, st=stEl.value, raw=amtEl.value.replace(/[^0-9]/g,'');
+  if(!raw||st==='급여협의') return '';
+  var amt=parseInt(raw,10);
+  if(amt<10320) return '최저임금(10,320원) 이상 입력해주세요.';
+  var limits=_salaryLimits[j1];
+  if(!limits) return '';
+  var max=limits[st];
+  if(max&&amt>max) return '급여기준표를 확인해주세요. ('+j1+' '+st+' 최대 '+max.toLocaleString()+'원)';
+  return '';
+}
+function showSalaryWarn(){
+  var w=document.getElementById('salary-warn');
+  if(!w) return;
+  var msg=checkSalaryLimit();
+  w.textContent=msg; w.style.display=msg?'block':'none';
+}
+(function(){
+  var a=document.getElementById('job_salary_amt');
+  var t=document.getElementById('job_salary_type');
+  var j=document.getElementById('job_job1');
+  if(a) a.addEventListener('input',showSalaryWarn);
+  if(t) t.addEventListener('change',showSalaryWarn);
+  if(j) j.addEventListener('change',showSalaryWarn);
+})();
+
+function openSalaryGuide(){ document.getElementById('modal-salary-guide').style.display='flex'; }
+function closeSalaryGuide(){ document.getElementById('modal-salary-guide').style.display='none'; }
 </script>
+
+<!-- 급여 기준표 모달 -->
+<div id="modal-salary-guide" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;" onclick="closeSalaryGuide()">
+<div style="width:100%;max-width:460px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35);display:flex;flex-direction:column;max-height:90vh;" onclick="event.stopPropagation()">
+  <div style="background:linear-gradient(135deg,#2D0020,#FF1B6B);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+    <div style="font-size:16px;font-weight:900;color:#fff;display:flex;align-items:center;gap:8px;">💰 급여 기준표</div>
+    <button type="button" onclick="closeSalaryGuide()" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:16px;font-weight:700;cursor:pointer;">✕</button>
+  </div>
+  <div style="overflow-y:auto;flex:1;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead><tr>
+        <th style="position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-weight:900;font-size:12px;padding:10px 0;text-align:center;width:80px;">업종</th>
+        <th style="position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-weight:900;font-size:12px;padding:10px 0;text-align:center;width:72px;">항목</th>
+        <th style="position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-weight:900;font-size:12px;padding:10px 0;text-align:center;">금액제한</th>
+      </tr></thead>
+      <tbody>
+        <?php
+        $sg_biz = [
+          ['룸싸롱','#FFF0F5','#C9007A','#FF1B6B',[['시급','10,320 ~ 150,000'],['일급','10,320 ~ 500,000'],['주급','10,320 ~ 3,000,000'],['월급','10,320 ~ 12,000,000'],['건당','10,320 ~ 190,000']]],
+          ['노래주점','#F3E8FF','#7B1FA2','#9C27B0',[['시급','10,320 ~ 150,000'],['일급','10,320 ~ 500,000'],['주급','10,320 ~ 3,000,000'],['월급','10,320 ~ 12,000,000'],['건당','10,320 ~ 190,000']]],
+          ['마사지','#E3F2FD','#1565C0','#1976D2',[['시급','10,320 ~ 120,000'],['일급','10,320 ~ 400,000'],['주급','10,320 ~ 2,500,000'],['월급','10,320 ~ 8,400,000'],['건당','10,320 ~ 170,000']]],
+          ['기타','#E8F5E9','#2E7D32','#43A047',[['시급','10,320 ~ 150,000'],['일급','10,320 ~ 500,000'],['주급','10,320 ~ 3,000,000'],['월급','10,320 ~ 12,000,000'],['건당','10,320 ~ 190,000']]],
+        ];
+        foreach($sg_biz as $bi => $b){
+          $cnt = count($b[4]);
+          foreach($b[4] as $ri => $r){
+            echo '<tr>';
+            if($ri===0) echo '<td rowspan="'.$cnt.'" style="text-align:center;font-weight:900;font-size:13px;padding:0 8px;vertical-align:middle;white-space:nowrap;background:'.$b[1].';color:'.$b[2].';border-right:3px solid '.$b[3].';">'.$b[0].'</td>';
+            echo '<td style="text-align:center;font-size:12.5px;color:#555;font-weight:500;padding:11px 8px;background:#fafafa;border-bottom:1px solid #f5f5f5;border-right:1px solid #f0f0f0;">'.$r[0].'</td>';
+            echo '<td style="text-align:center;font-size:12.5px;color:#FF1B6B;font-weight:700;padding:11px 12px;border-bottom:1px solid #f5f5f5;">'.$r[1].'</td>';
+            echo '</tr>';
+          }
+          if($bi < count($sg_biz)-1) echo '<tr><td colspan="3" style="height:5px;padding:0;border:none;background:linear-gradient(90deg,#FF1B6B,#FF6BA8,#FF1B6B);opacity:.18;"></td></tr>';
+        }
+        ?>
+      </tbody>
+    </table>
+  </div>
+  <div style="padding:11px 16px;background:linear-gradient(90deg,#fff0f6,#fff8fb);border-top:1.5px solid #fce8f0;font-size:11px;color:#888;display:flex;align-items:center;gap:6px;flex-shrink:0;">
+    💡 ※ 급여 승인신청은 <strong style="color:#FF1B6B;">채용공고 수정페이지</strong>에 있습니다.
+  </div>
+</div>
+</div>
