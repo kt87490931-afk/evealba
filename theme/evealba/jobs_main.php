@@ -272,7 +272,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr>
               <th>지역</th>
               <th>업직종</th>
-              <th class="col-gender">성별/연령</th>
               <th>채용제목 / 편의사항</th>
               <th class="col-benefits">업소명</th>
               <th>급여조건</th>
@@ -283,7 +282,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="룸싸롱">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">룸싸롱<br>퍼블릭</td>
-              <td class="col-gender td-gender">여<br>20-35세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">【급구】 개인 특별이벤트 진행中 하퍼 하이퍼블릭 ♡초보환영</a>
                 <div class="list-title-bottom">
@@ -314,7 +312,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="기타">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">기타<br>기타업종</td>
-              <td class="col-gender td-gender">여<br>20대</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">★하루100~160★강남1등!최고대추!안전제일 출퇴근지원 당일 당달 500,000만</a>
                 <div class="list-title-bottom">
@@ -342,7 +339,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="기타">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">기타<br>기타업종</td>
-              <td class="col-gender td-gender">여<br>-</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">❤정보❤VIP멤버쉽 한달 3천이상</a>
                 <div class="list-title-bottom">
@@ -370,7 +366,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="룸싸롱">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">룸싸롱<br>텐프로</td>
-              <td class="col-gender td-gender">여<br>20-28세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title" style="color:var(--hot-pink);font-weight:900;">LA가라오케 고페이 일급 2,000,000원</a>
                 <div class="list-title-bottom">
@@ -400,7 +395,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="서울" data-subregion="강서구" data-type="노래주점">
               <td class="td-region">서울<br>강서구</td>
               <td class="td-type">노래주점<br>아가씨</td>
-              <td class="col-gender td-gender">여<br>전연령</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">♡강서구 TOP 1등 여왕들을 모시나여♡</a>
                 <div class="list-title-bottom">
@@ -428,7 +422,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="인천" data-subregion="중구" data-type="노래주점">
               <td class="td-region">인천<br>중구</td>
               <td class="td-type">노래주점<br>아가씨</td>
-              <td class="col-gender td-gender">여<br>-</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">인천 영종도 신규오픈 하루대기없이 일가능</a>
                 <div class="list-title-bottom">
@@ -455,7 +448,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="인천" data-subregion="계양구" data-type="기타">
               <td class="td-region">인천<br>계양구</td>
               <td class="td-type">기타<br>기타업종</td>
-              <td class="col-gender td-gender">여<br>20-35세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">인천패티서1위업소최고수입보장!!수위약감 접대 받으면서 일하세요^^</a>
                 <div class="list-title-bottom">
@@ -484,7 +476,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="경기" data-subregion="파주시" data-type="룸싸롱">
               <td class="td-region">경기<br>파주시</td>
               <td class="td-type">룸싸롱<br>룸싸롱</td>
-              <td class="col-gender td-gender">여<br>20-40세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">파주 유일 야당새초름 파주최고 출퇴근지원 차비지원</a>
                 <div class="list-title-bottom">
@@ -512,7 +503,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="서울" data-subregion="강남구" data-type="룸싸롱">
               <td class="td-region">서울<br>강남구</td>
               <td class="td-type">룸싸롱<br>퍼블릭</td>
-              <td class="col-gender td-gender">여<br>20-35세</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">♥도파민♥하1퍼♥도파민,슈앤미 퍼펙트,엘리트,갈토,언노♥을 급구!!</a>
                 <div class="list-title-bottom">
@@ -541,7 +531,6 @@ $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광�
             <tr class="job-list-row" data-region="서울" data-subregion="성동구" data-type="노래주점">
               <td class="td-region">서울<br>성동구</td>
               <td class="td-type">노래주점<br>아가씨</td>
-              <td class="col-gender td-gender">여<br>20대</td>
               <td class="list-title-cell">
                 <a href="#" class="list-job-title">♡첫날찡떼X♡지정365일 박스♡</a>
                 <div class="list-title-bottom">
