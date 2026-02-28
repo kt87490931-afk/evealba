@@ -284,6 +284,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 }
 </style>
 
+<?php if ($is_owner) { ?>
 <div class="thumb-gen-wrap" id="thumb-gen-section">
   <div class="tg-section-header">
     <span class="tg-section-label">🎨 썸네일 생성</span>
@@ -538,6 +539,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     </div>
   </div>
 </div>
+<?php } ?>
 
 <!-- 테마 스위처 (eve_alba_ad_editor_3 100% 일치) -->
 <div id="theme-switcher">
@@ -1067,7 +1069,11 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       <p>* 커뮤니티 정책과 맞지 않는 게시물의 경우 블라인드 또는 삭제될 수 있습니다.</p>
     </div>
     <div class="view-actions" style="margin:0 0 16px;width:100%;">
+      <?php if ($is_owner) { ?>
       <a href="<?php echo $jobs_ongoing_url; ?>" class="btn-action btn-list2">📋 목록으로</a>
+      <?php } else { ?>
+      <a href="/jobs.php" class="btn-action btn-list2">📋 목록으로</a>
+      <?php } ?>
     </div>
 </article>
 <script>

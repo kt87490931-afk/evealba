@@ -8,6 +8,30 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 
+function _jlh_clean_url($row, $jr_data = null) {
+    if (!$jr_data && !empty($row['jr_data'])) {
+        $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
+    }
+    if (!is_array($jr_data)) $jr_data = array();
+    $jr_id = (int)$row['jr_id'];
+    static $reg_map = null, $regd_map = null;
+    if ($reg_map === null) {
+        $reg_map = array(); $regd_map = array();
+        @include_once(G5_PATH.'/lib/ev_region_fallback.inc.php');
+        if (isset($ev_regions_fallback)) foreach ($ev_regions_fallback as $r) $reg_map[$r['er_id']] = $r['er_name'];
+        if (isset($ev_region_details_fallback)) foreach ($ev_region_details_fallback as $rd) $regd_map[$rd['erd_id']] = $rd['erd_name'];
+    }
+    $r1 = isset($jr_data['job_work_region_1']) ? trim($jr_data['job_work_region_1']) : '';
+    $rd1 = isset($jr_data['job_work_region_detail_1']) ? trim($jr_data['job_work_region_detail_1']) : '';
+    $region = $r1 ? (isset($reg_map[(int)$r1]) ? $reg_map[(int)$r1] : $r1) : '전국';
+    if ($rd1 && isset($regd_map[(int)$rd1])) $region .= '-' . $regd_map[(int)$rd1];
+    $region = str_replace(' ', '-', $region);
+    $job1 = isset($jr_data['job_job1']) ? trim($jr_data['job_job1']) : '';
+    $jobtype = $job1 ?: '기타';
+    $name = $row['jr_nickname'] ?: ($row['jr_company'] ?: '채용');
+    return '/jobs/' . urlencode($region) . '/' . urlencode($jobtype) . '/' . urlencode($name) . '-' . $jr_id;
+}
+
 $_jlh_gradients = array(
     1  => 'linear-gradient(135deg,rgb(255,65,108),rgb(255,75,43))',
     2  => 'linear-gradient(135deg,rgb(255,94,98),rgb(255,195,113))',
@@ -82,7 +106,7 @@ function render_job_card($row) {
     $text = htmlspecialchars($jr_data['thumb_text'] ?? '');
     $text_color = $jr_data['thumb_text_color'] ?? 'rgb(255,255,255)';
     $jr_id = (int)$row['jr_id'];
-    $link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $jr_id;
+    $link = _jlh_clean_url($row, $jr_data);
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
     $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 30, 'UTF-8'));
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
@@ -119,7 +143,7 @@ function render_premium_card($row, $card_class = 'premium-card') {
     $grad = _jlh_get_gradient($grad_key);
     $title = htmlspecialchars($jr_data['thumb_title'] ?? $row['jr_nickname'] ?? $row['jr_company'] ?? '');
     $jr_id = (int)$row['jr_id'];
-    $link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $jr_id;
+    $link = _jlh_clean_url($row, $jr_data);
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
     $carbon_class = ($grad_key === 'P3') ? ' carbon-bg' : '';
@@ -141,7 +165,7 @@ function render_premium_card($row, $card_class = 'premium-card') {
 function render_urgency_card($row) {
     $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
     $jr_id = (int)$row['jr_id'];
-    $link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $jr_id;
+    $link = _jlh_clean_url($row, $jr_data);
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
     $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 30, 'UTF-8'));
@@ -161,7 +185,7 @@ function render_urgency_card($row) {
 function render_recommend_card($row) {
     $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
     $jr_id = (int)$row['jr_id'];
-    $link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $jr_id;
+    $link = _jlh_clean_url($row, $jr_data);
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
     $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 40, 'UTF-8'));
@@ -205,7 +229,7 @@ function _jlh_extract_fields($row) {
     $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
     $f = array();
     $f['jr_id'] = (int)$row['jr_id'];
-    $f['link'] = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $f['jr_id'];
+    $f['link'] = _jlh_clean_url($row, $jr_data);
     $f['nickname'] = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
     $f['location'] = htmlspecialchars($jr_data['desc_location'] ?? '');
     $f['region'] = _jlh_region_name($jr_data['job_work_region_1'] ?? '');
