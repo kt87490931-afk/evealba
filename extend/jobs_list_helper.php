@@ -176,6 +176,29 @@ function render_recommend_card($row) {
 }
 
 /**
+ * 지역 ID → 이름 변환 (fallback 데이터 활용)
+ */
+function _jlh_region_name($er_id) {
+    static $map = null;
+    if ($map === null) {
+        $map = array(1=>'서울',2=>'경기',3=>'인천',4=>'부산',5=>'대구',6=>'광주',7=>'대전',8=>'울산',9=>'강원',10=>'경남',11=>'경북',12=>'전남',13=>'전북',14=>'충남',15=>'충북',16=>'세종',17=>'제주');
+    }
+    return isset($map[(int)$er_id]) ? $map[(int)$er_id] : '';
+}
+
+function _jlh_region_detail_name($erd_id) {
+    static $map = null;
+    if ($map === null) {
+        @include(G5_LIB_PATH . '/ev_region_fallback.inc.php');
+        $map = array();
+        if (isset($ev_region_details_fallback)) {
+            foreach ($ev_region_details_fallback as $rd) $map[(int)$rd['erd_id']] = $rd['erd_name'];
+        }
+    }
+    return isset($map[(int)$erd_id]) ? $map[(int)$erd_id] : '';
+}
+
+/**
  * jr_data에서 공통 필드 추출
  */
 function _jlh_extract_fields($row) {
@@ -185,6 +208,8 @@ function _jlh_extract_fields($row) {
     $f['link'] = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . $f['jr_id'];
     $f['nickname'] = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
     $f['location'] = htmlspecialchars($jr_data['desc_location'] ?? '');
+    $f['region'] = _jlh_region_name($jr_data['job_work_region_1'] ?? '');
+    $f['subregion'] = _jlh_region_detail_name($jr_data['job_work_region_detail_1'] ?? '');
     $f['title'] = htmlspecialchars($row['jr_title'] ?: ($jr_data['job_title'] ?? ''));
     $f['job1'] = htmlspecialchars($jr_data['job_job1'] ?? '');
     $f['job2'] = htmlspecialchars($jr_data['job_job2'] ?? '');
@@ -239,9 +264,9 @@ function render_job_list_row($row) {
     if ($f['is_new'] && !$tags_html) $tags_html .= '<span class="list-tag tag-init">NEW</span>';
 
     echo '<tr class="job-list-row">';
-    echo '<td class="td-region">' . htmlspecialchars($f['location']) . '</td>';
+    echo '<td class="td-region">' . ($f['region'] ?: '-') . ($f['subregion'] ? '<br>' . htmlspecialchars($f['subregion']) : '') . '</td>';
     echo '<td class="td-type">' . ($f['job1'] ?: '-') . ($f['job2'] ? '<br>' . $f['job2'] : '') . '</td>';
-    echo '<td class="col-gender td-gender">-</td>';
+    echo '<td class="col-gender td-gender">여<br>-</td>';
     echo '<td class="list-title-cell">';
     echo '<a href="' . $f['link'] . '" class="list-job-title">' . $f['title'] . '</a>';
     if ($benefit_html || $tags_html) {
@@ -283,11 +308,11 @@ function render_job_list_mobile($row) {
     $job_type = ($f['job1'] ?: '-') . ($f['job2'] ? ' ' . $f['job2'] : '');
 
     echo '<a href="' . $f['link'] . '" class="job-card-m">';
-    echo '<div class="job-card-m-row row-1"><span class="job-card-m-region">' . mb_substr($f['location'], 0, 4, 'UTF-8') . '</span><span class="job-card-m-title">' . $f['title'] . '</span></div>';
-    echo '<div class="job-card-m-row row-2"><span class="job-card-m-region2">' . htmlspecialchars($f['location']) . '</span>';
+    echo '<div class="job-card-m-row row-1"><span class="job-card-m-region">' . ($f['region'] ?: '-') . '</span><span class="job-card-m-title">' . $f['title'] . '</span></div>';
+    echo '<div class="job-card-m-row row-2"><span class="job-card-m-region2">' . htmlspecialchars($f['subregion']) . '</span>';
     if ($tags_html) echo '<span class="job-card-m-tags">' . $tags_html . '</span>';
     echo '</div>';
-    echo '<div class="job-card-m-row row-3"><span class="job-card-m-type">' . $job_type . '</span><span class="job-card-m-wage">[' . htmlspecialchars($f['wage_badge_label']) . '] ' . htmlspecialchars($f['wage_display']) . '</span></div>';
+    echo '<div class="job-card-m-row row-3"><span class="job-card-m-type">' . $job_type . ' | 여 -</span><span class="job-card-m-wage">[' . htmlspecialchars($f['wage_badge_label']) . '] ' . htmlspecialchars($f['wage_display']) . '</span></div>';
     echo '<div class="job-card-m-row row-4"><span class="job-card-m-left"></span><span class="job-card-m-shop">' . $f['nickname'];
     if ($f['jump_count'] > 0) echo ' ' . $jump_icon . $f['jump_count'] . '회 ' . ($f['jump_count'] * $f['ad_period']) . '일';
     echo '</span></div>';
