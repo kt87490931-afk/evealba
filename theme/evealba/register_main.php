@@ -192,17 +192,17 @@
       <div class="form-row">
         <div class="form-label">이름 <span class="req">*</span></div>
         <div class="form-cell col">
-          <input class="fi fi-md" id="inp-name" name="mb_name" type="text" placeholder="이름을 입력해주세요" oninput="syncNickFromName()" required>
+          <input class="fi fi-md" id="inp-name" name="mb_name" type="text" placeholder="이름을 입력해주세요" required>
           <span class="fi-hint" id="name-hint">휴대폰 인증시 자동입력됩니다. (미인증시 직접 입력)</span>
         </div>
       </div>
 
-      <!-- 닉네임 (자동설정, 수정불가) -->
+      <!-- 닉네임 -->
       <div class="form-row">
-        <div class="form-label">닉네임</div>
+        <div class="form-label">닉네임 <span class="req">*</span></div>
         <div class="form-cell col">
-          <input class="fi fi-md fi-readonly" id="inp-nick" name="mb_nick" type="text" placeholder="이름 입력시 자동설정" readonly>
-          <span class="fi-hint" style="color:var(--hot-pink);">이름과 동일하게 자동 설정됩니다. (수정불가)</span>
+          <input class="fi fi-md" id="inp-nick" name="mb_nick" type="text" placeholder="닉네임을 입력해주세요" required maxlength="20">
+          <span class="fi-hint">공백 없이 한글, 영문, 숫자만 입력 가능 (2~20자)</span>
         </div>
       </div>
 
@@ -554,10 +554,7 @@ function togglePw(inputId, eyeId) {
   else { inp.type = 'password'; eye.textContent = '👁'; }
 }
 
-function syncNickFromName() {
-  var name = document.getElementById('inp-name').value.trim();
-  document.getElementById('inp-nick').value = name;
-}
+function syncNickFromName() {}
 
 function setEmailDomain(sel) {
   if(sel.value) document.getElementById('email-domain').value = sel.value;
@@ -660,7 +657,9 @@ function doJoin() {
   if(!/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?`~]/.test(pw)) { alert('비밀번호에 특수문자를 포함해야 합니다. (!@#$%^&* 등)'); return; }
   if(pw !== pw2) { alert('비밀번호가 일치하지 않습니다.'); return; }
   if(!name) { alert('이름을 입력해주세요.'); return; }
-  var nick = name;
+  var nick = document.getElementById('inp-nick').value.trim();
+  if(!nick) { alert('닉네임을 입력해주세요.'); return; }
+  if(nick.length < 2) { alert('닉네임은 2자 이상 입력해주세요.'); return; }
   if(!birthY || !birthM || !birthD) { alert('생년월일을 선택해주세요.'); return; }
   if(!emailId || !emailDomain) { alert('이메일을 입력해주세요.'); return; }
   if(!hp) { alert('핸드폰 번호를 입력해주세요.'); return; }

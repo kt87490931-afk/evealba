@@ -25,9 +25,9 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
 
         <!-- 닉네임 -->
         <div class="form-row">
-          <div class="form-label">닉네임 (업소명) <span class="req">*</span></div>
+          <div class="form-label">닉네임 <span class="req">*</span></div>
           <div class="form-cell">
-            <input class="fi fi-md" type="text" id="job_nickname" name="job_nickname" placeholder="업소명을 입력해주세요">
+            <input class="fi fi-md" type="text" id="job_nickname" name="job_nickname" placeholder="닉네임을 입력해주세요">
           </div>
         </div>
 
@@ -546,8 +546,12 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
       </div>
       <div class="ai-preview-body" id="jobsAiPreviewBody">
         <div class="aip-row">
-          <div class="aip-label">🏢 닉네임 · 상호</div>
-          <div class="aip-value" id="job-summary-name"><span class="aip-empty">—</span></div>
+          <div class="aip-label">🏢 닉네임</div>
+          <div class="aip-value" id="job-summary-nickname"><span class="aip-empty">—</span></div>
+        </div>
+        <div class="aip-row">
+          <div class="aip-label">🏪 상호</div>
+          <div class="aip-value" id="job-summary-company"><span class="aip-empty">—</span></div>
         </div>
         <div class="aip-row">
           <div class="aip-label">📞 연락처</div>
@@ -1005,7 +1009,8 @@ function updateJobsAiSummary() {
   function sel(id){ var e=document.getElementById(id); if(!e||!e.options[e.selectedIndex]) return '—'; var o=e.options[e.selectedIndex]; return o.value?o.text:'—'; }
   function set(id,v){ var e=document.getElementById(id); if(!e) return; var s=v||'—'; e.innerHTML = s==='—'?'<span class="aip-empty">—</span>':s.replace(/\n/g,'<br>'); }
   var nick = val('job_nickname'), comp = val('job_company');
-  set('job-summary-name', nick || comp ? [nick,comp].filter(Boolean).join(' · ') : null);
+  set('job-summary-nickname', nick || null);
+  set('job-summary-company', comp || null);
   var contact = val('job_contact');
   set('job-summary-contact', contact || null);
   var snsArr = [];
@@ -1148,7 +1153,7 @@ function checkPayment() {
   }
   var nick = document.getElementById('job_nickname');
   if(!nick || !nick.value.trim()){
-    alert('닉네임(업소명)을 입력해주세요.');
+    alert('닉네임을 입력해주세요.');
     if(nick) nick.focus();
     return;
   }
