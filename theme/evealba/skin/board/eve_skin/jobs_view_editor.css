@@ -1,0 +1,312 @@
+/**
+ * eve_alba_ad_editor_3.html 디자인 100% — jobs_view 전용
+ * 테마: 핑크, 블랙, 블루
+ */
+/* ══ 테마 변수 ══ */
+:root {
+  --pink:#FF1B6B; --deep:#C90050; --light:#FF6BA8; --pale:#FFD6E7;
+  --dark:#1A0010; --dark2:#2D0020; --orange:#FF6B35;
+  --bg:#FFF0F5; --border:#fce8f0; --gray:#888;
+  --th-main:#FF1B6B; --th-main2:#FF6B35; --th-dark:#2D0020; --th-dark2:#1A0010;
+  --th-light:#FF6BA8; --th-pale:#FFD6E7; --th-bg:#FFF0F5; --th-border:#fce8f0;
+  --th-section-hd1:#fff0f6; --th-section-hd2:#fff8fb; --th-lbl-bg:#fdf5f8;
+  --th-promise1:#fff0f6; --th-promise2:#fce8f2; --th-chip-bg:#ffe8f2;
+  --th-chip-color:#FF1B6B; --th-chip-border:#ffc8de; --th-detail-box:#fdf5f8;
+  --th-mbti-text-bg1:#fff0f6; --th-mbti-text-bg2:#fff8fb; --th-text-body:#fff;
+}
+.ev-view-wrap.theme-black {
+  --th-main:#FFD700; --th-main2:#FFA500; --th-dark:#000; --th-dark2:#111;
+  --th-light:#FFE066; --th-pale:#FFF3CD; --th-bg:#FFF0F5; --th-border:#333;
+  --th-section-hd1:#1e1e1e; --th-section-hd2:#252525; --th-lbl-bg:#1c1c1c;
+  --th-promise1:#1e1e1e; --th-promise2:#252525; --th-chip-bg:#2a2a00;
+  --th-chip-color:#FFD700; --th-chip-border:#665500; --th-detail-box:#1e1e1e;
+  --th-mbti-text-bg1:#1e1e1e; --th-mbti-text-bg2:#252525;
+  --pink:#FFD700; --deep:#FFA500; --light:#FFE066; --pale:#FFF3CD;
+  --dark:#000; --dark2:#111; --orange:#FFA500; --bg:#FFF0F5; --border:#333;
+}
+.ev-view-wrap.theme-blue {
+  --th-main:#1565C0; --th-main2:#1976D2; --th-dark:#0D2137; --th-dark2:#0A1929;
+  --th-light:#42A5F5; --th-pale:#BBDEFB; --th-bg:#FFF0F5; --th-border:#BBDEFB;
+  --th-section-hd1:#EBF5FF; --th-section-hd2:#F5FBFF; --th-lbl-bg:#EBF5FF;
+  --th-promise1:#EBF5FF; --th-promise2:#DCEEFF; --th-chip-bg:#E3F2FD;
+  --th-chip-color:#1565C0; --th-chip-border:#90CAF9; --th-detail-box:#EBF5FF;
+  --th-mbti-text-bg1:#EBF5FF; --th-mbti-text-bg2:#F5FBFF;
+  --pink:#1565C0; --deep:#0D47A1; --light:#42A5F5; --pale:#BBDEFB;
+  --dark:#0A1929; --dark2:#0D2137; --orange:#1976D2; --bg:#FFF0F5; --border:#BBDEFB; --gray:#666;
+}
+
+/* ── jobs-view 래퍼 ── */
+.jobs-view-editor-wrap *{margin:0;padding:0;box-sizing:border-box;}
+.jobs-view-editor-wrap a{text-decoration:none;color:inherit;}
+.jobs-view-editor-wrap{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;color:#222;line-height:1.6;}
+
+.jobs-view-editor-wrap .page-wrap{width:100%;max-width:958px;margin:0 auto;padding:24px 0 60px;}
+
+/* ── 상단 헤더 ── */
+.top-header{
+  background:linear-gradient(135deg,var(--dark2) 0%,var(--pink) 55%,var(--light) 100%);
+  border-radius:16px 16px 0 0;padding:28px 32px 24px;position:relative;overflow:hidden;
+}
+.top-header::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.07);border-radius:50%;}
+.top-header::after{content:'';position:absolute;bottom:-20px;right:80px;width:90px;height:90px;background:rgba(255,255,255,.05);border-radius:50%;}
+.top-header .biz-badge{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:11px;font-weight:700;padding:3px 14px;border-radius:20px;letter-spacing:.5px;margin-bottom:10px;}
+.top-header .biz-name{font-size:28px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.2;margin-bottom:6px;}
+.top-header .biz-title{font-size:14px;color:rgba(255,255,255,.88);font-weight:500;margin-bottom:14px;}
+.top-header .tags{display:flex;gap:8px;flex-wrap:wrap;}
+.top-header .tag{font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;}
+.tag-loc{background:rgba(0,0,0,.25);color:#fff;}
+.tag-pay{background:rgba(255,215,0,.25);color:#FFD700;}
+.tag-daily{background:rgba(255,255,255,.15);color:#fff;}
+
+/* ── 섹션 ── */
+.section{background:#fff;border:1.5px solid var(--border);border-top:none;position:relative;}
+.section-header{
+  background:linear-gradient(90deg,var(--th-section-hd1),var(--th-section-hd2));
+  padding:11px 20px;border-bottom:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.section-label{font-size:12px;font-weight:900;color:var(--pink);letter-spacing:.3px;}
+.btn-edit{display:flex;align-items:center;gap:4px;background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;border:none;border-radius:16px;font-size:11px;font-weight:700;padding:4px 12px;cursor:pointer;font-family:inherit;transition:opacity .2s;white-space:nowrap;}
+.btn-edit:hover{opacity:.88;}
+
+/* ── 기본 정보 테이블 ── */
+.info-table{width:100%;border-collapse:collapse;}
+.info-table td{padding:11px 18px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;}
+.info-table tr:last-child td{border-bottom:none;}
+.info-table .lbl{width:120px;padding:11px 14px 11px 20px;background:var(--th-lbl-bg);font-size:12px;font-weight:700;color:var(--gray);white-space:nowrap;}
+.info-table .val{color:#222;}
+.val-pink{color:var(--pink);font-weight:700;}
+.jobs-val-input{width:100%;max-width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:#222;background:#fff;box-sizing:border-box;}
+.jobs-val-input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 2px rgba(255,27,107,.15);}
+.info-table .jobs-val-input{max-width:280px;}
+.info-table .jobs-sns{max-width:110px;margin-right:6px;}
+.jobs-ai-edit-actions{margin-top:8px;}
+.jobs-ai-edit-actions .btn-save-ai{background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;padding:6px 16px;cursor:pointer;font-family:inherit;}
+.jobs-ai-edit-actions .btn-save-ai:hover{opacity:.9;}
+.sns-chip{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;margin-right:4px;margin-bottom:3px;}
+.cat-chip{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;margin-right:4px;margin-bottom:3px;}
+
+/* ── 인트로/텍스트 ── */
+.section-body{padding:20px 24px;}
+.intro-bar{border-left:3px solid var(--pink);padding-left:14px;margin-bottom:10px;font-size:13px;font-weight:900;color:var(--pink);}
+.section-text{font-size:13px;color:#444;line-height:1.9;}
+.section-text.jobs-ai-edit-ta{display:block;width:100%;min-height:120px;resize:vertical;}
+
+/* ── 포인트 카드 ── */
+.cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px 20px;}
+.p-card{border-radius:12px;padding:16px 15px;}
+.p-card-icon{font-size:22px;margin-bottom:7px;}
+.p-card-title{font-size:12px;font-weight:900;margin-bottom:5px;}
+.p-card-desc{font-size:11px;color:#666;line-height:1.7;}
+.p-card .jobs-val-input.p-card-title{display:block;margin-bottom:6px;font-size:12px;font-weight:900;background:rgba(255,255,255,.6);}
+.p-card .jobs-val-input.p-card-desc{display:block;font-size:11px;color:#666;line-height:1.7;min-height:60px;resize:vertical;}
+.card-pink{background:linear-gradient(135deg,#fff0f6,#ffe8f2);border:1.5px solid #ffd6e7;}
+.card-pink .p-card-title{color:var(--pink);}
+.card-gold{background:linear-gradient(135deg,#fff8e8,#fff3d6);border:1.5px solid #ffe0a0;}
+.card-gold .p-card-title{color:#D4840A;}
+.card-green{background:linear-gradient(135deg,#f0fff4,#e8f5e9);border:1.5px solid #b2dfdb;}
+.card-green .p-card-title{color:#2E7D32;}
+.card-purple{background:linear-gradient(135deg,#f3e8ff,#ede0f5);border:1.5px solid #d4b0f0;}
+.card-purple .p-card-title{color:#7B1FA2;}
+
+/* ── 상세 블록 ── */
+.detail-block{padding:0 24px 20px;}
+.detail-row{margin-bottom:16px;}
+.detail-row:last-child{margin-bottom:0;}
+.detail-badge{display:inline-block;background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;font-size:10px;font-weight:900;padding:3px 10px;border-radius:10px;margin-bottom:7px;}
+.detail-box{background:var(--th-detail-box);border-radius:10px;padding:13px 16px;font-size:12.5px;color:#444;line-height:1.9;border-left:3px solid var(--light);}
+
+/* ── 칩 / 편의사항·키워드 체크박스 ── */
+.chips-wrap{padding:16px 20px;display:flex;flex-wrap:wrap;gap:7px;}
+.chips-wrap.amenity-grid-form{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px 12px;}
+.chips-wrap.amenity-grid-form .chk-item{display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;}
+.chips-wrap.amenity-grid-form input{accent-color:var(--pink);width:14px;height:14px;cursor:pointer;}
+.chips-empty{color:#999;font-size:12px;font-style:italic;}
+
+/* ── MBTI (eve_alba_ad_editor_3 ⑧ 100% 동일) ── */
+.mbti-wrap{padding:20px 22px 24px;background:#fff;}
+.mbti-group{margin-bottom:22px;}
+.mbti-group:last-child{margin-bottom:0;}
+.mbti-group-title{font-size:13px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:#333;}
+.mbti-group-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;display:inline-block;}
+.mbti-cards,.mbti-cards-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.mbti-card{background:#fff;border:1.5px solid #e8e8e8;border-radius:14px;padding:14px 36px 14px 14px;cursor:pointer;position:relative;transition:border-color .18s,box-shadow .18s,opacity .18s;opacity:.45;}
+.mbti-card:hover{opacity:.7;border-color:#ddd;}
+.mbti-card.selected{opacity:1;border-color:var(--pink);background:linear-gradient(135deg,#fff5f8,#fff0f5);box-shadow:0 2px 8px rgba(255,27,107,.15);}
+.mbti-card-name{font-size:14px;font-weight:900;margin-bottom:6px;line-height:1.1;}
+.mbti-card-desc{font-size:11px;line-height:1.6;color:#999;word-break:keep-all;}
+.mbti-card-check{position:absolute;top:12px;right:13px;font-size:14px;color:#ddd;line-height:1;transition:color .18s;}
+.mbti-card.selected .mbti-card-check{color:#aaa;}
+/* 그룹별 타입명 색상 (eve_alba_ad_editor_3 원본) */
+.mbti-nt .mbti-card-name{color:#5C6BC0;}
+.mbti-nf .mbti-card-name{color:#43A047;}
+.mbti-sj .mbti-card-name{color:#FB8C00;}
+.mbti-sp .mbti-card-name{color:#E53935;}
+/* 선택 시 그룹별 테두리+배경 색 (jobs_register.php 동일) */
+.mbti-card.mbti-nt.selected{border-color:#1565C0;background:linear-gradient(135deg,#f0f4ff,#e8f0ff);}
+.mbti-card.mbti-nt.selected .mbti-card-check{color:#1565C0;}
+.mbti-card.mbti-nf.selected{border-color:#2E7D32;background:linear-gradient(135deg,#f0fff4,#e8f5e9);}
+.mbti-card.mbti-nf.selected .mbti-card-check{color:#2E7D32;}
+.mbti-card.mbti-sj.selected{border-color:#E65100;background:linear-gradient(135deg,#fff8f0,#fff3e0);}
+.mbti-card.mbti-sj.selected .mbti-card-check{color:#E65100;}
+.mbti-card.mbti-sp.selected{border-color:#AD1457;background:linear-gradient(135deg,#fdf0f5,#fce4ec);}
+.mbti-card.mbti-sp.selected .mbti-card-check{color:#AD1457;}
+.mbti-text-section{background:linear-gradient(90deg,var(--th-section-hd1),var(--th-section-hd2));border-top:1.5px solid var(--border);padding:16px 22px;}
+.mbti-text-label{font-size:12px;font-weight:900;color:var(--pink);margin-bottom:8px;}
+.mbti-text-display{font-size:12.5px;color:#444;line-height:1.9;min-height:36px;}
+.mbti-text-display.jobs-val-input{display:block;width:100%;min-height:80px;resize:vertical;}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;background:var(--th-chip-bg);color:var(--th-chip-color);border:1px solid var(--th-chip-border);}
+.chip-kw{background:#f3e8ff;color:#7B1FA2;border:1px solid #d4b0f0;}
+
+/* ── 약속 섹션 ── */
+.promise-body{background:linear-gradient(135deg,var(--th-promise1),var(--th-promise2));padding:18px 24px;border-top:1.5px solid var(--border);}
+.promise-list{font-size:12.5px;color:#555;line-height:2.1;}
+.promise-list.jobs-val-input{display:block;width:100%;min-height:100px;resize:vertical;}
+.detail-box .jobs-val-input{background:#fff;border:1.5px solid var(--border);min-height:80px;resize:vertical;}
+
+/* ── CTA (eve_alba_ad_editor_3 100% 일치) ── */
+.cta-footer{background:linear-gradient(135deg,var(--dark2),var(--pink));border-radius:0 0 16px 16px;padding:24px;text-align:center;}
+.cta-title{font-size:14px;font-weight:900;color:#fff;margin-bottom:4px;}
+.cta-sub{font-size:11px;color:rgba(255,255,255,.75);margin-bottom:16px;}
+.cta-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:14px;}
+.cta-btn{display:block;padding:10px 0;border-radius:12px;font-size:12px;font-weight:900;cursor:pointer;text-align:center;border:none;font-family:inherit;text-decoration:none;}
+.cta-kakao{background:#FEE500;color:#333;}
+.cta-line{background:#00B300;color:#fff;}
+.cta-tg{background:#2AABEE;color:#fff;}
+.cta-phone{display:inline-block;background:rgba(255,255,255,.15);border-radius:10px;padding:10px 24px;font-size:15px;font-weight:900;color:#fff;letter-spacing:.5px;text-decoration:none;}
+.jobs-view-editor-wrap .cta-footer .cta-phone,
+.jobs-view-editor-wrap .cta-footer .cta-phone:link,
+.jobs-view-editor-wrap .cta-footer .cta-phone:visited,
+.jobs-view-editor-wrap .cta-footer .cta-phone:hover{color:#fff!important;text-decoration:none!important;}
+.cta-watermark{margin-top:12px;font-size:10px;color:rgba(255,255,255,.35);}
+.jobs-view-editor-wrap .cta-footer .cta-watermark{color:rgba(255,255,255,.35)!important;}
+
+/* ── 테마 스위처 ── */
+#theme-switcher{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #e8e8e8;padding:10px 16px;}
+.ts-inner{max-width:958px;margin:0 auto;display:flex;align-items:center;gap:10px;}
+.ts-label{font-size:12px;font-weight:700;color:#888;margin-right:4px;}
+.ts-btn{display:flex;align-items:center;gap:6px;border:2px solid transparent;border-radius:20px;font-size:12px;font-weight:700;padding:6px 16px;cursor:pointer;font-family:inherit;transition:all .2s;background:#f5f5f5;color:#666;}
+.ts-btn .ts-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.ts-pink .ts-dot{background:linear-gradient(135deg,#FF6B35,#FF1B6B);}
+.ts-black .ts-dot{background:linear-gradient(135deg,#333,#111);}
+.ts-blue .ts-dot{background:linear-gradient(135deg,#1976D2,#0D47A1);}
+.ts-btn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.12);}
+.ts-btn.active.ts-pink{background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(255,27,107,.35);}
+.ts-btn.active.ts-black{background:linear-gradient(135deg,#333,#111);color:#FFD700;border-color:transparent;box-shadow:0 2px 12px rgba(0,0,0,.4);}
+.ts-btn.active.ts-blue{background:linear-gradient(135deg,#1976D2,#0D47A1);color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(21,101,192,.4);}
+.ts-btn.active .ts-dot{background:rgba(255,255,255,.4);}
+
+/* 테마 오버라이드 */
+.ev-view-wrap.theme-black .section{background:#1e1e1e;border-color:#333;}
+.ev-view-wrap.theme-black .section-label{color:var(--th-main);}
+.ev-view-wrap.theme-black .info-table td{border-color:#333;color:#ddd;}
+.ev-view-wrap.theme-black .info-table .val{color:#eee;}
+.ev-view-wrap.theme-black .section-text{color:#ccc;}
+.ev-view-wrap.theme-black .detail-box{color:#ccc;border-left-color:var(--th-light);}
+.ev-view-wrap.theme-black .promise-list{color:#bbb;}
+.ev-view-wrap.theme-black .p-card-desc{color:#aaa;}
+.ev-view-wrap.theme-black .intro-bar{color:var(--th-main);border-left-color:var(--th-main);}
+.ev-view-wrap.theme-black .detail-badge{background:linear-gradient(135deg,var(--th-main2),var(--th-main));}
+.ev-view-wrap.theme-black .card-pink{background:#1e1a00;border-color:#443300;}
+.ev-view-wrap.theme-black .card-gold{background:#1a1500;border-color:#443300;}
+.ev-view-wrap.theme-black .card-green{background:#001a0a;border-color:#003311;}
+.ev-view-wrap.theme-black .card-purple{background:#150020;border-color:#330055;}
+.ev-view-wrap.theme-black .p-card-title{color:var(--th-main)!important;}
+.ev-view-wrap.theme-black .mbti-card{background:#252525;border-color:#444;}
+.ev-view-wrap.theme-black .mbti-card.selected{background:#2a2a1a;border-color:#665500;}
+.ev-view-wrap.theme-black .mbti-card.mbti-nt.selected{border-color:#5C6BC0;background:linear-gradient(135deg,#1a1e30,#1e2540);}
+.ev-view-wrap.theme-black .mbti-card.mbti-nf.selected{border-color:#43A047;background:linear-gradient(135deg,#1a2a1a,#1e301e);}
+.ev-view-wrap.theme-black .mbti-card.mbti-sj.selected{border-color:#FB8C00;background:linear-gradient(135deg,#2a2010,#302515);}
+.ev-view-wrap.theme-black .mbti-card.mbti-sp.selected{border-color:#E53935;background:linear-gradient(135deg,#2a1520,#301a25);}
+.ev-view-wrap.theme-black .mbti-card-desc{color:#888;}
+.ev-view-wrap.theme-black .mbti-group-title{color:#ccc;}
+.ev-view-wrap.theme-black .mbti-text-display{color:#ccc;}
+.ev-view-wrap.theme-blue .info-table .lbl{background:var(--th-lbl-bg);}
+.ev-view-wrap.theme-blue .detail-box{border-left-color:var(--th-light);}
+.ev-view-wrap.theme-blue .intro-bar{color:var(--th-main);border-left-color:var(--th-main);}
+.ev-view-wrap.theme-blue .card-pink{background:linear-gradient(135deg,#EBF5FF,#DCEEFF);border-color:#BBDEFB;}
+.ev-view-wrap.theme-blue .card-pink .p-card-title{color:#1565C0;}
+.ev-view-wrap.theme-blue .section-text strong{color:#1565C0;}
+.ev-view-wrap.theme-blue .detail-badge{background:linear-gradient(135deg,#1976D2,#1565C0);}
+
+/* ── 모달 (eve_alba_ad_editor_3 100%) ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.is-open{display:flex;}
+.jobs-view-editor-wrap .modal{background:#fff;border-radius:16px;width:100%;max-width:958px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+.jobs-view-editor-wrap .modal-header{background:linear-gradient(135deg,var(--dark2),var(--pink));padding:16px 20px;border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;}
+.jobs-view-editor-wrap .modal-title{font-size:14px;font-weight:900;color:#fff;}
+.jobs-view-editor-wrap .modal-close{width:28px;height:28px;background:rgba(255,255,255,.2);border:none;border-radius:50%;color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.jobs-view-editor-wrap .modal-body{padding:20px;}
+.jobs-view-editor-wrap .modal .mbti-nt .mbti-card-name{color:#5C6BC0!important;}
+.jobs-view-editor-wrap .modal .mbti-nf .mbti-card-name{color:#43A047!important;}
+.jobs-view-editor-wrap .modal .mbti-sj .mbti-card-name{color:#FB8C00!important;}
+.jobs-view-editor-wrap .modal .mbti-sp .mbti-card-name{color:#E53935!important;}
+.jobs-view-editor-wrap .modal-field{margin-bottom:16px;}
+.jobs-view-editor-wrap .modal-label{font-size:12px;font-weight:700;color:var(--gray);margin-bottom:6px;display:block;}
+.jobs-view-editor-wrap .modal-input{width:100%;padding:10px 13px;border:1.5px solid #f0e0e8;border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:vertical;transition:border-color .2s;color:#222;background:#fff;box-sizing:border-box;}
+.jobs-view-editor-wrap .modal-input:focus{border-color:var(--pink);}
+.jobs-view-editor-wrap textarea.modal-input{min-height:90px;}
+.jobs-view-editor-wrap .modal-footer{padding:14px 20px;border-top:1.5px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff;border-radius:0 0 16px 16px;}
+.jobs-view-editor-wrap .btn-cancel{padding:8px 18px;background:#f5f5f5;color:#666;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.jobs-view-editor-wrap .btn-save{padding:8px 22px;background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.jobs-view-editor-wrap .btn-save:hover{opacity:.9;}
+.deploy-bar{margin-top:20px;text-align:center;}
+.btn-deploy{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;border:none;border-radius:28px;font-size:14px;font-weight:900;padding:14px 40px;cursor:pointer;font-family:inherit;box-shadow:0 4px 18px rgba(255,27,107,.35);transition:opacity .2s;}
+.btn-deploy:hover{opacity:.9;}
+
+/* ════════════════════════════════
+   ★ 업소 이미지 슬라이더
+════════════════════════════════ */
+.img-slider-section{background:#fff;border:1.5px solid var(--border);border-top:none;position:relative;}
+.slider-wrap{position:relative;width:100%;background:#f0f0f0;overflow:hidden;aspect-ratio:16/7;min-height:200px;}
+.slider-track{display:flex;width:100%;height:100%;transition:transform .38s cubic-bezier(.4,0,.2,1);}
+.slide{flex:0 0 100%;width:100%;height:100%;position:relative;overflow:hidden;cursor:pointer;}
+.slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.slide-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#f8f8f8,#efefef);color:#ccc;gap:10px;}
+.slide-placeholder-icon{font-size:40px;opacity:.4;}
+.slide-placeholder-text{font-size:13px;font-weight:600;color:#bbb;}
+.slide-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.55));color:#fff;font-size:12px;font-weight:600;padding:24px 16px 12px;pointer-events:none;min-height:48px;}
+.slider-arrow{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.88);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:#444;box-shadow:0 2px 10px rgba(0,0,0,.18);transition:all .18s;z-index:10;backdrop-filter:blur(4px);}
+.slider-arrow:hover{background:#fff;box-shadow:0 3px 14px rgba(0,0,0,.24);transform:translateY(-50%) scale(1.08);}
+.slider-arrow.prev{left:12px;}
+.slider-arrow.next{right:12px;}
+.slider-arrow:disabled{opacity:.3;cursor:default;}
+.slider-indicators{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 0 4px;}
+.s-dot{width:8px;height:8px;border-radius:50%;background:#ddd;border:none;cursor:pointer;transition:all .2s;padding:0;}
+.s-dot.active{background:var(--th-main,#FF1B6B);width:22px;border-radius:4px;}
+.slider-counter{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.45);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;backdrop-filter:blur(4px);z-index:10;}
+.slider-empty{padding:32px 20px;text-align:center;color:#ccc;font-size:13px;}
+.slider-empty-icon{font-size:36px;margin-bottom:8px;display:block;}
+
+/* ── 이미지 수정 모달 ── */
+.img-modal-list{display:flex;flex-direction:column;gap:16px;}
+.img-modal-item{background:#fafafa;border:1.5px solid #f0e0e8;border-radius:12px;padding:14px 16px;}
+.img-modal-item-title{font-size:12px;font-weight:700;color:#888;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.img-preview-thumb{width:80px;height:56px;object-fit:cover;border-radius:8px;border:1.5px solid #eee;margin-bottom:8px;display:block;}
+.img-file-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.img-file-label{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--orange,#FF6B35),var(--pink,#FF1B6B));color:#fff;font-size:11px;font-weight:700;padding:6px 13px;border-radius:20px;cursor:pointer;white-space:nowrap;}
+.img-file-label input[type=file]{display:none;}
+.img-file-name{font-size:11px;color:#999;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.img-caption-input{width:100%;padding:7px 11px;border:1.5px solid #f0e0e8;border-radius:8px;font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;box-sizing:border-box;}
+.img-caption-input:focus{border-color:var(--pink,#FF1B6B);}
+.img-remove-btn{display:inline-flex;align-items:center;gap:4px;background:#f5f5f5;color:#999;border:1.5px solid #eee;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;cursor:pointer;font-family:inherit;}
+.img-remove-btn:hover{background:#ffe8f2;color:#FF1B6B;border-color:#ffc8de;}
+
+/* ── 원본 이미지 뷰어 ── */
+.img-fullview-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
+.img-fullview-overlay.is-open{display:flex;}
+.img-fullview-overlay img{max-width:95vw;max-height:90vh;object-fit:contain;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5);}
+.img-fullview-close{position:absolute;top:16px;right:20px;width:36px;height:36px;background:rgba(255,255,255,.2);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2001;backdrop-filter:blur(4px);}
+.img-fullview-close:hover{background:rgba(255,255,255,.35);}
+
+/* 블랙 테마 슬라이더 */
+.ev-view-wrap.theme-black .img-slider-section{background:#1e1e1e;border-color:#333;}
+.ev-view-wrap.theme-black .slider-wrap{background:#111;}
+.ev-view-wrap.theme-black .slider-empty{color:#666;}
+.ev-view-wrap.theme-black .s-dot{background:#444;}
+.ev-view-wrap.theme-black .slider-arrow{background:rgba(50,50,50,.88);color:#ddd;}
+
+/* 반응형 */
+@media(max-width:680px){.cards-grid{grid-template-columns:1fr;}.cta-btns{grid-template-columns:1fr;}.mbti-cards{grid-template-columns:repeat(2,1fr);} .info-table .lbl{width:90px;font-size:11px;} .top-header .biz-name{font-size:22px;} .top-header{padding:20px 18px 18px;} .section-body,.detail-block,.chips-wrap{padding-left:14px;padding-right:14px;} .cards-grid{padding:14px;}}
+@media(max-width:600px){.slider-wrap{aspect-ratio:4/3;min-height:180px;}.slider-arrow{width:32px;height:32px;font-size:14px;}}
+@media(max-width:400px){.info-table{display:block;} .info-table tbody,.info-table tr{display:block;} .info-table .lbl{display:block;width:100%;border-bottom:none;padding-bottom:4px;} .info-table .val{display:block;padding-top:4px;}}

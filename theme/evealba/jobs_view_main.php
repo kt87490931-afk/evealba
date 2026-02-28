@@ -172,6 +172,9 @@ $sns_telegram = !empty($data['job_telegram']) ? trim($data['job_telegram']) : ''
 $banner_comp = $nick ?: $comp ?: '—';
 $biz_title = isset($data['job_title']) && trim($data['job_title']) !== '' ? trim($data['job_title']) : ($row['jr_title'] ?: ($row['jr_subject_display'] ?? ''));
 
+$saved_theme = isset($data['theme']) ? trim($data['theme']) : 'pink';
+if (!in_array($saved_theme, array('pink', 'black', 'blue'))) $saved_theme = 'pink';
+
 $thumb_gradient = isset($data['thumb_gradient']) ? trim($data['thumb_gradient']) : '';
 $thumb_title = isset($data['thumb_title']) ? trim($data['thumb_title']) : '';
 $thumb_text = isset($data['thumb_text']) ? trim($data['thumb_text']) : '';
@@ -541,17 +544,20 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 </div>
 <?php } ?>
 
-<!-- 테마 스위처 (eve_alba_ad_editor_3 100% 일치) -->
+<?php if ($is_owner) { ?>
+<!-- 테마 스위처 (소유자 전용) -->
 <div id="theme-switcher">
   <div class="ts-inner">
     <span class="ts-label">🎨 테마</span>
-    <button type="button" class="ts-btn ts-pink active" data-theme="pink"><span class="ts-dot"></span> 핑크</button>
-    <button type="button" class="ts-btn ts-black" data-theme="black"><span class="ts-dot"></span> 블랙</button>
-    <button type="button" class="ts-btn ts-blue" data-theme="blue"><span class="ts-dot"></span> 블루</button>
+    <button type="button" class="ts-btn ts-pink<?php echo $saved_theme==='pink'?' active':''; ?>" data-theme="pink"><span class="ts-dot"></span> 핑크</button>
+    <button type="button" class="ts-btn ts-black<?php echo $saved_theme==='black'?' active':''; ?>" data-theme="black"><span class="ts-dot"></span> 블랙</button>
+    <button type="button" class="ts-btn ts-blue<?php echo $saved_theme==='blue'?' active':''; ?>" data-theme="blue"><span class="ts-dot"></span> 블루</button>
+    <button type="button" class="ts-btn-save" id="btn-save-theme" onclick="saveThemeChoice()" style="margin-left:8px;padding:5px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-size:11px;font-weight:900;cursor:pointer;">💾 테마저장</button>
   </div>
 </div>
+<?php } ?>
 
-<article id="bo_v" class="ev-view-wrap jobs-view-wrap jobs-view-editor-wrap">
+<article id="bo_v" class="ev-view-wrap jobs-view-wrap jobs-view-editor-wrap<?php echo $saved_theme !== 'pink' ? ' theme-'.$saved_theme : ''; ?>">
   <?php
   /* ═══ AI 생성 필드 매핑 (jr_data) ═══
    * ai_intro         : 인사말
@@ -1579,8 +1585,36 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
   };
   _applyBorder();
 
-  function setTheme(theme){ var root=document.documentElement; root.className=theme==='pink'?'':'theme-'+theme; document.querySelectorAll('.ts-btn').forEach(function(b){b.classList.remove('active');}); var btn=document.querySelector('.ts-'+theme); if(btn)btn.classList.add('active'); }
-  document.querySelectorAll('#theme-switcher .ts-btn').forEach(function(btn){ btn.addEventListener('click',function(){ setTheme(this.getAttribute('data-theme')||'pink'); }); });
+  var _currentTheme = <?php echo json_encode($saved_theme); ?>;
+  function setTheme(theme){
+    var article = document.getElementById('bo_v');
+    if(!article) return;
+    article.classList.remove('theme-black','theme-blue');
+    if(theme !== 'pink') article.classList.add('theme-'+theme);
+    _currentTheme = theme;
+    document.querySelectorAll('.ts-btn[data-theme]').forEach(function(b){b.classList.remove('active');});
+    var btn=document.querySelector('.ts-'+theme);
+    if(btn)btn.classList.add('active');
+  }
+  document.querySelectorAll('#theme-switcher .ts-btn[data-theme]').forEach(function(btn){ btn.addEventListener('click',function(){ setTheme(this.getAttribute('data-theme')||'pink'); }); });
+
+  window.saveThemeChoice = function(){
+    var btn = document.getElementById('btn-save-theme');
+    if(btn){ btn.textContent='저장중...'; btn.disabled=true; }
+    var fd = new FormData();
+    fd.append('jr_id', jrId);
+    fd.append('theme', _currentTheme);
+    fetch((<?php echo json_encode($jobs_base_url); ?>)+'/jobs_theme_save.php',{method:'POST',body:fd})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(btn){ btn.textContent = d.success ? '✅ 저장완료' : '❌ 실패'; btn.disabled=false; }
+      setTimeout(function(){ if(btn) btn.textContent='💾 테마저장'; }, 2000);
+    })
+    .catch(function(){
+      if(btn){ btn.textContent='❌ 오류'; btn.disabled=false; }
+      setTimeout(function(){ if(btn) btn.textContent='💾 테마저장'; }, 2000);
+    });
+  };
 
   /* ═══════════════════════════════════════
      🖼️ 업소 이미지 슬라이더
