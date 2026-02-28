@@ -12,7 +12,8 @@ if ($is_member) {
     $tb_check = sql_query("SHOW TABLES LIKE 'g5_jobs_register'", false);
     if ($tb_check && sql_num_rows($tb_check)) {
         $mb_id_esc = addslashes($member['mb_id']);
-        $sql = "SELECT * FROM `g5_jobs_register` WHERE mb_id = '{$mb_id_esc}' AND jr_status IN ('pending','ongoing') ORDER BY jr_datetime DESC";
+        $today_esc = date('Y-m-d');
+        $sql = "SELECT * FROM `g5_jobs_register` WHERE mb_id = '{$mb_id_esc}' AND jr_status IN ('pending','ongoing') AND (jr_end_date IS NULL OR jr_end_date >= '{$today_esc}' OR jr_status = 'pending') ORDER BY jr_datetime DESC";
         $result = sql_query($sql);
         $today = date('Y-m-d');
         while ($row = sql_fetch_array($result)) {
@@ -45,21 +46,17 @@ if ($is_member) {
                 $period = (int)($row['jr_ad_period'] ?? 30);
                 $ad_labels = ($jc <= 300) ? '줄광고 30일' : (($jc <= 700) ? '줄광고 60일' : (($jc <= 1200) ? '줄광고 90일' : "줄광고 {$period}일"));
             }
-            $thumb_url = '';
-            if (!empty($row['jr_data'])) {
-                $jr_data_arr = @json_decode($row['jr_data'], true);
-                if (is_array($jr_data_arr)) {
-                    if (!empty($jr_data_arr['thumb_url'])) $thumb_url = $jr_data_arr['thumb_url'];
-                    elseif (!empty($jr_data_arr['thumb']) && is_string($jr_data_arr['thumb'])) $thumb_url = $jr_data_arr['thumb'];
-                    elseif (!empty($jr_data_arr['image']) && is_string($jr_data_arr['image'])) $thumb_url = $jr_data_arr['image'];
-                    elseif (!empty($jr_data_arr['images'][0])) $thumb_url = is_string($jr_data_arr['images'][0]) ? $jr_data_arr['images'][0] : '';
-                }
-            }
+            $jr_data_arr = !empty($row['jr_data']) ? @json_decode($row['jr_data'], true) : array();
+            if (!is_array($jr_data_arr)) $jr_data_arr = array();
+            $thumb_grad = isset($jr_data_arr['thumb_gradient']) ? $jr_data_arr['thumb_gradient'] : '1';
+            $thumb_title_text = $jr_data_arr['thumb_title'] ?? $row['jr_nickname'] ?? $row['jr_company'] ?? '';
+            $thumb_icon_key = isset($jr_data_arr['thumb_icon']) ? trim($jr_data_arr['thumb_icon']) : '';
+            $thumb_border_key = isset($jr_data_arr['thumb_border']) ? trim($jr_data_arr['thumb_border']) : '';
             $can_view = ($status === 'ongoing') || $payment_ok;
             $list[] = array(
                 'jr_id' => $row['jr_id'],
                 'wr_id' => $row['jr_id'],
-                'subject' => $row['jr_subject_display'] ?: '[제목없음]',
+                'subject' => $row['jr_title'] ?: ($row['jr_subject_display'] ?: '[제목없음]'),
                 'datetime2' => date('Y-m-d', strtotime($row['jr_datetime'])),
                 'status' => $status,
                 'status_class' => $status_class,
@@ -70,7 +67,10 @@ if ($is_member) {
                 'ad_labels' => $ad_labels,
                 'total_amount' => (int)($row['jr_total_amount'] ?? 0),
                 'nickname' => isset($row['jr_nickname']) ? trim($row['jr_nickname']) : '',
-                'thumb_url' => $thumb_url,
+                'thumb_grad' => $thumb_grad,
+                'thumb_title_text' => $thumb_title_text,
+                'thumb_icon' => $thumb_icon_key,
+                'thumb_border' => $thumb_border_key,
                 'view_href' => $can_view ? ($jobs_view_url_base.'?jr_id='.$row['jr_id']) : '#',
                 'can_view' => $can_view
             );
@@ -78,6 +78,38 @@ if ($is_member) {
         $total_count = count($list);
     }
 }
+
+$_grad_map = array(
+    '1'=>'linear-gradient(135deg,rgb(255,182,193),rgb(255,105,180))',
+    '2'=>'linear-gradient(135deg,rgb(255,218,185),rgb(255,140,105))',
+    '3'=>'linear-gradient(135deg,rgb(173,216,230),rgb(100,149,237))',
+    '4'=>'linear-gradient(135deg,rgb(221,160,221),rgb(186,85,211))',
+    '5'=>'linear-gradient(135deg,rgb(144,238,144),rgb(60,179,113))',
+    '6'=>'linear-gradient(135deg,rgb(255,255,224),rgb(255,215,0))',
+    'P1'=>'linear-gradient(135deg,rgb(255,215,0),rgb(218,165,32),rgb(184,134,11))',
+    'P2'=>'linear-gradient(135deg,rgb(192,192,192),rgb(169,169,169),rgb(128,128,128))',
+    'P3'=>'linear-gradient(135deg,rgb(30,30,30),rgb(60,60,60),rgb(30,30,30))',
+    'P4'=>'linear-gradient(135deg,rgb(255,105,180),rgb(138,43,226),rgb(0,191,255))',
+);
+$_border_map = array(
+    'gold'=>'border:2px solid #FFD700;',
+    'pink'=>'border:2px solid #FF1B6B;',
+    'charcoal'=>'border:2px solid #444;',
+    'royalblue'=>'border:2px solid #4169E1;',
+    'royalpurple'=>'border:2px solid #7B2FBE;',
+);
+$_icon_map = array(
+    'new'=>array('bg'=>'#FF1B6B','label'=>'초보환영'),
+    'all'=>array('bg'=>'#FF6B35','label'=>'원종제공'),
+    'lux'=>array('bg'=>'#8B5CF6','label'=>'고급시설'),
+    'hair'=>array('bg'=>'#EC4899','label'=>'블랙 관리'),
+    'money'=>array('bg'=>'#10B981','label'=>'포비지급'),
+    'sizex'=>array('bg'=>'#3B82F6','label'=>'사이즈X'),
+    'set'=>array('bg'=>'#F59E0B','label'=>'세트환영'),
+    'dual'=>array('bg'=>'#6366F1','label'=>'떡업가능'),
+    'once'=>array('bg'=>'#14B8A6','label'=>'1회원제운영'),
+    'room'=>array('bg'=>'#E11D48','label'=>'공비지급'),
+);
 ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/skin/board/eve_skin/style.css?v=<?php echo @filemtime(G5_THEME_PATH.'/skin/board/eve_skin/style.css'); ?>">
 
@@ -106,17 +138,21 @@ if ($is_member) {
       $num = $total_count;
       foreach ($list as $row) {
         $extend_url = $jobs_extend_popup_url . '?jr_id=' . (isset($row['jr_id']) ? $row['jr_id'] : '');
-        $thumb_url = isset($row['thumb_url']) ? trim($row['thumb_url']) : '';
-        $thumb_full = ($thumb_url && (strpos($thumb_url, 'http') === 0 || strpos($thumb_url, '/') === 0)) ? $thumb_url : ($thumb_url ? (G5_DATA_URL . '/jobs/' . ltrim($thumb_url, '/')) : '');
+        $_tg = isset($row['thumb_grad']) ? $row['thumb_grad'] : '1';
+        $_tbg = isset($_grad_map[$_tg]) ? $_grad_map[$_tg] : $_grad_map['1'];
+        $_tt = htmlspecialchars($row['thumb_title_text'] ?? '');
+        $_tb = isset($row['thumb_border']) && isset($_border_map[$row['thumb_border']]) ? $_border_map[$row['thumb_border']] : '';
+        $_ti = isset($row['thumb_icon']) && isset($_icon_map[$row['thumb_icon']]) ? $_icon_map[$row['thumb_icon']] : null;
     ?>
     <a href="<?php echo isset($row['view_href']) ? htmlspecialchars($row['view_href']) : '#'; ?>" class="board-row jobs-ongoing-row<?php echo empty($row['can_view']) ? ' row-blocked' : ''; ?>"<?php if (empty($row['can_view'])) { ?> onclick="event.preventDefault();alert('입금확인 후 이용 가능합니다.');return false;"<?php } ?>>
       <div class="board-td td-num"><?php echo $num--; ?></div>
       <div class="board-td td-thumb">
-        <?php if ($thumb_full) { ?>
-        <div class="thumb-box"><img src="<?php echo htmlspecialchars($thumb_full); ?>" alt=""></div>
-        <?php } else { ?>
-        <div class="thumb-empty"><span class="thumb-empty-icon">📋</span><span class="thumb-empty-text">이미지 없음</span></div>
-        <?php } ?>
+        <div class="mini-thumb" style="width:56px;height:56px;border-radius:10px;background:<?php echo $_tbg; ?>;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;<?php echo $_tb; ?>">
+          <span style="color:#fff;font-size:10px;font-weight:900;text-align:center;line-height:1.3;text-shadow:0 1px 3px rgba(0,0,0,.3);padding:2px 4px;"><?php echo $_tt ?: '—'; ?></span>
+          <?php if ($_ti) { ?>
+          <span style="position:absolute;top:2px;right:2px;font-size:7px;font-weight:900;padding:1px 4px;border-radius:6px;color:#fff;background:<?php echo $_ti['bg']; ?>"><?php echo $_ti['label']; ?></span>
+          <?php } ?>
+        </div>
       </div>
       <div class="board-td td-title">
         <div class="td-title-inner">
