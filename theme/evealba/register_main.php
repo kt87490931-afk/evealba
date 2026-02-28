@@ -172,7 +172,7 @@
             <input class="fi" id="inp-pw" name="mb_password" type="password" placeholder="비밀번호 입력" oninput="checkPw()" required>
             <span class="pw-toggle" onclick="togglePw('inp-pw','eye1')" id="eye1">👁</span>
           </div>
-          <span class="fi-hint" id="pw-hint">4자 이상 12자이하로 입력해 주세요.</span>
+          <span class="fi-hint" id="pw-hint">영문 + 특수문자 조합, 4자 이상 12자이하</span>
         </div>
       </div>
 
@@ -525,9 +525,13 @@ function checkIdDuplicate() {
 function checkPw() {
   var val = document.getElementById('inp-pw').value;
   var hint = document.getElementById('pw-hint');
-  if(val.length === 0) { hint.textContent = '4자 이상 12자이하로 입력해 주세요.'; hint.className = 'fi-hint'; }
+  var hasLetter = /[a-zA-Z]/.test(val);
+  var hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(val);
+  if(val.length === 0) { hint.textContent = '영문 + 특수문자 조합, 4자 이상 12자이하'; hint.className = 'fi-hint'; }
   else if(val.length < 4) { hint.textContent = '⚠ 4자 이상 입력해주세요.'; hint.className = 'fi-hint err'; }
   else if(val.length > 12) { hint.textContent = '⚠ 12자 이하로 입력해주세요.'; hint.className = 'fi-hint err'; }
+  else if(!hasLetter) { hint.textContent = '⚠ 영문자를 포함해야 합니다.'; hint.className = 'fi-hint err'; }
+  else if(!hasSpecial) { hint.textContent = '⚠ 특수문자를 포함해야 합니다. (!@#$%^&* 등)'; hint.className = 'fi-hint err'; }
   else { hint.textContent = '✅ 사용 가능한 비밀번호입니다.'; hint.className = 'fi-hint ok'; }
   checkPw2();
 }
@@ -638,6 +642,9 @@ function doJoin() {
   if(!id || id.length < 4) { alert('아이디를 입력해주세요 (4자 이상).'); return; }
   if(!idChecked || checkedId !== id) { alert('아이디 중복확인을 해주세요.'); return; }
   if(!pw || pw.length < 4) { alert('비밀번호를 입력해주세요 (4자 이상).'); return; }
+  if(pw.length > 12) { alert('비밀번호는 12자 이하로 입력해주세요.'); return; }
+  if(!/[a-zA-Z]/.test(pw)) { alert('비밀번호에 영문자를 포함해야 합니다.'); return; }
+  if(!/[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?`~]/.test(pw)) { alert('비밀번호에 특수문자를 포함해야 합니다. (!@#$%^&* 등)'); return; }
   if(pw !== pw2) { alert('비밀번호가 일치하지 않습니다.'); return; }
   if(!name) { alert('이름을 입력해주세요.'); return; }
   if(!nick) { alert('닉네임을 입력해주세요.'); return; }

@@ -53,6 +53,18 @@ if (!$mb_password || strlen($mb_password) < 4) {
     $res['msg'] = '비밀번호를 4자 이상 입력해주세요.';
     echo json_encode($res, JSON_UNESCAPED_UNICODE); exit;
 }
+if (strlen($mb_password) > 12) {
+    $res['msg'] = '비밀번호는 12자 이하로 입력해주세요.';
+    echo json_encode($res, JSON_UNESCAPED_UNICODE); exit;
+}
+if (!preg_match('/[a-zA-Z]/', $mb_password)) {
+    $res['msg'] = '비밀번호에 영문자를 포함해야 합니다.';
+    echo json_encode($res, JSON_UNESCAPED_UNICODE); exit;
+}
+if (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\\\|,.<>\/?`~]/', $mb_password)) {
+    $res['msg'] = '비밀번호에 특수문자를 포함해야 합니다.';
+    echo json_encode($res, JSON_UNESCAPED_UNICODE); exit;
+}
 if ($mb_password !== $mb_password_re) {
     $res['msg'] = '비밀번호가 일치하지 않습니다.';
     echo json_encode($res, JSON_UNESCAPED_UNICODE); exit;
