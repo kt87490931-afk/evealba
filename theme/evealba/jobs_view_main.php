@@ -67,6 +67,19 @@ if ($status === 'pending' && !$payment_ok) {
 
 $data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();
 if (!is_array($data)) $data = array();
+
+$_opt_end_date = $row['jr_end_date'] ?? '';
+$_opt_remaining_days = 0;
+if ($_opt_end_date) {
+    $_opt_remaining_days = max(0, (int)((strtotime($_opt_end_date . ' 23:59:59') - time()) / 86400) + 1);
+}
+$_opt_daily_rates = array(
+    'premium' => 1667,
+    'badge'   => 1000,
+    'motion'  => 1000,
+    'wave'    => 1667,
+    'border'  => 1000,
+);
 $nick = isset($data['job_nickname']) ? trim($data['job_nickname']) : $row['jr_nickname'];
 $comp = isset($data['job_company']) ? trim($data['job_company']) : $row['jr_company'];
 $title = isset($data['job_title']) ? trim($data['job_title']) : $row['jr_title'];
@@ -252,12 +265,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 #tg-pv-card .tpc-sub{display:block;font-size:12px;font-weight:500;margin-top:2px;opacity:.9;transition:font-size .15s}
 .pv-icon-badge{position:absolute;top:7px;right:7px;font-size:10px;font-weight:900;padding:2px 7px;border-radius:9px;z-index:10;color:#fff}
 /* 기간 선택 & 총금액 (기존 유지) */
-.tg-period-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;margin-bottom:4px}
-.tg-period-row label{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#555;cursor:pointer;padding:5px 12px;border:1.5px solid #f0e0e8;border-radius:8px;transition:all .2s}
-.tg-period-row label:hover{border-color:var(--light-pink);background:#fff8fb}
-.tg-period-row input[type="radio"]{accent-color:var(--hot-pink,#FF1B6B);width:14px;height:14px;cursor:pointer}
-.tg-period-row input[type="radio"]:checked+span{color:var(--hot-pink,#FF1B6B)}
-.tg-period-row label:has(input:checked){border-color:var(--hot-pink,#FF1B6B);background:var(--pale-pink,#FFD6E7)}
+.tg-option-price{margin-top:6px;padding:6px 10px;background:#fff8fb;border:1px solid #f0e0e8;border-radius:8px;font-size:12px}
 .tg-total-wrap{margin-top:14px;background:linear-gradient(135deg,var(--dark2,#2D0020),#5C0040);border-radius:12px;padding:14px 16px;color:#fff}
 .tg-total-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .tg-total-header .tth-label{font-size:13px;font-weight:700}
@@ -363,12 +371,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
             }
             ?>
           </div>
-          <div class="tg-period-row" id="tg-premium-period" style="display:none">
-            <label><input type="radio" name="premium-period" value="0" checked onchange="calcThumbTotal()"><span>선택안함</span></label>
-            <label><input type="radio" name="premium-period" value="50000" onchange="calcThumbTotal()"><span>30일 50,000원</span></label>
-            <label><input type="radio" name="premium-period" value="95000" onchange="calcThumbTotal()"><span>60일 95,000원</span></label>
-            <label><input type="radio" name="premium-period" value="140000" onchange="calcThumbTotal()"><span>90일 140,000원</span></label>
-          </div>
+          <div class="tg-option-price" id="tg-premium-price" style="display:none"></div>
         </div>
       </div>
 
@@ -408,12 +411,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
             }
           } ?>
         </div>
-        <div class="tg-period-row" id="tg-badge-period" style="<?php echo $thumb_icon ? '' : 'display:none'; ?>">
-          <label><input type="radio" name="badge-period" value="0" checked onchange="calcThumbTotal()"><span>선택안함</span></label>
-          <label><input type="radio" name="badge-period" value="30000" onchange="calcThumbTotal()"><span>30일 30,000원</span></label>
-          <label><input type="radio" name="badge-period" value="55000" onchange="calcThumbTotal()"><span>60일 55,000원</span></label>
-          <label><input type="radio" name="badge-period" value="80000" onchange="calcThumbTotal()"><span>90일 80,000원</span></label>
-        </div>
+        <div class="tg-option-price" id="tg-badge-price" style="<?php echo $thumb_icon ? '' : 'display:none'; ?>"></div>
       </div>
 
       <!-- 제목 모션 -->
@@ -434,12 +432,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
           }
           ?>
         </div>
-        <div class="tg-period-row" id="tg-motion-period" style="<?php echo $thumb_motion ? '' : 'display:none'; ?>">
-          <label><input type="radio" name="motion-period" value="0" checked onchange="calcThumbTotal()"><span>선택안함</span></label>
-          <label><input type="radio" name="motion-period" value="30000" onchange="calcThumbTotal()"><span>30일 30,000원</span></label>
-          <label><input type="radio" name="motion-period" value="55000" onchange="calcThumbTotal()"><span>60일 55,000원</span></label>
-          <label><input type="radio" name="motion-period" value="80000" onchange="calcThumbTotal()"><span>90일 80,000원</span></label>
-        </div>
+        <div class="tg-option-price" id="tg-motion-price" style="<?php echo $thumb_motion ? '' : 'display:none'; ?>"></div>
       </div>
 
       <!-- 컬러 웨이브 -->
@@ -449,12 +442,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
           <input type="checkbox" id="tg-wave-chk" <?php echo $thumb_wave ? 'checked' : ''; ?> onchange="toggleWave(this.checked)">
           <span class="wave-toggle-label">배경 웨이브 효과 적용</span>
         </label>
-        <div class="tg-period-row" id="tg-wave-period" style="<?php echo $thumb_wave ? '' : 'display:none'; ?>">
-          <label><input type="radio" name="wave-period" value="0" checked onchange="calcThumbTotal()"><span>선택안함</span></label>
-          <label><input type="radio" name="wave-period" value="50000" onchange="calcThumbTotal()"><span>30일 50,000원</span></label>
-          <label><input type="radio" name="wave-period" value="95000" onchange="calcThumbTotal()"><span>60일 95,000원</span></label>
-          <label><input type="radio" name="wave-period" value="140000" onchange="calcThumbTotal()"><span>90일 140,000원</span></label>
-        </div>
+        <div class="tg-option-price" id="tg-wave-price" style="<?php echo $thumb_wave ? '' : 'display:none'; ?>"></div>
       </div>
 
       <!-- 테두리 -->
@@ -468,12 +456,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
           <button type="button" class="border-btn<?php echo $thumb_border==='royalblue' ? ' selected' : ''; ?>" title="로얄블루" data-border="royalblue" onclick="selectBorder(this)" style="background:linear-gradient(135deg,#1a3a8a,#4169E1);border:none"></button>
           <button type="button" class="border-btn<?php echo $thumb_border==='royalpurple' ? ' selected' : ''; ?>" title="로얄퍼플" data-border="royalpurple" onclick="selectBorder(this)" style="background:linear-gradient(135deg,#4B0082,#7B2FBE);border:none"></button>
         </div>
-        <div class="tg-period-row" id="tg-border-period" style="<?php echo $thumb_border ? '' : 'display:none'; ?>">
-          <label><input type="radio" name="border-period" value="0" checked onchange="calcThumbTotal()"><span>선택안함</span></label>
-          <label><input type="radio" name="border-period" value="30000" onchange="calcThumbTotal()"><span>30일 30,000원</span></label>
-          <label><input type="radio" name="border-period" value="55000" onchange="calcThumbTotal()"><span>60일 55,000원</span></label>
-          <label><input type="radio" name="border-period" value="80000" onchange="calcThumbTotal()"><span>90일 80,000원</span></label>
-        </div>
+        <div class="tg-option-price" id="tg-border-price" style="<?php echo $thumb_border ? '' : 'display:none'; ?>"></div>
       </div>
     </div>
 
@@ -528,10 +511,16 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       <div style="font-size:10px;color:#aaa;text-align:center;line-height:1.6;margin-top:4px">
         💡 이 썸네일은 메인, 채용정보,<br>지역별채용 페이지에 표시됩니다.
       </div>
+      <!-- 광고 잔여 기간 안내 -->
+      <div style="width:100%;background:#2a1525;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;margin-bottom:8px;font-size:11px;color:#ddd;line-height:1.6">
+        📆 광고 종료일: <b style="color:#FFD700"><?php echo $_opt_end_date ?: '미정'; ?></b>
+        &nbsp;|&nbsp; 잔여: <b style="color:#FF1B6B"><?php echo $_opt_remaining_days; ?>일</b>
+        <div style="margin-top:2px;font-size:10px;color:#999">옵션 비용 = 일일 단가 × 잔여일수 (광고 기간 내 적용)</div>
+      </div>
       <!-- 총 신청 금액 -->
       <div class="tg-total-wrap" id="tg-total-wrap" style="width:100%">
         <div class="tg-total-header">
-          <span class="tth-label">🛒 총 신청 금액</span>
+          <span class="tth-label">🛒 총 옵션 비용</span>
           <span class="tth-amount" id="tg-total-amount">0 원</span>
         </div>
         <div class="tg-total-items" id="tg-total-items">
@@ -1412,14 +1401,9 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     document.querySelectorAll('.premium-swatch').forEach(function(b){b.classList.remove('selected');});
     btn.classList.add('selected');
     _thumbSelected = btn.getAttribute('data-grad');
-    if(window._thumbState) window._thumbState.grad = _thumbSelected;
     _applyBannerBg();
     var isPremium = _thumbSelected && _thumbSelected.charAt(0) === 'P';
-    var pp = document.getElementById('tg-premium-period');
-    if(pp){
-      pp.style.display = isPremium ? '' : 'none';
-      if(!isPremium){ var r=pp.querySelector('input[value="0"]'); if(r) r.checked=true; }
-    }
+    _updateOptionPrice('tg-premium-price','premium','프리미엄', isPremium);
     calcThumbTotal();
   };
   window.updatePreview = function(){
@@ -1454,11 +1438,33 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     var pt = document.getElementById('tpc-title');
     if(pt) pt.style.color = _thumbTextColor;
   };
+  var _optRemainingDays = <?php echo (int)$_opt_remaining_days; ?>;
+  var _optDailyRates = {
+    premium: <?php echo (int)$_opt_daily_rates['premium']; ?>,
+    badge:   <?php echo (int)$_opt_daily_rates['badge']; ?>,
+    motion:  <?php echo (int)$_opt_daily_rates['motion']; ?>,
+    wave:    <?php echo (int)$_opt_daily_rates['wave']; ?>,
+    border:  <?php echo (int)$_opt_daily_rates['border']; ?>
+  };
+  var _optEndDate = '<?php echo $_opt_end_date; ?>';
+
+  function _optPriceHtml(type, label, days){
+    if(days <= 0) return '<span style="color:#999;font-size:11px;">광고 기간이 만료되었습니다</span>';
+    var cost = days * _optDailyRates[type];
+    return '<span style="font-size:11px;color:#888;">📅 잔여 <b style="color:#FF1B6B">'+days+'일</b> × '+_optDailyRates[type].toLocaleString()+'원 = </span><b style="color:#FF1B6B;font-size:13px">'+cost.toLocaleString()+'원</b>';
+  }
+
+  function _updateOptionPrice(id, type, label, visible){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.style.display = visible ? '' : 'none';
+    if(visible) el.innerHTML = _optPriceHtml(type, label, _optRemainingDays);
+  }
+
   window.selectIcon = function(btn){
     document.querySelectorAll('#tg-icon-grid .badge-opt').forEach(function(b){b.classList.remove('selected');});
     btn.classList.add('selected');
     _thumbIcon = btn.getAttribute('data-icon') || '';
-    if(window._thumbState) window._thumbState.icon = _thumbIcon;
     var pvIcon = document.getElementById('tg-pv-icon');
     if(pvIcon){
       if(_thumbIcon){
@@ -1469,86 +1475,73 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
         pvIcon.style.display = 'none';
       }
     }
-    var bp = document.getElementById('tg-badge-period');
-    if(bp) bp.style.display = _thumbIcon ? '' : 'none';
-    if(!_thumbIcon){ var r=bp.querySelector('input[value="0"]'); if(r) r.checked=true; }
+    _updateOptionPrice('tg-badge-price','badge', btn.getAttribute('data-icon-label')||'뱃지', !!_thumbIcon);
     calcThumbTotal();
   };
   window.selectMotion = function(btn){
     document.querySelectorAll('#tg-motion-grid .motion-btn').forEach(function(b){b.classList.remove('selected');});
     btn.classList.add('selected');
     _thumbMotion = btn.getAttribute('data-motion') || '';
-    if(window._thumbState) window._thumbState.motion = _thumbMotion;
     var pt = document.getElementById('tpc-title');
     if(pt) pt.className = _thumbMotion ? 'pv-motion-' + _thumbMotion : '';
-    var mp = document.getElementById('tg-motion-period');
-    if(mp) mp.style.display = _thumbMotion ? '' : 'none';
-    if(!_thumbMotion){ var r=mp.querySelector('input[value="0"]'); if(r) r.checked=true; }
+    _updateOptionPrice('tg-motion-price','motion','모션', !!_thumbMotion);
     calcThumbTotal();
   };
   window.toggleWave = function(checked){
     _thumbWave = checked;
-    if(window._thumbState) window._thumbState.wave = _thumbWave;
     _applyBannerBg();
-    var wp = document.getElementById('tg-wave-period');
-    if(wp) wp.style.display = checked ? '' : 'none';
-    if(!checked){ var r=wp.querySelector('input[value="0"]'); if(r) r.checked=true; }
+    _updateOptionPrice('tg-wave-price','wave','웨이브', checked);
     calcThumbTotal();
   };
   window.selectBorder = function(btn){
     document.querySelectorAll('#tg-border-grid .border-btn').forEach(function(b){b.classList.remove('selected');});
     btn.classList.add('selected');
     _thumbBorder = btn.getAttribute('data-border') || '';
-    if(window._thumbState) window._thumbState.border = _thumbBorder;
     _applyBorder();
-    var brp = document.getElementById('tg-border-period');
-    if(brp) brp.style.display = _thumbBorder ? '' : 'none';
-    if(!_thumbBorder){ var r=brp.querySelector('input[value="0"]'); if(r) r.checked=true; }
+    _updateOptionPrice('tg-border-price','border','테두리', !!_thumbBorder);
     calcThumbTotal();
   };
   window.calcThumbTotal = function(){
     var items = [];
     var total = 0;
-    var _periodLabel = function(v){ return v==='30000'?'30일':v==='55000'?'60일':v==='80000'?'90일':v==='50000'?'30일':v==='95000'?'60일':v==='140000'?'90일':''; };
-    var bp = document.querySelector('input[name="badge-period"]:checked');
-    if(bp && parseInt(bp.value)){
-      var v=parseInt(bp.value);
-      var iconLabel = '';
-      var activeIcon = document.querySelector('#tg-icon-grid .badge-opt.selected');
-      if(activeIcon) iconLabel = activeIcon.getAttribute('data-icon-label') || '뱃지';
-      items.push({name: iconLabel+'('+_periodLabel(bp.value)+')', price:v});
-      total+=v;
+    var days = _optRemainingDays;
+    var motionNames = {'shimmer':'글씨 확대','soft-blink':'소프트 블링크','glow':'글로우 글씨','bounce':'바운스'};
+    var borderNames = {'gold':'골드 테두리','pink':'핫핑크 테두리','charcoal':'차콜 테두리','royalblue':'로얄블루 테두리','royalpurple':'로얄퍼플 테두리'};
+    var premNames = {'P1':'메탈릭골드','P2':'메탈릭실버','P3':'카본','P4':'오로라'};
+
+    if(_thumbIcon && days > 0){
+      var ic = document.querySelector('#tg-icon-grid .badge-opt.selected');
+      var label = ic ? (ic.getAttribute('data-icon-label')||'뱃지') : '뱃지';
+      var cost = days * _optDailyRates.badge;
+      items.push({name: '💖 '+label+' ('+days+'일)', price: cost});
+      total += cost;
     }
-    var mp = document.querySelector('input[name="motion-period"]:checked');
-    if(mp && parseInt(mp.value)){
-      var v2=parseInt(mp.value);
-      var motionNames = {'shimmer':'글씨 확대','soft-blink':'소프트 블링크','glow':'글로우 글씨','bounce':'바운스'};
-      var motionLabel = motionNames[_thumbMotion] || '모션';
-      items.push({name: motionLabel+'('+_periodLabel(mp.value)+')', price:v2});
-      total+=v2;
+    if(_thumbMotion && days > 0){
+      var mLabel = motionNames[_thumbMotion] || '모션';
+      var cost2 = days * _optDailyRates.motion;
+      items.push({name: '✨ '+mLabel+' ('+days+'일)', price: cost2});
+      total += cost2;
     }
-    var wp = document.querySelector('input[name="wave-period"]:checked');
-    if(wp && parseInt(wp.value)){
-      var v3=parseInt(wp.value);
-      items.push({name:'배경 웨이브('+_periodLabel(wp.value)+')', price:v3});
-      total+=v3;
+    if(_thumbWave && days > 0){
+      var cost3 = days * _optDailyRates.wave;
+      items.push({name: '🌊 배경 웨이브 ('+days+'일)', price: cost3});
+      total += cost3;
     }
-    var brp = document.querySelector('input[name="border-period"]:checked');
-    if(brp && parseInt(brp.value)){
-      var v4=parseInt(brp.value);
-      var borderNames = {'gold':'골드 테두리','pink':'핫핑크 테두리','charcoal':'차콜 테두리','royalblue':'로얄블루 테두리','royalpurple':'로얄퍼플 테두리'};
-      var borderLabel = borderNames[_thumbBorder] || '테두리';
-      items.push({name: borderLabel+'('+_periodLabel(brp.value)+')', price:v4});
-      total+=v4;
+    if(_thumbBorder && days > 0){
+      var bLabel = borderNames[_thumbBorder] || '테두리';
+      var cost4 = days * _optDailyRates.border;
+      items.push({name: '🖼️ '+bLabel+' ('+days+'일)', price: cost4});
+      total += cost4;
     }
-    var prp = document.querySelector('input[name="premium-period"]:checked');
-    if(prp && parseInt(prp.value)){
-      var v5=parseInt(prp.value);
-      var premNames = {'P1':'메탈릭골드','P2':'메탈릭실버','P3':'카본','P4':'오로라'};
-      var premLabel = premNames[_thumbSelected] || '프리미엄 컬러';
-      items.push({name: premLabel+'('+_periodLabel(prp.value)+')', price:v5});
-      total+=v5;
+    var isPremium = _thumbSelected && (String(_thumbSelected).charAt(0)==='P');
+    if(isPremium && days > 0){
+      var pLabel = premNames[_thumbSelected] || '프리미엄 컬러';
+      var cost5 = days * _optDailyRates.premium;
+      items.push({name: '🎨 '+pLabel+' ('+days+'일)', price: cost5});
+      total += cost5;
     }
+    _updateOptionPrice('tg-premium-price','premium','프리미엄', isPremium);
+
     var amtEl = document.getElementById('tg-total-amount');
     if(amtEl) amtEl.textContent = total.toLocaleString('ko-KR') + ' 원';
     var listEl = document.getElementById('tg-total-items');
@@ -1590,6 +1583,13 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     });
   };
   _applyBorder();
+  if(_thumbIcon) _updateOptionPrice('tg-badge-price','badge','뱃지', true);
+  if(_thumbMotion) _updateOptionPrice('tg-motion-price','motion','모션', true);
+  if(_thumbWave) _updateOptionPrice('tg-wave-price','wave','웨이브', true);
+  if(_thumbBorder) _updateOptionPrice('tg-border-price','border','테두리', true);
+  var isPremInit = _thumbSelected && String(_thumbSelected).charAt(0)==='P';
+  if(isPremInit) _updateOptionPrice('tg-premium-price','premium','프리미엄', true);
+  calcThumbTotal();
 
   var _currentTheme = <?php echo json_encode($saved_theme); ?>;
   function setTheme(theme){
