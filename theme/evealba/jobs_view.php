@@ -74,7 +74,6 @@ if ($_jv_is_owner) {
     include_once(G5_THEME_PATH.'/head_jobs_register.php');
 } else {
     include_once(G5_THEME_PATH.'/head_jobs.php');
-    echo '<style>.left-sidebar{display:none!important}.page-layout{grid-template-columns:1fr!important}</style>';
 }
 ?>
 
