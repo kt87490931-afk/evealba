@@ -12,7 +12,7 @@ if (!function_exists('get_jobs_by_type')) {
 
 $_idx_udae   = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 0) : array();
 $_idx_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 0) : array();
-$_idx_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 6) : array();
+$_idx_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 0) : array();
 $_idx_urgent  = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', 5) : array();
 $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', 10) : array();
 ?>
@@ -96,7 +96,6 @@ $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천',
 <div class="section-wrap">
   <div class="section-header">
     <h2 class="section-title">우대채용정보</h2>
-    <a href="/jobs.php?ad_type=우대" class="section-more">더보기 →</a>
   </div>
   <div class="featured-grid">
 <?php if (!empty($_idx_udae)) { foreach ($_idx_udae as $_u) { render_job_card($_u); } } else { ?>
@@ -156,7 +155,6 @@ $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천',
 <div class="section-wrap">
   <div class="section-header">
     <h2 class="section-title">프리미엄채용정보</h2>
-    <a href="/jobs.php?ad_type=프리미엄" class="section-more">더보기 →</a>
   </div>
 <?php if (!empty($_idx_premium)) { ?>
   <div class="premium-grid">
@@ -253,7 +251,6 @@ $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천',
 <div class="section-wrap">
   <div class="section-header">
     <h2 class="section-title">스페셜채용정보</h2>
-    <a href="/jobs.php?ad_type=스페셜" class="section-more">더보기 →</a>
   </div>
 <?php if (!empty($_idx_special)) { ?>
   <div class="special-grid">

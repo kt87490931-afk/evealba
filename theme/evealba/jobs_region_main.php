@@ -12,7 +12,7 @@ if (!function_exists('get_jobs_by_type')) {
 $_rf = isset($region_filter) ? $region_filter : '';
 $_jobs_udae    = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 0, $_rf) : array();
 $_jobs_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 0, $_rf) : array();
-$_jobs_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 6, $_rf) : array();
+$_jobs_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 0, $_rf) : array();
 $_jobs_urgent  = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', 5, $_rf) : array();
 $_jobs_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', 10, $_rf) : array();
 $_jobs_list    = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광고', 20, $_rf) : array();
@@ -100,7 +100,6 @@ $_region_list = array('서울','경기','인천','부산','대구','대전','광
       <div class="section-header">
         <h2 class="section-title">💎 우대등록 채용정보<?php if($_rf) echo ' - '.htmlspecialchars($_rf); ?></h2>
         <div class="section-actions">
-          <a href="/jobs.php?ad_type=우대" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
@@ -163,7 +162,6 @@ $_region_list = array('서울','경기','인천','부산','대구','대전','광
       <div class="section-header">
         <h2 class="section-title">✨ 프리미엄 채용정보</h2>
         <div class="section-actions">
-          <a href="/jobs.php?ad_type=프리미엄" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
@@ -179,7 +177,6 @@ $_region_list = array('서울','경기','인천','부산','대구','대전','광
       <div class="section-header">
         <h2 class="section-title">⭐ 스페셜채용정보</h2>
         <div class="section-actions">
-          <a href="/jobs.php?ad_type=스페셜" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>

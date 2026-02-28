@@ -21,7 +21,7 @@ if ($_show_all_sections || $_atf === '프리미엄') {
 } else { $_jobs_premium = array(); }
 
 if ($_show_all_sections || $_atf === '스페셜') {
-    $_lim_special = $_show_all_sections ? 6 : 0;
+    $_lim_special = 0;
     $_jobs_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', $_lim_special) : array();
 } else { $_jobs_special = array(); }
 
@@ -113,7 +113,6 @@ if ($_show_all_sections) {
       <div class="section-header">
         <h2 class="section-title">💎 우대등록 채용정보</h2>
         <div class="section-actions">
-          <a href="/jobs.php?ad_type=우대" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
@@ -178,7 +177,6 @@ if ($_show_all_sections) {
       <div class="section-header">
         <h2 class="section-title">✨ 프리미엄 채용정보</h2>
         <div class="section-actions">
-          <a href="/jobs.php?ad_type=프리미엄" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
@@ -196,7 +194,6 @@ if ($_show_all_sections) {
       <div class="section-header">
         <h2 class="section-title">⭐ 스페셜채용정보</h2>
         <div class="section-actions">
-          <a href="/jobs.php?ad_type=스페셜" class="section-more">더보기 →</a>
           <button type="button" class="btn-post-ad">광고신청</button>
         </div>
       </div>
