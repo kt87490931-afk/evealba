@@ -16,7 +16,7 @@ if (!defined('_GNUBOARD_')) exit;
       <div class="cs-support-phone">1588-0000</div>
       <div class="cs-support-hours">평일 09:30~19:00 · 점심<br>12:00~13:30</div>
       <div class="cs-support-note">*공휴일·일 근무하지 않습니다.</div>
-      <a href="#" class="cs-support-kakao">💬 EvéAlba</a>
+      <a href="#" class="cs-support-kakao"><img src="<?php echo G5_THEME_URL; ?>/img/logo_kakao.svg" alt="카카오톡" style="width:16px;height:16px;vertical-align:-3px;margin-right:4px;">EvéAlba</a>
     </div>
   </div>
 </div>

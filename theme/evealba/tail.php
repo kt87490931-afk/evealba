@@ -67,7 +67,9 @@ if(G5_COMMUNITY_USE === false) {
 
 <!-- FLOATING CTA -->
 <div class="floating-cta">
-  <a href="#" class="float-btn float-kakao" title="카카오톡 문의">💬</a>
+  <a href="#" class="float-btn float-kakao" title="카카오톡 문의"><img src="<?php echo G5_THEME_URL; ?>/img/logo_kakao.svg" alt="카카오톡" style="width:26px;height:26px;"></a>
+  <a href="#" class="float-btn float-line" title="라인 문의"><img src="<?php echo G5_THEME_URL; ?>/img/logo_line.svg" alt="라인" style="width:26px;height:26px;"></a>
+  <a href="#" class="float-btn float-telegram" title="텔레그램 문의"><img src="<?php echo G5_THEME_URL; ?>/img/logo_telegram.svg" alt="텔레그램" style="width:26px;height:26px;"></a>
   <button type="button" class="float-btn float-chat" id="chatOpen" title="실시간 채팅" onclick="if(typeof toggleEveChat==='function')toggleEveChat();return false;">💭</button>
   <a href="#" class="float-btn float-top" title="맨 위로" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">▲</a>
 </div>

@@ -1361,6 +1361,8 @@ nav::before {
 }
 .float-btn:hover{transform:scale(1.1)}
 .float-kakao{background:#FEE500}
+.float-line{background:#06C755}
+.float-telegram{background:#26A5E4}
 .float-chat{background:var(--hot-pink);color:#fff;font-size:16px;border:none}
 .float-top{background:var(--dark2);font-size:15px;color:#fff}
 

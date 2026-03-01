@@ -170,9 +170,10 @@
 .cta-sub{font-size:11px;color:rgba(255,255,255,.75);margin-bottom:16px;}
 .cta-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:14px;}
 .cta-btn{display:block;padding:10px 0;border-radius:12px;font-size:12px;font-weight:900;cursor:pointer;text-align:center;border:none;font-family:inherit;text-decoration:none;}
-.cta-kakao{background:#FEE500;color:#333;}
-.cta-line{background:#00B300;color:#fff;}
-.cta-tg{background:#2AABEE;color:#fff;}
+.cta-kakao{background:#FEE500;color:#3C1E1E;}
+.cta-line{background:#06C755;color:#fff;}
+.cta-tg{background:#26A5E4;color:#fff;}
+.cta-btn-logo{width:18px;height:18px;vertical-align:-4px;margin-right:4px;}
 .cta-phone{display:inline-block;background:rgba(255,255,255,.15);border-radius:10px;padding:10px 24px;font-size:15px;font-weight:900;color:#fff;letter-spacing:.5px;text-decoration:none;}
 .jobs-view-editor-wrap .cta-footer .cta-phone,
 .jobs-view-editor-wrap .cta-footer .cta-phone:link,

@@ -640,10 +640,11 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
           <tr><td class="lbl">🏪 상호</td><td class="val" id="disp-comp"><?php echo htmlspecialchars($comp ?: '—'); ?></td></tr>
           <tr><td class="lbl">📞 연락처</td><td class="val val-pink" id="disp-tel"><?php echo htmlspecialchars($contact); ?></td></tr>
           <tr><td class="lbl">💬 SNS</td><td class="val" id="disp-sns"><?php
+            $_img_base = G5_THEME_URL.'/img';
             $sns_chips = array();
-            if ($sns_kakao) $sns_chips[] = '<span class="sns-chip" style="background:#FEE500;color:#333;">카카오 '.htmlspecialchars($sns_kakao).'</span>';
-            if ($sns_line) $sns_chips[] = '<span class="sns-chip" style="background:#00B300;color:#fff;">라인 '.htmlspecialchars($sns_line).'</span>';
-            if ($sns_telegram) $sns_chips[] = '<span class="sns-chip" style="background:#2AABEE;color:#fff;">텔레그램 '.htmlspecialchars($sns_telegram).'</span>';
+            if ($sns_kakao) $sns_chips[] = '<span class="sns-chip" style="background:#FEE500;color:#3C1E1E;"><img src="'.$_img_base.'/logo_kakao.svg" alt="카카오" style="width:16px;height:16px;vertical-align:-3px;margin-right:4px;">'.htmlspecialchars($sns_kakao).'</span>';
+            if ($sns_line) $sns_chips[] = '<span class="sns-chip" style="background:#06C755;color:#fff;"><img src="'.$_img_base.'/logo_line.svg" alt="라인" style="width:16px;height:16px;vertical-align:-3px;margin-right:4px;">'.htmlspecialchars($sns_line).'</span>';
+            if ($sns_telegram) $sns_chips[] = '<span class="sns-chip" style="background:#26A5E4;color:#fff;"><img src="'.$_img_base.'/logo_telegram.svg" alt="텔레그램" style="width:16px;height:16px;vertical-align:-3px;margin-right:4px;">'.htmlspecialchars($sns_telegram).'</span>';
             echo implode(' ', $sns_chips ?: array('-'));
           ?></td></tr>
           <tr><td class="lbl">💰 급여조건</td><td class="val" id="disp-pay"><span style="display:inline-block;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-size:12px;font-weight:900;padding:4px 14px;border-radius:20px;"><?php echo htmlspecialchars($salary_disp ?: '—'); ?></span></td></tr>
@@ -867,9 +868,9 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       <div class="cta-sub"><?php echo $_cta['sub']; ?></div>
       <?php if ($sns_kakao || $sns_line || $sns_telegram) { ?>
       <div class="cta-btns">
-        <?php if ($sns_kakao) { ?><a href="https://open.kakao.com/o/s/<?php echo htmlspecialchars($sns_kakao); ?>" target="_blank" rel="noopener" class="cta-btn cta-kakao">💬 카카오 <?php echo htmlspecialchars($sns_kakao); ?></a><?php } ?>
-        <?php if ($sns_line) { ?><span class="cta-btn cta-line">💚 라인 <?php echo htmlspecialchars($sns_line); ?></span><?php } ?>
-        <?php if ($sns_telegram) { ?><span class="cta-btn cta-tg">✈️ 텔레그램 <?php echo htmlspecialchars($sns_telegram); ?></span><?php } ?>
+        <?php if ($sns_kakao) { ?><a href="https://open.kakao.com/o/s/<?php echo htmlspecialchars($sns_kakao); ?>" target="_blank" rel="noopener" class="cta-btn cta-kakao"><img src="<?php echo $_img_base; ?>/logo_kakao.svg" alt="카카오" class="cta-btn-logo"> 카카오 <?php echo htmlspecialchars($sns_kakao); ?></a><?php } ?>
+        <?php if ($sns_line) { ?><span class="cta-btn cta-line"><img src="<?php echo $_img_base; ?>/logo_line.svg" alt="라인" class="cta-btn-logo"> 라인 <?php echo htmlspecialchars($sns_line); ?></span><?php } ?>
+        <?php if ($sns_telegram) { ?><span class="cta-btn cta-tg"><img src="<?php echo $_img_base; ?>/logo_telegram.svg" alt="텔레그램" class="cta-btn-logo"> 텔레그램 <?php echo htmlspecialchars($sns_telegram); ?></span><?php } ?>
       </div>
       <?php } ?>
       <?php if ($contact) { ?><a href="tel:<?php echo preg_replace('/[^0-9+]/','',$contact); ?>" class="cta-phone">📞 <?php echo htmlspecialchars($contact); ?></a><?php } ?>
