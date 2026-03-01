@@ -92,11 +92,11 @@ $_grad_map = array(
     'P4'=>'linear-gradient(135deg,rgb(255,105,180),rgb(138,43,226),rgb(0,191,255))',
 );
 $_border_map = array(
-    'gold'=>'border:2px solid #FFD700;',
-    'pink'=>'border:2px solid #FF1B6B;',
-    'charcoal'=>'border:2px solid #444;',
-    'royalblue'=>'border:2px solid #4169E1;',
-    'royalpurple'=>'border:2px solid #7B2FBE;',
+    'gold'=>'border:none;box-shadow:inset 0 0 0 1px #FFD700,0 0 0 1px #FFD700;',
+    'pink'=>'border:none;box-shadow:inset 0 0 0 1px #FF1B6B,0 0 0 1px #FF1B6B;',
+    'charcoal'=>'border:none;box-shadow:inset 0 0 0 1px #444,0 0 0 1px #444;',
+    'royalblue'=>'border:none;box-shadow:inset 0 0 0 1px #4169E1,0 0 0 1px #4169E1;',
+    'royalpurple'=>'border:none;box-shadow:inset 0 0 0 1px #7B2FBE,0 0 0 1px #7B2FBE;',
 );
 $_icon_map = array(
     'new'=>array('bg'=>'#FF1B6B','label'=>'초보환영'),

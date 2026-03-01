@@ -1434,15 +1434,15 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
     card.style.outlineOffset = '';
     card.style.boxShadow = '0 6px 24px rgba(0,0,0,.18)';
     if(_thumbBorder === 'gold'){
-      card.style.boxShadow = '0 0 0 4px #FFD700, 0 6px 24px rgba(0,0,0,.18)';
+      card.style.boxShadow = 'inset 0 0 0 2px #FFD700, 0 0 0 2px #FFD700, 0 6px 24px rgba(0,0,0,.18)';
     } else if(_thumbBorder === 'pink'){
-      card.style.boxShadow = '0 0 0 4px #FF1B6B, 0 6px 24px rgba(0,0,0,.18)';
+      card.style.boxShadow = 'inset 0 0 0 2px #FF1B6B, 0 0 0 2px #FF1B6B, 0 6px 24px rgba(0,0,0,.18)';
     } else if(_thumbBorder === 'charcoal'){
-      card.style.boxShadow = '0 0 0 4px #3a3a3a, 0 6px 24px rgba(0,0,0,.18)';
+      card.style.boxShadow = 'inset 0 0 0 2px #3a3a3a, 0 0 0 2px #3a3a3a, 0 6px 24px rgba(0,0,0,.18)';
     } else if(_thumbBorder === 'royalblue'){
-      card.style.boxShadow = '0 0 0 4px #4169E1, 0 6px 24px rgba(0,0,0,.18)';
+      card.style.boxShadow = 'inset 0 0 0 2px #4169E1, 0 0 0 2px #4169E1, 0 6px 24px rgba(0,0,0,.18)';
     } else if(_thumbBorder === 'royalpurple'){
-      card.style.boxShadow = '0 0 0 4px #7B2FBE, 0 6px 24px rgba(0,0,0,.18)';
+      card.style.boxShadow = 'inset 0 0 0 2px #7B2FBE, 0 0 0 2px #7B2FBE, 0 6px 24px rgba(0,0,0,.18)';
     }
   }
   window.selectGrad = function(btn){

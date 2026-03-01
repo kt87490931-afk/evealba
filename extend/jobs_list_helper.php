@@ -152,11 +152,11 @@ function render_job_card($row) {
     $carbon_class = ($grad_key === 'P3') ? ' carbon-bg' : '';
 
     $border_style = '';
-    if ($thumb_border === 'gold') $border_style = 'border:2.5px solid transparent;background-clip:padding-box;box-shadow:0 0 0 2.5px #FFD700,0 4px 15px rgba(255,215,0,.35);';
-    elseif ($thumb_border === 'pink') $border_style = 'border:2.5px solid #FF1B6B;box-shadow:0 4px 15px rgba(255,27,107,.35);';
-    elseif ($thumb_border === 'charcoal') $border_style = 'border:2.5px solid #444;box-shadow:0 4px 15px rgba(0,0,0,.25);';
-    elseif ($thumb_border === 'royalblue') $border_style = 'border:2.5px solid #4169E1;box-shadow:0 4px 15px rgba(65,105,225,.35);';
-    elseif ($thumb_border === 'royalpurple') $border_style = 'border:2.5px solid #7B2FBE;box-shadow:0 4px 15px rgba(123,47,190,.35);';
+    if ($thumb_border === 'gold') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #FFD700,0 0 0 1.25px #FFD700,0 4px 15px rgba(255,215,0,.35);';
+    elseif ($thumb_border === 'pink') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #FF1B6B,0 0 0 1.25px #FF1B6B,0 4px 15px rgba(255,27,107,.35);';
+    elseif ($thumb_border === 'charcoal') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #444,0 0 0 1.25px #444,0 4px 15px rgba(0,0,0,.25);';
+    elseif ($thumb_border === 'royalblue') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #4169E1,0 0 0 1.25px #4169E1,0 4px 15px rgba(65,105,225,.35);';
+    elseif ($thumb_border === 'royalpurple') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #7B2FBE,0 0 0 1.25px #7B2FBE,0 4px 15px rgba(123,47,190,.35);';
 
     $banner_bg = $grad;
     if ($thumb_wave) {
@@ -230,11 +230,11 @@ function render_premium_card($row, $card_class = 'premium-card') {
     }
 
     $border_style = '';
-    if ($thumb_border === 'gold') $border_style = 'border:2.5px solid transparent;box-shadow:0 0 0 2.5px #FFD700,0 4px 15px rgba(255,215,0,.35);';
-    elseif ($thumb_border === 'pink') $border_style = 'border:2.5px solid #FF1B6B;box-shadow:0 4px 15px rgba(255,27,107,.35);';
-    elseif ($thumb_border === 'charcoal') $border_style = 'border:2.5px solid #444;box-shadow:0 4px 15px rgba(0,0,0,.25);';
-    elseif ($thumb_border === 'royalblue') $border_style = 'border:2.5px solid #4169E1;box-shadow:0 4px 15px rgba(65,105,225,.35);';
-    elseif ($thumb_border === 'royalpurple') $border_style = 'border:2.5px solid #7B2FBE;box-shadow:0 4px 15px rgba(123,47,190,.35);';
+    if ($thumb_border === 'gold') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #FFD700,0 0 0 1.25px #FFD700,0 4px 15px rgba(255,215,0,.35);';
+    elseif ($thumb_border === 'pink') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #FF1B6B,0 0 0 1.25px #FF1B6B,0 4px 15px rgba(255,27,107,.35);';
+    elseif ($thumb_border === 'charcoal') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #444,0 0 0 1.25px #444,0 4px 15px rgba(0,0,0,.25);';
+    elseif ($thumb_border === 'royalblue') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #4169E1,0 0 0 1.25px #4169E1,0 4px 15px rgba(65,105,225,.35);';
+    elseif ($thumb_border === 'royalpurple') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #7B2FBE,0 0 0 1.25px #7B2FBE,0 4px 15px rgba(123,47,190,.35);';
 
     $banner_bg = $grad;
     if ($thumb_wave) {
