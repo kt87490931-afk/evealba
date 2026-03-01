@@ -69,6 +69,12 @@ if (!$_chk) {
       PRIMARY KEY (`id`), KEY `idx_target` (`target_id`), KEY `idx_reporter` (`reporter_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", false);
 }
+// cm_region 컬럼 누락 시 자동 추가
+$_col_chk = @sql_fetch("SHOW COLUMNS FROM `{$g5['chat_msg_table']}` LIKE 'cm_region'");
+if (!$_col_chk) {
+    @sql_query("ALTER TABLE `{$g5['chat_msg_table']}` ADD COLUMN `cm_region` VARCHAR(10) NOT NULL DEFAULT '전체' AFTER `cm_content`", false);
+    @sql_query("ALTER TABLE `{$g5['chat_msg_table']}` ADD KEY `idx_region` (`cm_region`)", false);
+}
 
 function eve_chat_json($arr){
     echo json_encode($arr, JSON_UNESCAPED_UNICODE);
