@@ -739,24 +739,15 @@ button { cursor:pointer; font-family:inherit; }
   </div>
   <?php } else { ?>
 
-  <?php if ($_notice) { ?>
-  <div class="chat-notice-wrap" id="chatNoticeWrap">
-    <div class="chat-notice">
-      <span class="notice-icon">📢</span>
-      <div class="notice-text"><strong>[공지]</strong> <?php echo nl2br(htmlspecialchars($_notice)); ?></div>
-    </div>
-  </div>
-  <?php } ?>
-
   <div class="chat-messages" id="chatMessages">
-    <div class="chat-system">💗 이브알바 채팅방에 오신 것을 환영합니다!</div>
+    <div class="chat-system" id="chatWelcomeMsg">💗 <?php echo $_notice ? htmlspecialchars($_notice) : '이브알바 채팅방에 오신 것을 환영합니다!'; ?></div>
   </div>
 
   <div class="chat-status" id="chatStatus"></div>
 
   <div class="chat-input-area">
     <div class="chat-input-row">
-      <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요" rows="1" autocomplete="off"></textarea>
+      <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요" rows="1" autocomplete="off" enterkeyhint="send"></textarea>
       <button class="chat-send-btn" id="chatSendBtn">➤</button>
     </div>
     <div class="chat-input-hint">📢을 누르면 버튼의 자세한 설명을 확인하세요</div>
@@ -852,6 +843,9 @@ button { cursor:pointer; font-family:inherit; }
   var MY_ID = "<?php echo addslashes($_my_id); ?>";
   var MY_NICK = "<?php echo addslashes($_my_nick); ?>";
 
+  var EMOJI_LIST = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😙','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤠','🥳','😎','🤓'];
+  var MY_EMOJI = EMOJI_LIST[Math.floor(Math.random()*EMOJI_LIST.length)];
+
   var state = { last_id:0, region:'전체', freeze:0, sending:false, lastSendTs:0 };
   var pollTimer = null, pingTimer = null, idleTimer = null;
   var lastActiveTs = Date.now(), stoppedByIdle = false;
@@ -916,9 +910,11 @@ button { cursor:pointer; font-family:inherit; }
       r.dataset.mb=mbid;
       r.style.marginTop='8px';
 
+      var rowIcon=row.cm_icon||'😊';
+
       var av=document.createElement('div');
       av.className='msg-avatar'+(isMe?' me-avatar':'');
-      av.textContent='👩';
+      av.textContent=rowIcon;
 
       var content=document.createElement('div');
       content.className='msg-content';
@@ -926,7 +922,7 @@ button { cursor:pointer; font-family:inherit; }
       if(!isMe){
         var name=document.createElement('div');
         name.className='msg-name';
-        name.innerHTML='👩 <strong>'+escHtml(row.cm_nick||'')+'</strong>'
+        name.innerHTML=escHtml(rowIcon)+' <strong>'+escHtml(row.cm_nick||'')+'</strong>'
           +(row.cm_region&&row.cm_region!=='전체'?'<span class="region-tag">'+escHtml(row.cm_region)+'</span>':'');
         name.dataset.mb=mbid;
         name.dataset.nick=row.cm_nick||'';
@@ -984,6 +980,9 @@ button { cursor:pointer; font-family:inherit; }
     fetch(AJAX+'?act=ping&region='+encodeURIComponent(state.region),{method:'GET',credentials:'same-origin'}).catch(function(){});
   }
 
+  var DEFAULT_NOTICE = '이브알바 채팅방에 오신 것을 환영합니다!';
+  var currentNotice = DEFAULT_NOTICE;
+
   function chatHello(forceReset,done){
     fetch(AJAX+'?act=hello&region='+encodeURIComponent(state.region),{method:'GET',credentials:'same-origin'})
     .then(function(r){return r.json();})
@@ -994,9 +993,22 @@ button { cursor:pointer; font-family:inherit; }
           var oc=parseInt(j.online_count,10);
           if(!isNaN(oc)){el.onlineNum.textContent=oc;el.rdCountNum.textContent=oc;}
         }
-        if(typeof j.last_id!=='undefined'){
+        if(typeof j.notice_text==='string'&&j.notice_text!==''){
+          currentNotice=j.notice_text;
+        } else {
+          currentNotice=DEFAULT_NOTICE;
+        }
+        if(forceReset && Array.isArray(j.recent) && j.recent.length>0){
+          var startId=parseInt(j.start_id,10);
+          if(!isNaN(startId)&&startId>=0) state.last_id=startId;
+          else {
+            var firstRecent=parseInt(j.recent[0].cm_id,10);
+            state.last_id=(firstRecent>0)?(firstRecent-1):0;
+          }
+          appendMessages(j.recent);
+        } else if(forceReset && typeof j.last_id!=='undefined'){
           var lid=parseInt(j.last_id,10);
-          if(!isNaN(lid)&&lid>=0&&forceReset) state.last_id=lid;
+          if(!isNaN(lid)&&lid>=0) state.last_id=lid;
         }
       }
       if(typeof done==='function') done();
@@ -1016,7 +1028,7 @@ button { cursor:pointer; font-family:inherit; }
     fetch(AJAX,{
       method:'POST',credentials:'same-origin',
       headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-      body:'act=send&content='+encodeURIComponent(content)+'&region='+encodeURIComponent(state.region)
+      body:'act=send&content='+encodeURIComponent(content)+'&region='+encodeURIComponent(state.region)+'&icon='+encodeURIComponent(MY_EMOJI)
     })
     .then(function(r){return r.json();})
     .then(function(j){
@@ -1077,9 +1089,20 @@ button { cursor:pointer; font-family:inherit; }
     });
   });
 
+  var _composing = false;
+  el.input.addEventListener('compositionstart',function(){ _composing=true; });
+  el.input.addEventListener('compositionend',function(e){
+    _composing=false;
+    if(_pendingEnter){ _pendingEnter=false; chatSend(); }
+  });
+  var _pendingEnter = false;
   el.input.addEventListener('keydown',function(e){
-    if(e.isComposing||e.repeat) return;
-    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();e.stopPropagation();chatSend();}
+    if(e.repeat) return;
+    if(e.key==='Enter'&&!e.shiftKey){
+      e.preventDefault();e.stopPropagation();
+      if(_composing||e.isComposing){ _pendingEnter=true; return; }
+      chatSend();
+    }
   });
   el.input.addEventListener('input',function(){
     this.style.height='20px';
@@ -1094,7 +1117,7 @@ button { cursor:pointer; font-family:inherit; }
     el.msgs.innerHTML='';addSystemMsg('🔄 새로고침 중...');
     state.last_id=0;
     chatHello(true,function(){
-      el.msgs.innerHTML='';addSystemMsg('💗 이브알바 채팅방에 오신 것을 환영합니다!');chatLoad();
+      el.msgs.innerHTML='';addSystemMsg('💗 '+currentNotice);chatLoad();
     });
   });
 
@@ -1128,7 +1151,7 @@ button { cursor:pointer; font-family:inherit; }
       return;
     }
     el.ignoreList.innerHTML=ignored.map(function(id){
-      return '<div class="ignore-item"><div class="ignore-avatar">👩</div><div class="ignore-info"><div class="ignore-nick">'+escHtml(id)+'</div></div><button class="btn-unignore" data-id="'+escHtml(id)+'">무시해제</button></div>';
+      return '<div class="ignore-item"><div class="ignore-avatar">🙈</div><div class="ignore-info"><div class="ignore-nick">'+escHtml(id)+'</div></div><button class="btn-unignore" data-id="'+escHtml(id)+'">무시해제</button></div>';
     }).join('');
     el.ignoreList.querySelectorAll('.btn-unignore').forEach(function(btn){
       btn.addEventListener('click',function(){

@@ -257,13 +257,41 @@ if ($act === 'hello') {
 
     $notice_text = isset($cfg['cf_notice_text']) ? trim($cfg['cf_notice_text']) : '';
 
+    $region_where = '';
+    if ($req_region !== '' && $req_region !== '전체') {
+        $region_where = " AND cm_region = '".sql_real_escape_string($req_region)."' ";
+    }
+    $recent = array();
+    $recent_result = sql_query("
+        SELECT cm_id, mb_id, cm_nick, cm_icon, cm_content, cm_region, cm_datetime
+        FROM {$tbl_chat}
+        WHERE 1 {$region_where}
+        ORDER BY cm_id DESC LIMIT 5
+    ");
+    while ($rr = sql_fetch_array($recent_result)) {
+        $recent[] = array(
+            'cm_id' => (int)$rr['cm_id'], 'mb_id' => $rr['mb_id'],
+            'cm_nick' => $rr['cm_nick'], 'cm_icon' => $rr['cm_icon'],
+            'cm_content' => $rr['cm_content'], 'cm_region' => $rr['cm_region'],
+            'cm_datetime' => $rr['cm_datetime']
+        );
+    }
+    $recent = array_reverse($recent);
+
+    $start_id = $last_id;
+    if (count($recent) > 0) {
+        $start_id = (int)$recent[0]['cm_id'] - 1;
+    }
+
     eve_chat_json(array(
         'ok' => 1,
         'last_id' => $last_id,
+        'start_id' => $start_id,
         'freeze' => $freeze,
         'online_count' => ($base + $fake),
         'can_chat' => ($is_member && eve_chat_can_chat($member)) ? 1 : 0,
-        'notice_text' => $notice_text
+        'notice_text' => $notice_text,
+        'recent' => $recent
     ));
 }
 
@@ -285,7 +313,7 @@ if ($act === 'list') {
 
     $rows = array();
     $result = sql_query("
-        SELECT cm_id, mb_id, cm_nick, cm_content, cm_region, cm_datetime
+        SELECT cm_id, mb_id, cm_nick, cm_icon, cm_content, cm_region, cm_datetime
         FROM {$tbl_chat}
         WHERE cm_id > {$last_id} {$region_where}
         ORDER BY cm_id ASC
@@ -296,6 +324,7 @@ if ($act === 'list') {
             'cm_id' => (int)$r['cm_id'],
             'mb_id' => $r['mb_id'],
             'cm_nick' => $r['cm_nick'],
+            'cm_icon' => $r['cm_icon'],
             'cm_content' => $r['cm_content'],
             'cm_region' => $r['cm_region'],
             'cm_datetime' => $r['cm_datetime']
@@ -361,12 +390,15 @@ if ($act === 'send') {
         }
     }
 
+    $send_icon = isset($_POST['icon']) ? trim($_POST['icon']) : '';
+    if ($send_icon === '' || mb_strlen($send_icon) > 4) $send_icon = '😊';
+
     $sql = "
         INSERT INTO {$tbl_chat}
         SET mb_id = '".sql_real_escape_string($my_id)."',
             cm_nick = '".sql_real_escape_string($my_nick)."',
             cm_content = '".sql_real_escape_string($content)."',
-            cm_icon = '👩',
+            cm_icon = '".sql_real_escape_string($send_icon)."',
             cm_region = '".sql_real_escape_string($send_region)."',
             cm_datetime = NOW()
     ";
