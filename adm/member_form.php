@@ -165,6 +165,12 @@ if (isset($mb['mb_adult'])) {
     sql_query(" ALTER TABLE `{$g5['member_table']}` ADD `mb_adult` TINYINT NOT NULL DEFAULT '0' AFTER `mb_certify` ", false);
 }
 
+// 성별 필드 추가
+if (!isset($mb['mb_sex'])) {
+    sql_query(" ALTER TABLE {$g5['member_table']} ADD `mb_sex` CHAR(1) NOT NULL DEFAULT '' AFTER `mb_nick` ", false);
+    $mb['mb_sex'] = '';
+}
+
 // 지번주소 필드추가
 if (!isset($mb['mb_addr_jibeon'])) {
     sql_query(" ALTER TABLE {$g5['member_table']} ADD `mb_addr_jibeon` varchar(255) NOT NULL DEFAULT '' AFTER `mb_addr2` ", false);
@@ -288,6 +294,27 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
                     <td><input type="text" name="mb_hp" value="<?php echo $mb['mb_hp'] ?>" id="mb_hp" class="frm_input" size="15" maxlength="20"></td>
                     <th scope="row"><label for="mb_tel">전화번호</label></th>
                     <td><input type="text" name="mb_tel" value="<?php echo $mb['mb_tel'] ?>" id="mb_tel" class="frm_input" size="15" maxlength="20"></td>
+                </tr>
+                <tr>
+                    <th scope="row">성별</th>
+                    <td>
+                        <?php
+                        $mb_sex_val = isset($mb['mb_sex']) ? $mb['mb_sex'] : '';
+                        ?>
+                        <input type="radio" name="mb_sex" value="M" id="mb_sex_m" <?php echo ($mb_sex_val === 'M') ? 'checked="checked"' : ''; ?>>
+                        <label for="mb_sex_m">남</label>
+                        <input type="radio" name="mb_sex" value="F" id="mb_sex_f" <?php echo ($mb_sex_val === 'F') ? 'checked="checked"' : ''; ?>>
+                        <label for="mb_sex_f">여</label>
+                    </td>
+                    <th scope="row">회원유형 (mb_1)</th>
+                    <td>
+                        <?php $mb_1_val = isset($mb['mb_1']) ? $mb['mb_1'] : ''; ?>
+                        <select name="mb_1_preset" onchange="document.getElementById('mb_1').value=this.value;">
+                            <option value="">-- 선택 --</option>
+                            <option value="normal" <?php echo ($mb_1_val === 'normal') ? 'selected' : ''; ?>>일반회원 (normal)</option>
+                            <option value="business" <?php echo ($mb_1_val === 'business') ? 'selected' : ''; ?>>업소회원 (business)</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">본인확인방법</th>

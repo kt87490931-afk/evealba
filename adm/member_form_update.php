@@ -90,7 +90,10 @@ foreach ($check_keys as $key) {
     }
 }
 
-$sql_common = "  mb_name = '{$posts['mb_name']}',
+$mb_sex = isset($_POST['mb_sex']) ? preg_replace('/[^MF]/', '', $_POST['mb_sex']) : '';
+
+$sql_common = "  mb_sex = '{$mb_sex}',
+                 mb_name = '{$posts['mb_name']}',
                  mb_nick = '{$mb_nick}',
                  mb_email = '{$mb_email}',
                  mb_homepage = '{$posts['mb_homepage']}',
