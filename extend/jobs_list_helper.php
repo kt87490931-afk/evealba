@@ -184,7 +184,10 @@ function render_job_card($row) {
     echo '<div class="job-card-body">';
     if ($region_name) echo '<div class="job-card-location"><span class="job-loc-badge">' . htmlspecialchars($region_name) . '</span>' . htmlspecialchars($loc_detail) . '</div>';
     if ($desc) echo '<div class="job-desc">' . $desc . '</div>';
-    echo '<div class="job-card-footer"><span class="job-wage">' . htmlspecialchars($wage_disp) . '</span></div>';
+    $jr_good_val = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
+    echo '<div class="job-card-footer"><span class="job-wage">' . htmlspecialchars($wage_disp) . '</span>';
+    if ($jr_good_val > 0) echo '<span class="job-good-badge">❤️ ' . number_format($jr_good_val) . '</span>';
+    echo '</div>';
     echo '</div>';
     echo '</a>';
     echo '</div>';
@@ -252,9 +255,12 @@ function render_premium_card($row, $card_class = 'premium-card') {
     echo '<span' . $motion_data . '>' . $title . '</span>';
     if ($text) echo '<br><span' . $motion_data . ' style="font-size:11px;opacity:.85">' . $text . '</span>';
     echo '</div>';
+    $jr_good_val = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
     echo '<div class="premium-body">';
     if ($loc_line) echo '<div class="premium-area"><span class="job-loc-badge" style="font-size:10px;padding:1px 5px;border-radius:4px;margin-right:3px">' . htmlspecialchars($region_name) . '</span>' . htmlspecialchars(trim($detail_name . ' ' . $job1)) . '</div>';
-    echo '<div class="premium-name">' . htmlspecialchars($wage_disp) . '</div>';
+    echo '<div class="premium-name">' . htmlspecialchars($wage_disp);
+    if ($jr_good_val > 0) echo ' <span class="job-good-badge">❤️ ' . number_format($jr_good_val) . '</span>';
+    echo '</div>';
     echo '</div>';
     echo '</a>';
     echo '</div>';
@@ -271,11 +277,13 @@ function render_urgency_card($row) {
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
     $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 30, 'UTF-8'));
 
+    $jr_good_val = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
     echo '<div class="urgency-card">';
     echo '<div class="urgency-name">' . $nickname . '</div>';
     if ($location) echo '<div class="urgency-area">' . $location . '</div>';
     if ($desc) echo '<div class="urgency-desc">' . $desc . '</div>';
+    if ($jr_good_val > 0) echo '<div class="job-good-badge" style="margin-top:4px;">❤️ ' . number_format($jr_good_val) . '</div>';
     echo '</div>';
     echo '</a>';
 }
@@ -291,11 +299,14 @@ function render_recommend_card($row) {
     $location = htmlspecialchars($jr_data['desc_location'] ?? '');
     $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 40, 'UTF-8'));
 
+    $jr_good_val = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
     echo '<div class="recommend-card">';
     echo '<div><div class="rec-name">' . $nickname . ' <span class="rec-area">' . $location . '</span></div>';
     echo '<div class="rec-desc">' . $desc . '</div></div>';
-    echo '<div class="rec-right"><div class="rec-wage">' . $nickname . '</div></div>';
+    echo '<div class="rec-right"><div class="rec-wage">' . $nickname . '</div>';
+    if ($jr_good_val > 0) echo '<div class="job-good-badge">❤️ ' . number_format($jr_good_val) . '</div>';
+    echo '</div>';
     echo '</div>';
     echo '</a>';
 }

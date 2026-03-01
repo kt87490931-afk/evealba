@@ -42,7 +42,24 @@ if (!$row) {
     return;
 }
 
+// 추천(좋아요) 데이터
+$_jr_good = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
+$_jr_good_used = 0;
+$_jr_good_limit = 10;
+if ($is_member) {
+    $col_chk = @sql_query("SHOW COLUMNS FROM g5_jobs_register LIKE 'jr_good'", false);
+    if (!$col_chk || !@sql_num_rows($col_chk)) {
+        @sql_query("ALTER TABLE g5_jobs_register ADD COLUMN jr_good INT UNSIGNED NOT NULL DEFAULT 0", false);
+    }
+    $tb_chk = @sql_query("SHOW TABLES LIKE 'g5_jobs_good'", false);
+    if ($tb_chk && @sql_num_rows($tb_chk)) {
+        $_gu = @sql_fetch("SELECT jg_count FROM g5_jobs_good WHERE jr_id='".(int)$jr_id."' AND mb_id='".addslashes($member['mb_id'])."' AND jg_date='".date('Y-m-d')."'");
+        if ($_gu) $_jr_good_used = (int)$_gu['jg_count'];
+    }
+}
+
 $jobs_base_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
+$jobs_good_url = $jobs_base_url ? $jobs_base_url.'/jobs_good.php' : '/jobs_good.php';
 $jobs_ongoing_url = $jobs_base_url ? $jobs_base_url.'/jobs_ongoing.php' : '/jobs_ongoing.php';
 $jobs_ai_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_ai_section_save.php' : '/jobs_ai_section_save.php';
 $jobs_basic_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_basic_info_save.php' : '/jobs_basic_info_save.php';
@@ -876,6 +893,28 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       <?php if ($contact) { ?><a href="tel:<?php echo preg_replace('/[^0-9+]/','',$contact); ?>" class="cta-phone">📞 <?php echo htmlspecialchars($contact); ?></a><?php } ?>
       <?php if ($nick && $nick !== '—') { ?><div class="cta-watermark">🌸 이브알바 EVE ALBA — <?php echo htmlspecialchars($nick); ?></div><?php } ?>
     </div>
+
+    <!-- 추천하기 -->
+    <?php if ($row['jr_status'] === 'ongoing') { ?>
+    <div class="jobs-good-area" style="display:flex;align-items:center;justify-content:center;gap:14px;padding:24px 0;margin:0 auto;">
+      <?php if ($is_member) { ?>
+      <button type="button" id="jobs-good-btn" class="btn-rec" onclick="doJobsGood()" style="display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border:none;border-radius:30px;background:linear-gradient(135deg,#FF1B6B,#FF6B35);color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(255,27,107,.3);transition:transform .15s,box-shadow .15s;">
+        <span style="font-size:18px;">👍</span> 추천하기
+      </button>
+      <?php } else { ?>
+      <button type="button" class="btn-rec" onclick="alert('회원만 추천할 수 있습니다.')" style="display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border:none;border-radius:30px;background:#ccc;color:#fff;font-size:15px;font-weight:700;cursor:pointer;">
+        <span style="font-size:18px;">👍</span> 추천하기
+      </button>
+      <?php } ?>
+      <div style="display:flex;align-items:center;gap:6px;padding:10px 20px;background:rgba(255,182,193,.3);border-radius:30px;">
+        <span style="font-size:20px;">❤️</span>
+        <span id="jobs-good-count" style="font-size:18px;font-weight:900;color:#FF1B6B;"><?php echo number_format($_jr_good); ?></span>
+      </div>
+    </div>
+    <?php if ($is_member) { ?>
+    <div id="jobs-good-info" style="text-align:center;font-size:12px;color:#999;margin-top:-12px;padding-bottom:16px;">오늘 <?php echo $_jr_good_used; ?>/<?php echo $_jr_good_limit; ?> 사용</div>
+    <?php } ?>
+    <?php } ?>
   </div>
 
     <!-- ① 기본정보 모달 (eve_alba_ad_editor_3) -->
@@ -1769,6 +1808,29 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
   window.onImgFileChange=onImgFileChange; window.removeImg=removeImg;
   window.saveImgSlider=saveImgSlider;
   window.goSlide=goSlide; window.prevSlide=prevSlide; window.nextSlide=nextSlide;
+
+  window.doJobsGood=function(){
+    var btn=document.getElementById('jobs-good-btn');
+    if(!btn)return;
+    btn.disabled=true;btn.style.opacity='.6';
+    var fd=new FormData();fd.append('jr_id',jrId);
+    fetch('<?php echo $jobs_good_url; ?>',{method:'POST',body:fd,credentials:'same-origin'})
+    .then(function(r){return r.json();})
+    .then(function(res){
+      btn.disabled=false;btn.style.opacity='1';
+      if(res.ok){
+        var cnt=document.getElementById('jobs-good-count');
+        if(cnt)cnt.textContent=res.total.toLocaleString();
+        var info=document.getElementById('jobs-good-info');
+        if(info)info.textContent='오늘 '+res.used+'/'+res.limit+' 사용';
+        btn.style.transform='scale(1.15)';
+        setTimeout(function(){btn.style.transform='scale(1)';},200);
+      } else {
+        alert(res.msg||'추천에 실패했습니다.');
+      }
+    })
+    .catch(function(){btn.disabled=false;btn.style.opacity='1';alert('추천 처리 중 오류가 발생했습니다.');});
+  };
   filterRegDetail('inp-reg1','inp-regd1');
   filterRegDetail('inp-reg2','inp-regd2');
   filterRegDetail('inp-reg3','inp-regd3');

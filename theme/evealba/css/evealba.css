@@ -1112,6 +1112,7 @@ nav::before {
   border-top:1px solid #f0e0e8; padding-top:7px; gap:4px;
 }
 .job-wage { font-size:13px; font-weight:900; color:var(--hot-pink); }
+.job-good-badge { font-size:11px; font-weight:700; color:#FF1B6B; white-space:nowrap; }
 .job-badge { display:flex; align-items:center; gap:3px; font-size:10px; font-weight:700; color:var(--gray); }
 .crown-gold{color:var(--gold)} .crown-silver{color:var(--silver)} .crown-bronze{color:var(--bronze)}
 .hot-badge {
