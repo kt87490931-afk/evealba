@@ -18,7 +18,7 @@ $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천',
 ?>
 <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
 
-<!-- 빠른 통계 -->
+<!-- 빠른 통계 (데스크톱) -->
 <div class="quick-stats">
   <div class="stat-card">
     <div class="stat-icon">💼</div>
@@ -45,6 +45,17 @@ $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천',
     <div class="stat-label">오늘 매칭</div>
     <div class="stat-value">1,203</div>
   </div>
+</div>
+
+<!-- 빠른 메뉴 (모바일) -->
+<?php $_qm_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL, '/') : ''; ?>
+<div class="mobile-quick-menu">
+  <a href="<?php echo $_qm_base; ?>/jobs_register.php" class="mqm-btn"><span class="mqm-icon">📋</span><span class="mqm-label">채용공고 등록</span></a>
+  <a href="<?php echo $_qm_base; ?>/resume_register.php" class="mqm-btn"><span class="mqm-icon">👩</span><span class="mqm-label">이력서 등록</span></a>
+  <a href="<?php echo $_qm_base; ?>/jobs.php" class="mqm-btn"><span class="mqm-icon">📍</span><span class="mqm-label">지역별 채용</span></a>
+  <a href="<?php echo $_qm_base; ?>/sudabang.php" class="mqm-btn"><span class="mqm-icon">💬</span><span class="mqm-label">수다방</span></a>
+  <a href="javascript:void(0);" class="mqm-btn" onclick="var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';window.open(u,'eveChatPopup','width='+Math.min(420,screen.availWidth)+',height='+Math.min(720,screen.availHeight)+',scrollbars=no,resizable=yes');"><span class="mqm-icon">💬</span><span class="mqm-label">채팅</span></a>
+  <a href="<?php echo G5_BBS_URL; ?>/memo.php" class="mqm-btn"><span class="mqm-icon">📩</span><span class="mqm-label">쪽지</span></a>
 </div>
 
 <!-- 공지 -->
