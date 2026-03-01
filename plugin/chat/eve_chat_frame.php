@@ -110,7 +110,13 @@ button { cursor:pointer; font-family:inherit; }
   100% { transform: translateX(100%); }
 }
 .chat-header-icon { font-size: 22px; flex-shrink: 0; position:relative; z-index:1; }
-.chat-header-info { flex: 1; min-width: 0; position:relative; z-index:1; }
+.chat-header-info {
+  flex: 1; min-width: 0; position:relative; z-index:1;
+  text-align: right;
+  border-right: 1.5px solid rgba(255,255,255,.3);
+  padding-right: 10px;
+  margin-right: 4px;
+}
 .chat-header-title {
   color: var(--white);
   font-size: 15px;
@@ -148,6 +154,7 @@ button { cursor:pointer; font-family:inherit; }
   margin-top: 3px;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
   position:relative; z-index:1;
 }
