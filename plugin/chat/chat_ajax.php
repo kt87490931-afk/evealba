@@ -21,6 +21,10 @@ ob_end_clean();
 @set_time_limit(20);
 header('Content-Type: application/json; charset=utf-8');
 
+if (isset($connect_db)) {
+    @mysqli_set_charset($connect_db, 'utf8mb4');
+}
+
 // 테이블 자동 생성 (첫 실행 시)
 $_chk = @sql_fetch("SELECT 1 FROM {$g5['chat_config_table']} LIMIT 1");
 if (!$_chk) {
@@ -71,6 +75,9 @@ if (!$_chk) {
       PRIMARY KEY (`id`), KEY `idx_target` (`target_id`), KEY `idx_reporter` (`reporter_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", false);
 }
+// cm_icon 컬럼 utf8mb4 보장
+@sql_query("ALTER TABLE `{$g5['chat_msg_table']}` MODIFY `cm_icon` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''", false);
+
 // cm_region 컬럼 누락 시 자동 추가
 $_col_chk = @sql_fetch("SHOW COLUMNS FROM `{$g5['chat_msg_table']}` LIKE 'cm_region'");
 if (!$_col_chk) {
