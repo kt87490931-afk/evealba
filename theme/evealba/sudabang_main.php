@@ -1,8 +1,103 @@
 <?php
 /**
- * 이브수다방 메인 영역 (eve_alba_sudabang_1.html 100% 동일)
+ * 이브수다방 메인 영역 - DB 연동
  */
 if (!defined('_GNUBOARD_')) exit;
+
+$write_prefix = $g5['write_prefix'];
+$bbs_url = G5_BBS_URL;
+
+function eve_time_ago($datetime) {
+    $ts = strtotime($datetime);
+    if (!$ts) return '';
+    $diff = time() - $ts;
+    if ($diff < 60) return '방금';
+    if ($diff < 3600) return floor($diff/60).'분 전';
+    if ($diff < 86400) return floor($diff/3600).'시간 전';
+    if ($diff < 604800) return floor($diff/86400).'일 전';
+    return date('Y-m-d', $ts);
+}
+
+function eve_post_badge($row) {
+    if (isset($row['wr_good']) && $row['wr_good'] >= 10) return '<span class="post-badge pb-best">BEST</span>';
+    if ((isset($row['wr_comment']) && $row['wr_comment'] >= 10) || (isset($row['wr_hit']) && $row['wr_hit'] >= 100)) return '<span class="post-badge pb-hot">HOT</span>';
+    $diff = time() - strtotime($row['wr_datetime']);
+    if ($diff < 86400) return '<span class="post-badge pb-new">NEW</span>';
+    return '<span class="post-badge pb-free">자유</span>';
+}
+
+function eve_safe_board_query($sql) {
+    $result = @sql_query($sql, false);
+    if (!$result) return array();
+    $rows = array();
+    while ($row = @sql_fetch_array($result)) {
+        if (!$row) break;
+        $rows[] = $row;
+    }
+    return $rows;
+}
+
+function eve_board_exists($bo_table) {
+    global $g5;
+    $bo_table = preg_replace('/[^a-z0-9_]/i', '', $bo_table);
+    $row = @sql_fetch(" SELECT COUNT(*) as cnt FROM {$g5['board_table']} WHERE bo_table = '{$bo_table}' ");
+    return ($row && $row['cnt'] > 0);
+}
+
+$has_night  = eve_board_exists('night');
+$has_couple = eve_board_exists('couple');
+$has_law    = eve_board_exists('law');
+
+// --- 베스트글: night + couple 에서 좋아요 10개 이상 ---
+$best_posts = array();
+if ($has_night || $has_couple) {
+    $unions = array();
+    if ($has_night) {
+        $unions[] = "(SELECT wr_id, wr_subject, wr_content, wr_name, wr_hit, wr_good, wr_comment, wr_datetime, 'night' AS src_table
+                     FROM {$write_prefix}night
+                     WHERE wr_is_comment = 0 AND wr_good >= 10)";
+    }
+    if ($has_couple) {
+        $unions[] = "(SELECT wr_id, wr_subject, wr_content, wr_name, wr_hit, wr_good, wr_comment, wr_datetime, 'couple' AS src_table
+                     FROM {$write_prefix}couple
+                     WHERE wr_is_comment = 0 AND wr_good >= 10)";
+    }
+    $best_sql = implode(' UNION ALL ', $unions) . " ORDER BY wr_good DESC, wr_hit DESC LIMIT 5";
+    $best_posts = eve_safe_board_query($best_sql);
+}
+
+// --- 밤문화이야기: night 최신 8개 ---
+$night_posts = array();
+if ($has_night) {
+    $night_posts = eve_safe_board_query("
+        SELECT wr_id, wr_subject, wr_name, wr_hit, wr_good, wr_comment, wr_datetime
+        FROM {$write_prefix}night
+        WHERE wr_is_comment = 0
+        ORDER BY wr_id DESC LIMIT 8
+    ");
+}
+
+// --- 같이일할단짝찾기: couple 최신 6개 ---
+$couple_posts = array();
+if ($has_couple) {
+    $couple_posts = eve_safe_board_query("
+        SELECT wr_id, wr_subject, wr_name, wr_hit, wr_good, wr_comment, wr_datetime
+        FROM {$write_prefix}couple
+        WHERE wr_is_comment = 0
+        ORDER BY wr_id DESC LIMIT 6
+    ");
+}
+
+// --- 무료법률자문: law 최신 5개 ---
+$law_posts = array();
+if ($has_law) {
+    $law_posts = eve_safe_board_query("
+        SELECT wr_id, wr_subject, wr_name, wr_hit, wr_good, wr_comment, wr_datetime
+        FROM {$write_prefix}law
+        WHERE wr_is_comment = 0
+        ORDER BY wr_id DESC LIMIT 5
+    ");
+}
 ?>
     <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
 
@@ -18,56 +113,28 @@ if (!defined('_GNUBOARD_')) exit;
               <div class="board-desc">좋아요 10개 이상 · 자동 선정</div>
             </div>
           </div>
-          <div style="display:flex;gap:6px">
-            <a href="#" class="board-more">더보기 →</a>
-          </div>
         </div>
         <div class="board-post-list">
+          <?php if (empty($best_posts)): ?>
+            <div class="board-post-item" style="justify-content:center;color:#999;padding:20px 0;">아직 베스트글이 없습니다</div>
+          <?php else: foreach ($best_posts as $idx => $bp):
+            $rank = $idx + 1;
+            $rank_class = ($rank <= 3) ? ' r'.$rank : '';
+            $rank_style = ($rank > 3) ? ' style="background:#f0f0f0;color:#888;"' : '';
+            $raw_content = strip_tags(html_entity_decode($bp['wr_content'], ENT_QUOTES, 'UTF-8'));
+            $summary = mb_substr($raw_content, 0, 40, 'UTF-8');
+            $href = $bbs_url.'/board.php?bo_table='.$bp['src_table'].'&amp;wr_id='.$bp['wr_id'];
+          ?>
           <div class="best-post-item">
-            <div class="best-rank r1">1</div>
+            <div class="best-rank<?php echo $rank_class; ?>"<?php echo $rank_style; ?>><?php echo $rank; ?></div>
             <div class="best-info">
-              <div class="best-title">3부 강한 하퍼 어디예요 🔥</div>
-              <div class="best-sub">가능한 시간대가 3부까인데 보통 담당들이 초이스를...</div>
-              <div class="best-stats"><span class="hot">❤️ 38</span><span>💬 24</span><span>👁 412</span></div>
+              <a href="<?php echo $href; ?>" class="best-title"><?php echo htmlspecialchars($bp['wr_subject']); ?></a>
+              <div class="best-sub"><?php echo htmlspecialchars($summary); ?></div>
+              <div class="best-stats"><span class="hot">❤️ <?php echo number_format($bp['wr_good']); ?></span><span>💬 <?php echo number_format($bp['wr_comment']); ?></span><span>👁 <?php echo number_format($bp['wr_hit']); ?></span></div>
             </div>
-            <div class="best-meta">2분 전</div>
+            <div class="best-meta"><?php echo eve_time_ago($bp['wr_datetime']); ?></div>
           </div>
-          <div class="best-post-item">
-            <div class="best-rank r2">2</div>
-            <div class="best-info">
-              <div class="best-title">근데 일하면서 느낀게</div>
-              <div class="best-sub">오히려 찐파언니들 많은거같아요 일진이었던 언니들 극...</div>
-              <div class="best-stats"><span class="hot">❤️ 27</span><span>💬 19</span><span>👁 388</span></div>
-            </div>
-            <div class="best-meta">18분 전</div>
-          </div>
-          <div class="best-post-item">
-            <div class="best-rank r3">3</div>
-            <div class="best-info">
-              <div class="best-title">신림 퇴근차 🚗</div>
-              <div class="best-sub">해줘요? 아니면 차비? 집 마포구폰인데 ㅗ 아 그리고 앙다...</div>
-              <div class="best-stats"><span class="hot">❤️ 21</span><span>💬 13</span><span>👁 271</span></div>
-            </div>
-            <div class="best-meta">35분 전</div>
-          </div>
-          <div class="best-post-item">
-            <div class="best-rank" style="background:#f0f0f0;color:#888;">4</div>
-            <div class="best-info">
-              <div class="best-title">일프로 다니는 언니들!!💕</div>
-              <div class="best-sub">몇시에 가면 잘 루어져요? 손님이 루ー라는 개념 말고 가...</div>
-              <div class="best-stats"><span class="hot">❤️ 15</span><span>💬 11</span><span>👁 203</span></div>
-            </div>
-            <div class="best-meta">1시간 전</div>
-          </div>
-          <div class="best-post-item">
-            <div class="best-rank" style="background:#f0f0f0;color:#888;">5</div>
-            <div class="best-info">
-              <div class="best-title">원래 하퍼중미민볼이...💋</div>
-              <div class="best-sub">제목 그대로 느끼고 있는데 아직 거기 하나만 다녀서 그런...</div>
-              <div class="best-stats"><span class="hot">❤️ 12</span><span>💬 8</span><span>👁 176</span></div>
-            </div>
-            <div class="best-meta">2시간 전</div>
-          </div>
+          <?php endforeach; endif; ?>
         </div>
       </div>
 
@@ -82,51 +149,22 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
           <div style="display:flex;gap:6px">
-            <a href="#" class="board-more">더보기 →</a>
-            <a href="#" class="board-write-btn">✏️ 글쓰기</a>
+            <a href="<?php echo $bbs_url; ?>/board.php?bo_table=night" class="board-more">더보기 →</a>
+            <a href="<?php echo $bbs_url; ?>/write.php?bo_table=night" class="board-write-btn">✏️ 글쓰기</a>
           </div>
         </div>
         <div class="board-post-list">
+          <?php if (empty($night_posts)): ?>
+            <div class="board-post-item" style="justify-content:center;color:#999;padding:20px 0;">등록된 글이 없습니다</div>
+          <?php else: foreach ($night_posts as $np):
+            $href = $bbs_url.'/board.php?bo_table=night&amp;wr_id='.$np['wr_id'];
+          ?>
           <div class="board-post-item">
-            <span class="post-badge pb-best">BEST</span>
-            <a href="#" class="post-title">하퍼 담당분들은 잘 안... <span class="post-comment">[17]</span></a>
-            <span class="post-meta">24시간 상주판다는분들이나 매일매일 오게이시즌분들은 잘...</span>
+            <?php echo eve_post_badge($np); ?>
+            <a href="<?php echo $href; ?>" class="post-title"><?php echo htmlspecialchars($np['wr_subject']); ?><?php if ($np['wr_comment'] > 0): ?> <span class="post-comment">[<?php echo $np['wr_comment']; ?>]</span><?php endif; ?></a>
+            <span class="post-meta"><?php echo eve_time_ago($np['wr_datetime']); ?></span>
           </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-hot">HOT</span>
-            <a href="#" class="post-title">일프로 다니는 언니들!! <span class="post-comment">[11]</span></a>
-            <span class="post-meta">1시간 전</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-new">NEW</span>
-            <a href="#" class="post-title">원래 하퍼중미민볼이... <span class="post-comment">[8]</span></a>
-            <span class="post-meta">2시간 전</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-free">자유</span>
-            <a href="#" class="post-title">강남 룸 분위기 어때요? 처음 가보려고요 <span class="post-comment">[5]</span></a>
-            <span class="post-meta">3시간 전</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-free">자유</span>
-            <a href="#" class="post-title">퍼블릭 vs 룸싸롱 장단점 솔직 후기 <span class="post-comment">[14]</span></a>
-            <span class="post-meta">5시간 전</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-new">NEW</span>
-            <a href="#" class="post-title">첫 출근 긴장되는데 팁 좀 알려주세요 💕 <span class="post-comment">[22]</span></a>
-            <span class="post-meta">6시간 전</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-free">자유</span>
-            <a href="#" class="post-title">노래주점이랑 하이퍼블릭 차이 뭔가요? <span class="post-comment">[9]</span></a>
-            <span class="post-meta">어제</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-free">자유</span>
-            <a href="#" class="post-title">담당 바꾸고 싶은데 어떻게 말해야 할까요 <span class="post-comment">[6]</span></a>
-            <span class="post-meta">어제</span>
-          </div>
+          <?php endforeach; endif; ?>
         </div>
       </div>
     </div>
@@ -143,41 +181,22 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
           <div style="display:flex;gap:6px">
-            <a href="#" class="board-more">더보기</a>
-            <a href="#" class="board-write-btn">✏️ 글쓰기</a>
+            <a href="<?php echo $bbs_url; ?>/board.php?bo_table=couple" class="board-more">더보기</a>
+            <a href="<?php echo $bbs_url; ?>/write.php?bo_table=couple" class="board-write-btn">✏️ 글쓰기</a>
           </div>
         </div>
         <div class="board-post-list">
+          <?php if (empty($couple_posts)): ?>
+            <div class="board-post-item" style="justify-content:center;color:#999;padding:20px 0;">등록된 글이 없습니다</div>
+          <?php else: foreach ($couple_posts as $cp):
+            $href = $bbs_url.'/board.php?bo_table=couple&amp;wr_id='.$cp['wr_id'];
+          ?>
           <div class="board-post-item">
-            <span class="post-badge pb-new">NEW</span>
-            <a href="#" class="post-title">현재 회원님의 헝볼로 <span style="color:var(--hot-pink);font-weight:700;">같이 일할 단짝찾기</span> 게시판히스팅 원하이 있었다 <span class="post-comment">[8]</span></a>
-            <span class="post-meta">방금</span>
+            <?php echo eve_post_badge($cp); ?>
+            <a href="<?php echo $href; ?>" class="post-title"><?php echo htmlspecialchars($cp['wr_subject']); ?><?php if ($cp['wr_comment'] > 0): ?> <span class="post-comment">[<?php echo $cp['wr_comment']; ?>]</span><?php endif; ?></a>
+            <span class="post-meta"><?php echo eve_time_ago($cp['wr_datetime']); ?></span>
           </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-free">자유</span>
-            <a href="#" class="post-title">강남 하이퍼 같이 다닐 언니 구해요 🙋‍♀️ <span class="post-comment">[3]</span></a>
-            <span class="post-meta">1시간 전</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-free">자유</span>
-            <a href="#" class="post-title">수원 인계동 쪽 단짝 구합니다 💕 <span class="post-comment">[7]</span></a>
-            <span class="post-meta">3시간 전</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-hot">HOT</span>
-            <a href="#" class="post-title">부산 서면 룸 같이 다닐 단짝 찾아요!! <span class="post-comment">[15]</span></a>
-            <span class="post-meta">5시간 전</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-free">자유</span>
-            <a href="#" class="post-title">홍대 퍼블릭 같이 다닐 언니 있어요? <span class="post-comment">[4]</span></a>
-            <span class="post-meta">어제</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-new">NEW</span>
-            <a href="#" class="post-title">대구 동성로 같이 일할 단짝 언니 💌 <span class="post-comment">[6]</span></a>
-            <span class="post-meta">2일 전</span>
-          </div>
+          <?php endforeach; endif; ?>
         </div>
       </div>
 
@@ -191,110 +210,22 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
           <div style="display:flex;gap:6px">
-            <a href="#" class="board-more" style="border-color:rgba(255,255,255,.4);color:#fff;">더보기</a>
-            <a href="#" class="board-write-btn">✏️ 글쓰기</a>
+            <a href="<?php echo $bbs_url; ?>/board.php?bo_table=law" class="board-more" style="border-color:rgba(255,255,255,.4);color:#fff;">더보기</a>
+            <a href="<?php echo $bbs_url; ?>/write.php?bo_table=law" class="board-write-btn">✏️ 글쓰기</a>
           </div>
         </div>
         <div class="board-post-list">
+          <?php if (empty($law_posts)): ?>
+            <div class="board-post-item" style="justify-content:center;color:#999;padding:20px 0;">등록된 글이 없습니다</div>
+          <?php else: foreach ($law_posts as $lp):
+            $href = $bbs_url.'/board.php?bo_table=law&amp;wr_id='.$lp['wr_id'];
+          ?>
           <div class="board-post-item">
-            <span class="post-badge pb-secret">🔒 비밀</span>
-            <a href="#" class="post-title">마이킹 관련 <span class="post-comment">[3]</span></a>
-            <span class="post-meta">1시간 전</span>
+            <?php echo eve_post_badge($lp); ?>
+            <a href="<?php echo $href; ?>" class="post-title"><?php echo htmlspecialchars($lp['wr_subject']); ?><?php if ($lp['wr_comment'] > 0): ?> <span class="post-comment">[<?php echo $lp['wr_comment']; ?>]</span><?php endif; ?></a>
+            <span class="post-meta"><?php echo eve_time_ago($lp['wr_datetime']); ?></span>
           </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-secret">🔒 비밀</span>
-            <a href="#" class="post-title">출장 마사지 절도피해 <span class="post-comment">[1]</span></a>
-            <span class="post-meta">3시간 전</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-legal">법률</span>
-            <a href="#" class="post-title">업소에서 폰 압수 당했어요 어떻게 하나요 <span class="post-comment">[8]</span></a>
-            <span class="post-meta">어제</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-secret">🔒 비밀</span>
-            <a href="#" class="post-title">계약서 없이 일했는데 돈 안 줘요 <span class="post-comment">[5]</span></a>
-            <span class="post-meta">어제</span>
-          </div>
-          <div class="board-post-item">
-            <span class="post-badge pb-legal">법률</span>
-            <a href="#" class="post-title">성희롱 피해 고소 방법 문의드립니다 <span class="post-comment">[4]</span></a>
-            <span class="post-meta">2일 전</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 중고거래 -->
-    <div class="board-card-wide bh-trade" style="margin-bottom:20px;">
-      <div class="board-card-header">
-        <div class="board-title-row">
-          <span class="board-icon">🛍️</span>
-          <div>
-            <div class="board-name" style="color:#fff">중고거래게시판</div>
-            <div class="board-desc" style="color:rgba(255,255,255,.8)">의류 · 소품 · 용품 직거래</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:6px">
-          <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="board-more" style="border-color:rgba(255,255,255,.4);color:#fff;">더보기 →</a>
-          <a href="<?php echo G5_BBS_URL ?>/write.php?bo_table=used" class="board-write-btn" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.4);">✏️ 글쓰기</a>
-        </div>
-      </div>
-      <div class="used-grid">
-        <div class="used-item">
-          <div class="used-thumb" style="background:linear-gradient(135deg,#FFE4F0,#FFB3D1);">👗</div>
-          <div class="used-body"><div class="used-title">룸 드레스 S사이즈 새상품</div><div class="used-price">35,000원</div><div class="used-meta">서울 · 방금</div></div>
-        </div>
-        <div class="used-item">
-          <div class="used-thumb" style="background:linear-gradient(135deg,#E8F5E9,#B2DFDB);">👠</div>
-          <div class="used-body"><div class="used-title">하이힐 240 거의 새것</div><div class="used-price">20,000원</div><div class="used-meta">경기 · 1시간 전</div></div>
-        </div>
-        <div class="used-item">
-          <div class="used-thumb" style="background:linear-gradient(135deg,#E3F2FD,#BBDEFB);">💄</div>
-          <div class="used-body"><div class="used-title">명품 립스틱 미개봉 2개</div><div class="used-price">15,000원</div><div class="used-meta">인천 · 3시간 전</div></div>
-        </div>
-        <div class="used-item">
-          <div class="used-thumb" style="background:linear-gradient(135deg,#FFF8E1,#FFE0B2);">👜</div>
-          <div class="used-body"><div class="used-title">미니 크로스백 핑크</div><div class="used-price">18,000원</div><div class="used-meta">서울 · 어제</div></div>
-        </div>
-        <div class="used-item">
-          <div class="used-thumb" style="background:linear-gradient(135deg,#F3E5F5,#E1BEE7);">🩱</div>
-          <div class="used-body"><div class="used-title">bodycon 원피스 XS</div><div class="used-price">25,000원</div><div class="used-meta">부산 · 어제</div></div>
-        </div>
-        <div class="used-item">
-          <div class="used-thumb" style="background:linear-gradient(135deg,#FCE4EC,#F48FB1);">💋</div>
-          <div class="used-body"><div class="used-title">네일아트 재료 세트</div><div class="used-price">12,000원</div><div class="used-meta">대구 · 2일 전</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 공지사항 -->
-    <div class="board-card-wide" style="margin-bottom:20px;">
-      <div class="board-card-header" style="background:linear-gradient(135deg,#555,#333);">
-        <div class="board-title-row">
-          <span class="board-icon">📢</span>
-          <div>
-            <div class="board-name" style="color:#fff">공지사항</div>
-            <div class="board-desc" style="color:rgba(255,255,255,.7)">운영팀 공지 · 이벤트 안내</div>
-          </div>
-        </div>
-        <a href="#" class="board-more" style="border-color:rgba(255,255,255,.3);color:#fff;">더보기</a>
-      </div>
-      <div class="board-post-list">
-        <div class="board-post-item">
-          <span class="post-badge pb-notice">공지</span>
-          <a href="#" class="post-title">이브알바 커뮤니티 이용 규칙 안내 (필독)</a>
-          <span class="post-meta">2026-01-10</span>
-        </div>
-        <div class="board-post-item">
-          <span class="post-badge pb-notice">공지</span>
-          <a href="#" class="post-title">이브수다방 개설 기념 이벤트 🎉 참여하시고 포인트 받아가세요</a>
-          <span class="post-meta">2026-01-05</span>
-        </div>
-        <div class="board-post-item">
-          <span class="post-badge pb-notice">공지</span>
-          <a href="#" class="post-title">개인정보 노출 및 업소 비방글 즉시 삭제 조치 안내</a>
-          <span class="post-meta">2025-12-20</span>
+          <?php endforeach; endif; ?>
         </div>
       </div>
     </div>

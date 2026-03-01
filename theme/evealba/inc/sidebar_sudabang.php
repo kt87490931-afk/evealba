@@ -7,16 +7,34 @@ if (!defined('_GNUBOARD_')) exit;
 <?php include G5_THEME_PATH.'/inc/sidebar_login_widget.php'; ?>
 <?php include G5_THEME_PATH.'/inc/sidebar_quick_menu.php'; ?>
 
+<?php
+$_side_bbs = G5_BBS_URL;
+$_side_wp  = $g5['write_prefix'];
+$_side_cnt = array('night'=>0, 'couple'=>0, 'law'=>0);
+foreach (array_keys($_side_cnt) as $_sb) {
+    $_r = @sql_fetch("SELECT COUNT(*) as cnt FROM {$_side_wp}{$_sb} WHERE wr_is_comment=0");
+    if ($_r) $_side_cnt[$_sb] = (int)$_r['cnt'];
+}
+$_side_best_cnt = 0;
+$_rb = @sql_fetch("
+    SELECT COUNT(*) as cnt FROM (
+        (SELECT wr_id FROM {$_side_wp}night WHERE wr_is_comment=0 AND wr_good>=10)
+        UNION ALL
+        (SELECT wr_id FROM {$_side_wp}couple WHERE wr_is_comment=0 AND wr_good>=10)
+    ) AS t
+");
+if ($_rb) $_side_best_cnt = (int)$_rb['cnt'];
+
+$_cur_table = isset($_GET['bo_table']) ? $_GET['bo_table'] : '';
+?>
 <!-- 커뮤니티 메뉴 -->
 <div class="sidebar-widget">
   <div class="widget-title">💬 커뮤니티</div>
   <div class="widget-body">
     <div class="side-comm-list">
-      <a href="#" class="side-comm-item">🏆 베스트글<span class="side-comm-count">128</span></a>
-      <a href="#" class="side-comm-item active">🌙 밤문화이야기<span class="side-comm-count">2,341</span></a>
-      <a href="#" class="side-comm-item">💑 같이일할단짝찾기<span class="side-comm-count">847</span></a>
-      <a href="#" class="side-comm-item">⚖️ 무료법률자문<span class="side-comm-count">193</span></a>
-      <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="side-comm-item">🛍️ 중고거래<span class="side-comm-count">412</span></a>
+      <a href="<?php echo $_side_bbs; ?>/board.php?bo_table=night" class="side-comm-item<?php echo ($_cur_table==='night') ? ' active' : ''; ?>">🌙 밤문화이야기<span class="side-comm-count"><?php echo number_format($_side_cnt['night']); ?></span></a>
+      <a href="<?php echo $_side_bbs; ?>/board.php?bo_table=couple" class="side-comm-item<?php echo ($_cur_table==='couple') ? ' active' : ''; ?>">💑 같이일할단짝찾기<span class="side-comm-count"><?php echo number_format($_side_cnt['couple']); ?></span></a>
+      <a href="<?php echo $_side_bbs; ?>/board.php?bo_table=law" class="side-comm-item<?php echo ($_cur_table==='law') ? ' active' : ''; ?>">⚖️ 무료법률자문<span class="side-comm-count"><?php echo number_format($_side_cnt['law']); ?></span></a>
     </div>
   </div>
 </div>
