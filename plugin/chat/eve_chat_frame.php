@@ -116,9 +116,7 @@ button { cursor:pointer; font-family:inherit; }
   font-size: 15px;
   font-weight: 900;
   line-height: 1.2;
-  display: flex;
-  align-items: center;
-  gap: 7px;
+  white-space: nowrap;
 }
 .chat-header-region {
   display: inline-flex;
@@ -167,6 +165,7 @@ button { cursor:pointer; font-family:inherit; }
 }
 .chat-header-actions {
   display: flex;
+  align-items: center;
   gap: 6px;
   flex-shrink: 0;
   position:relative; z-index:1;
@@ -664,19 +663,17 @@ button { cursor:pointer; font-family:inherit; }
   <div class="chat-header">
     <div class="chat-header-icon">💬</div>
     <div class="chat-header-info">
-      <div class="chat-header-title">
-        실시간 채팅
-        <button class="chat-header-region" id="regionToggle">
-          <span id="currentRegionLabel">전체</span>
-          <span class="arrow" id="regionArrow">▼</span>
-        </button>
-      </div>
+      <div class="chat-header-title">실시간 채팅</div>
       <div class="chat-header-sub">
         <span class="online-dot"></span>
         <span>👩 <span id="onlineNum">0</span>명 접속 중</span>
       </div>
     </div>
     <div class="chat-header-actions">
+      <button class="chat-header-region" id="regionToggle">
+        <span id="currentRegionLabel">전체</span>
+        <span class="arrow" id="regionArrow">▼</span>
+      </button>
       <button class="chat-icon-btn" title="채팅규정" id="btnRules">📢</button>
       <button class="chat-icon-btn" title="새로고침" id="btnRefresh">🔄</button>
       <button class="chat-icon-btn" title="무시목록" id="btnIgnore">🙈</button>
