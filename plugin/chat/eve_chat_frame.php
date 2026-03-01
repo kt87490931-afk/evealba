@@ -195,20 +195,6 @@ button { cursor:pointer; font-family:inherit; }
   letter-spacing: .3px;
   white-space: nowrap;
 }
-.chat-close-btn {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.18);
-  border: 1px solid rgba(255,255,255,.25);
-  color: var(--white);
-  font-size: 15px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  position:relative; z-index:1;
-}
-.chat-close-btn:hover { background: rgba(255,255,255,.35); }
-
 /* -------- REGION DROPDOWN -------- */
 .region-dropdown {
   background: var(--white);
@@ -703,7 +689,6 @@ button { cursor:pointer; font-family:inherit; }
       <button class="chat-icon-btn" title="새로고침" id="btnRefresh">🔄</button>
       <button class="chat-icon-btn chat-icon-btn--text" title="채팅규정" id="btnRules">채팅규정</button>
       <button class="chat-icon-btn" title="무시목록" id="btnIgnore">🙈</button>
-      <button class="chat-icon-btn" title="닫기" id="btnClose">✕</button>
     </div>
   </div>
 
@@ -1083,9 +1068,6 @@ button { cursor:pointer; font-family:inherit; }
   });
   el.sendBtn.addEventListener('click',chatSend);
 
-  $('btnClose').addEventListener('click',function(){
-    window.parent.postMessage({type:'eve-chat-close'},'*');
-  });
   $('btnRefresh').addEventListener('click',function(){
     el.msgs.innerHTML='';addSystemMsg('🔄 새로고침 중...');
     state.last_id=0;
@@ -1169,12 +1151,6 @@ button { cursor:pointer; font-family:inherit; }
 
   chatHello(true,function(){startLoop();});
 })();
-</script>
-<?php } else { ?>
-<script>
-document.getElementById('btnClose').addEventListener('click',function(){
-  window.parent.postMessage({type:'eve-chat-close'},'*');
-});
 </script>
 <?php } ?>
 </body>
