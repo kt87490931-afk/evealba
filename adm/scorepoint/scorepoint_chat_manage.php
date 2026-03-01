@@ -190,7 +190,13 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
             credentials: 'same-origin',
             headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
             body: body
-        }).then(function(r){ return r.json(); });
+        }).then(function(r){
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.text();
+        }).then(function(t){
+            try { return JSON.parse(t); }
+            catch(e) { console.error('[CHAT-ADM] 응답 파싱 실패:', t); throw new Error('JSON parse error'); }
+        });
     }
 
     var btnFreeze = document.getElementById('adm-freeze-apply');
@@ -200,7 +206,7 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
             post('act=admin_freeze&freeze=' + encodeURIComponent(freeze)).then(function(j){
                 if (!j || j.ok !== 1) { alert(j && j.msg ? j.msg : '적용 실패'); return; }
                 alert('적용되었습니다.');
-            });
+            }).catch(function(e){ alert('오류: ' + e.message); console.error('[CHAT-ADM] freeze error:', e); });
         });
     }
 
@@ -215,7 +221,7 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
             post('act=admin_ban_nick&nick=' + encodeURIComponent(nick) + '&min=' + encodeURIComponent(min) + '&reason=' + encodeURIComponent(reason)).then(function(j){
                 if (!j || j.ok !== 1) { alert(j && j.msg ? j.msg : '밴 실패'); return; }
                 alert('밴 처리 완료');
-            });
+            }).catch(function(e){ alert('오류: ' + e.message); console.error('[CHAT-ADM] ban error:', e); });
         });
     }
 
@@ -226,7 +232,7 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
             post('act=admin_clear').then(function(j){
                 if (!j || j.ok !== 1) { alert(j && j.msg ? j.msg : '삭제 실패'); return; }
                 alert('삭제 완료');
-            });
+            }).catch(function(e){ alert('오류: ' + e.message); console.error('[CHAT-ADM] clear error:', e); });
         });
     }
 
@@ -248,7 +254,7 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
             post(body).then(function(j){
                 if (!j || j.ok !== 1) { alert(j && j.msg ? j.msg : '저장 실패'); return; }
                 alert('저장 완료');
-            });
+            }).catch(function(e){ alert('오류: ' + e.message); console.error('[CHAT-ADM] config save error:', e); });
         });
     }
 })();

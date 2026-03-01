@@ -13,8 +13,10 @@ if (!is_file($_common_path)) {
     echo json_encode(array('ok'=>0,'msg'=>'common.php not found','path'=>$_common_path));
     exit;
 }
+ob_start();
 include_once($_common_path);
 include_once(G5_PLUGIN_PATH.'/chat/_common.php');
+ob_end_clean();
 
 @set_time_limit(20);
 header('Content-Type: application/json; charset=utf-8');
@@ -74,6 +76,28 @@ $_col_chk = @sql_fetch("SHOW COLUMNS FROM `{$g5['chat_msg_table']}` LIKE 'cm_reg
 if (!$_col_chk) {
     @sql_query("ALTER TABLE `{$g5['chat_msg_table']}` ADD COLUMN `cm_region` VARCHAR(10) NOT NULL DEFAULT '전체' AFTER `cm_content`", false);
     @sql_query("ALTER TABLE `{$g5['chat_msg_table']}` ADD KEY `idx_region` (`cm_region`)", false);
+}
+// chat_config 누락 컬럼 자동 추가
+$_cfg_cols = array(
+    'cf_daily_visit_target' => "INT NOT NULL DEFAULT 0",
+    'cf_left_login_notice'  => "TEXT",
+    'cf_left_login_ticker_speed' => "INT NOT NULL DEFAULT 30"
+);
+foreach ($_cfg_cols as $_cname => $_cdef) {
+    $_cc = @sql_fetch("SHOW COLUMNS FROM `{$g5['chat_config_table']}` LIKE '{$_cname}'");
+    if (!$_cc) {
+        @sql_query("ALTER TABLE `{$g5['chat_config_table']}` ADD COLUMN `{$_cname}` {$_cdef}", false);
+    }
+}
+// chat_ban에 id 컬럼 없으면 추가 (mb_id는 UNIQUE로 유지 → ON DUPLICATE KEY UPDATE 동작 보장)
+$_ban_id = @sql_fetch("SHOW COLUMNS FROM `{$g5['chat_ban_table']}` LIKE 'id'");
+if (!$_ban_id) {
+    @sql_query("ALTER TABLE `{$g5['chat_ban_table']}` ADD COLUMN `id` INT UNSIGNED NOT NULL AUTO_INCREMENT FIRST, DROP PRIMARY KEY, ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `uk_mb_id` (`mb_id`)", false);
+}
+// chat_report에 target_nick 컬럼 없으면 추가
+$_rpt_tn = @sql_fetch("SHOW COLUMNS FROM `{$g5['chat_report_table']}` LIKE 'target_nick'");
+if (!$_rpt_tn) {
+    @sql_query("ALTER TABLE `{$g5['chat_report_table']}` ADD COLUMN `target_nick` VARCHAR(50) NOT NULL DEFAULT '' AFTER `reported_nick`", false);
 }
 
 function eve_chat_json($arr){
@@ -427,12 +451,18 @@ if (!$is_admin) eve_chat_json(array('ok'=>0,'msg'=>'권한이 없습니다.'));
 
 if ($act === 'admin_freeze') {
     $val = isset($_POST['freeze']) ? ((int)$_POST['freeze'] ? 1 : 0) : 0;
-    sql_query(" UPDATE {$tbl_cfg} SET cf_freeze = {$val}, cf_updated_at = NOW() WHERE cf_id = 1 ", false);
+    $ok = @sql_query(" UPDATE {$tbl_cfg} SET cf_freeze = {$val}, cf_updated_at = NOW() WHERE cf_id = 1 ", false);
+    if (!$ok) {
+        eve_chat_json(array('ok'=>0,'msg'=>'DB 오류: '.@mysqli_error($connect_db)));
+    }
     eve_chat_json(array('ok'=>1));
 }
 
 if ($act === 'admin_clear') {
-    sql_query(" DELETE FROM {$tbl_chat} ", false);
+    $ok = @sql_query(" DELETE FROM {$tbl_chat} ", false);
+    if (!$ok) {
+        eve_chat_json(array('ok'=>0,'msg'=>'DB 오류: '.@mysqli_error($connect_db)));
+    }
     eve_chat_json(array('ok'=>1));
 }
 
@@ -445,8 +475,12 @@ if ($act === 'admin_config_save') {
     $notice_text  = isset($_POST['notice_text']) ? trim($_POST['notice_text']) : '';
     $rule_text    = isset($_POST['rule_text']) ? trim($_POST['rule_text']) : '';
     $badwords     = isset($_POST['badwords']) ? trim($_POST['badwords']) : '';
+    $daily_visit_target = isset($_POST['daily_visit_target']) ? max(0,(int)$_POST['daily_visit_target']) : 0;
+    $left_login_notice = isset($_POST['left_login_notice']) ? trim($_POST['left_login_notice']) : '';
+    $left_login_ticker_speed = isset($_POST['left_login_ticker_speed']) ? (int)$_POST['left_login_ticker_speed'] : 30;
+    if ($left_login_ticker_speed < 10 || $left_login_ticker_speed > 45) $left_login_ticker_speed = 30;
 
-    sql_query("
+    $ok = @sql_query("
         UPDATE {$tbl_cfg}
         SET cf_spam_sec = {$spam_sec},
             cf_repeat_sec = {$repeat_sec},
@@ -456,9 +490,15 @@ if ($act === 'admin_config_save') {
             cf_rule_text   = '".sql_real_escape_string($rule_text)."',
             cf_badwords    = '".sql_real_escape_string($badwords)."',
             cf_online_fake_add = {$online_fake_add},
+            cf_daily_visit_target = {$daily_visit_target},
+            cf_left_login_notice = '".sql_real_escape_string($left_login_notice)."',
+            cf_left_login_ticker_speed = {$left_login_ticker_speed},
             cf_updated_at  = NOW()
         WHERE cf_id = 1
     ", false);
+    if (!$ok) {
+        eve_chat_json(array('ok'=>0,'msg'=>'DB 오류: '.@mysqli_error($connect_db)));
+    }
 
     eve_chat_json(array('ok'=>1));
 }
