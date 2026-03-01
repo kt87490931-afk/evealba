@@ -26,11 +26,8 @@ $memo_form_url = G5_BBS_URL.'/memo_form.php';
     <div class="crow" style="align-items:flex-start;">
       <div class="clabel" style="align-self:flex-start;padding-top:16px;">받는사람</div>
       <div class="ccell col" style="padding:12px 16px;">
-        <div class="memo-recv-fixed" style="padding:8px 0;">운영자</div>
+        <div class="memo-recv-fixed" style="padding:8px 0;"><?php echo get_text($me_recv_mb_id); ?></div>
         <input type="hidden" name="me_recv_mb_id" value="<?php echo htmlspecialchars($me_recv_mb_id); ?>">
-        <?php if ($config['cf_memo_send_point']) { ?>
-        <span style="font-size:11px;color:#bbb;">쪽지 보낼때 <?php echo number_format($config['cf_memo_send_point']); ?>점 차감</span>
-        <?php } ?>
       </div>
     </div>
     <div class="crow" style="align-items:flex-start;">

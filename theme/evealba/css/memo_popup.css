@@ -258,8 +258,8 @@ body.memo-popup-body {
 
 /* 쪽지보내기 폼 - eve_alba_messages_1 (crow, clabel, ccell, ci-ta, compose-btns, btn-send) */
 .compose-section { padding: 0; }
-.crow { display: grid; grid-template-columns: 86px 1fr; border-bottom: 1px solid #fdf0f5; align-items: stretch; }
-.clabel { background: #fff8fb; padding: 14px; font-size: 13px; font-weight: 700; color: #888; display: flex; align-items: center; border-right: 2px solid var(--pale-pink); }
+.crow { display: grid; grid-template-columns: 110px 1fr; border-bottom: 1px solid #fdf0f5; align-items: stretch; }
+.clabel { background: #fff8fb; padding: 14px; font-size: 13px; font-weight: 700; color: #888; display: flex; align-items: center; justify-content: center; border-right: 2px solid var(--pale-pink); white-space: nowrap; min-width: 0; }
 .ccell { padding: 10px 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ccell.col { align-items: flex-start; flex-direction: column; }
 .ci { padding: 9px 13px; border: 1.5px solid #f0e0e8; border-radius: 8px; font-size: 13px; background: #fff; outline: none; transition: border-color .2s; color: #333; }
