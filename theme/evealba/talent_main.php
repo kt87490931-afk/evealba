@@ -102,8 +102,14 @@ if (!defined('_GNUBOARD_')) exit;
 
     <!-- 인재정보 리스트 -->
     <div class="section-header">
-      <h2 class="section-title">👑 인재정보 리스트</h2>
-      <span class="result-count">총 <strong>17,048</strong>건</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <h2 class="section-title">👑 인재정보 리스트</h2>
+        <span class="result-count">총 <strong>17,048</strong>건</span>
+      </div>
+      <div style="display:flex;gap:7px;">
+        <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/resume_register.php' : '/resume_register.php'; ?>" class="btn-write" style="display:inline-flex;align-items:center;gap:5px;padding:8px 16px;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;">✏️ 글쓰기</a>
+        <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/talent.php' : '/talent.php'; ?>" class="btn-list" style="display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:#f5f5f5;color:#666;border-radius:20px;font-size:13px;font-weight:600;text-decoration:none;">📋 목록</a>
+      </div>
     </div>
 
     <div class="talent-table-wrap">
