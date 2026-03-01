@@ -774,6 +774,12 @@ button { cursor:pointer; font-family:inherit; }
           <div><strong style="font-size:14px;">↗</strong> — 채팅을 별도 팝업 새창으로 엽니다</div>
           <div><strong style="font-size:14px;">➖</strong> — 채팅창을 최소화(닫기)합니다</div>
         </div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--pale-pink);display:flex;flex-direction:column;gap:7px;font-size:12px;color:#444;line-height:1.7;">
+          <div style="font-size:13px;font-weight:900;color:var(--hot-pink);margin-bottom:2px;">💬 채팅 기능 안내</div>
+          <div><strong style="font-size:14px;">닉네임 클릭</strong> — 상대방의 닉네임 또는 이모지를 클릭하면 메뉴가 표시됩니다</div>
+          <div><strong style="font-size:14px;">🙈 무시하기</strong> — 해당 사용자의 메시지를 숨깁니다. 다시 클릭하면 해제됩니다</div>
+          <div><strong style="font-size:14px;">🚨 신고하기</strong> — 사유를 선택하여 운영자에게 신고합니다. 누적 신고 시 자동 제재됩니다</div>
+        </div>
       </div>
       <div class="rules-list">
         <div class="rule-item"><div class="rule-num">1</div><div class="rule-text"><strong>욕설·비방 금지</strong><br>다른 이용자를 향한 욕설, 비방, 인신공격은 즉시 이용 제한됩니다.</div></div>
@@ -915,6 +921,15 @@ button { cursor:pointer; font-family:inherit; }
       var av=document.createElement('div');
       av.className='msg-avatar'+(isMe?' me-avatar':'');
       av.textContent=rowIcon;
+      if(!isMe){
+        av.style.cursor='pointer';
+        av.dataset.mb=mbid;
+        av.dataset.nick=row.cm_nick||'';
+        av.addEventListener('click',function(ev){
+          ev.preventDefault();ev.stopPropagation();
+          showNickMenu(ev.clientX,ev.clientY,this.dataset.mb,this.dataset.nick);
+        });
+      }
 
       var content=document.createElement('div');
       content.className='msg-content';
