@@ -7,17 +7,7 @@ if (!defined('_GNUBOARD_')) exit;
 ?>
 <aside class="left-sidebar">
   <?php include G5_THEME_PATH.'/inc/sidebar_login_widget.php'; ?>
-  <div class="sidebar-widget">
-    <div class="widget-title">⚡ 빠른 메뉴</div>
-    <div class="widget-body">
-      <div class="quick-links">
-        <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_register.php' : '/jobs_register.php'; ?>" class="quick-link-btn"><span class="ql-icon">📋</span>채용공고 등록</a>
-        <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/resume_register.php' : '/resume_register.php'; ?>" class="quick-link-btn"><span class="ql-icon">👩</span>이력서 등록</a>
-        <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="quick-link-btn"><span class="ql-icon">📍</span>지역별 채용</a>
-        <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/sudabang.php' : '/sudabang.php'; ?>" class="quick-link-btn"><span class="ql-icon">💬</span>수다방</a>
-      </div>
-    </div>
-  </div>
+  <?php include G5_THEME_PATH.'/inc/sidebar_quick_menu.php'; ?>
   <div class="sidebar-widget">
     <div class="widget-title">📍 지역별 검색</div>
     <div class="widget-body">

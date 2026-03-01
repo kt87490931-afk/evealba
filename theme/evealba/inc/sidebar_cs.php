@@ -5,6 +5,7 @@
 if (!defined('_GNUBOARD_')) exit;
 ?>
 <?php include G5_THEME_PATH.'/inc/sidebar_login_widget.php'; ?>
+<?php include G5_THEME_PATH.'/inc/sidebar_quick_menu.php'; ?>
 
 <!-- 고객센터 메뉴 -->
 <div class="sidebar-widget">
