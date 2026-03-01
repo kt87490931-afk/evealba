@@ -69,8 +69,9 @@ html, body {
   height: 100%;
   overflow: hidden;
   font-family: 'Noto Sans KR', sans-serif;
-  background: transparent;
+  background: var(--white);
   color: var(--dark);
+  -webkit-text-size-adjust: 100%;
 }
 a { text-decoration:none; color:inherit; }
 button { cursor:pointer; font-family:inherit; }
@@ -702,7 +703,7 @@ button { cursor:pointer; font-family:inherit; }
       <button class="chat-icon-btn" title="새로고침" id="btnRefresh">🔄</button>
       <button class="chat-icon-btn chat-icon-btn--text" title="채팅규정" id="btnRules">채팅규정</button>
       <button class="chat-icon-btn" title="무시목록" id="btnIgnore">🙈</button>
-      <button class="chat-close-btn" title="닫기" id="btnClose">✕</button>
+      <button class="chat-icon-btn" title="닫기" id="btnClose">✕</button>
     </div>
   </div>
 
