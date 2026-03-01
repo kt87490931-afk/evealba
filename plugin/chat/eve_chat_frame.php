@@ -186,15 +186,6 @@ button { cursor:pointer; font-family:inherit; }
   backdrop-filter: blur(4px);
 }
 .chat-icon-btn:hover { background: rgba(255,255,255,.32); }
-.chat-icon-btn--text {
-  width: auto;
-  border-radius: 14px;
-  padding: 0 10px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .3px;
-  white-space: nowrap;
-}
 /* -------- REGION DROPDOWN -------- */
 .region-dropdown {
   background: var(--white);
@@ -686,8 +677,8 @@ button { cursor:pointer; font-family:inherit; }
       </div>
     </div>
     <div class="chat-header-actions">
+      <button class="chat-icon-btn" title="채팅규정" id="btnRules">📢</button>
       <button class="chat-icon-btn" title="새로고침" id="btnRefresh">🔄</button>
-      <button class="chat-icon-btn chat-icon-btn--text" title="채팅규정" id="btnRules">채팅규정</button>
       <button class="chat-icon-btn" title="무시목록" id="btnIgnore">🙈</button>
     </div>
   </div>
