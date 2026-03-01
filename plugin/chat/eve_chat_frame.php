@@ -864,10 +864,12 @@ button { cursor:pointer; font-family:inherit; }
   }
 
   function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function setStatus(t){
+  var _statusLock=0;
+  function setStatus(t,lock){
     if(!el.status) return;
-    if(!t){el.status.style.display='none';el.status.textContent='';return;}
+    if(!t){if(_statusLock>Date.now()) return;el.status.style.display='none';el.status.textContent='';return;}
     el.status.textContent=t;el.status.style.display='block';
+    if(lock) _statusLock=Date.now()+lock;
   }
   function fmtTime(dt){
     if(!dt) return '';
@@ -997,11 +999,18 @@ button { cursor:pointer; font-family:inherit; }
       body:'act=send&content='+encodeURIComponent(content)+'&region='+encodeURIComponent(state.region)
     })
     .then(function(r){return r.json();})
+    .then(function(r){
+      var ct=r.headers.get('content-type')||'';
+      if(ct.indexOf('json')<0){return r.text().then(function(t){console.error('[EVE-CHAT] send non-JSON:',t);setStatus('서버 응답 오류',5000);});}
+      return r.json();
+    })
     .then(function(j){
-      if(!j||j.ok!==1){if(j&&j.msg) setStatus(j.msg);else setStatus('전송 실패');return;}
+      if(!j) return;
+      console.log('[EVE-CHAT] send response:',j);
+      if(j.ok!==1){setStatus(j.msg||'전송 실패',5000);return;}
       el.input.value='';el.input.style.height='auto';setStatus('');chatLoad();
     })
-    .catch(function(){setStatus('서버 연결이 불안정합니다.');})
+    .catch(function(e){console.error('[EVE-CHAT] send error:',e);setStatus('서버 연결이 불안정합니다.',5000);})
     .finally(function(){state.sending=false;});
   }
 

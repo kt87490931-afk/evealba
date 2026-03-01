@@ -325,7 +325,10 @@ if ($act === 'send') {
             cm_region = '".sql_real_escape_string($send_region)."',
             cm_datetime = NOW()
     ";
-    sql_query($sql);
+    $send_ok = @sql_query($sql, false);
+    if (!$send_ok) {
+        eve_chat_json(array('ok'=>0,'msg'=>'DB 저장 실패: '.@mysqli_error($connect_db)));
+    }
 
     eve_chat_json(array('ok'=>1));
 }
