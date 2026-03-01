@@ -435,7 +435,7 @@ button { cursor:pointer; font-family:inherit; }
 }
 .chat-input-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 8px;
   background: #fdf5f9;
   border: 1.5px solid var(--border);
