@@ -77,8 +77,20 @@ if (!$_col_chk) {
     @sql_query("ALTER TABLE `{$g5['chat_msg_table']}` ADD COLUMN `cm_region` VARCHAR(10) NOT NULL DEFAULT '전체' AFTER `cm_content`", false);
     @sql_query("ALTER TABLE `{$g5['chat_msg_table']}` ADD KEY `idx_region` (`cm_region`)", false);
 }
-// chat_config 누락 컬럼 자동 추가
+// chat_config 누락 컬럼 자동 추가 (전체)
 $_cfg_cols = array(
+    'cf_title'          => "VARCHAR(50) NOT NULL DEFAULT '실시간 채팅'",
+    'cf_freeze'         => "TINYINT NOT NULL DEFAULT 0",
+    'cf_spam_sec'       => "INT NOT NULL DEFAULT 2",
+    'cf_repeat_sec'     => "INT NOT NULL DEFAULT 30",
+    'cf_report_limit'   => "INT NOT NULL DEFAULT 10",
+    'cf_autoban_min'    => "INT NOT NULL DEFAULT 10",
+    'cf_notice_text'    => "TEXT",
+    'cf_rule_text'      => "TEXT",
+    'cf_badwords'       => "TEXT",
+    'cf_online_window'  => "INT NOT NULL DEFAULT 300",
+    'cf_online_fake_add'=> "INT NOT NULL DEFAULT 0",
+    'cf_updated_at'     => "DATETIME DEFAULT NULL",
     'cf_daily_visit_target' => "INT NOT NULL DEFAULT 0",
     'cf_left_login_notice'  => "TEXT",
     'cf_left_login_ticker_speed' => "INT NOT NULL DEFAULT 30"
