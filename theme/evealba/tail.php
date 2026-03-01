@@ -40,14 +40,9 @@ if(G5_COMMUNITY_USE === false) {
 <!-- EVE CHAT (iframe 격리) -->
 <iframe id="eveChatFrame"
   src="<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php"
-  style="position:fixed;bottom:90px;right:28px;width:360px;height:calc(100vh - 110px);max-height:750px;border:1.5px solid #F0E0E8;border-radius:16px;box-shadow:0 8px 32px rgba(255,27,107,.15);z-index:1100;display:none;background:#fff;overflow:hidden;"
+  style="position:fixed;bottom:90px;right:28px;width:390px;height:calc(100vh - 110px);max-height:750px;border:1.5px solid #F0E0E8;border-radius:16px;box-shadow:0 8px 32px rgba(255,27,107,.15);z-index:1100;display:none;background:#fff;overflow:hidden;"
   allow="autoplay"
   loading="lazy"></iframe>
-<style>
-@media(max-width:768px){
-  #eveChatFrame{width:calc(100vw - 16px)!important;right:8px!important;bottom:80px!important;max-height:calc(100vh - 100px)!important;}
-}
-</style>
 <script>
 (function(){
   var frame=document.getElementById('eveChatFrame');

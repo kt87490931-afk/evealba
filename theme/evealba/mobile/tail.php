@@ -78,5 +78,36 @@ jQuery(function($) {
 });
 </script>
 
+<!-- EVE CHAT 모바일 전체화면 -->
+<iframe id="eveChatFrame"
+  src="<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php"
+  style="position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;border:none;border-radius:0;box-shadow:none;z-index:9999;display:none;background:#fff;overflow:hidden;"
+  allow="autoplay"
+  loading="lazy"></iframe>
+
+<button type="button" id="eveChatOpenMobile"
+  style="position:fixed;bottom:16px;right:16px;z-index:9998;width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,27,107,.4);cursor:pointer;"
+  onclick="toggleEveChatMobile()">💭</button>
+
+<script>
+(function(){
+  var frame = document.getElementById('eveChatFrame');
+  var btn = document.getElementById('eveChatOpenMobile');
+  var isOpen = false;
+  window.toggleEveChatMobile = function(){
+    isOpen = !isOpen;
+    frame.style.display = isOpen ? 'block' : 'none';
+    btn.style.display = isOpen ? 'none' : 'flex';
+  };
+  window.addEventListener('message', function(e){
+    if(e.data && e.data.type === 'eve-chat-close'){
+      isOpen = false;
+      frame.style.display = 'none';
+      btn.style.display = 'flex';
+    }
+  });
+})();
+</script>
+
 <?php
 include_once(G5_THEME_PATH."/tail.sub.php");

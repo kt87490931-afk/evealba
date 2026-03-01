@@ -39,7 +39,7 @@ if ($_cfg && isset($_cfg['cf_notice_text']) && $_cfg['cf_notice_text'] !== '') {
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>이브알바 실시간 채팅</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -173,23 +173,24 @@ button { cursor:pointer; font-family:inherit; }
 .chat-header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   flex-shrink: 0;
   position:relative; z-index:1;
 }
 .chat-icon-btn {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: rgba(255,255,255,.18);
   border: 1px solid rgba(255,255,255,.25);
   color: var(--white);
-  font-size: 14px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background .2s;
   backdrop-filter: blur(4px);
+  flex-shrink: 0;
 }
 .chat-icon-btn:hover { background: rgba(255,255,255,.32); }
 /* -------- REGION DROPDOWN -------- */
@@ -446,7 +447,7 @@ button { cursor:pointer; font-family:inherit; }
   flex: 1;
   border: none;
   background: transparent;
-  font-size: 13px;
+  font-size: 16px;
   color: var(--dark);
   resize: none;
   outline: none;
@@ -684,6 +685,8 @@ button { cursor:pointer; font-family:inherit; }
       <button class="chat-icon-btn" title="채팅규정" id="btnRules">📢</button>
       <button class="chat-icon-btn" title="새로고침" id="btnRefresh">🔄</button>
       <button class="chat-icon-btn" title="무시목록" id="btnIgnore">🙈</button>
+      <button class="chat-icon-btn" title="새창에서 열기" id="btnPopout">↗</button>
+      <button class="chat-icon-btn" title="최소화" id="btnMinimize">➖</button>
     </div>
   </div>
 
@@ -1072,6 +1075,20 @@ button { cursor:pointer; font-family:inherit; }
     chatHello(true,function(){
       el.msgs.innerHTML='';addSystemMsg('💗 이브알바 채팅방에 오신 것을 환영합니다!');chatLoad();
     });
+  });
+
+  $('btnPopout').addEventListener('click',function(){
+    var url = AJAX.replace('/chat_ajax.php','/eve_chat_frame.php');
+    var w = Math.min(420, screen.availWidth);
+    var h = Math.min(720, screen.availHeight);
+    var left = Math.round((screen.availWidth - w) / 2);
+    var top = Math.round((screen.availHeight - h) / 2);
+    window.open(url, 'eveChatPopup', 'width='+w+',height='+h+',left='+left+',top='+top+',scrollbars=no,resizable=yes');
+    try { window.parent.postMessage({type:'eve-chat-close'}, '*'); } catch(e){}
+  });
+
+  $('btnMinimize').addEventListener('click',function(){
+    try { window.parent.postMessage({type:'eve-chat-close'}, '*'); } catch(e){}
   });
 
   $('btnRules').addEventListener('click',function(){$('rulesModal').classList.add('show');});
