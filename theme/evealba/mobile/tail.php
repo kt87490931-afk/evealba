@@ -81,7 +81,7 @@ jQuery(function($) {
 <!-- EVE CHAT 모바일 전체화면 -->
 <iframe id="eveChatFrame"
   src="<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php"
-  style="position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;border:none;border-radius:0;box-shadow:none;z-index:9999;display:none;background:#fff;overflow:hidden;"
+  style="position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;border:none;border-radius:0;box-shadow:none;z-index:9999;display:none;background:#fff;overflow:hidden;"
   allow="autoplay"
   loading="lazy"></iframe>
 

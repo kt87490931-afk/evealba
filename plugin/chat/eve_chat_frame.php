@@ -72,6 +72,7 @@ html, body {
   background: var(--white);
   color: var(--dark);
   -webkit-text-size-adjust: 100%;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 a { text-decoration:none; color:inherit; }
 button { cursor:pointer; font-family:inherit; }
@@ -753,7 +754,7 @@ button { cursor:pointer; font-family:inherit; }
       <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요 (Enter 전송)" rows="1" autocomplete="off"></textarea>
       <button class="chat-send-btn" id="chatSendBtn">➤</button>
     </div>
-    <div class="chat-input-hint">Enter 전송 &nbsp;·&nbsp; Shift+Enter 줄바꿈</div>
+    <div class="chat-input-hint">📢을 누르면 버튼의 자세한 설명을 확인하세요</div>
   </div>
   <?php } ?>
 </div>
@@ -767,6 +768,17 @@ button { cursor:pointer; font-family:inherit; }
       <button class="modal-close" onclick="document.getElementById('rulesModal').classList.remove('show')">✕</button>
     </div>
     <div class="modal-body">
+      <div style="margin-bottom:16px;padding:14px;background:linear-gradient(135deg,#fff5f8,#fff0f5);border:1.5px solid var(--pale-pink);border-radius:12px;">
+        <div style="font-size:13px;font-weight:900;color:var(--hot-pink);margin-bottom:10px;">🎀 버튼 기능 안내</div>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:#444;line-height:1.7;">
+          <div><strong style="font-size:14px;">전체 ▼</strong> — 지역별 채팅방을 선택합니다 (서울, 경기, 부산 등)</div>
+          <div><strong style="font-size:14px;">📢</strong> — 채팅 규정 및 버튼 설명을 확인합니다 (지금 보고 있는 화면)</div>
+          <div><strong style="font-size:14px;">🔄</strong> — 채팅 내용을 새로고침합니다</div>
+          <div><strong style="font-size:14px;">🙈</strong> — 무시(차단)한 사용자 목록을 관리합니다</div>
+          <div><strong style="font-size:14px;">↗</strong> — 채팅을 별도 팝업 새창으로 엽니다</div>
+          <div><strong style="font-size:14px;">➖</strong> — 채팅창을 최소화(닫기)합니다</div>
+        </div>
+      </div>
       <div class="rules-list">
         <div class="rule-item"><div class="rule-num">1</div><div class="rule-text"><strong>욕설·비방 금지</strong><br>다른 이용자를 향한 욕설, 비방, 인신공격은 즉시 이용 제한됩니다.</div></div>
         <div class="rule-item"><div class="rule-num">2</div><div class="rule-text"><strong>광고·스팸 금지</strong><br>허가되지 않은 광고, 홍보, 스팸 메시지 작성은 금지됩니다.</div></div>
