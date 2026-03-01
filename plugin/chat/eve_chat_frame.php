@@ -999,7 +999,6 @@ button { cursor:pointer; font-family:inherit; }
       body:'act=send&content='+encodeURIComponent(content)+'&region='+encodeURIComponent(state.region)
     })
     .then(function(r){return r.json();})
-    .then(function(r){return r.json();})
     .then(function(j){
       console.log('[EVE-CHAT] send response:',j);
       if(!j||j.ok!==1){setStatus(j&&j.msg?j.msg:'전송 실패',5000);return;}
