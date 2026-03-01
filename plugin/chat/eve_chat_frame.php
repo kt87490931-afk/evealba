@@ -440,7 +440,7 @@ button { cursor:pointer; font-family:inherit; }
   background: #fdf5f9;
   border: 1.5px solid var(--border);
   border-radius: 24px;
-  padding: 8px 8px 8px 14px;
+  padding: 4px 6px 4px 14px;
   transition: border-color .2s, box-shadow .2s;
 }
 .chat-input-row:focus-within {
@@ -456,14 +456,16 @@ button { cursor:pointer; font-family:inherit; }
   resize: none;
   outline: none;
   max-height: 80px;
-  min-height: 22px;
-  line-height: 1.5;
+  min-height: 20px;
+  height: 20px;
+  line-height: 1.25;
   font-family: 'Noto Sans KR', sans-serif;
+  overflow-y: hidden;
 }
 .chat-input::placeholder { color: #bbb; }
 .chat-send-btn {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--orange), var(--hot-pink));
   border: none;
@@ -754,7 +756,7 @@ button { cursor:pointer; font-family:inherit; }
 
   <div class="chat-input-area">
     <div class="chat-input-row">
-      <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요 (Enter 전송)" rows="1" autocomplete="off"></textarea>
+      <textarea class="chat-input" id="chatInput" placeholder="메시지를 입력하세요" rows="1" autocomplete="off"></textarea>
       <button class="chat-send-btn" id="chatSendBtn">➤</button>
     </div>
     <div class="chat-input-hint">📢을 누르면 버튼의 자세한 설명을 확인하세요</div>
@@ -1080,7 +1082,11 @@ button { cursor:pointer; font-family:inherit; }
     if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();e.stopPropagation();chatSend();}
   });
   el.input.addEventListener('input',function(){
-    this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px';
+    this.style.height='20px';
+    var sh=this.scrollHeight;
+    var h=Math.min(sh,80);
+    this.style.height=h+'px';
+    this.style.overflowY=(sh>80)?'auto':'hidden';
   });
   el.sendBtn.addEventListener('click',chatSend);
 
