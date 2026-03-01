@@ -43,7 +43,7 @@ if (!defined('_GNUBOARD_')) exit;
       <div class="amb-icon">🤖</div>
       <div class="amb-text">
         <h3>AI 인재 매칭 시스템</h3>
-        <p>조건에 맞는 인재를 자동으로 매칭해드립니다 · 하루 최대 1명 (유료 시 5명)</p>
+        <p>조건에 맞는 인재를 자동으로 매칭해드립니다. 베타테스트중</p>
       </div>
       <div class="amb-badge">✨ 무료 운영 중</div>
     </div>
