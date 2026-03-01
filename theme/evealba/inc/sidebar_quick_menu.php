@@ -14,7 +14,7 @@ $_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL, '/') : '';
       <a href="<?php echo $_base; ?>/resume_register.php" class="quick-link-btn"><span class="ql-icon">👩</span>이력서 등록</a>
       <a href="<?php echo $_base; ?>/jobs.php" class="quick-link-btn"><span class="ql-icon">📍</span>지역별 채용</a>
       <a href="<?php echo $_base; ?>/sudabang.php" class="quick-link-btn"><span class="ql-icon">💬</span>수다방</a>
-      <a href="javascript:void(0);" class="quick-link-btn" onclick="try{window.eveChatToggle?window.eveChatToggle():document.getElementById('eveChatTrigger')&&document.getElementById('eveChatTrigger').click();}catch(e){}"><span class="ql-icon">💬</span>채팅</a>
+      <a href="javascript:void(0);" class="quick-link-btn" onclick="var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';var w=Math.min(420,screen.availWidth),h=Math.min(720,screen.availHeight),l=Math.round((screen.availWidth-w)/2),t=Math.round((screen.availHeight-h)/2);window.open(u,'eveChatPopup','width='+w+',height='+h+',left='+l+',top='+t+',scrollbars=no,resizable=yes');"><span class="ql-icon">💬</span>채팅</a>
       <a href="<?php echo G5_BBS_URL; ?>/memo.php" class="quick-link-btn"><span class="ql-icon">📩</span>쪽지</a>
     </div>
   </div>
