@@ -43,6 +43,11 @@ if(G5_COMMUNITY_USE === false) {
   style="position:fixed;bottom:90px;right:28px;width:390px;height:calc(100vh - 110px);max-height:750px;border:1.5px solid #F0E0E8;border-radius:16px;box-shadow:0 8px 32px rgba(255,27,107,.15);z-index:1100;display:none;background:#fff;overflow:hidden;"
   allow="autoplay"
   loading="lazy"></iframe>
+<style>
+@media(max-width:768px){
+  #eveChatFrame{top:0!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;height:100%!important;max-height:none!important;border:none!important;border-radius:0!important;box-shadow:none!important;z-index:9999!important;}
+}
+</style>
 <script>
 (function(){
   var frame=document.getElementById('eveChatFrame');

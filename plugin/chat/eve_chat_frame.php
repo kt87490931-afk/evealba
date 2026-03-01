@@ -72,7 +72,6 @@ html, body {
   background: var(--white);
   color: var(--dark);
   -webkit-text-size-adjust: 100%;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 a { text-decoration:none; color:inherit; }
 button { cursor:pointer; font-family:inherit; }
@@ -92,6 +91,9 @@ button { cursor:pointer; font-family:inherit; }
 .chat-header {
   background: linear-gradient(135deg, var(--dark2), var(--hot-pink));
   padding: 14px 16px 12px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  padding-left: calc(16px + env(safe-area-inset-left, 0px));
+  padding-right: calc(16px + env(safe-area-inset-right, 0px));
   display: flex;
   align-items: center;
   gap: 10px;
@@ -428,6 +430,7 @@ button { cursor:pointer; font-family:inherit; }
   border-top: 2px solid var(--border);
   background: var(--white);
   padding: 10px 12px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   flex-shrink: 0;
 }
 .chat-input-row {
