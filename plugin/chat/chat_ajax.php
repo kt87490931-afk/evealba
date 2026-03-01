@@ -255,12 +255,15 @@ if ($act === 'hello') {
     $fake = isset($cfg['cf_online_fake_add']) ? (int)$cfg['cf_online_fake_add'] : 0;
     if ($fake < 0) $fake = 0;
 
+    $notice_text = isset($cfg['cf_notice_text']) ? trim($cfg['cf_notice_text']) : '';
+
     eve_chat_json(array(
         'ok' => 1,
         'last_id' => $last_id,
         'freeze' => $freeze,
         'online_count' => ($base + $fake),
-        'can_chat' => ($is_member && eve_chat_can_chat($member)) ? 1 : 0
+        'can_chat' => ($is_member && eve_chat_can_chat($member)) ? 1 : 0,
+        'notice_text' => $notice_text
     ));
 }
 
@@ -472,6 +475,23 @@ if ($act === 'admin_freeze') {
 
 if ($act === 'admin_clear') {
     $ok = @sql_query(" DELETE FROM {$tbl_chat} ", false);
+    if (!$ok) {
+        eve_chat_json(array('ok'=>0,'msg'=>'DB 오류: '.@mysqli_error($connect_db)));
+    }
+    eve_chat_json(array('ok'=>1));
+}
+
+if ($act === 'admin_notice_save') {
+    $notice_text = isset($_POST['notice_text']) ? trim($_POST['notice_text']) : '';
+    $badwords    = isset($_POST['badwords']) ? trim($_POST['badwords']) : '';
+
+    $ok = @sql_query("
+        UPDATE {$tbl_cfg}
+        SET cf_notice_text = '".sql_real_escape_string($notice_text)."',
+            cf_badwords    = '".sql_real_escape_string($badwords)."',
+            cf_updated_at  = NOW()
+        WHERE cf_id = 1
+    ", false);
     if (!$ok) {
         eve_chat_json(array('ok'=>0,'msg'=>'DB 오류: '.@mysqli_error($connect_db)));
     }

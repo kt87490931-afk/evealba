@@ -39,19 +39,12 @@ if (!$cfg) {
 }
 
 $notice = isset($cfg['cf_notice_text']) ? $cfg['cf_notice_text'] : (isset($cfg['cf_notice_txt']) ? $cfg['cf_notice_txt'] : '');
-$rule = isset($cfg['cf_rule_text']) ? $cfg['cf_rule_text'] : '';
 $bad = isset($cfg['cf_badwords']) ? $cfg['cf_badwords'] : '';
-
-$spam_sec = isset($cfg['cf_spam_sec']) ? (int)$cfg['cf_spam_sec'] : 2;
-$repeat_sec = isset($cfg['cf_repeat_sec']) ? (int)$cfg['cf_repeat_sec'] : 30;
-$report_lim = isset($cfg['cf_report_limit']) ? (int)$cfg['cf_report_limit'] : 10;
-$autoban_min = isset($cfg['cf_autoban_min']) ? (int)$cfg['cf_autoban_min'] : 10;
-$online_fake_add = isset($cfg['cf_online_fake_add']) ? (int)$cfg['cf_online_fake_add'] : 0;
 
 $CHAT_AJAX_URL = G5_PLUGIN_URL . '/chat/chat_ajax.php';
 $base_url = G5_ADMIN_URL . '/scorepoint/';
 
-$g5['title'] = '공지/규정/금칙어';
+$g5['title'] = '공지/금칙어';
 require_once G5_ADMIN_PATH . '/admin.head.php';
 ?>
 <style>
@@ -62,7 +55,7 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
 
 <div class="local_ov01 local_ov">
     <a href="<?php echo $base_url; ?>scorepoint_chat_manage.php?sub_menu=910500" class="ov_listall">채팅관리</a>
-    <span class="btn_ov01"><span class="ov_txt">공지/규정/금칙어</span></span>
+    <span class="btn_ov01"><span class="ov_txt">공지/금칙어</span></span>
     <a href="<?php echo $base_url; ?>scorepoint_chat_reports.php?sub_menu=910700" class="btn_ov01">최근신고</a>
     <a href="<?php echo $base_url; ?>scorepoint_chat_banlist.php?sub_menu=910600" class="btn_ov01">밴리스트</a>
 </div>
@@ -72,7 +65,7 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
 
     <div class="tbl_head01 tbl_wrap sp-chat-form" style="margin-top:16px;">
         <table>
-            <caption class="sound_only">공지/규정/금칙어</caption>
+            <caption class="sound_only">공지/금칙어</caption>
             <colgroup>
                 <col style="width:140px;">
                 <col>
@@ -81,26 +74,8 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
                 <tr>
                     <th scope="row">공지(상단 띠)</th>
                     <td>
-                        <?php
-                        if (function_exists('editor_html')) {
-                            echo editor_html('adm_notice_text', html_purifier($notice), true);
-                        } else {
-                            echo '<textarea name="adm_notice_text" id="adm_notice_text" class="frm_input" rows="4" style="width:100%;">' . htmlspecialchars($notice, ENT_QUOTES, 'UTF-8') . '</textarea>';
-                        }
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">채팅규정</th>
-                    <td>
-                        <?php
-                        if (function_exists('editor_html')) {
-                            echo editor_html('adm_rule_text', html_purifier($rule), true);
-                        } else {
-                            echo '<textarea name="adm_rule_text" id="adm_rule_text" class="frm_input" rows="8" style="width:100%;">' . htmlspecialchars($rule, ENT_QUOTES, 'UTF-8') . '</textarea>';
-                        }
-                        ?>
-                        <p class="frm_info">채팅규정 탭에 표시됩니다.</p>
+                        <textarea name="adm_notice_text" id="adm_notice_text" class="frm_input" rows="3" style="width:100%;max-width:500px;"><?php echo htmlspecialchars($notice, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                        <p class="frm_info">채팅창 진입 시 첫 번째 시스템 메시지로 표시됩니다. 비우면 기본 환영 메시지가 표시됩니다.</p>
                     </td>
                 </tr>
                 <tr>
@@ -122,11 +97,6 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
 <script>
 (function(){
     var AJAX = <?php echo json_encode($CHAT_AJAX_URL, JSON_UNESCAPED_SLASHES); ?>;
-    var SPAM_SEC = <?php echo (int)$spam_sec; ?>;
-    var REPEAT_SEC = <?php echo (int)$repeat_sec; ?>;
-    var REPORT_LIMIT = <?php echo (int)$report_lim; ?>;
-    var AUTOBAN_MIN = <?php echo (int)$autoban_min; ?>;
-    var ONLINE_FAKE_ADD = <?php echo (int)$online_fake_add; ?>;
 
     function post(body){
         return fetch(AJAX, {
@@ -134,29 +104,25 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
             credentials: 'same-origin',
             headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
             body: body
-        }).then(function(r){ return r.json(); });
-    }
-
-    function getEditorContent(id){
-        var el = document.getElementById(id);
-        if (!el) return '';
-        if (typeof oEditors !== 'undefined' && oEditors.getById && oEditors.getById[id]) {
-            try { oEditors.getById[id].exec('UPDATE_CONTENTS_FIELD', []); } catch(e){}
-        }
-        return (el.value || '').trim();
+        }).then(function(r){
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.text();
+        }).then(function(t){
+            try { return JSON.parse(t); }
+            catch(e) { console.error('[CHAT-ADM] 응답 파싱 실패:', t); throw new Error('JSON parse error'); }
+        });
     }
 
     var btn = document.getElementById('adm-config-save');
     if (btn) {
         btn.addEventListener('click', function(){
-            var noticeText = getEditorContent('adm_notice_text');
-            var ruleText = getEditorContent('adm_rule_text');
+            var noticeText = (document.getElementById('adm_notice_text').value || '').trim();
             var badwords = (document.getElementById('adm_badwords').value || '').trim();
-            var body = 'act=admin_config_save&spam_sec=' + encodeURIComponent(String(SPAM_SEC)) + '&repeat_sec=' + encodeURIComponent(String(REPEAT_SEC)) + '&report_limit=' + encodeURIComponent(String(REPORT_LIMIT)) + '&autoban_min=' + encodeURIComponent(String(AUTOBAN_MIN)) + '&online_fake_add=' + encodeURIComponent(String(ONLINE_FAKE_ADD)) + '&notice_text=' + encodeURIComponent(noticeText) + '&rule_text=' + encodeURIComponent(ruleText) + '&badwords=' + encodeURIComponent(badwords);
+            var body = 'act=admin_notice_save&notice_text=' + encodeURIComponent(noticeText) + '&badwords=' + encodeURIComponent(badwords);
             post(body).then(function(j){
                 if (!j || j.ok !== 1) { alert(j && j.msg ? j.msg : '저장 실패'); return; }
                 alert('저장 완료');
-            });
+            }).catch(function(e){ alert('오류: ' + e.message); console.error('[CHAT-ADM] notice save error:', e); });
         });
     }
 })();
