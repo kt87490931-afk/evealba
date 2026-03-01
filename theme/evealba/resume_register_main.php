@@ -1018,7 +1018,101 @@ function submitResume() {
   }
   var salaryErr = checkResumeSalaryLimit();
   if(salaryErr){ alert(salaryErr); return; }
-  alert('이력서가 성공적으로 등록되었습니다! 🎉');
+
+  var titleEl=document.getElementById('resume_title');
+  if(!titleEl||!titleEl.value.trim()){alert('이력서 제목을 입력해 주세요.');return;}
+  var ageEl=document.getElementById('resume_age');
+  if(!ageEl||!ageEl.value){alert('나이를 선택해 주세요.');return;}
+  var introEl=document.getElementById('resume_intro');
+  if(!introEl||!introEl.value.trim()){alert('자기소개를 입력해 주세요.');return;}
+
+  function gv(id){var e=document.getElementById(id);return e?(e.value||'').trim():'';}
+  function gs(id){var e=document.getElementById(id);return e&&e.selectedIndex>0?e.options[e.selectedIndex].text:'';}
+  function rv(name){var r=document.querySelector('input[name="'+name+'"]:checked');return r&&r.nextElementSibling?r.nextElementSibling.textContent:'';}
+
+  var fd=new FormData();
+  fd.append('title', gv('resume_title'));
+  fd.append('nick', gv('resume_nick'));
+  fd.append('gender', gv('resume_gender'));
+  fd.append('age', gv('resume_age'));
+  fd.append('job1', gs('resume_job1'));
+  fd.append('job2', gs('resume_job2'));
+  fd.append('region', gs('resume_region'));
+  fd.append('region_detail', gs('resume_region_detail'));
+  fd.append('work_region', gs('resume_work_region'));
+  fd.append('work_region_detail', gs('resume_work_region_detail'));
+  fd.append('salary_type', gs('resume_salary_type'));
+  fd.append('salary_amt', gv('resume_salary_amt'));
+  fd.append('phone', gv('resume_phone'));
+  fd.append('sns_type', gs('resume_sns_type'));
+  fd.append('sns_id', gv('resume_sns_id'));
+  fd.append('contact', rv('contact'));
+  fd.append('height', gv('resume_height'));
+  fd.append('weight', gv('resume_weight'));
+  fd.append('size', gs('resume_size'));
+  fd.append('edu', gs('resume_edu'));
+  fd.append('work_type', rv('work-type'));
+  fd.append('work_time_type', gs('resume_work_time_type'));
+  fd.append('work_time_start', gv('resume_work_time_start'));
+  fd.append('work_time_end', gv('resume_work_time_end'));
+  fd.append('intro', gv('resume_intro'));
+  fd.append('career_type', rv('career'));
+
+  var days=[];
+  ['day-mon','day-tue','day-wed','day-thu','day-fri','day-sat','day-sun'].forEach(function(id){
+    var c=document.getElementById(id); if(c&&c.checked) days.push(c.nextElementSibling?c.nextElementSibling.textContent:'');
+  });
+  fd.append('work_days', days.join(','));
+
+  var extra=[];
+  if(document.getElementById('rg-all')&&document.getElementById('rg-all').checked) extra.push('전국 가능');
+  if(document.getElementById('rg-travel')&&document.getElementById('rg-travel').checked) extra.push('출장 가능');
+  if(document.getElementById('rg-abroad')&&document.getElementById('rg-abroad').checked) extra.push('해외 가능');
+  fd.append('work_region_extra', extra.join(','));
+
+  var careers=[];
+  document.querySelectorAll('#careerBody tr').forEach(function(tr){
+    var inputs=tr.querySelectorAll('input[type="text"], select');
+    if(inputs.length>=4){
+      careers.push({name:inputs[0].value,type:inputs[1].options[inputs[1].selectedIndex].text,period:inputs[2].value,pay:inputs[3].value});
+    }
+  });
+  fd.append('careers', JSON.stringify(careers));
+
+  var amenities=[];
+  for(var i=0;i<=21;i++){var c=document.getElementById('am-'+i);if(c&&c.checked&&c.nextElementSibling)amenities.push(c.nextElementSibling.textContent);}
+  fd.append('amenities', JSON.stringify(amenities));
+
+  var keywords=[];
+  for(var i=1;i<=24;i++){var c=document.getElementById('kw-'+i);if(c&&c.checked&&c.nextElementSibling)keywords.push(c.nextElementSibling.textContent);}
+  fd.append('keywords', JSON.stringify(keywords));
+
+  var mbtiR=document.querySelector('input[name="mbti"]:checked');
+  fd.append('mbti', mbtiR?mbtiR.value:'');
+
+  var photoFile=document.getElementById('photo-file');
+  if(photoFile&&photoFile.files&&photoFile.files[0]) fd.append('photo_file', photoFile.files[0]);
+
+  var btn=document.querySelector('.btn-submit');
+  if(btn){btn.disabled=true;btn.textContent='등록 중...';}
+
+  var saveUrl='<?php echo (defined("G5_URL")&&G5_URL)?rtrim(G5_URL,"/")."/resume_save.php":"/resume_save.php"; ?>';
+  fetch(saveUrl,{method:'POST',body:fd,credentials:'same-origin'})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    if(btn){btn.disabled=false;btn.textContent='📄 이력서 등록';}
+    if(res.ok){
+      alert(res.msg||'이력서가 등록되었습니다!');
+      var talentUrl='<?php echo (defined("G5_URL")&&G5_URL)?rtrim(G5_URL,"/")."/talent.php":"/talent.php"; ?>';
+      location.href=talentUrl;
+    } else {
+      alert(res.msg||'등록에 실패했습니다.');
+    }
+  })
+  .catch(function(e){
+    if(btn){btn.disabled=false;btn.textContent='📄 이력서 등록';}
+    alert('등록 중 오류가 발생했습니다: '+(e.message||''));
+  });
 }
 
 var _rSalaryLimits = {
