@@ -999,15 +999,10 @@ button { cursor:pointer; font-family:inherit; }
       body:'act=send&content='+encodeURIComponent(content)+'&region='+encodeURIComponent(state.region)
     })
     .then(function(r){return r.json();})
-    .then(function(r){
-      var ct=r.headers.get('content-type')||'';
-      if(ct.indexOf('json')<0){return r.text().then(function(t){console.error('[EVE-CHAT] send non-JSON:',t);setStatus('서버 응답 오류',5000);});}
-      return r.json();
-    })
+    .then(function(r){return r.json();})
     .then(function(j){
-      if(!j) return;
       console.log('[EVE-CHAT] send response:',j);
-      if(j.ok!==1){setStatus(j.msg||'전송 실패',5000);return;}
+      if(!j||j.ok!==1){setStatus(j&&j.msg?j.msg:'전송 실패',5000);return;}
       el.input.value='';el.input.style.height='auto';setStatus('');chatLoad();
     })
     .catch(function(e){console.error('[EVE-CHAT] send error:',e);setStatus('서버 연결이 불안정합니다.',5000);})
