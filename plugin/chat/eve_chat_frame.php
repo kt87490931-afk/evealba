@@ -674,7 +674,7 @@ button { cursor:pointer; font-family:inherit; }
       <div class="chat-header-title">실시간 채팅</div>
       <div class="chat-header-sub">
         <span class="online-dot"></span>
-        <span>👩 <span id="onlineNum">0</span>명 접속 중</span>
+        <span>👩 <span id="onlineNum">0</span>명</span>
       </div>
     </div>
     <div class="chat-header-actions">
