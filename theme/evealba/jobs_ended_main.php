@@ -61,10 +61,13 @@ if ($is_member) {
       <div class="board-td td-title">
         <div class="td-title-inner">
           <span class="post-title-text"><?php echo htmlspecialchars($row['subject']); ?></span>
-          <div class="mc-top-right">
+          <div class="mc-row1">
+            <span class="post-title-text-m"><?php echo htmlspecialchars($row['subject']); ?></span>
             <span class="status-badge" style="background:#f0f0f0;color:#999;">마감</span>
           </div>
-          <div class="mc-labels" style="color:#999;"><?php echo !empty($row['ad_labels']) ? htmlspecialchars(str_replace(',', ', ', $row['ad_labels'])) : ''; ?></div>
+          <div class="mc-row2">
+            <span class="mc-labels-inline" style="color:#999;"><?php echo !empty($row['ad_labels']) ? htmlspecialchars(str_replace(',', ', ', $row['ad_labels'])) : ''; ?></span>
+          </div>
           <div class="mc-bottom">
             <span class="mc-bottom-left">
               <span class="mi-date"><?php echo htmlspecialchars($row['datetime2']); ?></span>

@@ -163,11 +163,14 @@ $_icon_map = array(
             <?php if (!empty($row['total_amount'])) { ?><span class="td-price"><?php echo number_format($row['total_amount']); ?>원</span><?php } ?>
             <?php if (!empty($row['ad_labels'])) { ?><span class="cat-badge cat-jobs"><?php echo htmlspecialchars(cut_str(str_replace(',', ', ', $row['ad_labels']), 20)); ?></span><?php } ?>
           </div>
-          <div class="mc-top-right">
+          <div class="mc-row1">
+            <span class="post-title-text-m"><?php echo isset($row['subject']) ? htmlspecialchars($row['subject']) : ''; ?></span>
             <span class="status-badge status-<?php echo isset($row['status_class']) ? $row['status_class'] : 'payment-wait'; ?>"><?php echo isset($row['status_label']) ? htmlspecialchars($row['status_label']) : ''; ?></span>
+          </div>
+          <div class="mc-row2">
+            <span class="mc-labels-inline"><?php echo !empty($row['ad_labels']) ? htmlspecialchars(str_replace(',', ', ', $row['ad_labels'])) : ''; ?></span>
             <button type="button" class="btn-extend" onclick="event.preventDefault();event.stopPropagation();openExtendPopup('<?php echo $extend_url; ?>');">연장</button>
           </div>
-          <div class="mc-labels"><?php echo !empty($row['ad_labels']) ? htmlspecialchars(str_replace(',', ', ', $row['ad_labels'])) : ''; ?></div>
           <div class="mc-bottom">
             <span class="mc-bottom-left">
               <span class="mi-date"><?php echo isset($row['datetime2']) ? $row['datetime2'] : ''; ?></span>

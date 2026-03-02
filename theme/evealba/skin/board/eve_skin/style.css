@@ -144,7 +144,7 @@
   .jobs-ongoing-list .thumb-box, .jobs-ongoing-list .thumb-empty { width:76px; height:60px; }
 }
 /* 모바일 카드 요소 (데스크톱 숨김) */
-.mc-top-right, .mc-labels, .mc-bottom { display:none; }
+.mc-row1, .mc-row2, .mc-bottom { display:none; }
 
 @media (max-width:600px) {
   /* === 공통: 모바일 카드 === */
@@ -175,9 +175,9 @@
   /* 썸네일 */
   .jobs-ongoing-list .board-td.td-thumb {
     flex-shrink:0; margin-right:10px; display:flex !important;
-    align-items:flex-start; justify-content:center;
+    align-items:center; justify-content:center;
   }
-  .jobs-ongoing-list .mini-thumb { width:60px!important; height:60px!important; }
+  .jobs-ongoing-list .mini-thumb { width:56px!important; height:56px!important; }
 
   /* 제목 영역 */
   .jobs-ongoing-list .board-td.td-title,
@@ -186,23 +186,23 @@
   }
   .jobs-ongoing-list .td-title-inner,
   .jobs-ended-list .td-title-inner { align-items:flex-start; }
-  .jobs-ongoing-list .post-title-text,
-  .jobs-ended-list .post-title-text { font-size:14px; font-weight:700; text-align:left; display:block; }
+  .jobs-ongoing-list .td-title-top,
+  .jobs-ended-list .td-title-top { display:none; }
 
-  /* 상단 우측: 상태배지 + 연장버튼 */
-  .mc-top-right {
-    display:flex !important; flex-direction:column; align-items:flex-end; gap:6px;
-    flex-shrink:0; margin-left:auto;
+  /* 1줄: 제목 + 상태배지 */
+  .mc-row1 {
+    display:flex !important; align-items:center; justify-content:space-between;
+    width:100%; gap:8px;
   }
-  .mc-top-right .btn-extend { padding:5px 14px; font-size:11px; }
+  .mc-row1 .post-title-text-m { font-size:14px; font-weight:700; text-align:left; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-  /* 광고라벨 (제목 아래, 전체폭) */
-  .mc-labels {
-    display:block !important; width:100%;
-    font-size:12px; font-weight:600; color:#C9007A;
-    margin-top:6px; text-align:left;
+  /* 2줄: 광고라벨 + 연장 */
+  .mc-row2 {
+    display:flex !important; align-items:center; justify-content:space-between;
+    width:100%; margin-top:4px;
   }
-  .jobs-ended-list .mc-labels { color:#999; }
+  .mc-row2 .mc-labels-inline { font-size:12px; font-weight:600; color:#C9007A; }
+  .mc-row2 .btn-extend { padding:4px 12px; font-size:11px; flex-shrink:0; }
 
   /* 하단: 좌측 날짜·기간 / 우측 점프 */
   .mc-bottom {
