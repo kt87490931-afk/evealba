@@ -60,7 +60,7 @@ if ($is_member) {
       <div class="board-td td-date"><?php echo htmlspecialchars($row['datetime2']); ?></div>
       <div class="board-td td-title">
         <div class="td-title-inner">
-          <span class="post-title-text"><?php echo htmlspecialchars($row['subject']); ?></span>
+          <div class="td-title-top"><span class="post-title-text"><?php echo htmlspecialchars($row['subject']); ?></span></div>
           <div class="mc-row1">
             <span class="post-title-text-m"><?php echo htmlspecialchars($row['subject']); ?></span>
             <span class="status-badge" style="background:#f0f0f0;color:#999;">마감</span>
