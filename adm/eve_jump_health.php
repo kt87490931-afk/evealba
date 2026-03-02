@@ -2,7 +2,7 @@
 /**
  * 어드민 - 점프 헬스 모니터링
  */
-$sub_menu = '911000';
+$sub_menu = '910910';
 require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'r');

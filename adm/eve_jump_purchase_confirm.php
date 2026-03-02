@@ -3,7 +3,7 @@
  * 어드민 - 점프 추가 구매 입금확인 처리
  * 잔여 횟수에 추가하고, 자동 점프 간격 재계산
  */
-$sub_menu = '911000';
+$sub_menu = '910910';
 require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'w');

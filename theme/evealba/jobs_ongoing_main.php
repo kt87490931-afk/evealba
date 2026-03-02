@@ -72,7 +72,7 @@ if ($is_member) {
                 'thumb_title_text' => $thumb_title_text,
                 'thumb_icon' => $thumb_icon_key,
                 'thumb_border' => $thumb_border_key,
-                'view_href' => $can_view ? ($jobs_view_url_base.'?jr_id='.$row['jr_id']) : '#',
+                'view_href' => $can_view ? ($jobs_view_url_base.'?jr_id='.$row['jr_id'].'&mode=edit') : '#',
                 'can_view' => $can_view
             );
         }

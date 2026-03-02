@@ -28,6 +28,7 @@ if (!$tb_check || !sql_num_rows($tb_check)) {
 }
 
 $is_owner = false;
+$is_edit_mode = isset($_GET['mode']) && $_GET['mode'] === 'edit';
 if ($is_member) {
     $mb_id_esc = addslashes($member['mb_id']);
     $row = sql_fetch("SELECT * FROM g5_jobs_register WHERE jr_id = '{$jr_id}' AND mb_id = '{$mb_id_esc}'");
@@ -179,7 +180,7 @@ $ai_mbti_comment_val = $_ai('ai_mbti_comment');
 $ai_version = $_aic ? (int)$_aic['_version'] : 0;
 $has_sections = !empty($ai_intro) || !empty($ai_location) || !empty($ai_env) || !empty($ai_welfare) || !empty($ai_extra) || !empty($ai_card1_desc);
 $show_ai = ($status === 'ongoing' || $payment_ok) && ($ai_summary || $has_sections);
-$can_edit = $is_owner && ($status === 'ongoing' || $payment_ok);
+$can_edit = $is_owner && $is_edit_mode && ($status === 'ongoing' || $payment_ok);
 
 // AI 큐 상태 (입금확인 후 AI 미완성 시 로딩/실패 UI용)
 $ai_queue_status = '';
@@ -314,7 +315,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 }
 </style>
 
-<?php if ($is_owner && $row['jr_status'] === 'ongoing') {
+<?php if ($is_owner && $is_edit_mode && $row['jr_status'] === 'ongoing') {
     $jmp_remain = isset($row['jr_jump_remain']) ? (int)$row['jr_jump_remain'] : 0;
     $jmp_used   = isset($row['jr_jump_used']) ? (int)$row['jr_jump_used'] : 0;
     $jmp_total  = isset($row['jr_jump_total']) ? (int)$row['jr_jump_total'] : 0;
@@ -445,7 +446,7 @@ function toggleAutoJump(jrId,on){
 </script>
 <?php } ?>
 
-<?php if ($is_owner) { ?>
+<?php if ($is_owner && $is_edit_mode) { ?>
 <div class="thumb-gen-wrap" id="thumb-gen-section">
   <div class="tg-section-header">
     <span class="tg-section-label">🎨 썸네일 생성</span>
@@ -683,7 +684,7 @@ function toggleAutoJump(jrId,on){
 </div>
 <?php } ?>
 
-<?php if ($is_owner) { ?>
+<?php if ($is_owner && $is_edit_mode) { ?>
 <!-- 테마 스위처 (소유자 전용) -->
 <div id="theme-switcher">
   <div class="ts-inner">
@@ -1244,7 +1245,7 @@ function toggleAutoJump(jrId,on){
       <p>* 커뮤니티 정책과 맞지 않는 게시물의 경우 블라인드 또는 삭제될 수 있습니다.</p>
     </div>
     <div class="view-actions" style="margin:0 0 16px;width:100%;">
-      <?php if ($is_owner) { ?>
+      <?php if ($is_owner && $is_edit_mode) { ?>
       <a href="<?php echo $jobs_ongoing_url; ?>" class="btn-action btn-list2">📋 목록으로</a>
       <?php } else { ?>
       <a href="/jobs.php" class="btn-action btn-list2">📋 목록으로</a>

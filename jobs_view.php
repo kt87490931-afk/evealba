@@ -6,7 +6,7 @@ define('_JOBS_', true);
 if (!defined('_GNUBOARD_')) exit;
 
 if (empty($_GET['jr_id']) && isset($_SERVER['REQUEST_URI'])) {
-    if (preg_match('#/jobs/[^/]+/[^/]+/[^/]+-(\d+)$#', $_SERVER['REQUEST_URI'], $_m)) {
+    if (preg_match('#/jobs/[^/]+/[^/]+/[^/]+-(\d+)(?:\?|$)#', $_SERVER['REQUEST_URI'], $_m)) {
         $_GET['jr_id'] = (int)$_m[1];
     }
 }
