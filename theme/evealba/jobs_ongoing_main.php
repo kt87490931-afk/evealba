@@ -183,7 +183,7 @@ $_icon_map = array(
       </div>
       <div class="board-td td-manage">
 <?php if (!empty($row['can_view'])) { ?>
-        <a href="<?php echo htmlspecialchars($row['view_href']); ?>" class="btn-manage" onclick="event.stopPropagation();">관리</a>
+        <button type="button" class="btn-manage" onclick="event.preventDefault();event.stopPropagation();location.href='<?php echo htmlspecialchars($row['view_href']); ?>';">관리</button>
 <?php } else { ?>
         <span style="color:#ccc;font-size:11px;">—</span>
 <?php } ?>
