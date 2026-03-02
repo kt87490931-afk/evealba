@@ -37,10 +37,13 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <form method="get" action="<?php echo ($nav_active==='used') ? ((defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/used.php' : '/used.php') : (G5_BBS_URL.'/search.php'); ?>">
         <input type="hidden" name="sfl" value="wr_subject||wr_content">
         <input type="hidden" name="sop" value="and">
-        <input type="text" name="stx" placeholder="<?php echo ($nav_active==='cs') ? '궁금하신 내용을 검색하세요' : (($nav_active==='used') ? '중고거래 상품을 검색하세요' : '업소명, 지역명으로 검색하세요'); ?>">
+        <input type="text" name="stx" placeholder="<?php echo ($nav_active==='cs') ? '궁금하신 내용을 검색하세요' : (($nav_active==='used') ? '중고거래 상품을 검색하세요' : '업소명, 지역명으로 검색'); ?>">
         <button type="submit">🔍</button>
       </form>
     </div>
+    <button type="button" class="hamburger-btn" onclick="document.getElementById('mobileSlideMenu').classList.add('open');document.body.style.overflow='hidden';" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
     <div class="header-actions">
       <div class="kakao-btn">카카오톡<br><b>EvéAlba</b></div>
       <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_register.php' : '/jobs_register.php'; ?>">채용공고 등록</a>
@@ -145,6 +148,83 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <span><b>[이태원] 이브VIP</b> 하루 100만원 보장</span>
       <span><b>[압구정] 헤라클럽</b> 시급 20만원 · 2시간 40만원</span>
 <?php } } ?>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE SLIDE MENU -->
+<?php
+$_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
+$_is_biz = ($is_member && isset($member['mb_1']) && $member['mb_1'] === 'biz');
+$_jobs_base = $_base;
+?>
+<div id="mobileSlideMenu" class="mobile-slide-menu">
+  <div class="msm-overlay" onclick="document.getElementById('mobileSlideMenu').classList.remove('open');document.body.style.overflow='';"></div>
+  <div class="msm-panel">
+    <div class="msm-header">
+      <span class="msm-title">전체 메뉴</span>
+      <button type="button" class="msm-close" onclick="document.getElementById('mobileSlideMenu').classList.remove('open');document.body.style.overflow='';" aria-label="닫기">✕</button>
+    </div>
+    <div class="msm-body">
+
+<?php if ($is_member) { ?>
+      <?php if ($is_admin || $_is_biz) { ?>
+      <div class="msm-section">
+        <div class="msm-section-title">👑 채용정보 MY PAGE</div>
+        <a href="<?php echo $_jobs_base; ?>/jobs_register.php" class="msm-link">📝 채용정보등록</a>
+        <a href="<?php echo $_jobs_base; ?>/jobs_ongoing.php" class="msm-link">📋 진행중인 채용정보</a>
+        <a href="<?php echo $_jobs_base; ?>/jobs_ended.php" class="msm-link">📁 마감된 채용정보</a>
+        <a href="<?php echo $_jobs_base; ?>/jobs_jump_shop.php" class="msm-link">🔝 점프옵션 구매하기</a>
+        <a href="<?php echo $_jobs_base; ?>/jobs_payment_history.php" class="msm-link">💳 유료결제 내역</a>
+      </div>
+      <?php } ?>
+
+      <?php if ($is_admin || !$_is_biz) { ?>
+      <div class="msm-section">
+        <div class="msm-section-title">👩 인재정보 MY PAGE</div>
+        <a href="<?php echo $_jobs_base; ?>/resume_register.php" class="msm-link">📄 이력서 리스트</a>
+        <a href="#" class="msm-link">📋 채용정보 스크랩</a>
+        <a href="#" class="msm-link">👤 맞춤구인정보</a>
+        <a href="#" class="msm-link">⚙️ 맞춤구인 정보설정</a>
+        <a href="#" class="msm-link">📝 내가 작성한 게시글</a>
+        <a href="#" class="msm-link">💬 내가 작성한 댓글</a>
+        <a href="#" class="msm-link">⭐ 즐겨찾기한 게시글</a>
+      </div>
+      <?php } ?>
+<?php } else { ?>
+      <div class="msm-section">
+        <div class="msm-login-box">
+          <p>로그인 후 이용 가능합니다.</p>
+          <a href="<?php echo G5_BBS_URL; ?>/login.php" class="msm-btn-login">로그인</a>
+          <a href="<?php echo $_base; ?>/eve_register.php" class="msm-btn-signup">회원가입</a>
+        </div>
+      </div>
+<?php } ?>
+
+      <div class="msm-section">
+        <div class="msm-section-title">📌 메인 메뉴</div>
+        <a href="<?php echo $_jobs_base; ?>/jobs.php" class="msm-link">📋 채용정보</a>
+        <a href="<?php echo $_jobs_base; ?>/jobs.php" class="msm-link">📍 지역별채용</a>
+        <a href="<?php echo $_jobs_base; ?>/talent.php" class="msm-link">👑 인재정보</a>
+        <a href="<?php echo $_jobs_base; ?>/sudabang.php" class="msm-link">💬 이브수다방</a>
+        <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="msm-link">🏪 중고거래</a>
+        <a href="<?php echo $_jobs_base; ?>/cs.php" class="msm-link">🎀 고객센터</a>
+      </div>
+
+      <div class="msm-section">
+        <div class="msm-section-title">💬 커뮤니티</div>
+        <a href="javascript:void(0);" onclick="if(typeof openChatWidget==='function')openChatWidget();document.getElementById('mobileSlideMenu').classList.remove('open');document.body.style.overflow='';" class="msm-link">💬 채팅</a>
+        <a href="<?php echo $_base; ?>/memo_full.php" class="msm-link">📩 쪽지</a>
+      </div>
+
+<?php if ($is_member) { ?>
+      <div class="msm-section">
+        <a href="<?php echo G5_BBS_URL; ?>/member_confirm.php?url=<?php echo urlencode(G5_BBS_URL.'/register_form.php'); ?>" class="msm-link">⚙️ 회원정보 수정</a>
+        <?php if ($is_admin) { ?><a href="<?php echo G5_ADMIN_URL; ?>" class="msm-link">🔧 관리자 페이지</a><?php } ?>
+        <a href="<?php echo G5_BBS_URL; ?>/logout.php" class="msm-link msm-logout">🔐 로그아웃</a>
+      </div>
+<?php } ?>
+
     </div>
   </div>
 </div>

@@ -597,6 +597,45 @@ nav::before {
 .main-area { min-width:0; }
 .sidebar-mobile-toggle { display:none; }
 
+/* ======================== 햄버거 버튼 (데스크톱 숨김) */
+.hamburger-btn { display:none; }
+
+/* ======================== 모바일 슬라이드 메뉴 */
+.mobile-slide-menu { position:fixed; inset:0; z-index:99999; pointer-events:none; visibility:hidden; }
+.mobile-slide-menu.open { pointer-events:auto; visibility:visible; }
+.msm-overlay { position:absolute; inset:0; background:rgba(0,0,0,0); transition:background .3s; }
+.mobile-slide-menu.open .msm-overlay { background:rgba(0,0,0,.45); }
+.msm-panel {
+  position:absolute; top:0; right:0; bottom:0; width:280px; max-width:85vw;
+  background:#fff; transform:translateX(100%); transition:transform .3s ease;
+  display:flex; flex-direction:column; box-shadow:-4px 0 20px rgba(0,0,0,.15);
+}
+.mobile-slide-menu.open .msm-panel { transform:translateX(0); }
+.msm-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 18px; background:linear-gradient(135deg,#FF1B6B,#C9007A); color:#fff;
+}
+.msm-title { font-size:16px; font-weight:900; }
+.msm-close { background:none; border:none; color:#fff; font-size:22px; cursor:pointer; padding:4px 8px; line-height:1; }
+.msm-body { flex:1; overflow-y:auto; padding:8px 0; }
+.msm-section { padding:8px 0; border-bottom:1px solid #f5e8f0; }
+.msm-section:last-child { border-bottom:none; }
+.msm-section-title { padding:6px 18px; font-size:13px; font-weight:900; color:#C9007A; }
+.msm-link {
+  display:block; padding:10px 18px 10px 28px; font-size:13px; font-weight:600;
+  color:#444; text-decoration:none; transition:background .15s;
+}
+.msm-link:hover, .msm-link:active { background:#fff0f5; color:#C9007A; }
+.msm-logout { color:#999; }
+.msm-login-box { text-align:center; padding:20px 18px; }
+.msm-login-box p { font-size:13px; color:#888; margin-bottom:12px; }
+.msm-btn-login, .msm-btn-signup {
+  display:inline-block; padding:10px 24px; border-radius:20px; font-size:13px; font-weight:700;
+  text-decoration:none; margin:0 4px; transition:opacity .2s;
+}
+.msm-btn-login { background:#FF1B6B; color:#fff; }
+.msm-btn-signup { background:#f5e8f0; color:#C9007A; }
+
 /* ======================== 고객지원센터 위젯 (공통, 모든 페이지 동일) */
 .cs-support-widget { padding:0 !important; box-shadow:none !important; overflow:visible; }
 .cs-support-box {
@@ -1478,8 +1517,16 @@ footer {
   .search-box { max-width:none; }
   .search-box input { font-size:13px; padding:8px 12px; }
   .search-box button { padding:8px 14px; font-size:14px; }
-  .header-actions a:not(.btn-register) { display:none; }
-  .btn-register { font-size:12px !important; padding:7px 12px !important; }
+  .header-actions { display:none; }
+  .hamburger-btn {
+    display:flex; flex-direction:column; justify-content:center; gap:4px;
+    background:none; border:none; cursor:pointer; padding:6px; flex-shrink:0;
+  }
+  .hamburger-btn span {
+    display:block; width:20px; height:2px; background:#C9007A; border-radius:2px;
+  }
+  .search-box input { font-size:12px !important; padding:7px 10px !important; }
+  .search-box button { padding:7px 12px !important; font-size:13px !important; }
   .nav-icon { display:none; }
   .nav-scroll { padding:0; justify-content:flex-start; }
   .nav-item { flex:0 0 auto; padding:11px 14px; font-size:13px; min-width:70px; }
