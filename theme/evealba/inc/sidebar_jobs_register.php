@@ -14,9 +14,14 @@ $jobs_payment_url = $jobs_base_url ? $jobs_base_url.'/jobs_payment_history.php' 
 $jobs_mem_confirm_url = G5_BBS_URL.'/member_confirm.php?url='.urlencode(G5_BBS_URL.'/register_form.php');
 
 $jobs_mypage_active = isset($jobs_mypage_active) ? $jobs_mypage_active : 'register';
+$_jmp_labels = array(
+    'register'=>'📝 채용정보등록','ongoing'=>'📋 진행중인 채용정보','ended'=>'📁 마감된 채용정보',
+    'jump_shop'=>'🔝 점프옵션 구매하기','payment'=>'💳 유료결제 내역','member'=>'⚙️ 회원정보 수정'
+);
+$_jmp_active_label = isset($_jmp_labels[$jobs_mypage_active]) ? $_jmp_labels[$jobs_mypage_active] : '📋 MY PAGE';
 ?>
 <!-- 마이페이지 -->
-<div class="sidebar-widget">
+<div class="sidebar-widget sidebar-mypage" id="sidebarJobs">
   <div class="mypage-header">
     <span class="mypage-icon">👑</span>
     <div>
@@ -24,6 +29,10 @@ $jobs_mypage_active = isset($jobs_mypage_active) ? $jobs_mypage_active : 'regist
       <div class="mypage-sub">마이페이지</div>
     </div>
   </div>
+  <button type="button" class="sidebar-mobile-toggle" onclick="this.closest('.sidebar-mypage').classList.toggle('mobile-open');">
+    <span class="smt-label"><?php echo $_jmp_active_label; ?></span>
+    <span class="smt-arrow">▼</span>
+  </button>
   <div class="side-menu-list">
     <a href="<?php echo $jobs_register_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'register') ? ' active' : ''; ?>">📝 채용정보등록</a>
     <a href="<?php echo $jobs_ongoing_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'ongoing') ? ' active' : ''; ?>">📋 진행중인 채용정보</a>
