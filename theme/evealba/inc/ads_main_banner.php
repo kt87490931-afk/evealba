@@ -66,7 +66,7 @@ if ($_hero_check && sql_num_rows($_hero_check) > 0) {
 }
 
 if (!empty($_hero_rows)) :
-foreach ($_hero_rows as $_hb) :
+$_hb = $_hero_rows[array_rand($_hero_rows)];
     $_hd = $_hb['sb_data'] ? json_decode($_hb['sb_data'], true) : array();
     if (!is_array($_hd)) $_hd = array();
 
@@ -154,6 +154,5 @@ foreach ($_hero_rows as $_hb) :
   <?php if ($_h_link) : ?></a><?php endif; ?>
 </div>
 <?php
-endforeach;
 endif;
 ?>

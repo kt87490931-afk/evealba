@@ -66,6 +66,36 @@ if(G5_COMMUNITY_USE === false) {
 </script>
 
 <!-- FLOATING RECOMMEND PANEL -->
+<?php
+$_fr_sb_table = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'special_banner';
+$_fr_jr_table = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'jobs_register';
+$_fr_rows = array();
+$_fr_tb_check = sql_query("SHOW TABLES LIKE '{$_fr_sb_table}'");
+if ($_fr_tb_check && sql_num_rows($_fr_tb_check) > 0) {
+    $_fr_res = sql_query("SELECT sb.*, jr.jr_company, jr.jr_title, jr.jr_subject_display, jr.jr_data
+        FROM {$_fr_sb_table} sb
+        LEFT JOIN {$_fr_jr_table} jr ON sb.sb_jr_id = jr.jr_id
+        WHERE sb.sb_type = 'recommend' AND sb.sb_status = 'active'
+        ORDER BY sb.sb_position ASC LIMIT 6");
+    while ($_fr_r = sql_fetch_array($_fr_res)) {
+        $_fr_rows[] = $_fr_r;
+    }
+}
+$_fr_gradients = array(
+    1  => 'linear-gradient(135deg,rgb(255,65,108),rgb(255,75,43))',
+    2  => 'linear-gradient(135deg,rgb(255,94,98),rgb(255,195,113))',
+    3  => 'linear-gradient(135deg,rgb(238,9,121),rgb(255,106,0))',
+    4  => 'linear-gradient(135deg,rgb(74,0,224),rgb(142,45,226))',
+    5  => 'linear-gradient(135deg,rgb(67,233,123),rgb(56,249,215))',
+    6  => 'linear-gradient(135deg,rgb(29,209,161),rgb(9,132,227))',
+    7  => 'linear-gradient(135deg,rgb(196,113,237),rgb(246,79,89))',
+    8  => 'linear-gradient(135deg,rgb(36,198,220),rgb(81,74,157))',
+    9  => 'linear-gradient(135deg,rgb(0,210,255),rgb(58,123,213))',
+    10 => 'linear-gradient(135deg,rgb(236,64,122),rgb(240,98,146))',
+    11 => 'linear-gradient(135deg,rgb(118,75,162),rgb(102,126,234))',
+    12 => 'linear-gradient(135deg,rgb(72,85,99),rgb(41,50,60))',
+);
+?>
 <div class="float-recommend" id="floatRecommend">
   <button type="button" class="fr-tab" id="frTab" onclick="toggleFloatRecommend()">
     <span class="fr-tab-icon">💎</span>
@@ -77,30 +107,34 @@ if(G5_COMMUNITY_USE === false) {
       <button type="button" class="fr-close" onclick="toggleFloatRecommend()">&times;</button>
     </div>
     <div class="fr-list">
-      <a href="#" class="fr-card">
-        <div class="fr-banner g12">동탄스카이<br>아이퍼블릭<b>60분 TC12만원</b></div>
-        <div class="fr-info"><div class="fr-name">동탄스카이 아이퍼블릭</div><div class="fr-wage">자유복장 · TC12만원</div></div>
+<?php if (!empty($_fr_rows)) : ?>
+<?php foreach ($_fr_rows as $_fr) :
+    $_fr_link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . (int)$_fr['sb_jr_id'];
+    $_fr_company = $_fr['jr_company'] ?: '업소명';
+    $_fr_title = $_fr['jr_title'] ?: ($_fr['jr_subject_display'] ?: '');
+
+    $_fr_jd = !empty($_fr['jr_data']) ? json_decode($_fr['jr_data'], true) : array();
+    $_fr_wage_text = '';
+    if (!empty($_fr_jd['job_tc'])) {
+        $_fr_wage_text = $_fr_jd['job_tc'];
+    } elseif (!empty($_fr_jd['job_salary'])) {
+        $_fr_wage_text = $_fr_jd['job_salary'];
+    } elseif (!empty($_fr_title)) {
+        $_fr_wage_text = mb_strimwidth($_fr_title, 0, 30, '…');
+    }
+
+    $_fr_sd = !empty($_fr['sb_data']) ? json_decode($_fr['sb_data'], true) : array();
+    $_fr_grad_key = isset($_fr_sd['thumb_gradient']) ? $_fr_sd['thumb_gradient'] : ((int)$_fr['sb_position'] ?: 1);
+    $_fr_grad = isset($_fr_gradients[$_fr_grad_key]) ? $_fr_gradients[$_fr_grad_key] : $_fr_gradients[1];
+?>
+      <a href="<?php echo htmlspecialchars($_fr_link); ?>" class="fr-card">
+        <div class="fr-banner" style="background:<?php echo $_fr_grad; ?>"><?php echo htmlspecialchars($_fr_company); ?><?php if ($_fr_wage_text) : ?><b><?php echo htmlspecialchars($_fr_wage_text); ?></b><?php endif; ?></div>
+        <div class="fr-info"><div class="fr-name"><?php echo htmlspecialchars($_fr_company); ?></div><?php if ($_fr_wage_text) : ?><div class="fr-wage"><?php echo htmlspecialchars($_fr_wage_text); ?></div><?php endif; ?></div>
       </a>
-      <a href="#" class="fr-card">
-        <div class="fr-banner g1">일프로 &amp; 텐카페<b>300만 보상</b></div>
-        <div class="fr-info"><div class="fr-name">일프로 · 텐카페</div><div class="fr-wage">300만원 보장</div></div>
-      </a>
-      <a href="#" class="fr-card">
-        <div class="fr-banner" style="background:linear-gradient(135deg,#1A0010,#FF1B6B)">당일<br>백만 UP</div>
-        <div class="fr-info"><div class="fr-name">당일 백만원 UP 이벤트</div><div class="fr-wage">기간 한정 특별 혜택</div></div>
-      </a>
-      <a href="#" class="fr-card">
-        <div class="fr-banner g7">강남 VIP<b>순수테이블 2H</b></div>
-        <div class="fr-info"><div class="fr-name">강남짬오 이태곤대표</div><div class="fr-wage">면접 후 협의</div></div>
-      </a>
-      <a href="#" class="fr-card">
-        <div class="fr-banner g6">수원 하이퍼<b>TC12 당일지급</b></div>
-        <div class="fr-info"><div class="fr-name">아우라 하이퍼블릭</div><div class="fr-wage">면접 후 협의</div></div>
-      </a>
-      <a href="#" class="fr-card">
-        <div class="fr-banner g3">파주 최고TC<b>1시간 10만원</b></div>
-        <div class="fr-info"><div class="fr-name">파주최고TC REINA</div><div class="fr-wage">100,000원</div></div>
-      </a>
+<?php endforeach; ?>
+<?php else : ?>
+      <div style="padding:20px 12px;text-align:center;color:#999;font-size:13px;">등록된 추천업소가 없습니다.</div>
+<?php endif; ?>
     </div>
   </div>
 </div>

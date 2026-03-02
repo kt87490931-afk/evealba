@@ -211,12 +211,14 @@ require_once './admin.head.php';
                         }
                     }
                     $view_url = (int)$hr['sb_jr_id'] ? $jobs_view_base . '?jr_id=' . (int)$hr['sb_jr_id'] : '#';
+                    $_hr_data = !empty($hr['sb_data']) ? json_decode($hr['sb_data'], true) : array();
+                    $_hr_shop = !empty($_hr_data['shop_name']) ? $_hr_data['shop_name'] : ($hr['jr_company'] ?: '—');
                 ?>
                 <tr class="bg<?php echo $idx % 2; ?>">
                     <td class="td_num"><?php echo (int)$hr['sb_position']; ?></td>
                     <td class="td_num" style="color:#6366f1;font-weight:700;">#<?php echo (int)$hr['sb_id']; ?></td>
                     <td class="td_num"><?php echo (int)$hr['sb_jr_id'] ? '<a href="'.$view_url.'" target="_blank" style="color:#6366f1;font-weight:700;">#'.(int)$hr['sb_jr_id'].'</a>' : '—'; ?></td>
-                    <td class="td_left"><?php echo htmlspecialchars($hr['jr_company'] ?: '—'); ?></td>
+                    <td class="td_left"><?php echo htmlspecialchars($_hr_shop); ?></td>
                     <td class="td_left"><?php echo htmlspecialchars($hr['sb_mb_id'] ?: $hr['jr_mb_id'] ?: '—'); ?></td>
                     <td class="td_num"><?php echo htmlspecialchars($hr['sb_status']); ?></td>
                     <td class="td_num"><span class="sb-remaining <?php echo $rem_class; ?>"><?php echo $remaining; ?></span></td>
