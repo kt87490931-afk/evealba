@@ -252,10 +252,12 @@ function render_premium_card($row, $card_class = 'premium-card') {
     if ($text) echo '<br><span' . $motion_data . ' style="font-size:11px;opacity:.85">' . $text . '</span>';
     echo '</div>';
     $jr_good_val = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
+    $company_name = htmlspecialchars($row['jr_nickname'] ?: ($row['jr_company'] ?: ''));
     echo '<div class="premium-body">';
-    if ($loc_line) echo '<div class="premium-area"><span class="job-loc-badge" style="font-size:10px;padding:1px 5px;border-radius:4px;margin-right:3px">' . htmlspecialchars($region_name) . '</span>' . htmlspecialchars(trim($detail_name . ' ' . $job1)) . '</div>';
-    echo '<div class="premium-name">' . htmlspecialchars($wage_disp);
-    if ($jr_good_val > 0) echo ' <span class="job-good-badge">❤️ ' . number_format($jr_good_val) . '</span>';
+    if ($company_name) echo '<div class="premium-name">' . $company_name . '</div>';
+    if ($loc_line) echo '<div class="premium-area"><span class="job-loc-badge" style="font-size:10px;padding:1px 5px;border-radius:4px;margin-right:3px">' . htmlspecialchars($region_name) . '</span>' . htmlspecialchars(trim($detail_name . ' · ' . $job1)) . '</div>';
+    echo '<div class="premium-wage">' . htmlspecialchars($wage_disp);
+    if ($jr_good_val > 0) echo '<span class="job-good-badge" style="float:right">❤️ ' . number_format($jr_good_val) . '</span>';
     echo '</div>';
     echo '</div>';
     echo '</a>';

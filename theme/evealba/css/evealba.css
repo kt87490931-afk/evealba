@@ -2224,6 +2224,7 @@ footer {
 .fr-card .premium-body { padding:5px 7px; }
 .fr-card .premium-name { font-size:11px; font-weight:700; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .fr-card .premium-area { font-size:10px; color:var(--gray); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fr-card .premium-wage { font-size:11px; font-weight:900; color:var(--hot-pink); margin-top:2px; overflow:hidden; }
 .fr-card .pv-icon-badge { font-size:9px !important; padding:1px 5px !important; }
 .fr-card a { display:block; text-decoration:none; color:inherit; }
 .fr-banner {
