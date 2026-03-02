@@ -177,6 +177,7 @@ if ($act === 'save_hero') {
         'thumb_gradient'   => isset($_POST['thumb_gradient']) ? trim($_POST['thumb_gradient']) : '1',
         'thumb_title'      => isset($_POST['thumb_title']) ? trim($_POST['thumb_title']) : '',
         'thumb_text'       => isset($_POST['thumb_text']) ? trim($_POST['thumb_text']) : '',
+        'thumb_text2'      => isset($_POST['thumb_text2']) ? trim($_POST['thumb_text2']) : '',
         'thumb_icon'       => isset($_POST['thumb_icon']) ? trim($_POST['thumb_icon']) : '',
         'thumb_motion'     => isset($_POST['thumb_motion']) ? trim($_POST['thumb_motion']) : '',
         'thumb_wave'       => isset($_POST['thumb_wave']) ? (int)$_POST['thumb_wave'] : 0,
@@ -187,6 +188,9 @@ if ($act === 'save_hero') {
         'text_size'        => isset($_POST['text_size']) ? trim($_POST['text_size']) : '14px',
         'text_color'       => isset($_POST['text_color']) ? trim($_POST['text_color']) : '#ffffff',
         'text_align'       => isset($_POST['text_align']) ? trim($_POST['text_align']) : 'left',
+        'text2_size'       => isset($_POST['text2_size']) ? trim($_POST['text2_size']) : '14px',
+        'text2_color'      => isset($_POST['text2_color']) ? trim($_POST['text2_color']) : '#ffffff',
+        'text2_align'      => isset($_POST['text2_align']) ? trim($_POST['text2_align']) : 'left',
     );
 
     $mb_id = '';

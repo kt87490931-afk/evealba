@@ -30,17 +30,21 @@ if ($sb_id) {
 $thumb_gradient   = isset($data['thumb_gradient']) ? trim($data['thumb_gradient']) : '';
 $thumb_title      = isset($data['thumb_title']) ? trim($data['thumb_title']) : '';
 $thumb_text       = isset($data['thumb_text']) ? trim($data['thumb_text']) : '';
+$thumb_text2      = isset($data['thumb_text2']) ? trim($data['thumb_text2']) : '';
 $thumb_icon       = isset($data['thumb_icon']) ? trim($data['thumb_icon']) : '';
 $thumb_motion     = isset($data['thumb_motion']) ? trim($data['thumb_motion']) : '';
 $thumb_wave       = isset($data['thumb_wave']) ? (int)$data['thumb_wave'] : 0;
-$thumb_text_color = isset($data['thumb_text_color']) ? trim($data['thumb_text_color']) : 'rgb(255,255,255)';
+$thumb_text_color = isset($data['thumb_text_color']) ? trim($data['thumb_text_color']) : '#ffffff';
 $thumb_border     = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 
 $title_size  = isset($data['title_size']) ? trim($data['title_size']) : '30px';
 $title_align = isset($data['title_align']) ? trim($data['title_align']) : 'left';
 $text_size   = isset($data['text_size']) ? trim($data['text_size']) : '14px';
-$text_color  = isset($data['text_color']) ? trim($data['text_color']) : 'rgba(255,255,255,.9)';
+$text_color  = isset($data['text_color']) ? trim($data['text_color']) : '#ffffff';
 $text_align  = isset($data['text_align']) ? trim($data['text_align']) : 'left';
+$text2_size  = isset($data['text2_size']) ? trim($data['text2_size']) : '14px';
+$text2_color = isset($data['text2_color']) ? trim($data['text2_color']) : '#ffffff';
+$text2_align = isset($data['text2_align']) ? trim($data['text2_align']) : 'left';
 
 $sb_jr_id   = $is_edit ? (int)$sb['sb_jr_id'] : 0;
 $sb_link    = $is_edit ? ($sb['sb_link'] ?? '') : '';
@@ -266,8 +270,9 @@ if ($thumb_wave) {
         <div class="hero-pv-label">👁️ 실제 크기 미리보기 (히어로배너)</div>
         <div class="hero-pv-card<?php echo $thumb_wave ? ' pv-wave-active' : ''; ?><?php echo ($saved_grad === 'P3' && !$thumb_wave) ? ' carbon-bg' : ''; ?>" id="hero-pv-card" style="<?php echo $pv_banner_style; ?>">
           <div class="hero-pv-text" id="hero-pv-text" style="text-align:<?php echo htmlspecialchars($title_align); ?>">
-            <h2 id="hero-pv-h2" class="<?php echo $thumb_motion ? 'pv-motion-'.htmlspecialchars($thumb_motion) : ''; ?>" style="font-size:<?php echo htmlspecialchars($title_size); ?>;color:<?php echo htmlspecialchars($thumb_text_color); ?>"><?php echo htmlspecialchars($thumb_title ?: '홍보문구1 입력'); ?></h2>
-            <p id="hero-pv-p" style="font-size:<?php echo htmlspecialchars($text_size); ?>;color:<?php echo htmlspecialchars($text_color); ?>;text-align:<?php echo htmlspecialchars($text_align); ?>"><?php echo htmlspecialchars($thumb_text ?: '홍보문구2 입력'); ?></p>
+            <h2 id="hero-pv-h2" class="<?php echo $thumb_motion ? 'pv-motion-'.htmlspecialchars($thumb_motion) : ''; ?>" style="font-size:<?php echo htmlspecialchars($title_size); ?>;color:<?php echo htmlspecialchars($thumb_text_color); ?>"><?php echo htmlspecialchars($thumb_title ?: '썸네일 제목'); ?></h2>
+            <p id="hero-pv-p1" style="font-size:<?php echo htmlspecialchars($text_size); ?>;color:<?php echo htmlspecialchars($text_color); ?>;text-align:<?php echo htmlspecialchars($text_align); ?>"><?php echo htmlspecialchars($thumb_text ?: '홍보문구1 입력'); ?></p>
+            <p id="hero-pv-p2" style="font-size:<?php echo htmlspecialchars($text2_size); ?>;color:<?php echo htmlspecialchars($text2_color); ?>;text-align:<?php echo htmlspecialchars($text2_align); ?>;margin-top:4px"><?php echo htmlspecialchars($thumb_text2 ?: '홍보문구2 입력'); ?></p>
           </div>
           <?php if ($thumb_icon && isset($icons[$thumb_icon])) { ?>
           <div class="hero-pv-badge" id="hero-pv-badge" style="background:<?php echo $icons[$thumb_icon]['bg']; ?>"><?php echo $icons[$thumb_icon]['label']; ?></div>
@@ -279,15 +284,15 @@ if ($thumb_wave) {
 
       <!-- 컨트롤 영역 -->
       <div class="ctrl-grid">
-        <!-- 홍보문구1 -->
+        <!-- 썸네일 제목 -->
         <div class="ctrl-row">
-          <div class="ctrl-label">📢 홍보문구1 (메인 타이틀)</div>
+          <div class="ctrl-label">📌 썸네일 제목 (메인 타이틀)</div>
           <input type="text" class="ctrl-input" id="tg-title" maxlength="30" placeholder="예) 강남 룸 80개 1등 대일팀!" value="<?php echo htmlspecialchars($thumb_title, ENT_QUOTES); ?>" oninput="updatePreview()">
           <div class="ctrl-charcount"><span id="tg-title-cnt"><?php echo mb_strlen($thumb_title, 'UTF-8'); ?></span>/30</div>
         </div>
-        <!-- 홍보문구1 스타일 -->
+        <!-- 썸네일 제목 스타일 -->
         <div class="ctrl-row">
-          <div class="ctrl-label">🎨 홍보문구1 스타일</div>
+          <div class="ctrl-label">🎨 썸네일 제목 스타일</div>
           <div class="ctrl-inline">
             <select id="tg-title-size" onchange="updatePreview()">
               <option value="24px"<?php echo $title_size==='24px'?' selected':''; ?>>소 (24px)</option>
@@ -307,15 +312,15 @@ if ($thumb_wave) {
           </div>
         </div>
 
-        <!-- 홍보문구2 -->
+        <!-- 홍보문구1 -->
         <div class="ctrl-row">
-          <div class="ctrl-label">💬 홍보문구2 (서브 텍스트)</div>
+          <div class="ctrl-label">📢 홍보문구1</div>
           <input type="text" class="ctrl-input" id="tg-text" maxlength="60" placeholder="예) 🔥 하이퍼블릭 밀빵OK · 5인1조 픽업OK!!" value="<?php echo htmlspecialchars($thumb_text, ENT_QUOTES); ?>" oninput="updatePreview()">
           <div class="ctrl-charcount"><span id="tg-text-cnt"><?php echo mb_strlen($thumb_text, 'UTF-8'); ?></span>/60</div>
         </div>
-        <!-- 홍보문구2 스타일 -->
+        <!-- 홍보문구1 스타일 -->
         <div class="ctrl-row">
-          <div class="ctrl-label">🎨 홍보문구2 스타일</div>
+          <div class="ctrl-label">🎨 홍보문구1 스타일</div>
           <div class="ctrl-inline">
             <select id="tg-text-size" onchange="updatePreview()">
               <option value="12px"<?php echo $text_size==='12px'?' selected':''; ?>>소 (12px)</option>
@@ -324,17 +329,39 @@ if ($thumb_wave) {
               <option value="18px"<?php echo $text_size==='18px'?' selected':''; ?>>특대 (18px)</option>
             </select>
             <div class="color-pick-wrap">
-              <input type="color" id="tg-text-color" value="<?php
-                $tc = $text_color;
-                if (strpos($tc, 'rgba') === 0) echo '#ffffff';
-                elseif (strpos($tc, '#') === 0) echo htmlspecialchars($tc);
-                else echo '#ffffff';
-              ?>" onchange="updatePreview()">
+              <input type="color" id="tg-text-color" value="<?php echo (strpos($text_color,'#')===0) ? htmlspecialchars($text_color) : '#ffffff'; ?>" onchange="updatePreview()">
             </div>
             <div class="align-opts" id="tg-text-align">
-              <button type="button" class="align-btn<?php echo $text_align==='left'?' selected':''; ?>" data-align="left" onclick="setAlign('text',this)" title="좌측">◀</button>
-              <button type="button" class="align-btn<?php echo $text_align==='center'?' selected':''; ?>" data-align="center" onclick="setAlign('text',this)" title="중앙">●</button>
-              <button type="button" class="align-btn<?php echo $text_align==='right'?' selected':''; ?>" data-align="right" onclick="setAlign('text',this)" title="우측">▶</button>
+              <button type="button" class="align-btn<?php echo $text_align==='left'?' selected':''; ?>" data-align="left" onclick="setAlign('text1',this)" title="좌측">◀</button>
+              <button type="button" class="align-btn<?php echo $text_align==='center'?' selected':''; ?>" data-align="center" onclick="setAlign('text1',this)" title="중앙">●</button>
+              <button type="button" class="align-btn<?php echo $text_align==='right'?' selected':''; ?>" data-align="right" onclick="setAlign('text1',this)" title="우측">▶</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 홍보문구2 -->
+        <div class="ctrl-row">
+          <div class="ctrl-label">💬 홍보문구2</div>
+          <input type="text" class="ctrl-input" id="tg-text2" maxlength="60" placeholder="예) 시급 15,000원 · 초보환영 · 당일지급" value="<?php echo htmlspecialchars($thumb_text2, ENT_QUOTES); ?>" oninput="updatePreview()">
+          <div class="ctrl-charcount"><span id="tg-text2-cnt"><?php echo mb_strlen($thumb_text2, 'UTF-8'); ?></span>/60</div>
+        </div>
+        <!-- 홍보문구2 스타일 -->
+        <div class="ctrl-row">
+          <div class="ctrl-label">🎨 홍보문구2 스타일</div>
+          <div class="ctrl-inline">
+            <select id="tg-text2-size" onchange="updatePreview()">
+              <option value="12px"<?php echo $text2_size==='12px'?' selected':''; ?>>소 (12px)</option>
+              <option value="14px"<?php echo $text2_size==='14px'?' selected':''; ?>>중 (14px)</option>
+              <option value="16px"<?php echo $text2_size==='16px'?' selected':''; ?>>대 (16px)</option>
+              <option value="18px"<?php echo $text2_size==='18px'?' selected':''; ?>>특대 (18px)</option>
+            </select>
+            <div class="color-pick-wrap">
+              <input type="color" id="tg-text2-color" value="<?php echo (strpos($text2_color,'#')===0) ? htmlspecialchars($text2_color) : '#ffffff'; ?>" onchange="updatePreview()">
+            </div>
+            <div class="align-opts" id="tg-text2-align">
+              <button type="button" class="align-btn<?php echo $text2_align==='left'?' selected':''; ?>" data-align="left" onclick="setAlign('text2',this)" title="좌측">◀</button>
+              <button type="button" class="align-btn<?php echo $text2_align==='center'?' selected':''; ?>" data-align="center" onclick="setAlign('text2',this)" title="중앙">●</button>
+              <button type="button" class="align-btn<?php echo $text2_align==='right'?' selected':''; ?>" data-align="right" onclick="setAlign('text2',this)" title="우측">▶</button>
             </div>
           </div>
         </div>
@@ -469,39 +496,55 @@ function _applyBorder(){
 }
 
 function updatePreview(){
-  var title = document.getElementById('tg-title').value || '홍보문구1 입력';
-  var text  = document.getElementById('tg-text').value || '홍보문구2 입력';
-  var h2    = document.getElementById('hero-pv-h2');
-  var p     = document.getElementById('hero-pv-p');
+  var title = document.getElementById('tg-title').value || '썸네일 제목';
+  var text1 = document.getElementById('tg-text').value || '홍보문구1 입력';
+  var text2El = document.getElementById('tg-text2');
+  var text2 = text2El ? (text2El.value || '홍보문구2 입력') : '';
+
+  var h2 = document.getElementById('hero-pv-h2');
+  var p1 = document.getElementById('hero-pv-p1');
+  var p2 = document.getElementById('hero-pv-p2');
 
   if(h2) h2.textContent = title;
-  if(p) p.textContent = text;
+  if(p1) p1.textContent = text1;
+  if(p2) p2.textContent = text2;
 
   var titleSize  = document.getElementById('tg-title-size').value;
   var titleColor = document.getElementById('tg-title-color').value;
   var textSize   = document.getElementById('tg-text-size').value;
   var textColor  = document.getElementById('tg-text-color').value;
+  var text2SizeEl = document.getElementById('tg-text2-size');
+  var text2ColorEl = document.getElementById('tg-text2-color');
+  var text2Size  = text2SizeEl ? text2SizeEl.value : '14px';
+  var text2Color = text2ColorEl ? text2ColorEl.value : '#ffffff';
 
   if(h2){ h2.style.fontSize = titleSize; h2.style.color = titleColor; }
-  if(p){ p.style.fontSize = textSize; p.style.color = textColor; }
+  if(p1){ p1.style.fontSize = textSize; p1.style.color = textColor; }
+  if(p2){ p2.style.fontSize = text2Size; p2.style.color = text2Color; }
 
   var cnt1 = document.getElementById('tg-title-cnt');
   var cnt2 = document.getElementById('tg-text-cnt');
+  var cnt3 = document.getElementById('tg-text2-cnt');
   if(cnt1) cnt1.textContent = Array.from(document.getElementById('tg-title').value).length;
   if(cnt2) cnt2.textContent = Array.from(document.getElementById('tg-text').value).length;
+  if(cnt3 && text2El) cnt3.textContent = Array.from(text2El.value).length;
 }
 
 function setAlign(target, btn){
-  var containerId = target === 'title' ? 'tg-title-align' : 'tg-text-align';
+  var containerMap = {'title':'tg-title-align','text1':'tg-text-align','text2':'tg-text2-align'};
+  var containerId = containerMap[target] || 'tg-title-align';
   document.querySelectorAll('#'+containerId+' .align-btn').forEach(function(b){ b.classList.remove('selected'); });
   btn.classList.add('selected');
   var align = btn.getAttribute('data-align');
   if(target === 'title'){
     var wrap = document.getElementById('hero-pv-text');
     if(wrap) wrap.style.textAlign = align;
-  } else {
-    var p = document.getElementById('hero-pv-p');
-    if(p) p.style.textAlign = align;
+  } else if(target === 'text1'){
+    var p1 = document.getElementById('hero-pv-p1');
+    if(p1) p1.style.textAlign = align;
+  } else if(target === 'text2'){
+    var p2 = document.getElementById('hero-pv-p2');
+    if(p2) p2.style.textAlign = align;
   }
 }
 
@@ -565,11 +608,13 @@ function searchJr(){
 function saveHero(){
   var btn = document.getElementById('tg-save-btn'); if(btn) btn.disabled = true;
 
-  var titleAlign = 'left', textAlign = 'left';
+  var titleAlign = 'left', textAlign = 'left', text2Align = 'left';
   var ta = document.querySelector('#tg-title-align .align-btn.selected');
   if(ta) titleAlign = ta.getAttribute('data-align');
   var xa = document.querySelector('#tg-text-align .align-btn.selected');
   if(xa) textAlign = xa.getAttribute('data-align');
+  var x2a = document.querySelector('#tg-text2-align .align-btn.selected');
+  if(x2a) text2Align = x2a.getAttribute('data-align');
 
   var form = document.createElement('form');
   form.method = 'POST';
@@ -584,6 +629,7 @@ function saveHero(){
     thumb_gradient: _thumbSelected || '1',
     thumb_title: (document.getElementById('tg-title') || {}).value || '',
     thumb_text: (document.getElementById('tg-text') || {}).value || '',
+    thumb_text2: (document.getElementById('tg-text2') || {}).value || '',
     thumb_icon: _thumbIcon || '',
     thumb_motion: _thumbMotion || '',
     thumb_wave: _thumbWave ? '1' : '0',
@@ -594,6 +640,9 @@ function saveHero(){
     text_size: document.getElementById('tg-text-size').value || '14px',
     text_color: document.getElementById('tg-text-color').value || '#ffffff',
     text_align: textAlign,
+    text2_size: (document.getElementById('tg-text2-size') || {}).value || '14px',
+    text2_color: (document.getElementById('tg-text2-color') || {}).value || '#ffffff',
+    text2_align: text2Align,
     token: '<?php echo $token; ?>'
   };
   for(var k in fields){

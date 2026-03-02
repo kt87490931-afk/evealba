@@ -975,7 +975,7 @@ nav::before {
 .hero-text p {
   color:rgba(255,255,255,.9);
   margin-top:7px; font-size:14px; font-weight:500;
-  white-space:nowrap;
+  white-space:pre-wrap; word-break:keep-all;
 }
 .hero-badge {
   position:absolute; top:14px; right:14px;
@@ -987,6 +987,11 @@ nav::before {
 @keyframes bounce {
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-4px)}
+}
+@keyframes heroWave {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
 /* QUICK STATS */
