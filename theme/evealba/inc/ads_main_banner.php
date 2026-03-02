@@ -6,7 +6,7 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 
-$_hero_sb_table = $g5['prefix'] . 'special_banner';
+$_hero_sb_table = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'special_banner';
 
 $_hero_gradients = array(
     1  => 'linear-gradient(135deg,rgb(255,65,108),rgb(255,75,43))',
