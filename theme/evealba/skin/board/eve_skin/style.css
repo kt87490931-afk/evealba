@@ -76,7 +76,7 @@
 /* ===== 진행중인 채용정보 리스트 (jobs-ongoing) - eve_alba_board_v2 스타일 ===== */
 .jobs-ongoing-list .jobs-ongoing-thead,
 .jobs-ongoing-list .jobs-ongoing-row {
-  grid-template-columns:54px 110px 1fr 90px 80px 70px 80px 80px;
+  grid-template-columns:54px 110px 1fr 90px 80px 70px 80px 90px 80px;
   align-items:center;
 }
 .jobs-ongoing-list .jobs-ongoing-thead {
@@ -123,14 +123,19 @@
 .jobs-ongoing-list .status-approve-wait,
 .jobs-ongoing-list .status-payment-ok { background:#E3F2FD; color:#1565C0; }
 .jobs-ongoing-list .status-ongoing { background:#E8F5E9; color:#2E7D32; }
+.jobs-ongoing-list .td-jump { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.jobs-ongoing-list .jump-remain-num { font-size:11px; font-weight:700; color:#6B21A8; }
+.jobs-ongoing-list .btn-jump-inline { padding:4px 10px; border:none; border-radius:6px; background:linear-gradient(135deg,#FF1B6B,#C90050); color:#fff; font-size:10px; font-weight:900; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.jobs-ongoing-list .btn-jump-inline:hover { opacity:.9; transform:translateY(-1px); }
+.jobs-ongoing-list .btn-jump-inline:disabled { opacity:.4; cursor:not-allowed; transform:none; }
 .jobs-ended-list .jobs-ongoing-thead,
-.jobs-ended-list .jobs-ongoing-row { grid-template-columns:90px 1fr 80px 70px; }
+.jobs-ended-list .jobs-ongoing-row { grid-template-columns:90px 1fr 80px 80px 70px; }
 .jobs-payment-list .jobs-ongoing-thead,
 .jobs-payment-list .jobs-ongoing-row { grid-template-columns:120px 1fr 100px 70px 80px; }
 .jobs-payment-list .board-td.td-price { font-weight:700; color:var(--ev-hot-pink); }
 @media (max-width:900px) {
   .jobs-ongoing-list .jobs-ongoing-thead,
-  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:52px 84px 1fr 90px 80px 80px; }
+  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:52px 84px 1fr 80px 90px 80px; }
   .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5),
   .jobs-ongoing-list .board-th:nth-child(6), .jobs-ongoing-list .board-td:nth-child(6) { display:none; }
   .jobs-ongoing-list .thumb-box, .jobs-ongoing-list .thumb-empty { width:76px; height:60px; }

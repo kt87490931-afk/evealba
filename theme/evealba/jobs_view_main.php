@@ -354,8 +354,16 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
       <?php } ?>
     </div>
   </div>
+  <div class="jcb-desc">
+    <strong>자동 점프란?</strong>
+    남은 기간과 잔여 점프 횟수를 기반으로 균등한 간격으로 자동 점프됩니다.
+    <?php if ($jmp_remain > 0 && $jmp_days_left > 0) { ?>
+    예) 남은 <?php echo $jmp_days_left; ?>일, 잔여 <?php echo number_format($jmp_remain); ?>회 → 약 <?php echo $jmp_interval; ?>분마다 자동 점프
+    <?php } ?>
+    수동 점프를 사용하면 간격이 자동으로 재계산됩니다.
+  </div>
   <?php if ($jmp_remain <= 0) { ?>
-  <div class="jcb-empty">잔여 점프 횟수가 없습니다. <a href="<?php echo rtrim(G5_URL,'/'); ?>/jobs_ongoing.php#jump-purchase">점프 추가 구매</a></div>
+  <div class="jcb-empty">잔여 점프 횟수가 없습니다. <a href="<?php echo rtrim(G5_URL,'/'); ?>/jobs_jump_shop.php">점프 추가 구매</a></div>
   <?php } ?>
 </div>
 <style>
@@ -381,6 +389,8 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 .jcb-toggle input:checked+.jcb-toggle-slider::after{transform:translateX(18px)}
 .jcb-toggle-text{font-size:12px;font-weight:700;color:#555}
 .jcb-next{font-size:11px;color:#888;background:#f5f5f5;padding:4px 10px;border-radius:6px}
+.jcb-desc{padding:10px 20px;background:#f9f5ff;border-top:1px solid #f0e0f8;font-size:11px;color:#666;line-height:1.7}
+.jcb-desc strong{color:#6B21A8;display:block;margin-bottom:2px;font-size:12px}
 .jcb-empty{padding:10px 20px;background:#fff5f8;text-align:center;font-size:12px;color:#FF1B6B;border-top:1px solid #fce8f0}
 .jcb-empty a{color:#FF1B6B;font-weight:700;text-decoration:underline}
 @media(max-width:600px){

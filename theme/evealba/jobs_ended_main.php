@@ -19,6 +19,8 @@ if ($is_member) {
                 'subject' => $row['jr_subject_display'] ?: '[제목없음]',
                 'datetime2' => date('Y-m-d', strtotime($row['jr_datetime'])),
                 'ad_period' => $row['jr_ad_period'] ? $row['jr_ad_period'].'일' : '—',
+                'jump_used' => isset($row['jr_jump_used']) ? (int)$row['jr_jump_used'] : 0,
+                'jump_total' => isset($row['jr_jump_total']) ? (int)$row['jr_jump_total'] : 0,
                 'view_href' => $jobs_view_url_base.'?jr_id='.$row['jr_id']
             );
         }
@@ -48,6 +50,7 @@ if ($is_member) {
       <div class="board-th">날짜</div>
       <div class="board-th td-title">제목</div>
       <div class="board-th">광고기간</div>
+      <div class="board-th">점프 사용</div>
       <div class="board-th">보기</div>
     </div>
     <?php if (count($list) > 0) {
@@ -56,6 +59,7 @@ if ($is_member) {
       <div class="board-td td-date"><?php echo htmlspecialchars($row['datetime2']); ?></div>
       <div class="board-td td-title"><div class="td-title-inner"><span class="post-title-text"><?php echo htmlspecialchars($row['subject']); ?></span></div></div>
       <div class="board-td td-period"><?php echo htmlspecialchars($row['ad_period']); ?></div>
+      <div class="board-td" style="font-size:11px;color:#999;"><?php echo number_format($row['jump_used']); ?>/<?php echo number_format($row['jump_total']); ?>회</div>
       <div class="board-td">보기</div>
     </a>
     <?php }
