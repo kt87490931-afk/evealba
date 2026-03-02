@@ -205,7 +205,7 @@ if ($_show_all_sections) {
     </div>
 <?php } ?>
 
-    <!-- 급구 + 추천 -->
+    <!-- 급구 + 추천 (단독 페이지) -->
 <?php if ($_atf === '급구') { ?>
     <div class="section-wrap">
       <div class="section-header">
@@ -237,6 +237,42 @@ if ($_show_all_sections) {
         <div class="job-list-mobile">
 <?php if (!empty($_jobs_urgent)) { foreach ($_jobs_urgent as $_ug) { render_job_list_mobile($_ug); } } else { ?>
           <div style="text-align:center;padding:40px 0;color:#999;">등록된 급구 채용정보가 없습니다.</div>
+<?php } ?>
+        </div>
+      </div>
+    </div>
+<?php } ?>
+<?php if ($_atf === '추천') { ?>
+    <div class="section-wrap">
+      <div class="section-header">
+        <h2 class="section-title">💖 추천채용</h2>
+        <span style="font-size:12px;color:#888;">총 <strong style="color:var(--hot-pink);"><?php echo number_format(count($_jobs_recomm)); ?></strong>건</span>
+      </div>
+      <div class="list-section">
+        <div class="job-list-desktop">
+        <div class="list-table-wrap">
+        <table class="list-table">
+          <thead>
+            <tr>
+              <th>지역</th>
+              <th>업직종</th>
+              <th class="col-gender">성별/연령</th>
+              <th>채용제목 / 편의사항</th>
+              <th class="col-benefits">업소명</th>
+              <th>급여조건</th>
+            </tr>
+          </thead>
+          <tbody>
+<?php if (!empty($_jobs_recomm)) { foreach ($_jobs_recomm as $_rc) { render_job_list_row($_rc); } } else { ?>
+            <tr><td colspan="6" style="text-align:center;padding:40px 0;color:#999;">등록된 추천 채용정보가 없습니다.</td></tr>
+<?php } ?>
+          </tbody>
+        </table>
+        </div>
+        </div>
+        <div class="job-list-mobile">
+<?php if (!empty($_jobs_recomm)) { foreach ($_jobs_recomm as $_rc) { render_job_list_mobile($_rc); } } else { ?>
+          <div style="text-align:center;padding:40px 0;color:#999;">등록된 추천 채용정보가 없습니다.</div>
 <?php } ?>
         </div>
       </div>
@@ -276,7 +312,7 @@ if ($_show_all_sections) {
         </div>
       </div>
 <?php } ?>
-<?php if ($_show_all_sections || $_atf === '추천') { ?>
+<?php if ($_show_all_sections) { ?>
       <div>
         <div class="section-header">
           <h2 class="section-title" style="font-size:16px">💖 추천채용</h2>
