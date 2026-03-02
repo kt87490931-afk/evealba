@@ -41,25 +41,4 @@ if (!defined('_GNUBOARD_')) exit;
   </div>
 </div>
 
-<!-- 추천업소 배너 -->
-<div class="sidebar-widget">
-  <div class="widget-title">💎 추천업소</div>
-  <div class="widget-body">
-    <div class="side-ad-card">
-      <div class="side-ad-banner g12">동탄스카이 아이퍼블릭<br><b style="font-size:14px">60분 TC12만원</b></div>
-      <div class="side-ad-info">
-        <div class="side-ad-name">동탄스카이 아이퍼블릭</div>
-        <div class="side-ad-wage">자유복장 · TC12만원</div>
-      </div>
-    </div>
-    <div class="side-ad-card">
-      <div class="side-ad-banner g1">일프로 &amp; 텐카페<br><b>300만 보상</b></div>
-      <div class="side-ad-info">
-        <div class="side-ad-name">일프로 · 텐카페</div>
-        <div class="side-ad-wage">300만원 보장</div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <?php include G5_THEME_PATH.'/inc/sidebar_cs_widget.php'; ?>

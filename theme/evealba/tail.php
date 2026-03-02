@@ -65,6 +65,52 @@ if(G5_COMMUNITY_USE === false) {
 })();
 </script>
 
+<!-- FLOATING RECOMMEND PANEL -->
+<div class="float-recommend" id="floatRecommend">
+  <button type="button" class="fr-tab" id="frTab" onclick="toggleFloatRecommend()">
+    <span class="fr-tab-icon">💎</span>
+    <span class="fr-tab-text">추천업소</span>
+  </button>
+  <div class="fr-panel">
+    <div class="fr-header">
+      <span class="fr-title">💎 추천업소</span>
+      <button type="button" class="fr-close" onclick="toggleFloatRecommend()">&times;</button>
+    </div>
+    <div class="fr-list">
+      <a href="#" class="fr-card">
+        <div class="fr-banner g12">동탄스카이<br>아이퍼블릭<b>60분 TC12만원</b></div>
+        <div class="fr-info"><div class="fr-name">동탄스카이 아이퍼블릭</div><div class="fr-wage">자유복장 · TC12만원</div></div>
+      </a>
+      <a href="#" class="fr-card">
+        <div class="fr-banner g1">일프로 &amp; 텐카페<b>300만 보상</b></div>
+        <div class="fr-info"><div class="fr-name">일프로 · 텐카페</div><div class="fr-wage">300만원 보장</div></div>
+      </a>
+      <a href="#" class="fr-card">
+        <div class="fr-banner" style="background:linear-gradient(135deg,#1A0010,#FF1B6B)">당일<br>백만 UP</div>
+        <div class="fr-info"><div class="fr-name">당일 백만원 UP 이벤트</div><div class="fr-wage">기간 한정 특별 혜택</div></div>
+      </a>
+      <a href="#" class="fr-card">
+        <div class="fr-banner g7">강남 VIP<b>순수테이블 2H</b></div>
+        <div class="fr-info"><div class="fr-name">강남짬오 이태곤대표</div><div class="fr-wage">면접 후 협의</div></div>
+      </a>
+      <a href="#" class="fr-card">
+        <div class="fr-banner g6">수원 하이퍼<b>TC12 당일지급</b></div>
+        <div class="fr-info"><div class="fr-name">아우라 하이퍼블릭</div><div class="fr-wage">면접 후 협의</div></div>
+      </a>
+      <a href="#" class="fr-card">
+        <div class="fr-banner g3">파주 최고TC<b>1시간 10만원</b></div>
+        <div class="fr-info"><div class="fr-name">파주최고TC REINA</div><div class="fr-wage">100,000원</div></div>
+      </a>
+    </div>
+  </div>
+</div>
+<script>
+function toggleFloatRecommend(){
+  var el=document.getElementById('floatRecommend');
+  if(el) el.classList.toggle('fr-open');
+}
+</script>
+
 <!-- FLOATING CTA -->
 <div class="floating-cta">
   <a href="#" class="float-btn float-kakao" title="카카오톡 문의"><img src="<?php echo G5_THEME_URL; ?>/img/logo_kakao.svg" alt="카카오톡" style="width:26px;height:26px;"></a>
