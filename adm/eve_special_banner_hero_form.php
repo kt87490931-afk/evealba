@@ -37,14 +37,16 @@ $thumb_wave       = isset($data['thumb_wave']) ? (int)$data['thumb_wave'] : 0;
 $thumb_text_color = isset($data['thumb_text_color']) ? trim($data['thumb_text_color']) : '#ffffff';
 $thumb_border     = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 
-$title_size  = isset($data['title_size']) ? trim($data['title_size']) : '30px';
-$title_align = isset($data['title_align']) ? trim($data['title_align']) : 'left';
-$text_size   = isset($data['text_size']) ? trim($data['text_size']) : '14px';
-$text_color  = isset($data['text_color']) ? trim($data['text_color']) : '#ffffff';
-$text_align  = isset($data['text_align']) ? trim($data['text_align']) : 'left';
-$text2_size  = isset($data['text2_size']) ? trim($data['text2_size']) : '14px';
-$text2_color = isset($data['text2_color']) ? trim($data['text2_color']) : '#ffffff';
-$text2_align = isset($data['text2_align']) ? trim($data['text2_align']) : 'left';
+$title_size   = isset($data['title_size']) ? trim($data['title_size']) : '30px';
+$title_weight = isset($data['title_weight']) ? trim($data['title_weight']) : '900';
+$text_size    = isset($data['text_size']) ? trim($data['text_size']) : '14px';
+$text_color   = isset($data['text_color']) ? trim($data['text_color']) : '#ffffff';
+$text_weight  = isset($data['text_weight']) ? trim($data['text_weight']) : '500';
+$text2_size   = isset($data['text2_size']) ? trim($data['text2_size']) : '14px';
+$text2_color  = isset($data['text2_color']) ? trim($data['text2_color']) : '#ffffff';
+$text2_weight = isset($data['text2_weight']) ? trim($data['text2_weight']) : '500';
+$text_pos_x   = isset($data['text_pos_x']) ? (float)$data['text_pos_x'] : 3;
+$text_pos_y   = isset($data['text_pos_y']) ? (float)$data['text_pos_y'] : 50;
 
 $sb_jr_id   = $is_edit ? (int)$sb['sb_jr_id'] : 0;
 $sb_link    = $is_edit ? ($sb['sb_link'] ?? '') : '';
@@ -154,9 +156,11 @@ if ($thumb_wave) {
 .hero-pv-card{position:relative;border-radius:14px;overflow:hidden;height:190px;display:flex;align-items:center;padding:28px;cursor:default}
 .hero-pv-card::before{content:'';position:absolute;top:-50%;right:-10%;width:60%;height:200%;background:radial-gradient(ellipse,rgba(255,27,107,.15),transparent 70%);animation:hero-float 3s ease-in-out infinite;pointer-events:none}
 @keyframes hero-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.hero-pv-text{position:relative;z-index:2;max-width:70%}
-.hero-pv-text h2{margin:0;font-weight:900;line-height:1.2;text-shadow:0 2px 10px rgba(0,0,0,.5);white-space:pre-wrap;word-break:keep-all}
-.hero-pv-text p{margin:7px 0 0;font-weight:500;white-space:pre-wrap;word-break:keep-all}
+.hero-pv-text{position:absolute;z-index:2;max-width:85%;cursor:grab;user-select:none;-webkit-user-select:none}
+.hero-pv-text.dragging{cursor:grabbing;opacity:.85}
+.hero-pv-text h2{margin:0;line-height:1.2;text-shadow:0 2px 10px rgba(0,0,0,.5);white-space:pre-wrap;word-break:keep-all}
+.hero-pv-text p{margin:7px 0 0;white-space:pre-wrap;word-break:keep-all}
+.drag-hint{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,.5);pointer-events:none;z-index:3;white-space:nowrap}
 .hero-pv-badge{position:absolute;top:14px;right:14px;font-weight:900;font-size:12px;padding:5px 12px;border-radius:18px;z-index:10;color:#fff}
 
 /* 컨트롤 그리드 */
@@ -269,11 +273,12 @@ if ($thumb_wave) {
       <div class="hero-pv-section">
         <div class="hero-pv-label">👁️ 실제 크기 미리보기 (히어로배너)</div>
         <div class="hero-pv-card<?php echo $thumb_wave ? ' pv-wave-active' : ''; ?><?php echo ($saved_grad === 'P3' && !$thumb_wave) ? ' carbon-bg' : ''; ?>" id="hero-pv-card" style="<?php echo $pv_banner_style; ?>">
-          <div class="hero-pv-text" id="hero-pv-text" style="text-align:<?php echo htmlspecialchars($title_align); ?>">
-            <h2 id="hero-pv-h2" class="<?php echo $thumb_motion ? 'pv-motion-'.htmlspecialchars($thumb_motion) : ''; ?>" style="font-size:<?php echo htmlspecialchars($title_size); ?>;color:<?php echo htmlspecialchars($thumb_text_color); ?>"><?php echo htmlspecialchars($thumb_title ?: '썸네일 제목'); ?></h2>
-            <p id="hero-pv-p1" style="font-size:<?php echo htmlspecialchars($text_size); ?>;color:<?php echo htmlspecialchars($text_color); ?>;text-align:<?php echo htmlspecialchars($text_align); ?>"><?php echo htmlspecialchars($thumb_text ?: '홍보문구1 입력'); ?></p>
-            <p id="hero-pv-p2" style="font-size:<?php echo htmlspecialchars($text2_size); ?>;color:<?php echo htmlspecialchars($text2_color); ?>;text-align:<?php echo htmlspecialchars($text2_align); ?>;margin-top:4px"><?php echo htmlspecialchars($thumb_text2 ?: '홍보문구2 입력'); ?></p>
+          <div class="hero-pv-text" id="hero-pv-text" style="left:<?php echo $text_pos_x; ?>%;top:<?php echo $text_pos_y; ?>%;transform:translateY(-50%)">
+            <h2 id="hero-pv-h2" class="<?php echo $thumb_motion ? 'pv-motion-'.htmlspecialchars($thumb_motion) : ''; ?>" style="font-size:<?php echo htmlspecialchars($title_size); ?>;color:<?php echo htmlspecialchars($thumb_text_color); ?>;font-weight:<?php echo htmlspecialchars($title_weight); ?>"><?php echo htmlspecialchars($thumb_title ?: '썸네일 제목'); ?></h2>
+            <p id="hero-pv-p1" style="font-size:<?php echo htmlspecialchars($text_size); ?>;color:<?php echo htmlspecialchars($text_color); ?>;font-weight:<?php echo htmlspecialchars($text_weight); ?>"><?php echo htmlspecialchars($thumb_text ?: '홍보문구1 입력'); ?></p>
+            <p id="hero-pv-p2" style="font-size:<?php echo htmlspecialchars($text2_size); ?>;color:<?php echo htmlspecialchars($text2_color); ?>;font-weight:<?php echo htmlspecialchars($text2_weight); ?>;margin-top:4px"><?php echo htmlspecialchars($thumb_text2 ?: '홍보문구2 입력'); ?></p>
           </div>
+          <div class="drag-hint">✋ 텍스트를 드래그하여 위치를 조정하세요</div>
           <?php if ($thumb_icon && isset($icons[$thumb_icon])) { ?>
           <div class="hero-pv-badge" id="hero-pv-badge" style="background:<?php echo $icons[$thumb_icon]['bg']; ?>"><?php echo $icons[$thumb_icon]['label']; ?></div>
           <?php } else { ?>
@@ -301,13 +306,15 @@ if ($thumb_wave) {
               <option value="36px"<?php echo $title_size==='36px'?' selected':''; ?>>특대 (36px)</option>
               <option value="42px"<?php echo $title_size==='42px'?' selected':''; ?>>초특대 (42px)</option>
             </select>
+            <select id="tg-title-weight" onchange="updatePreview()">
+              <option value="300"<?php echo $title_weight==='300'?' selected':''; ?>>가늘게</option>
+              <option value="400"<?php echo $title_weight==='400'?' selected':''; ?>>보통</option>
+              <option value="500"<?php echo $title_weight==='500'?' selected':''; ?>>중간</option>
+              <option value="700"<?php echo $title_weight==='700'?' selected':''; ?>>굵게</option>
+              <option value="900"<?php echo $title_weight==='900'?' selected':''; ?>>매우굵게</option>
+            </select>
             <div class="color-pick-wrap">
               <input type="color" id="tg-title-color" value="<?php echo ($thumb_text_color === 'rgb(255,255,255)' || $thumb_text_color === '#ffffff') ? '#ffffff' : '#444444'; ?>" onchange="updatePreview()">
-            </div>
-            <div class="align-opts" id="tg-title-align">
-              <button type="button" class="align-btn<?php echo $title_align==='left'?' selected':''; ?>" data-align="left" onclick="setAlign('title',this)" title="좌측">◀</button>
-              <button type="button" class="align-btn<?php echo $title_align==='center'?' selected':''; ?>" data-align="center" onclick="setAlign('title',this)" title="중앙">●</button>
-              <button type="button" class="align-btn<?php echo $title_align==='right'?' selected':''; ?>" data-align="right" onclick="setAlign('title',this)" title="우측">▶</button>
             </div>
           </div>
         </div>
@@ -328,13 +335,15 @@ if ($thumb_wave) {
               <option value="16px"<?php echo $text_size==='16px'?' selected':''; ?>>대 (16px)</option>
               <option value="18px"<?php echo $text_size==='18px'?' selected':''; ?>>특대 (18px)</option>
             </select>
+            <select id="tg-text-weight" onchange="updatePreview()">
+              <option value="300"<?php echo $text_weight==='300'?' selected':''; ?>>가늘게</option>
+              <option value="400"<?php echo $text_weight==='400'?' selected':''; ?>>보통</option>
+              <option value="500"<?php echo $text_weight==='500'?' selected':''; ?>>중간</option>
+              <option value="700"<?php echo $text_weight==='700'?' selected':''; ?>>굵게</option>
+              <option value="900"<?php echo $text_weight==='900'?' selected':''; ?>>매우굵게</option>
+            </select>
             <div class="color-pick-wrap">
               <input type="color" id="tg-text-color" value="<?php echo (strpos($text_color,'#')===0) ? htmlspecialchars($text_color) : '#ffffff'; ?>" onchange="updatePreview()">
-            </div>
-            <div class="align-opts" id="tg-text-align">
-              <button type="button" class="align-btn<?php echo $text_align==='left'?' selected':''; ?>" data-align="left" onclick="setAlign('text1',this)" title="좌측">◀</button>
-              <button type="button" class="align-btn<?php echo $text_align==='center'?' selected':''; ?>" data-align="center" onclick="setAlign('text1',this)" title="중앙">●</button>
-              <button type="button" class="align-btn<?php echo $text_align==='right'?' selected':''; ?>" data-align="right" onclick="setAlign('text1',this)" title="우측">▶</button>
             </div>
           </div>
         </div>
@@ -355,13 +364,15 @@ if ($thumb_wave) {
               <option value="16px"<?php echo $text2_size==='16px'?' selected':''; ?>>대 (16px)</option>
               <option value="18px"<?php echo $text2_size==='18px'?' selected':''; ?>>특대 (18px)</option>
             </select>
+            <select id="tg-text2-weight" onchange="updatePreview()">
+              <option value="300"<?php echo $text2_weight==='300'?' selected':''; ?>>가늘게</option>
+              <option value="400"<?php echo $text2_weight==='400'?' selected':''; ?>>보통</option>
+              <option value="500"<?php echo $text2_weight==='500'?' selected':''; ?>>중간</option>
+              <option value="700"<?php echo $text2_weight==='700'?' selected':''; ?>>굵게</option>
+              <option value="900"<?php echo $text2_weight==='900'?' selected':''; ?>>매우굵게</option>
+            </select>
             <div class="color-pick-wrap">
               <input type="color" id="tg-text2-color" value="<?php echo (strpos($text2_color,'#')===0) ? htmlspecialchars($text2_color) : '#ffffff'; ?>" onchange="updatePreview()">
-            </div>
-            <div class="align-opts" id="tg-text2-align">
-              <button type="button" class="align-btn<?php echo $text2_align==='left'?' selected':''; ?>" data-align="left" onclick="setAlign('text2',this)" title="좌측">◀</button>
-              <button type="button" class="align-btn<?php echo $text2_align==='center'?' selected':''; ?>" data-align="center" onclick="setAlign('text2',this)" title="중앙">●</button>
-              <button type="button" class="align-btn<?php echo $text2_align==='right'?' selected':''; ?>" data-align="right" onclick="setAlign('text2',this)" title="우측">▶</button>
             </div>
           </div>
         </div>
@@ -495,6 +506,9 @@ function _applyBorder(){
   }
 }
 
+var _textPosX = <?php echo $text_pos_x; ?>;
+var _textPosY = <?php echo $text_pos_y; ?>;
+
 function updatePreview(){
   var title = document.getElementById('tg-title').value || '썸네일 제목';
   var text1 = document.getElementById('tg-text').value || '홍보문구1 입력';
@@ -509,18 +523,19 @@ function updatePreview(){
   if(p1) p1.textContent = text1;
   if(p2) p2.textContent = text2;
 
-  var titleSize  = document.getElementById('tg-title-size').value;
-  var titleColor = document.getElementById('tg-title-color').value;
-  var textSize   = document.getElementById('tg-text-size').value;
-  var textColor  = document.getElementById('tg-text-color').value;
-  var text2SizeEl = document.getElementById('tg-text2-size');
-  var text2ColorEl = document.getElementById('tg-text2-color');
-  var text2Size  = text2SizeEl ? text2SizeEl.value : '14px';
-  var text2Color = text2ColorEl ? text2ColorEl.value : '#ffffff';
+  var titleSize   = document.getElementById('tg-title-size').value;
+  var titleWeight = document.getElementById('tg-title-weight').value;
+  var titleColor  = document.getElementById('tg-title-color').value;
+  var textSize    = document.getElementById('tg-text-size').value;
+  var textWeight  = document.getElementById('tg-text-weight').value;
+  var textColor   = document.getElementById('tg-text-color').value;
+  var text2Size   = (document.getElementById('tg-text2-size') || {}).value || '14px';
+  var text2Weight = (document.getElementById('tg-text2-weight') || {}).value || '500';
+  var text2Color  = (document.getElementById('tg-text2-color') || {}).value || '#ffffff';
 
-  if(h2){ h2.style.fontSize = titleSize; h2.style.color = titleColor; }
-  if(p1){ p1.style.fontSize = textSize; p1.style.color = textColor; }
-  if(p2){ p2.style.fontSize = text2Size; p2.style.color = text2Color; }
+  if(h2){ h2.style.fontSize = titleSize; h2.style.fontWeight = titleWeight; h2.style.color = titleColor; }
+  if(p1){ p1.style.fontSize = textSize; p1.style.fontWeight = textWeight; p1.style.color = textColor; }
+  if(p2){ p2.style.fontSize = text2Size; p2.style.fontWeight = text2Weight; p2.style.color = text2Color; }
 
   var cnt1 = document.getElementById('tg-title-cnt');
   var cnt2 = document.getElementById('tg-text-cnt');
@@ -530,23 +545,53 @@ function updatePreview(){
   if(cnt3 && text2El) cnt3.textContent = Array.from(text2El.value).length;
 }
 
-function setAlign(target, btn){
-  var containerMap = {'title':'tg-title-align','text1':'tg-text-align','text2':'tg-text2-align'};
-  var containerId = containerMap[target] || 'tg-title-align';
-  document.querySelectorAll('#'+containerId+' .align-btn').forEach(function(b){ b.classList.remove('selected'); });
-  btn.classList.add('selected');
-  var align = btn.getAttribute('data-align');
-  if(target === 'title'){
-    var wrap = document.getElementById('hero-pv-text');
-    if(wrap) wrap.style.textAlign = align;
-  } else if(target === 'text1'){
-    var p1 = document.getElementById('hero-pv-p1');
-    if(p1) p1.style.textAlign = align;
-  } else if(target === 'text2'){
-    var p2 = document.getElementById('hero-pv-p2');
-    if(p2) p2.style.textAlign = align;
+/* ── 드래그 이동 ── */
+(function(){
+  var txt = document.getElementById('hero-pv-text');
+  var card = document.getElementById('hero-pv-card');
+  if(!txt || !card) return;
+  var dragging = false, startX, startY, startLeft, startTop;
+
+  function getPos(e){
+    if(e.touches) return {x: e.touches[0].clientX, y: e.touches[0].clientY};
+    return {x: e.clientX, y: e.clientY};
   }
-}
+
+  function onDown(e){
+    e.preventDefault();
+    dragging = true;
+    txt.classList.add('dragging');
+    var pos = getPos(e);
+    startX = pos.x; startY = pos.y;
+    startLeft = parseFloat(txt.style.left) || _textPosX;
+    startTop = parseFloat(txt.style.top) || _textPosY;
+  }
+  function onMove(e){
+    if(!dragging) return;
+    e.preventDefault();
+    var pos = getPos(e);
+    var rect = card.getBoundingClientRect();
+    var dx = ((pos.x - startX) / rect.width) * 100;
+    var dy = ((pos.y - startY) / rect.height) * 100;
+    var nx = Math.max(0, Math.min(85, startLeft + dx));
+    var ny = Math.max(5, Math.min(95, startTop + dy));
+    txt.style.left = nx + '%';
+    txt.style.top = ny + '%';
+    _textPosX = Math.round(nx * 10) / 10;
+    _textPosY = Math.round(ny * 10) / 10;
+  }
+  function onUp(){
+    if(!dragging) return;
+    dragging = false;
+    txt.classList.remove('dragging');
+  }
+  txt.addEventListener('mousedown', onDown);
+  txt.addEventListener('touchstart', onDown, {passive:false});
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('touchmove', onMove, {passive:false});
+  document.addEventListener('mouseup', onUp);
+  document.addEventListener('touchend', onUp);
+})();
 
 function selectGrad(btn){
   document.querySelectorAll('.color-swatch').forEach(function(b){ b.classList.remove('selected'); });
@@ -608,14 +653,6 @@ function searchJr(){
 function saveHero(){
   var btn = document.getElementById('tg-save-btn'); if(btn) btn.disabled = true;
 
-  var titleAlign = 'left', textAlign = 'left', text2Align = 'left';
-  var ta = document.querySelector('#tg-title-align .align-btn.selected');
-  if(ta) titleAlign = ta.getAttribute('data-align');
-  var xa = document.querySelector('#tg-text-align .align-btn.selected');
-  if(xa) textAlign = xa.getAttribute('data-align');
-  var x2a = document.querySelector('#tg-text2-align .align-btn.selected');
-  if(x2a) text2Align = x2a.getAttribute('data-align');
-
   var form = document.createElement('form');
   form.method = 'POST';
   form.action = './eve_special_banner_update.php';
@@ -636,13 +673,15 @@ function saveHero(){
     thumb_text_color: document.getElementById('tg-title-color').value || '#ffffff',
     thumb_border: _thumbBorder || '',
     title_size: document.getElementById('tg-title-size').value || '30px',
-    title_align: titleAlign,
+    title_weight: document.getElementById('tg-title-weight').value || '900',
     text_size: document.getElementById('tg-text-size').value || '14px',
     text_color: document.getElementById('tg-text-color').value || '#ffffff',
-    text_align: textAlign,
+    text_weight: document.getElementById('tg-text-weight').value || '500',
     text2_size: (document.getElementById('tg-text2-size') || {}).value || '14px',
     text2_color: (document.getElementById('tg-text2-color') || {}).value || '#ffffff',
-    text2_align: text2Align,
+    text2_weight: (document.getElementById('tg-text2-weight') || {}).value || '500',
+    text_pos_x: String(_textPosX),
+    text_pos_y: String(_textPosY),
     token: '<?php echo $token; ?>'
   };
   for(var k in fields){

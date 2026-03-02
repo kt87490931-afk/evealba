@@ -184,13 +184,15 @@ if ($act === 'save_hero') {
         'thumb_text_color' => isset($_POST['thumb_text_color']) ? trim($_POST['thumb_text_color']) : '#ffffff',
         'thumb_border'     => isset($_POST['thumb_border']) ? trim($_POST['thumb_border']) : '',
         'title_size'       => isset($_POST['title_size']) ? trim($_POST['title_size']) : '30px',
-        'title_align'      => isset($_POST['title_align']) ? trim($_POST['title_align']) : 'left',
+        'title_weight'     => isset($_POST['title_weight']) ? trim($_POST['title_weight']) : '900',
         'text_size'        => isset($_POST['text_size']) ? trim($_POST['text_size']) : '14px',
         'text_color'       => isset($_POST['text_color']) ? trim($_POST['text_color']) : '#ffffff',
-        'text_align'       => isset($_POST['text_align']) ? trim($_POST['text_align']) : 'left',
+        'text_weight'      => isset($_POST['text_weight']) ? trim($_POST['text_weight']) : '500',
         'text2_size'       => isset($_POST['text2_size']) ? trim($_POST['text2_size']) : '14px',
         'text2_color'      => isset($_POST['text2_color']) ? trim($_POST['text2_color']) : '#ffffff',
-        'text2_align'      => isset($_POST['text2_align']) ? trim($_POST['text2_align']) : 'left',
+        'text2_weight'     => isset($_POST['text2_weight']) ? trim($_POST['text2_weight']) : '500',
+        'text_pos_x'       => isset($_POST['text_pos_x']) ? (float)$_POST['text_pos_x'] : 3,
+        'text_pos_y'       => isset($_POST['text_pos_y']) ? (float)$_POST['text_pos_y'] : 50,
     );
 
     $mb_id = '';
