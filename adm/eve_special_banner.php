@@ -4,7 +4,7 @@
  * 히어로배너(메인 상단) + 추천업소(플로팅 패널)
  * 기존 채용광고(jr_id)를 특수배너 슬롯에 연결/해제
  */
-$sub_menu = '911100';
+$sub_menu = '910920';
 require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'r');
@@ -32,8 +32,15 @@ if (!sql_num_rows($tb_check)) {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", false);
 }
 
+// ── sb_data, sb_link 컬럼 마이그레이션 ──
+$col_check = sql_query("SHOW COLUMNS FROM {$sb_table} LIKE 'sb_data'", false);
+if (!$col_check || !sql_num_rows($col_check)) {
+    sql_query("ALTER TABLE {$sb_table} ADD COLUMN sb_data JSON DEFAULT NULL COMMENT '썸네일 옵션 JSON' AFTER sb_memo", false);
+    sql_query("ALTER TABLE {$sb_table} ADD COLUMN sb_link VARCHAR(500) NOT NULL DEFAULT '' COMMENT '클릭 시 이동 URL' AFTER sb_data", false);
+}
+
 // ── 현황 조회 ──
-$hero_max    = 2;
+$hero_max    = 10;
 $recommend_max = 6;
 
 $hero_rows = array();
@@ -165,30 +172,26 @@ require_once './admin.head.php';
 <div class="sb-section">
     <div class="sb-section-title">
         <span class="ico">🏆</span> 히어로배너
-        <?php if ($hero_cnt < $hero_max) { ?>
-            <button type="button" class="sb-add-btn" onclick="openSearchModal('hero')">+ 히어로배너 연결</button>
-        <?php } else { ?>
-            <span style="font-size:11px;color:#C62828;font-weight:400;">슬롯이 가득 찼습니다</span>
-        <?php } ?>
+        <a href="./eve_special_banner_hero_form.php" class="sb-add-btn">+ 히어로배너 생성</a>
     </div>
 
     <?php if ($hero_cnt === 0) { ?>
-        <div class="sb-empty">등록된 히어로배너가 없습니다. 위 버튼으로 채용광고를 연결하세요.</div>
+        <div class="sb-empty">등록된 히어로배너가 없습니다. "히어로배너 생성" 버튼으로 새로 만드세요.</div>
     <?php } else { ?>
     <div class="tbl_head01 tbl_wrap">
         <table>
             <thead>
                 <tr>
                     <th scope="col" style="width:50px;">순서</th>
+                    <th scope="col" style="width:50px;">sb_id</th>
                     <th scope="col" style="width:60px;">jr_id</th>
                     <th scope="col">업소명</th>
-                    <th scope="col">닉네임</th>
                     <th scope="col">기업회원</th>
-                    <th scope="col">광고상태</th>
+                    <th scope="col">상태</th>
                     <th scope="col">남은기간</th>
-                    <th scope="col">연결일</th>
+                    <th scope="col">생성일</th>
                     <th scope="col">메모</th>
-                    <th scope="col" style="width:120px;">관리</th>
+                    <th scope="col" style="width:160px;">관리</th>
                 </tr>
             </thead>
             <tbody>
@@ -207,21 +210,24 @@ require_once './admin.head.php';
                             $rem_class = 'end';
                         }
                     }
-                    $view_url = $jobs_view_base . '?jr_id=' . (int)$hr['sb_jr_id'];
+                    $view_url = (int)$hr['sb_jr_id'] ? $jobs_view_base . '?jr_id=' . (int)$hr['sb_jr_id'] : '#';
                 ?>
                 <tr class="bg<?php echo $idx % 2; ?>">
                     <td class="td_num"><?php echo (int)$hr['sb_position']; ?></td>
-                    <td class="td_num"><a href="<?php echo $view_url; ?>" target="_blank" style="color:#6366f1;font-weight:700;">#<?php echo (int)$hr['sb_jr_id']; ?></a></td>
+                    <td class="td_num" style="color:#6366f1;font-weight:700;">#<?php echo (int)$hr['sb_id']; ?></td>
+                    <td class="td_num"><?php echo (int)$hr['sb_jr_id'] ? '<a href="'.$view_url.'" target="_blank" style="color:#6366f1;font-weight:700;">#'.(int)$hr['sb_jr_id'].'</a>' : '—'; ?></td>
                     <td class="td_left"><?php echo htmlspecialchars($hr['jr_company'] ?: '—'); ?></td>
-                    <td class="td_left"><?php echo htmlspecialchars($hr['jr_nickname'] ?: '—'); ?></td>
                     <td class="td_left"><?php echo htmlspecialchars($hr['sb_mb_id'] ?: $hr['jr_mb_id'] ?: '—'); ?></td>
-                    <td class="td_num"><?php echo htmlspecialchars($hr['jr_status'] ?: '—'); ?></td>
+                    <td class="td_num"><?php echo htmlspecialchars($hr['sb_status']); ?></td>
                     <td class="td_num"><span class="sb-remaining <?php echo $rem_class; ?>"><?php echo $remaining; ?></span></td>
                     <td class="td_datetime"><?php echo substr($hr['sb_created'], 0, 10); ?></td>
                     <td class="td_left" style="font-size:11px;"><?php echo htmlspecialchars(cut_str($hr['sb_memo'] ?: '', 30)); ?></td>
                     <td class="td_mng">
-                        <a href="<?php echo $view_url; ?>" class="btn btn_02" target="_blank">보기</a>
-                        <a href="./eve_special_banner_update.php?act=remove&sb_id=<?php echo (int)$hr['sb_id']; ?>&token=<?php echo $token; ?>" class="btn btn_01" onclick="return confirm('히어로배너 연결을 해제하시겠습니까?');">해제</a>
+                        <a href="./eve_special_banner_hero_form.php?sb_id=<?php echo (int)$hr['sb_id']; ?>" class="btn btn_02">편집</a>
+                        <?php if ((int)$hr['sb_jr_id']) { ?>
+                        <a href="<?php echo $view_url; ?>" class="btn btn_02" target="_blank">광고</a>
+                        <?php } ?>
+                        <a href="./eve_special_banner_update.php?act=remove&sb_id=<?php echo (int)$hr['sb_id']; ?>&token=<?php echo $token; ?>" class="btn btn_01" onclick="return confirm('히어로배너를 삭제하시겠습니까?');">삭제</a>
                     </td>
                 </tr>
                 <?php } ?>

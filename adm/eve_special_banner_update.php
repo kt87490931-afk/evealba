@@ -2,7 +2,7 @@
 /**
  * 어드민 - 특수배너 처리 (검색 / 연결 / 해제)
  */
-$sub_menu = '911100';
+$sub_menu = '910920';
 require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'w');
@@ -10,10 +10,10 @@ auth_check_menu($auth, $sub_menu, 'w');
 $jr_table = 'g5_jobs_register';
 $sb_table = 'g5_special_banner';
 
-$act   = isset($_REQUEST['act']) ? preg_replace('/[^a-z]/', '', $_REQUEST['act']) : '';
+$act   = isset($_REQUEST['act']) ? preg_replace('/[^a-z_]/', '', $_REQUEST['act']) : '';
 $token = isset($_REQUEST['token']) ? $_REQUEST['token'] : '';
 
-$hero_max      = 2;
+$hero_max      = 10;
 $recommend_max = 6;
 
 // ── AJAX 검색 ──
@@ -162,6 +162,64 @@ if ($act === 'remove') {
 
     $label = $sb['sb_type'] === 'hero' ? '히어로배너' : '추천업소';
     alert($label . ' 해제 완료 (jr_id: ' . $sb['sb_jr_id'] . ')', './eve_special_banner.php');
+    exit;
+}
+
+// ── 히어로배너 저장 (생성/수정) ──
+if ($act === 'save_hero') {
+    $sb_id    = isset($_POST['sb_id']) ? (int)$_POST['sb_id'] : 0;
+    $jr_id    = isset($_POST['jr_id']) ? (int)$_POST['jr_id'] : 0;
+    $link     = isset($_POST['link']) ? trim($_POST['link']) : '';
+    $position = isset($_POST['position']) ? (int)$_POST['position'] : 0;
+    $memo     = isset($_POST['memo']) ? trim($_POST['memo']) : '';
+
+    $sb_data = array(
+        'thumb_gradient'   => isset($_POST['thumb_gradient']) ? trim($_POST['thumb_gradient']) : '1',
+        'thumb_title'      => isset($_POST['thumb_title']) ? trim($_POST['thumb_title']) : '',
+        'thumb_text'       => isset($_POST['thumb_text']) ? trim($_POST['thumb_text']) : '',
+        'thumb_icon'       => isset($_POST['thumb_icon']) ? trim($_POST['thumb_icon']) : '',
+        'thumb_motion'     => isset($_POST['thumb_motion']) ? trim($_POST['thumb_motion']) : '',
+        'thumb_wave'       => isset($_POST['thumb_wave']) ? (int)$_POST['thumb_wave'] : 0,
+        'thumb_text_color' => isset($_POST['thumb_text_color']) ? trim($_POST['thumb_text_color']) : 'rgb(255,255,255)',
+        'thumb_border'     => isset($_POST['thumb_border']) ? trim($_POST['thumb_border']) : '',
+    );
+
+    $mb_id = '';
+    if ($jr_id) {
+        $jr = sql_fetch("SELECT mb_id FROM {$jr_table} WHERE jr_id = {$jr_id}");
+        if ($jr) $mb_id = $jr['mb_id'];
+    }
+
+    $data_json = sql_real_escape_string(json_encode($sb_data, JSON_UNESCAPED_UNICODE));
+    $link_esc  = sql_real_escape_string($link);
+    $memo_esc  = sql_real_escape_string($memo);
+    $mb_id_esc = sql_real_escape_string($mb_id);
+
+    if ($sb_id) {
+        $existing = sql_fetch("SELECT sb_id FROM {$sb_table} WHERE sb_id = {$sb_id} AND sb_type = 'hero'");
+        if (!$existing) {
+            alert('해당 히어로배너를 찾을 수 없습니다.', './eve_special_banner.php');
+            exit;
+        }
+        sql_query("UPDATE {$sb_table} SET
+            sb_jr_id = {$jr_id},
+            sb_mb_id = '{$mb_id_esc}',
+            sb_position = {$position},
+            sb_memo = '{$memo_esc}',
+            sb_data = '{$data_json}',
+            sb_link = '{$link_esc}',
+            sb_updated = NOW()
+            WHERE sb_id = {$sb_id}");
+        alert('히어로배너가 수정되었습니다. (sb_id: ' . $sb_id . ')', './eve_special_banner.php');
+    } else {
+        if ($position === 0) {
+            $position = (int)sql_fetch("SELECT IFNULL(MAX(sb_position), 0) + 1 as np FROM {$sb_table} WHERE sb_type = 'hero' AND sb_status = 'active'")['np'];
+        }
+        sql_query("INSERT INTO {$sb_table} (sb_type, sb_status, sb_position, sb_jr_id, sb_mb_id, sb_memo, sb_data, sb_link, sb_created)
+                   VALUES ('hero', 'active', {$position}, {$jr_id}, '{$mb_id_esc}', '{$memo_esc}', '{$data_json}', '{$link_esc}', NOW())");
+        $new_id = sql_insert_id();
+        alert('히어로배너가 생성되었습니다. (sb_id: ' . $new_id . ')', './eve_special_banner.php');
+    }
     exit;
 }
 
