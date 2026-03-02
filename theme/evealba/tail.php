@@ -109,6 +109,33 @@ function toggleFloatRecommend(){
   var el=document.getElementById('floatRecommend');
   if(el) el.classList.toggle('fr-open');
 }
+(function(){
+  var fr=document.getElementById('floatRecommend');
+  if(!fr) return;
+  var ma=document.querySelector('.main-area');
+  if(!ma) return;
+  var gap=14;
+  function pos(){
+    var r=ma.getBoundingClientRect();
+    var panelH=fr.offsetHeight;
+    var mainTop=r.top+gap;
+    var mainBot=r.bottom-panelH-gap;
+    if(mainTop>mainBot) mainTop=mainBot;
+    if(r.bottom<panelH||r.top>window.innerHeight){
+      fr.style.opacity='0';
+      fr.style.pointerEvents='none';
+    } else {
+      fr.style.opacity='1';
+      fr.style.pointerEvents='';
+      var t=mainTop<gap?gap:mainTop;
+      if(t>mainBot) t=mainBot;
+      fr.style.top=t+'px';
+    }
+  }
+  window.addEventListener('scroll',pos,{passive:true});
+  window.addEventListener('resize',pos,{passive:true});
+  pos();
+})();
 </script>
 
 <!-- FLOATING CTA -->

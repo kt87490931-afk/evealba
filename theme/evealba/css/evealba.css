@@ -2144,6 +2144,7 @@ footer {
   z-index:900;
   display:flex;
   align-items:flex-start;
+  transition:top .15s ease-out, opacity .15s ease-out;
 }
 .fr-tab {
   display:none;
