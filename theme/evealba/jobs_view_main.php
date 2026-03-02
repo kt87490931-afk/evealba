@@ -279,7 +279,7 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 .border-btn-none{border:2px dashed #ddd;font-size:10px;color:#bbb}
 /* 미리보기 카드 border-radius 유지 */
 #tg-pv-card.job-card{cursor:default;transition:box-shadow .2s,outline .2s;border-radius:12px!important;overflow:hidden}
-#tg-pv-card.job-card:hover{transform:none;box-shadow:none;border-color:#f0e0e8}
+#tg-pv-card.job-card:hover{transform:none}
 #tg-pv-card .job-card-banner{height:auto;aspect-ratio:16/9;padding:16px}
 #tg-pv-card .job-card-banner span{position:relative;z-index:1;line-height:1.4;transition:font-size .15s}
 #tg-pv-card .tpc-sub{display:block;font-size:12px;font-weight:500;margin-top:2px;opacity:.9;transition:font-size .15s}
@@ -1564,17 +1564,11 @@ function toggleAutoJump(jrId,on){
     card.style.border = 'none';
     card.style.outline = 'none';
     card.style.outlineOffset = '';
-    card.style.boxShadow = '0 6px 24px rgba(0,0,0,.18)';
-    if(_thumbBorder === 'gold'){
-      card.style.boxShadow = 'inset 0 0 0 2px #FFD700, 0 0 0 2px #FFD700, 0 6px 24px rgba(0,0,0,.18)';
-    } else if(_thumbBorder === 'pink'){
-      card.style.boxShadow = 'inset 0 0 0 2px #FF1B6B, 0 0 0 2px #FF1B6B, 0 6px 24px rgba(0,0,0,.18)';
-    } else if(_thumbBorder === 'charcoal'){
-      card.style.boxShadow = 'inset 0 0 0 2px #3a3a3a, 0 0 0 2px #3a3a3a, 0 6px 24px rgba(0,0,0,.18)';
-    } else if(_thumbBorder === 'royalblue'){
-      card.style.boxShadow = 'inset 0 0 0 2px #4169E1, 0 0 0 2px #4169E1, 0 6px 24px rgba(0,0,0,.18)';
-    } else if(_thumbBorder === 'royalpurple'){
-      card.style.boxShadow = 'inset 0 0 0 2px #7B2FBE, 0 0 0 2px #7B2FBE, 0 6px 24px rgba(0,0,0,.18)';
+    var borders = {gold:'#FFD700',pink:'#FF1B6B',charcoal:'#3a3a3a',royalblue:'#4169E1',royalpurple:'#7B2FBE'};
+    if(borders[_thumbBorder]){
+      card.style.boxShadow = 'inset 0 0 0 2px '+borders[_thumbBorder]+', 0 0 0 2px '+borders[_thumbBorder]+', 0 6px 24px rgba(0,0,0,.18)';
+    } else {
+      card.style.boxShadow = 'inset 0 0 0 0.75px #f0e0e8, 0 0 0 0.75px #f0e0e8';
     }
   }
   window.selectGrad = function(btn){

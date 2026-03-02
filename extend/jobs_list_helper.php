@@ -161,7 +161,12 @@ function render_job_card($row) {
     }
 
     $motion_data = $thumb_motion ? ' data-motion="pv-motion-' . $thumb_motion . '"' : '';
+    $border_colors = array('gold'=>'#FFD700','pink'=>'#FF1B6B','charcoal'=>'#3a3a3a','royalblue'=>'#4169E1','royalpurple'=>'#7B2FBE');
     $card_style = '';
+    if ($thumb_border && isset($border_colors[$thumb_border])) {
+        $bc = $border_colors[$thumb_border];
+        $card_style = ' style="box-shadow:inset 0 0 0 2px '.$bc.', 0 0 0 2px '.$bc.', 0 2px 8px rgba(0,0,0,.10)"';
+    }
     $has_anim = ($thumb_wave || $thumb_motion) ? ' data-lazy-anim="1"' : '';
 
     echo '<div class="job-card"' . $card_style . $has_anim . '>';
@@ -231,7 +236,12 @@ function render_premium_card($row, $card_class = 'premium-card') {
         }
     }
     $motion_data = $thumb_motion ? ' data-motion="pv-motion-' . $thumb_motion . '"' : '';
+    $border_colors = array('gold'=>'#FFD700','pink'=>'#FF1B6B','charcoal'=>'#3a3a3a','royalblue'=>'#4169E1','royalpurple'=>'#7B2FBE');
     $card_style = '';
+    if ($thumb_border && isset($border_colors[$thumb_border])) {
+        $bc = $border_colors[$thumb_border];
+        $card_style = ' style="box-shadow:inset 0 0 0 2px '.$bc.', 0 0 0 2px '.$bc.', 0 2px 8px rgba(0,0,0,.10)"';
+    }
     $has_anim = ($thumb_wave || $thumb_motion) ? ' data-lazy-anim="1"' : '';
 
     echo '<div class="' . $card_class . '"' . $card_style . $has_anim . '>';

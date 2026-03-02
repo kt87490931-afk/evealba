@@ -175,7 +175,7 @@ if ($thumb_wave) {
 .border-btn.selected{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--pink);transform:scale(1.1)}
 .border-btn-none{border:2px dashed #ddd;font-size:10px;color:#bbb}
 /* 미리보기 카드 */
-.job-card{position:relative;border-radius:12px;overflow:hidden;border:0.75px solid #f0e0e8;background:#fff}
+.job-card{position:relative;border-radius:12px;overflow:hidden;border:none;background:#fff;box-shadow:inset 0 0 0 0.75px #f0e0e8, 0 0 0 0.75px #f0e0e8}
 .job-card-banner{height:auto;aspect-ratio:16/9;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;text-align:center;line-height:1.4}
 .job-card-banner span{position:relative;z-index:1;line-height:1.4;transition:font-size .15s}
 .tpc-sub{display:block;font-size:12px;font-weight:500;margin-top:2px;opacity:.9;transition:font-size .15s}
@@ -381,9 +381,12 @@ function _applyBannerBg(){
 }
 function _applyBorder(){
   var card=document.getElementById('tg-pv-card');if(!card)return;
-  card.style.boxShadow='0 6px 24px rgba(0,0,0,.18)';
   var borders={gold:'#FFD700',pink:'#FF1B6B',charcoal:'#3a3a3a',royalblue:'#4169E1',royalpurple:'#7B2FBE'};
-  if(borders[_thumbBorder]) card.style.boxShadow='inset 0 0 0 2px '+borders[_thumbBorder]+', 0 0 0 2px '+borders[_thumbBorder]+', 0 6px 24px rgba(0,0,0,.18)';
+  if(borders[_thumbBorder]){
+    card.style.boxShadow='inset 0 0 0 2px '+borders[_thumbBorder]+', 0 0 0 2px '+borders[_thumbBorder]+', 0 6px 24px rgba(0,0,0,.18)';
+  } else {
+    card.style.boxShadow='inset 0 0 0 0.75px #f0e0e8, 0 0 0 0.75px #f0e0e8';
+  }
 }
 function selectGrad(btn){
   document.querySelectorAll('.color-swatch').forEach(function(b){b.classList.remove('selected');});
