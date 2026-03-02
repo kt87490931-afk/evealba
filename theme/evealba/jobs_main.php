@@ -206,8 +206,44 @@ if ($_show_all_sections) {
 <?php } ?>
 
     <!-- 급구 + 추천 -->
+<?php if ($_atf === '급구') { ?>
+    <div class="section-wrap">
+      <div class="section-header">
+        <h2 class="section-title">🚨 급구채용</h2>
+        <span style="font-size:12px;color:#888;">총 <strong style="color:var(--hot-pink);"><?php echo number_format(count($_jobs_urgent)); ?></strong>건</span>
+      </div>
+      <div class="list-section">
+        <div class="job-list-desktop">
+        <div class="list-table-wrap">
+        <table class="list-table">
+          <thead>
+            <tr>
+              <th>지역</th>
+              <th>업직종</th>
+              <th class="col-gender">성별/연령</th>
+              <th>채용제목 / 편의사항</th>
+              <th class="col-benefits">업소명</th>
+              <th>급여조건</th>
+            </tr>
+          </thead>
+          <tbody>
+<?php if (!empty($_jobs_urgent)) { foreach ($_jobs_urgent as $_ug) { render_job_list_row($_ug); } } else { ?>
+            <tr><td colspan="6" style="text-align:center;padding:40px 0;color:#999;">등록된 급구 채용정보가 없습니다.</td></tr>
+<?php } ?>
+          </tbody>
+        </table>
+        </div>
+        </div>
+        <div class="job-list-mobile">
+<?php if (!empty($_jobs_urgent)) { foreach ($_jobs_urgent as $_ug) { render_job_list_mobile($_ug); } } else { ?>
+          <div style="text-align:center;padding:40px 0;color:#999;">등록된 급구 채용정보가 없습니다.</div>
+<?php } ?>
+        </div>
+      </div>
+    </div>
+<?php } ?>
     <div class="urgency-recommend-row">
-<?php if ($_show_all_sections || $_atf === '급구') { ?>
+<?php if ($_show_all_sections) { ?>
       <div>
         <div class="section-header">
           <h2 class="section-title" style="font-size:16px">🚨 급구채용</h2>

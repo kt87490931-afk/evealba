@@ -103,7 +103,37 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <span><b>베이스 메이크업 화장품 브러쉬세트</b> - 화장품 · 방금</span>
       <span><b>웃저렴하게팔아용</b> - 의류 · 방금</span>
       <span><b>유엘핀 수입의류 판매</b> - 의류 · 방금</span>
-<?php } else { ?>
+<?php } else {
+  $_ticker_urgent = array();
+  if (function_exists('get_jobs_by_type')) {
+      $_ticker_urgent = get_jobs_by_type('급구', 30);
+  }
+  if (!empty($_ticker_urgent)) {
+      $_ticker_spans = '';
+      foreach ($_ticker_urgent as $_tu) {
+          $_tu_data = is_string($_tu['jr_data']) ? @json_decode($_tu['jr_data'], true) : (array)$_tu['jr_data'];
+          $_tu_region = '';
+          if (!empty($_tu_data['desc_location'])) {
+              $_tu_region = trim(explode(' ', trim($_tu_data['desc_location']))[0]);
+          }
+          $_tu_name = htmlspecialchars($_tu['jr_nickname'] ?: $_tu['jr_company']);
+          $_tu_promo = '';
+          if (!empty($_tu_data['desc_promo'])) {
+              $_tu_promo = htmlspecialchars(mb_substr($_tu_data['desc_promo'], 0, 25, 'UTF-8'));
+          } elseif (!empty($_tu['jr_title'])) {
+              $_tu_promo = htmlspecialchars(mb_substr($_tu['jr_title'], 0, 25, 'UTF-8'));
+          }
+          $_tu_text = '<span><b>[' . htmlspecialchars($_tu_region ?: '전국') . '] ' . $_tu_name . '</b>';
+          if ($_tu_promo) $_tu_text .= ' ' . $_tu_promo;
+          $_tu_text .= '</span>';
+          $_ticker_spans .= $_tu_text;
+      }
+      echo $_ticker_spans;
+      echo $_ticker_spans;
+      $_ticker_cnt = count($_ticker_urgent);
+      $_ticker_dur = max(30, $_ticker_cnt * 3);
+      echo '<style>.ticker-inner{animation-duration:'.$_ticker_dur.'s !important;}</style>';
+  } else { ?>
       <span><b>[강남] 클럽마샤</b> 일급 150만원 · 밀빵OK · 당일면접</span>
       <span><b>[홍대] 하이퍼블릭 이브</b> 시급 15만원 · 초보환영</span>
       <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
@@ -114,7 +144,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
       <span><b>[이태원] 이브VIP</b> 하루 100만원 보장</span>
       <span><b>[압구정] 헤라클럽</b> 시급 20만원 · 2시간 40만원</span>
-<?php } ?>
+<?php } } ?>
     </div>
   </div>
 </div>
