@@ -300,6 +300,8 @@
 @media(max-width:900px){
   .resume-register-page .page-layout{grid-template-columns:1fr;padding:0 12px;}
   .resume-register-page .left-sidebar{display:flex;flex-direction:column;gap:0;}
+  .resume-register-page .sidebar-mypage .side-menu-list{display:none;}
+  .resume-register-page .sidebar-mypage.mobile-open .side-menu-list{display:flex;flex-direction:column;gap:2px;padding:8px 4px;background:#fff;border-radius:0 0 10px 10px;box-shadow:0 4px 12px rgba(0,0,0,.08);}
   .resume-register-page .amenity-grid{grid-template-columns:repeat(3,1fr);}
   .resume-register-page .chk-grid{grid-template-columns:repeat(3,1fr);}
   .resume-register-page .mbti-grid{grid-template-columns:repeat(2,1fr);}
