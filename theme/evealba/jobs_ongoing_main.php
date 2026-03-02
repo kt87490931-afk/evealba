@@ -163,6 +163,14 @@ $_icon_map = array(
             <?php if (!empty($row['total_amount'])) { ?><span class="td-price"><?php echo number_format($row['total_amount']); ?>원</span><?php } ?>
             <?php if (!empty($row['ad_labels'])) { ?><span class="cat-badge cat-jobs"><?php echo htmlspecialchars(cut_str(str_replace(',', ', ', $row['ad_labels']), 20)); ?></span><?php } ?>
           </div>
+          <div class="td-mobile-info">
+            <span class="mi-date"><?php echo isset($row['datetime2']) ? $row['datetime2'] : ''; ?></span>
+            <span class="mi-period"><?php echo isset($row['ad_period']) ? str_replace('일','',$row['ad_period']) : '—'; ?>일/<?php echo isset($row['remaining']) ? $row['remaining'] : '—'; ?></span>
+            <span class="status-badge status-<?php echo isset($row['status_class']) ? $row['status_class'] : 'payment-wait'; ?>"><?php echo isset($row['status_label']) ? htmlspecialchars($row['status_label']) : ''; ?></span>
+<?php if ($row['status'] === 'ongoing') { ?>
+            <span class="mi-jump"><?php echo number_format($row['jump_remain']); ?>회 <button type="button" class="btn-jump-inline" onclick="event.preventDefault();event.stopPropagation();doListJump(<?php echo $row['jr_id']; ?>);" <?php echo $row['jump_remain'] <= 0 ? 'disabled' : ''; ?>>⚡점프</button></span>
+<?php } ?>
+          </div>
         </div>
       </div>
       <div class="board-td td-period">
