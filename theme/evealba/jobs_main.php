@@ -39,8 +39,6 @@ if ($_show_all_sections) {
     $_jobs_list = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광고', 20) : array();
 } else { $_jobs_list = array(); }
 ?>
-    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
-
     <!-- 검색 필터 박스 -->
     <?php
     $jf = isset($job_filters) ? $job_filters : array('er_id'=>0,'erd_id'=>0,'ei_id'=>0,'ej_id'=>0,'ec_id'=>0,'stx'=>'');

@@ -75,3 +75,4 @@ $mypage_url = G5_BBS_URL.'/member_confirm.php?url='.urlencode(G5_BBS_URL.'/regis
 
   <!-- 메인 영역 -->
   <div class="main-area">
+    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>

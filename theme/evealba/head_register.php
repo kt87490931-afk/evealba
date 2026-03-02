@@ -34,3 +34,4 @@ include G5_THEME_PATH.'/inc/head_top.php';
 <!-- PAGE LAYOUT (단일 컬럼, 사이드바 없음) -->
 <div class="page-layout layout-register">
   <div class="main-area">
+    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>

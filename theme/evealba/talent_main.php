@@ -78,8 +78,6 @@ if ($filter_job1 && in_array($filter_job1, array('룸살롱','룸싸롱'))) $act
 elseif ($filter_job1 && in_array($filter_job1, array('노래주점','노래방','가라오케'))) $active_tab = 'karaoke';
 elseif ($filter_job1 === '마사지') $active_tab = 'massage';
 ?>
-    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
-
     <!-- 업직종 탭 카운터 -->
     <div class="type-tab-bar">
       <div class="type-tab-card<?php echo $active_tab==='all'?' active':''; ?>" onclick="setTab(this,'all')">

@@ -16,8 +16,6 @@ $_idx_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페�
 $_idx_urgent  = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', 5) : array();
 $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', 10) : array();
 ?>
-<?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
-
 <!-- 빠른 통계 (데스크톱) -->
 <div class="quick-stats">
   <div class="stat-card">

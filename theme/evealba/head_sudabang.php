@@ -40,3 +40,4 @@ include G5_THEME_PATH.'/inc/head_top.php';
 
   <!-- 메인 영역 -->
   <div class="main-area">
+    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>

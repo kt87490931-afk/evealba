@@ -49,6 +49,7 @@ $nav_active = '';
   <div class="main-area">
     <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
     <div class="memo-page-layout">
+
       <!-- memo-top-widget: 4칸 각 225px (회원유형 | 받은쪽지 | 미확인 | 보낸쪽지) -->
       <div class="memo-top-widget">
         <div class="memo-tw-cell memo-tw-role-cell">

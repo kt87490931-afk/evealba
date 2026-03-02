@@ -29,3 +29,4 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
   <?php include G5_THEME_PATH.'/inc/sidebar_main.php'; ?>
   <!-- 메인 영역 (index.php에서 채움) -->
   <div class="main-area">
+    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>

@@ -68,7 +68,7 @@ if ($_jv_row) {
 
 $g5['title'] = $_jv_page_title . ' | ' . $config['cf_title'];
 
-if ($_jv_is_owner) {
+if ($_jv_is_owner && isset($_GET['mode']) && $_GET['mode'] === 'edit') {
     $jobs_mypage_active = 'ongoing';
     $jobs_breadcrumb_current = '채용정보 상세';
     include_once(G5_THEME_PATH.'/head_jobs_register.php');
