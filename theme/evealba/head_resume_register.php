@@ -5,6 +5,23 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 
+$_edit_rs_id = isset($_GET['rs_id']) ? (int)$_GET['rs_id'] : 0;
+$_is_edit_mode = false;
+$rs_row = null;
+$rs_data = array();
+if ($_edit_rs_id > 0 && $is_member) {
+    $_rs_tb = @sql_query("SHOW TABLES LIKE 'g5_resume'", false);
+    if ($_rs_tb && @sql_num_rows($_rs_tb)) {
+        $rs_row = sql_fetch("SELECT * FROM g5_resume WHERE rs_id = '{$_edit_rs_id}' AND mb_id = '".addslashes($member['mb_id'])."' AND rs_status = 'active'");
+        if ($rs_row) {
+            $_is_edit_mode = true;
+            $rs_data = @json_decode($rs_row['rs_data'], true);
+            if (!is_array($rs_data)) $rs_data = array();
+            $g5['title'] = '이력서 수정 - '.$config['cf_title'];
+        }
+    }
+}
+
 if (G5_COMMUNITY_USE === false) {
     define('G5_IS_COMMUNITY_PAGE', true);
     include_once(G5_THEME_SHOP_PATH.'/shop.head.php');
@@ -61,7 +78,7 @@ $mypage_url = G5_BBS_URL.'/member_confirm.php?url='.urlencode(G5_BBS_URL.'/regis
     <span class="sep">›</span>
     <a href="<?php echo $talent_url; ?>">인재정보</a>
     <span class="sep">›</span>
-    <span class="current">📄 이력서 등록</span>
+    <span class="current">📄 <?php echo $_is_edit_mode ? '이력서 수정' : '이력서 등록'; ?></span>
   </div>
 </div>
 

@@ -1,10 +1,14 @@
 <?php if (!defined('_GNUBOARD_')) exit;
 $mb_id = isset($member['mb_id']) ? get_text($member['mb_id']) : '';
 $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
+$_edit = !empty($_is_edit_mode) && !empty($rs_row);
+$_e = $_edit ? (is_array($rs_data) ? $rs_data : array()) : array();
+$_r = $_edit ? $rs_row : array();
+if (!function_exists('_ef')) { function _ef($a,$k,$d=''){return isset($a[$k])&&$a[$k]!==''?$a[$k]:$d;} }
 ?>
 
     <div class="page-title-bar">
-      <h2 class="page-title">📄 이력서 등록</h2>
+      <h2 class="page-title">📄 <?php echo $_edit ? '이력서 수정' : '이력서 등록'; ?></h2>
     </div>
 
     <!-- 구직자 주의사항 배너 -->
@@ -34,8 +38,12 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
             <div class="photo-upload-area" style="padding:0;gap:16px;">
               <div class="photo-box">
                 <div class="photo-preview" id="photoPreview" onclick="triggerFile('photo-file')">
+<?php if ($_edit && !empty($_r['rs_photo'])) { ?>
+                  <img src="<?php echo htmlspecialchars($_r['rs_photo']); ?>" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+<?php } else { ?>
                   <span class="photo-preview-icon">📷</span>
                   <span class="photo-preview-text">클릭하여<br>사진 등록</span>
+<?php } ?>
                 </div>
                 <input type="file" id="photo-file" accept="image/*" style="display:none" onchange="previewPhoto(this)">
               </div>
@@ -112,7 +120,7 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
         <div class="form-row">
           <div class="form-label">핸드폰 번호</div>
           <div class="form-cell col">
-            <input class="fi fi-sm" type="text" placeholder="010-0000-0000" id="resume_phone">
+            <input class="fi fi-sm" type="text" placeholder="010-0000-0000" id="resume_phone" value="<?php echo $_edit ? htmlspecialchars(_ef($_e,'phone')) : ''; ?>">
           </div>
         </div>
 
@@ -125,7 +133,7 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
               <option>카카오톡</option>
               <option>텔레그램</option>
             </select>
-            <input class="fi fi-sm" type="text" placeholder="SNS 아이디" id="resume_sns_id">
+            <input class="fi fi-sm" type="text" placeholder="SNS 아이디" id="resume_sns_id" value="<?php echo $_edit ? htmlspecialchars(_ef($_e,'sns_id')) : ''; ?>">
           </div>
         </div>
 
@@ -174,7 +182,7 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
         <div class="form-row">
           <div class="form-label">이력서 제목 <span class="req">*</span></div>
           <div class="form-cell" style="position:relative;">
-            <input class="fi fi-full" type="text" placeholder="이력서 제목을 입력해주세요" maxlength="40" id="resume_title">
+            <input class="fi fi-full" type="text" placeholder="이력서 제목을 입력해주세요" maxlength="40" id="resume_title" value="<?php echo $_edit ? htmlspecialchars($_r['rs_title']) : ''; ?>">
             <span style="position:absolute;right:22px;font-size:11px;color:#aaa;">40자 제한</span>
           </div>
         </div>
@@ -190,7 +198,7 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
               <option>주급</option>
               <option>월급</option>
             </select>
-            <input class="fi fi-xs" type="text" placeholder="금액 입력" id="resume_salary_amt">
+            <input class="fi fi-xs" type="text" placeholder="금액 입력" id="resume_salary_amt" value="<?php echo ($_edit && (int)$_r['rs_salary_amt'] > 0) ? number_format((int)$_r['rs_salary_amt']) : ''; ?>">
             <span style="font-size:13px;color:#888;">원</span>
             <button type="button" class="btn-salary-guide" onclick="openSalaryGuide()">💰 급여 기준표</button>
             <div class="salary-warn" id="salary-warn-resume" style="display:none;color:#FF1B6B;font-size:11px;font-weight:700;margin-top:4px;"></div>
@@ -202,10 +210,10 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
           <div class="form-label">신장 / 체중</div>
           <div class="form-cell">
             <div class="hw-row">
-              <input class="fi" type="text" placeholder="신장" style="width:80px;text-align:center;" id="resume_height">
+              <input class="fi" type="text" placeholder="신장" style="width:80px;text-align:center;" id="resume_height" value="<?php echo $_edit ? htmlspecialchars(_ef($_e,'height')) : ''; ?>">
               <span class="fi-unit">cm</span>
               <span style="color:#ccc;margin:0 4px;">|</span>
-              <input class="fi" type="text" placeholder="체중" style="width:80px;text-align:center;" id="resume_weight">
+              <input class="fi" type="text" placeholder="체중" style="width:80px;text-align:center;" id="resume_weight" value="<?php echo $_edit ? htmlspecialchars(_ef($_e,'weight')) : ''; ?>">
               <span class="fi-unit">kg</span>
             </div>
           </div>
@@ -351,9 +359,9 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
           <div class="form-cell" style="gap:6px;">
             <select class="fi-select" id="resume_work_time_type"><option>무관</option><option>주간</option><option>야간</option><option>새벽</option></select>
             <span style="font-size:13px;color:#888;">시작</span>
-            <input class="fi" type="text" placeholder="00:00" style="width:80px;text-align:center;" id="resume_work_time_start">
+            <input class="fi" type="text" placeholder="00:00" style="width:80px;text-align:center;" id="resume_work_time_start" value="<?php echo $_edit ? htmlspecialchars(_ef($_e,'work_time_start')) : ''; ?>">
             <span style="font-size:13px;color:#888;">~</span>
-            <input class="fi" type="text" placeholder="00:00" style="width:80px;text-align:center;" id="resume_work_time_end">
+            <input class="fi" type="text" placeholder="00:00" style="width:80px;text-align:center;" id="resume_work_time_end" value="<?php echo $_edit ? htmlspecialchars(_ef($_e,'work_time_end')) : ''; ?>">
           </div>
         </div>
 
@@ -506,7 +514,7 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
         <div class="form-row" style="min-height:160px;">
           <div class="form-label">자기소개 <span class="req">*</span></div>
           <div class="form-cell col">
-            <textarea class="fi fi-full" style="min-height:140px;" placeholder="자신을 어필할 수 있는 내용을 자유롭게 작성해주세요.&#10;예) 성격, 장점, 희망 업소 유형, 특이사항 등" id="resume_intro"></textarea>
+            <textarea class="fi fi-full" style="min-height:140px;" placeholder="자신을 어필할 수 있는 내용을 자유롭게 작성해주세요.&#10;예) 성격, 장점, 희망 업소 유형, 특이사항 등" id="resume_intro"><?php echo $_edit ? htmlspecialchars(_ef($_e,'intro')) : ''; ?></textarea>
             <p class="hint">* 2000자 이내로 작성해주세요.</p>
           </div>
         </div>
@@ -765,9 +773,10 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
       </div>
     </div>
 
-    <!-- 등록 버튼 -->
+    <!-- 등록/수정 버튼 -->
+    <input type="hidden" id="resume_rs_id" value="<?php echo $_edit ? (int)$_r['rs_id'] : 0; ?>">
     <div class="submit-btn-wrap">
-      <button class="btn-submit" type="button" onclick="submitResume()">📄 이력서 등록</button>
+      <button class="btn-submit" type="button" onclick="submitResume()">📄 <?php echo $_edit ? '이력서 수정' : '이력서 등록'; ?></button>
     </div>
 
 <script>
@@ -1033,6 +1042,8 @@ function submitResume() {
   function rv(name){var r=document.querySelector('input[name="'+name+'"]:checked');return r&&r.nextElementSibling?r.nextElementSibling.textContent:'';}
 
   var fd=new FormData();
+  var _rsId = parseInt(gv('resume_rs_id'),10) || 0;
+  if(_rsId > 0) fd.append('rs_id', _rsId);
   fd.append('title', gv('resume_title'));
   fd.append('nick', gv('resume_nick'));
   fd.append('gender', gv('resume_gender'));
@@ -1058,7 +1069,7 @@ function submitResume() {
   fd.append('work_time_start', gv('resume_work_time_start'));
   fd.append('work_time_end', gv('resume_work_time_end'));
   fd.append('intro', gv('resume_intro'));
-  fd.append('career_type', rv('career'));
+  fd.append('career_type', rv('career-yn'));
 
   var days=[];
   ['day-mon','day-tue','day-wed','day-thu','day-fri','day-sat','day-sun'].forEach(function(id){
@@ -1096,24 +1107,25 @@ function submitResume() {
   if(photoFile&&photoFile.files&&photoFile.files[0]) fd.append('photo_file', photoFile.files[0]);
 
   var btn=document.querySelector('.btn-submit');
-  if(btn){btn.disabled=true;btn.textContent='등록 중...';}
+  var _btnLabel = _rsId > 0 ? '📄 이력서 수정' : '📄 이력서 등록';
+  if(btn){btn.disabled=true;btn.textContent=(_rsId>0?'수정':'등록')+' 중...';}
 
   var saveUrl='<?php echo (defined("G5_URL")&&G5_URL)?rtrim(G5_URL,"/")."/resume_save.php":"/resume_save.php"; ?>';
   fetch(saveUrl,{method:'POST',body:fd,credentials:'same-origin'})
   .then(function(r){return r.json();})
   .then(function(res){
-    if(btn){btn.disabled=false;btn.textContent='📄 이력서 등록';}
+    if(btn){btn.disabled=false;btn.textContent=_btnLabel;}
     if(res.ok){
-      alert(res.msg||'이력서가 등록되었습니다!');
+      alert(res.msg||(_rsId>0?'이력서가 수정되었습니다!':'이력서가 등록되었습니다!'));
       var talentUrl='<?php echo (defined("G5_URL")&&G5_URL)?rtrim(G5_URL,"/")."/talent.php":"/talent.php"; ?>';
       location.href=talentUrl;
     } else {
-      alert(res.msg||'등록에 실패했습니다.');
+      alert(res.msg||'저장에 실패했습니다.');
     }
   })
   .catch(function(e){
-    if(btn){btn.disabled=false;btn.textContent='📄 이력서 등록';}
-    alert('등록 중 오류가 발생했습니다: '+(e.message||''));
+    if(btn){btn.disabled=false;btn.textContent=_btnLabel;}
+    alert('저장 중 오류가 발생했습니다: '+(e.message||''));
   });
 }
 
@@ -1159,6 +1171,60 @@ function showResumeSalaryWarn(){
 
 function openSalaryGuide(){ document.getElementById('modal-salary-guide').style.display='flex'; }
 function closeSalaryGuide(){ document.getElementById('modal-salary-guide').style.display='none'; }
+
+<?php if ($_edit) {
+  $_ej = json_encode(array(
+    'age'=>(int)$_r['rs_age'], 'job1'=>$_r['rs_job1'], 'job2'=>$_r['rs_job2'],
+    'region'=>$_r['rs_region'], 'region_detail'=>isset($_r['rs_region_detail'])?$_r['rs_region_detail']:_ef($_e,'region_detail'),
+    'work_region'=>$_r['rs_work_region'], 'wrd'=>_ef($_e,'work_region_detail'),
+    'sal_type'=>$_r['rs_salary_type'], 'size'=>_ef($_e,'size'), 'edu'=>_ef($_e,'edu'),
+    'sns_type'=>_ef($_e,'sns_type'), 'contact'=>_ef($_e,'contact'),
+    'work_type'=>_ef($_e,'work_type'), 'wtt'=>_ef($_e,'work_time_type'),
+    'work_days'=>_ef($_e,'work_days'), 'wre'=>_ef($_e,'work_region_extra'),
+    'career_type'=>_ef($_e,'career_type'),
+    'amenities'=>_ef($_e,'amenities','[]'), 'keywords'=>_ef($_e,'keywords','[]'),
+    'mbti'=>_ef($_e,'mbti')
+  ), JSON_UNESCAPED_UNICODE);
+?>
+(function(){
+  var ed=<?php echo $_ej; ?>;
+  function sst(id,t){var e=document.getElementById(id);if(!e||!t)return;for(var i=0;i<e.options.length;i++){if(e.options[i].text===t){e.selectedIndex=i;return;}}}
+  function srad(n,l){if(!l)return;document.querySelectorAll('input[name="'+n+'"]').forEach(function(r){var lb=r.nextElementSibling||(r.labels&&r.labels[0]);if(lb&&lb.textContent.trim()===l)r.checked=true;});}
+
+  if(ed.age){var ae=document.getElementById('resume_age');if(ae)ae.value=String(ed.age);}
+  sst('resume_job1',ed.job1); sst('resume_job2',ed.job2);
+  sst('resume_salary_type',ed.sal_type); sst('resume_size',ed.size);
+  sst('resume_edu',ed.edu); sst('resume_sns_type',ed.sns_type);
+  sst('resume_work_time_type',ed.wtt);
+
+  sst('resume_region',ed.region);
+  var rEl=document.getElementById('resume_region');
+  if(rEl)rEl.dispatchEvent(new Event('change'));
+  sst('resume_work_region',ed.work_region);
+  var wrEl=document.getElementById('resume_work_region');
+  if(wrEl)wrEl.dispatchEvent(new Event('change'));
+  setTimeout(function(){
+    sst('resume_region_detail',ed.region_detail);
+    sst('resume_work_region_detail',ed.wrd);
+  },100);
+
+  srad('contact',ed.contact);
+  srad('work-type',ed.work_type);
+  srad('career-yn',ed.career_type);
+
+  if(ed.work_days){var dm={'월':'day-mon','화':'day-tue','수':'day-wed','목':'day-thu','금':'day-fri','토':'day-sat','일':'day-sun'};ed.work_days.split(',').forEach(function(d){var e=document.getElementById(dm[d.trim()]);if(e)e.checked=true;});}
+
+  if(ed.wre){ed.wre.split(',').forEach(function(x){x=x.trim();if(x==='전국 가능'){var e=document.getElementById('rg-all');if(e)e.checked=true;}if(x==='출장 가능'){var e=document.getElementById('rg-travel');if(e)e.checked=true;}if(x==='해외 가능'){var e=document.getElementById('rg-abroad');if(e)e.checked=true;}});}
+
+  try{var am=JSON.parse(ed.amenities);if(Array.isArray(am)){for(var i=0;i<=21;i++){var c=document.getElementById('am-'+i);if(c&&c.nextElementSibling&&am.indexOf(c.nextElementSibling.textContent)>=0)c.checked=true;}}}catch(ex){}
+
+  try{var kw=JSON.parse(ed.keywords);if(Array.isArray(kw)){for(var i=1;i<=24;i++){var c=document.getElementById('kw-'+i);if(c&&c.nextElementSibling&&kw.indexOf(c.nextElementSibling.textContent)>=0)c.checked=true;}}}catch(ex){}
+
+  if(ed.mbti){var mr=document.querySelector('input[name="mbti"][value="'+ed.mbti+'"]');if(mr){mr.checked=true;var card=mr.closest('.mbti-card');if(card)card.classList.add('selected');}}
+
+  setTimeout(function(){if(typeof updateResumeSummary==='function')updateResumeSummary();},300);
+})();
+<?php } ?>
 </script>
 
 <!-- 급여 기준표 모달 -->
