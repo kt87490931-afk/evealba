@@ -42,6 +42,11 @@
       </div>
     </div>
 
+    <div class="agree-all-bar">
+      <input type="checkbox" id="agree-all" onchange="toggleAgreeAll()">
+      <label for="agree-all">✅ 전체 약관에 동의합니다</label>
+    </div>
+
     <div class="form-card">
       <div class="terms-box-wrap">
         <div class="terms-box-title">📋 이용약관</div>
@@ -427,7 +432,16 @@ function showScreen(which) {
   });
 }
 
-function checkAgreements() {}
+function toggleAgreeAll() {
+  var allChecked = document.getElementById('agree-all').checked;
+  document.getElementById('agree-terms').checked = allChecked;
+  document.getElementById('agree-privacy').checked = allChecked;
+}
+function checkAgreements() {
+  var t = document.getElementById('agree-terms').checked;
+  var p = document.getElementById('agree-privacy').checked;
+  document.getElementById('agree-all').checked = (t && p);
+}
 
 function doVerify() {
   verifyDone = true;
