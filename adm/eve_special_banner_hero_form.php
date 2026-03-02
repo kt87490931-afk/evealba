@@ -1,6 +1,6 @@
 <?php
 /**
- * 어드민 - 히어로배너 생성/편집 (썸네일 에디터 포함)
+ * 어드민 - 히어로배너 생성/편집 (실제 히어로 사이즈 미리보기 + 홍보문구1/2 + 폰트 컨트롤)
  */
 $sub_menu = '910920';
 require_once './_common.php';
@@ -35,6 +35,12 @@ $thumb_motion     = isset($data['thumb_motion']) ? trim($data['thumb_motion']) :
 $thumb_wave       = isset($data['thumb_wave']) ? (int)$data['thumb_wave'] : 0;
 $thumb_text_color = isset($data['thumb_text_color']) ? trim($data['thumb_text_color']) : 'rgb(255,255,255)';
 $thumb_border     = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
+
+$title_size  = isset($data['title_size']) ? trim($data['title_size']) : '30px';
+$title_align = isset($data['title_align']) ? trim($data['title_align']) : 'left';
+$text_size   = isset($data['text_size']) ? trim($data['text_size']) : '14px';
+$text_color  = isset($data['text_color']) ? trim($data['text_color']) : 'rgba(255,255,255,.9)';
+$text_align  = isset($data['text_align']) ? trim($data['text_align']) : 'left';
 
 $sb_jr_id   = $is_edit ? (int)$sb['sb_jr_id'] : 0;
 $sb_link    = $is_edit ? ($sb['sb_link'] ?? '') : '';
@@ -124,28 +130,58 @@ if ($thumb_wave) {
 .meta-input{flex:1;padding:8px 12px;border:1.5px solid #f0e0e8;border-radius:8px;font-size:13px;outline:none;transition:border-color .2s}
 .meta-input:focus{border-color:var(--pink)}
 .meta-input-sm{width:80px;flex:initial}
-.meta-help{font-size:10px;color:#aaa;margin-top:2px}
 .jr-search-wrap{display:flex;gap:6px;flex:1}
 .jr-search-wrap input{flex:1}
 .jr-search-btn{padding:8px 14px;background:#6366f1;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
 .jr-search-result{margin-top:6px;font-size:12px;color:#333;padding:6px 10px;background:#f8f0ff;border-radius:6px;display:none}
 
-/* 썸네일 에디터 (jobs_view_main.php와 동일) */
-.thumb-gen-wrap{max-width:960px;margin:0 auto 12px;background:#fff;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;font-family:'Noto Sans KR',sans-serif}
-.thumb-gen-wrap .tg-section-header{background:linear-gradient(90deg,#fff0f6,#fff8fb);padding:11px 20px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.thumb-gen-wrap .tg-section-label{font-size:12px;font-weight:900;color:var(--pink);letter-spacing:.3px}
-.thumb-gen-wrap .tg-save-btn{padding:5px 18px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;font-size:12px;font-weight:900;cursor:pointer;transition:opacity .2s;box-shadow:0 3px 12px rgba(255,27,107,.3)}
-.thumb-gen-wrap .tg-save-btn:hover{opacity:.9}
-.thumb-gen-wrap .tg-save-btn:disabled{opacity:.5;cursor:not-allowed}
-.thumb-body{display:grid;grid-template-columns:1fr 300px;gap:0}
-.thumb-controls{padding:20px 22px;border-right:1.5px solid var(--border)}
-.thumb-preview-col{padding:20px 18px;background:linear-gradient(180deg,#fff0f6,#fff8fb);display:flex;flex-direction:column;align-items:center;gap:12px}
-.thumb-preview-label{font-size:11px;font-weight:900;color:var(--pink);letter-spacing:.3px;align-self:flex-start}
+/* 에디터 */
+.hero-editor-wrap{max-width:960px;margin:0 auto 12px;background:#fff;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;font-family:'Noto Sans KR',sans-serif}
+.hero-editor-wrap .tg-section-header{background:linear-gradient(90deg,#fff0f6,#fff8fb);padding:11px 20px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.hero-editor-wrap .tg-section-label{font-size:12px;font-weight:900;color:var(--pink);letter-spacing:.3px}
+.hero-editor-wrap .tg-save-btn{padding:5px 18px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;font-size:12px;font-weight:900;cursor:pointer;transition:opacity .2s;box-shadow:0 3px 12px rgba(255,27,107,.3)}
+.hero-editor-wrap .tg-save-btn:hover{opacity:.9}
+.hero-editor-wrap .tg-save-btn:disabled{opacity:.5;cursor:not-allowed}
+.hero-editor-body{padding:20px 22px}
+
+/* 미리보기 - 실제 히어로배너 사이즈 */
+.hero-pv-section{margin-bottom:20px}
+.hero-pv-label{font-size:11px;font-weight:900;color:var(--pink);letter-spacing:.3px;margin-bottom:8px}
+.hero-pv-card{position:relative;border-radius:14px;overflow:hidden;height:190px;display:flex;align-items:center;padding:28px;cursor:default}
+.hero-pv-card::before{content:'';position:absolute;top:-50%;right:-10%;width:60%;height:200%;background:radial-gradient(ellipse,rgba(255,27,107,.15),transparent 70%);animation:hero-float 3s ease-in-out infinite;pointer-events:none}
+@keyframes hero-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero-pv-text{position:relative;z-index:2;max-width:70%}
+.hero-pv-text h2{margin:0;font-weight:900;line-height:1.2;text-shadow:0 2px 10px rgba(0,0,0,.5);white-space:pre-wrap;word-break:keep-all}
+.hero-pv-text p{margin:7px 0 0;font-weight:500;white-space:pre-wrap;word-break:keep-all}
+.hero-pv-badge{position:absolute;top:14px;right:14px;font-weight:900;font-size:12px;padding:5px 12px;border-radius:18px;z-index:10;color:#fff}
+
+/* 컨트롤 그리드 */
+.ctrl-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.ctrl-grid-full{grid-column:1/-1}
 .ctrl-row{margin-bottom:16px}
 .ctrl-label{font-size:11px;font-weight:900;color:#666;margin-bottom:7px;display:flex;align-items:center;gap:5px}
-.ctrl-input{width:100%;padding:9px 12px;border:1.5px solid #f0e0e8;border-radius:10px;font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;color:#222;resize:vertical}
+.ctrl-input{width:100%;padding:9px 12px;border:1.5px solid #f0e0e8;border-radius:10px;font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;color:#222;box-sizing:border-box}
 .ctrl-input:focus{border-color:var(--pink)}
 .ctrl-charcount{font-size:10px;color:#bbb;text-align:right;margin-top:3px}
+
+/* 인라인 옵션 그룹 */
+.ctrl-inline{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ctrl-inline select{padding:6px 10px;border:1.5px solid #f0e0e8;border-radius:8px;font-size:12px;font-family:inherit;outline:none;cursor:pointer;background:#fff}
+.ctrl-inline select:focus{border-color:var(--pink)}
+
+/* 색상 선택 (input[type=color]) */
+.color-pick-wrap{display:flex;align-items:center;gap:8px}
+.color-pick-wrap input[type=color]{width:32px;height:32px;border:2px solid #f0e0e8;border-radius:8px;cursor:pointer;padding:0;background:none;-webkit-appearance:none;appearance:none}
+.color-pick-wrap input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
+.color-pick-wrap input[type=color]::-webkit-color-swatch{border-radius:4px;border:none}
+
+/* 정렬 버튼 */
+.align-opts{display:flex;gap:4px}
+.align-btn{width:32px;height:32px;border:1.5px solid #eee;border-radius:6px;cursor:pointer;font-size:14px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.align-btn:hover{background:#fff0f6}
+.align-btn.selected{background:var(--pink);color:#fff;border-color:var(--pink)}
+
+/* 컬러 그리드 */
 .color-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:16px}
 .color-swatch{width:100%;aspect-ratio:1;border-radius:8px;cursor:pointer;border:2.5px solid transparent;transition:all .18s;position:relative;overflow:hidden}
 .color-swatch:hover{transform:scale(1.12);box-shadow:0 3px 10px rgba(0,0,0,.2)}
@@ -155,9 +191,6 @@ if ($thumb_wave) {
 .premium-title{font-size:11px;font-weight:900;color:#666;margin-bottom:7px;display:flex;align-items:center;gap:5px}
 .premium-color-wrap .color-grid{margin-bottom:0}
 .carbon-bg{background:linear-gradient(160deg,rgba(45,45,55,.45) 0%,transparent 40%,rgba(55,55,65,.3) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='8' height='8' fill='%230d0d12'/%3E%3Crect width='2' height='2' fill='%2318181f'/%3E%3Crect x='2' width='2' height='2' fill='%2318181f'/%3E%3Crect x='2' y='2' width='2' height='2' fill='%2318181f'/%3E%3Crect x='4' y='2' width='2' height='2' fill='%2318181f'/%3E%3Crect x='4' y='4' width='2' height='2' fill='%2318181f'/%3E%3Crect x='6' y='4' width='2' height='2' fill='%2318181f'/%3E%3Crect x='6' y='6' width='2' height='2' fill='%2318181f'/%3E%3Crect y='6' width='2' height='2' fill='%2318181f'/%3E%3C/svg%3E") repeat!important;background-size:100% 100%,8px 8px!important}
-.txt-color-opts{display:flex;gap:8px}
-.txt-color-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:2px solid #eee;font-size:12px;font-weight:700;cursor:pointer;background:#f5f5f5;font-family:inherit;transition:all .18s;color:#555}
-.txt-color-btn.selected{border-color:var(--pink);background:#fff0f6;color:var(--pink)}
 .badge-opts{display:flex;flex-wrap:wrap;gap:6px}
 .badge-opt{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid #eee;background:#f9f9f9;color:#666;transition:all .18s}
 .badge-opt.selected{background:var(--pink);color:#fff;border-color:var(--pink)}
@@ -174,18 +207,7 @@ if ($thumb_wave) {
 .border-btn:hover{transform:scale(1.1)}
 .border-btn.selected{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--pink);transform:scale(1.1)}
 .border-btn-none{border:2px dashed #ddd;font-size:10px;color:#bbb}
-/* 미리보기 카드 */
-.job-card{position:relative;border-radius:12px;overflow:hidden;border:none;background:#fff;box-shadow:inset 0 0 0 0.75px #f0e0e8, 0 0 0 0.75px #f0e0e8}
-.job-card-banner{height:auto;aspect-ratio:16/9;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;text-align:center;line-height:1.4}
-.job-card-banner span{position:relative;z-index:1;line-height:1.4;transition:font-size .15s}
-.tpc-sub{display:block;font-size:12px;font-weight:500;margin-top:2px;opacity:.9;transition:font-size .15s}
-.pv-icon-badge{position:absolute;top:7px;right:7px;font-size:10px;font-weight:900;padding:2px 7px;border-radius:9px;z-index:10;color:#fff}
-.job-card-body{padding:10px 12px}
-.job-card-location{font-size:11px;color:#888;margin-bottom:4px}
-.job-loc-badge{background:#fff0f6;color:var(--pink);padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;margin-right:4px}
-.job-desc{font-size:13px;font-weight:700;color:#333;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.job-card-footer{display:flex;justify-content:space-between;align-items:center}
-.job-wage{font-size:12px;font-weight:700;color:var(--pink)}
+
 @keyframes motion-pulse-scale{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
 @keyframes motion-soft-blink{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes motion-glow-pulse{0%,100%{text-shadow:none}50%{text-shadow:0 0 10px #fff,0 0 25px #fff,0 0 50px rgba(255,255,255,.7),0 0 80px rgba(255,255,255,.4)}}
@@ -196,6 +218,8 @@ if ($thumb_wave) {
 .pv-motion-glow{animation:motion-glow-pulse 2s ease-in-out infinite!important}
 .pv-motion-bounce{animation:motion-bounce 1.2s ease infinite!important}
 .pv-wave-active{animation:wave-diag 4s ease-in-out infinite!important;background-size:400% 400%!important}
+.hero-bottom-save{text-align:center;margin-top:16px}
+.hero-bottom-save .tg-save-btn{width:100%;padding:13px;border-radius:12px;font-size:14px}
 </style>
 
 <div class="hero-form-wrap">
@@ -229,16 +253,95 @@ if ($thumb_wave) {
     </div>
   </div>
 
-  <!-- 썸네일 에디터 -->
-  <div class="thumb-gen-wrap" id="thumb-gen-section">
+  <!-- 히어로배너 에디터 -->
+  <div class="hero-editor-wrap" id="hero-editor-section">
     <div class="tg-section-header">
-      <span class="tg-section-label">🎨 썸네일 에디터</span>
+      <span class="tg-section-label">🎨 히어로배너 에디터</span>
       <button type="button" class="tg-save-btn" id="tg-save-btn" onclick="saveHero()">💾 저장</button>
     </div>
-    <div class="thumb-body">
-      <div class="thumb-controls">
+    <div class="hero-editor-body">
+
+      <!-- 실제 크기 미리보기 -->
+      <div class="hero-pv-section">
+        <div class="hero-pv-label">👁️ 실제 크기 미리보기 (히어로배너)</div>
+        <div class="hero-pv-card<?php echo $thumb_wave ? ' pv-wave-active' : ''; ?><?php echo ($saved_grad === 'P3' && !$thumb_wave) ? ' carbon-bg' : ''; ?>" id="hero-pv-card" style="<?php echo $pv_banner_style; ?>">
+          <div class="hero-pv-text" id="hero-pv-text" style="text-align:<?php echo htmlspecialchars($title_align); ?>">
+            <h2 id="hero-pv-h2" class="<?php echo $thumb_motion ? 'pv-motion-'.htmlspecialchars($thumb_motion) : ''; ?>" style="font-size:<?php echo htmlspecialchars($title_size); ?>;color:<?php echo htmlspecialchars($thumb_text_color); ?>"><?php echo htmlspecialchars($thumb_title ?: '홍보문구1 입력'); ?></h2>
+            <p id="hero-pv-p" style="font-size:<?php echo htmlspecialchars($text_size); ?>;color:<?php echo htmlspecialchars($text_color); ?>;text-align:<?php echo htmlspecialchars($text_align); ?>"><?php echo htmlspecialchars($thumb_text ?: '홍보문구2 입력'); ?></p>
+          </div>
+          <?php if ($thumb_icon && isset($icons[$thumb_icon])) { ?>
+          <div class="hero-pv-badge" id="hero-pv-badge" style="background:<?php echo $icons[$thumb_icon]['bg']; ?>"><?php echo $icons[$thumb_icon]['label']; ?></div>
+          <?php } else { ?>
+          <div class="hero-pv-badge" id="hero-pv-badge" style="display:none"></div>
+          <?php } ?>
+        </div>
+      </div>
+
+      <!-- 컨트롤 영역 -->
+      <div class="ctrl-grid">
+        <!-- 홍보문구1 -->
         <div class="ctrl-row">
-          <div class="ctrl-label">🎨 컬러 선택 <span style="color:#bbb;font-weight:400;">(무료 20종)</span></div>
+          <div class="ctrl-label">📢 홍보문구1 (메인 타이틀)</div>
+          <input type="text" class="ctrl-input" id="tg-title" maxlength="30" placeholder="예) 강남 룸 80개 1등 대일팀!" value="<?php echo htmlspecialchars($thumb_title, ENT_QUOTES); ?>" oninput="updatePreview()">
+          <div class="ctrl-charcount"><span id="tg-title-cnt"><?php echo mb_strlen($thumb_title, 'UTF-8'); ?></span>/30</div>
+        </div>
+        <!-- 홍보문구1 스타일 -->
+        <div class="ctrl-row">
+          <div class="ctrl-label">🎨 홍보문구1 스타일</div>
+          <div class="ctrl-inline">
+            <select id="tg-title-size" onchange="updatePreview()">
+              <option value="24px"<?php echo $title_size==='24px'?' selected':''; ?>>소 (24px)</option>
+              <option value="28px"<?php echo $title_size==='28px'?' selected':''; ?>>중 (28px)</option>
+              <option value="30px"<?php echo $title_size==='30px'?' selected':''; ?>>대 (30px)</option>
+              <option value="36px"<?php echo $title_size==='36px'?' selected':''; ?>>특대 (36px)</option>
+              <option value="42px"<?php echo $title_size==='42px'?' selected':''; ?>>초특대 (42px)</option>
+            </select>
+            <div class="color-pick-wrap">
+              <input type="color" id="tg-title-color" value="<?php echo ($thumb_text_color === 'rgb(255,255,255)' || $thumb_text_color === '#ffffff') ? '#ffffff' : '#444444'; ?>" onchange="updatePreview()">
+            </div>
+            <div class="align-opts" id="tg-title-align">
+              <button type="button" class="align-btn<?php echo $title_align==='left'?' selected':''; ?>" data-align="left" onclick="setAlign('title',this)" title="좌측">◀</button>
+              <button type="button" class="align-btn<?php echo $title_align==='center'?' selected':''; ?>" data-align="center" onclick="setAlign('title',this)" title="중앙">●</button>
+              <button type="button" class="align-btn<?php echo $title_align==='right'?' selected':''; ?>" data-align="right" onclick="setAlign('title',this)" title="우측">▶</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 홍보문구2 -->
+        <div class="ctrl-row">
+          <div class="ctrl-label">💬 홍보문구2 (서브 텍스트)</div>
+          <input type="text" class="ctrl-input" id="tg-text" maxlength="60" placeholder="예) 🔥 하이퍼블릭 밀빵OK · 5인1조 픽업OK!!" value="<?php echo htmlspecialchars($thumb_text, ENT_QUOTES); ?>" oninput="updatePreview()">
+          <div class="ctrl-charcount"><span id="tg-text-cnt"><?php echo mb_strlen($thumb_text, 'UTF-8'); ?></span>/60</div>
+        </div>
+        <!-- 홍보문구2 스타일 -->
+        <div class="ctrl-row">
+          <div class="ctrl-label">🎨 홍보문구2 스타일</div>
+          <div class="ctrl-inline">
+            <select id="tg-text-size" onchange="updatePreview()">
+              <option value="12px"<?php echo $text_size==='12px'?' selected':''; ?>>소 (12px)</option>
+              <option value="14px"<?php echo $text_size==='14px'?' selected':''; ?>>중 (14px)</option>
+              <option value="16px"<?php echo $text_size==='16px'?' selected':''; ?>>대 (16px)</option>
+              <option value="18px"<?php echo $text_size==='18px'?' selected':''; ?>>특대 (18px)</option>
+            </select>
+            <div class="color-pick-wrap">
+              <input type="color" id="tg-text-color" value="<?php
+                $tc = $text_color;
+                if (strpos($tc, 'rgba') === 0) echo '#ffffff';
+                elseif (strpos($tc, '#') === 0) echo htmlspecialchars($tc);
+                else echo '#ffffff';
+              ?>" onchange="updatePreview()">
+            </div>
+            <div class="align-opts" id="tg-text-align">
+              <button type="button" class="align-btn<?php echo $text_align==='left'?' selected':''; ?>" data-align="left" onclick="setAlign('text',this)" title="좌측">◀</button>
+              <button type="button" class="align-btn<?php echo $text_align==='center'?' selected':''; ?>" data-align="center" onclick="setAlign('text',this)" title="중앙">●</button>
+              <button type="button" class="align-btn<?php echo $text_align==='right'?' selected':''; ?>" data-align="right" onclick="setAlign('text',this)" title="우측">▶</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 배경 컬러 -->
+        <div class="ctrl-row ctrl-grid-full">
+          <div class="ctrl-label">🎨 배경 컬러 선택 <span style="color:#bbb;font-weight:400;">(무료 20종)</span></div>
           <div class="color-grid" id="tg-color-grid">
             <?php foreach ($gradients as $num => $grad) {
               $sel = ((string)$num === (string)$saved_grad) ? ' selected' : '';
@@ -246,7 +349,7 @@ if ($thumb_wave) {
             } ?>
           </div>
         </div>
-        <div class="ctrl-row">
+        <div class="ctrl-row ctrl-grid-full">
           <div class="premium-color-wrap">
             <div class="premium-title">유료 컬러 <span style="color:#aaa;font-weight:400;">(4종)</span></div>
             <div class="color-grid" id="tg-premium-grid">
@@ -266,24 +369,9 @@ if ($thumb_wave) {
             </div>
           </div>
         </div>
-        <div class="ctrl-row">
-          <div class="ctrl-label">✏️ 썸네일 제목</div>
-          <input type="text" class="ctrl-input" id="tg-title" maxlength="20" placeholder="업소명을 입력하세요" value="<?php echo htmlspecialchars($thumb_title, ENT_QUOTES); ?>" oninput="updatePreview();countChar(this,'tg-title-cnt',20)">
-          <div class="ctrl-charcount"><span id="tg-title-cnt"><?php echo mb_strlen($thumb_title, 'UTF-8'); ?></span>/20</div>
-        </div>
-        <div class="ctrl-row">
-          <div class="ctrl-label">💬 홍보 문구</div>
-          <input type="text" class="ctrl-input" id="tg-text" maxlength="60" placeholder="예) 시급 15,000원 · 초보환영 · 당일지급" value="<?php echo htmlspecialchars($thumb_text, ENT_QUOTES); ?>" oninput="updatePreview();countChar(this,'tg-text-cnt',60)">
-          <div class="ctrl-charcount"><span id="tg-text-cnt"><?php echo mb_strlen($thumb_text, 'UTF-8'); ?></span>/60</div>
-        </div>
-        <div class="ctrl-row">
-          <div class="ctrl-label">🖊️ 텍스트 컬러</div>
-          <div class="txt-color-opts" id="tg-textcolor-grid">
-            <button type="button" class="txt-color-btn<?php echo $thumb_text_color === 'rgb(255,255,255)' ? ' selected' : ''; ?>" data-tcolor="rgb(255,255,255)" onclick="selectTextColor(this)"><span style="width:14px;height:14px;border-radius:50%;background:#fff;border:1.5px solid #ddd;display:inline-block"></span> 흰색</button>
-            <button type="button" class="txt-color-btn<?php echo $thumb_text_color === 'rgb(68,68,68)' ? ' selected' : ''; ?>" data-tcolor="rgb(68,68,68)" onclick="selectTextColor(this)"><span style="width:14px;height:14px;border-radius:50%;background:#333;display:inline-block"></span> 다크그레이</button>
-          </div>
-        </div>
-        <div class="ctrl-row">
+
+        <!-- 뱃지 -->
+        <div class="ctrl-row ctrl-grid-full">
           <div class="ctrl-label">🏷️ 뱃지</div>
           <div class="badge-opts" id="tg-icon-grid">
             <?php foreach ($icons as $key => $ic) {
@@ -296,6 +384,8 @@ if ($thumb_wave) {
             } ?>
           </div>
         </div>
+
+        <!-- 모션 -->
         <div class="ctrl-row">
           <div class="ctrl-label">✨ 제목 모션</div>
           <div class="motion-opts" id="tg-motion-grid">
@@ -305,6 +395,8 @@ if ($thumb_wave) {
             } ?>
           </div>
         </div>
+
+        <!-- 웨이브 -->
         <div class="ctrl-row">
           <div class="ctrl-label">🌊 컬러 웨이브</div>
           <label class="wave-toggle">
@@ -312,7 +404,9 @@ if ($thumb_wave) {
             <span class="wave-toggle-label">배경 웨이브 효과 적용</span>
           </label>
         </div>
-        <div class="ctrl-row" style="margin-bottom:0">
+
+        <!-- 테두리 -->
+        <div class="ctrl-row ctrl-grid-full" style="margin-bottom:0">
           <div class="ctrl-label">🖼️ 테두리</div>
           <div class="border-opts" id="tg-border-grid">
             <button type="button" class="border-btn border-btn-none<?php echo !$thumb_border ? ' selected' : ''; ?>" title="없음" data-border="" onclick="selectBorder(this)">없음</button>
@@ -325,28 +419,8 @@ if ($thumb_wave) {
         </div>
       </div>
 
-      <!-- 미리보기 -->
-      <div class="thumb-preview-col">
-        <div class="thumb-preview-label">👁️ 미리보기</div>
-        <div class="job-card" id="tg-pv-card" style="width:100%">
-          <div class="job-card-banner<?php echo $thumb_wave ? ' pv-wave-active' : ''; ?><?php echo ($saved_grad === 'P3' && !$thumb_wave) ? ' carbon-bg' : ''; ?>" id="tg-pv-banner" style="<?php echo $pv_banner_style; ?>">
-            <span id="tpc-title" class="<?php echo $thumb_motion ? 'pv-motion-'.htmlspecialchars($thumb_motion) : ''; ?>" style="color:<?php echo htmlspecialchars($thumb_text_color); ?>"><?php echo htmlspecialchars($thumb_title ?: '업소명', ENT_QUOTES); ?><span class="tpc-sub" id="tpc-text"><?php echo htmlspecialchars($thumb_text, ENT_QUOTES); ?></span></span>
-          </div>
-          <?php if ($thumb_icon && isset($icons[$thumb_icon])) { ?>
-          <div class="pv-icon-badge" id="tg-pv-icon" style="background:<?php echo $icons[$thumb_icon]['bg']; ?>"><?php echo $icons[$thumb_icon]['label']; ?></div>
-          <?php } else { ?>
-          <div class="pv-icon-badge" id="tg-pv-icon" style="display:none"></div>
-          <?php } ?>
-          <div class="job-card-body">
-            <div class="job-card-location"><span class="job-loc-badge">히어로</span> <span>배너</span></div>
-            <div class="job-desc" id="tg-pv-desc"><?php echo htmlspecialchars($thumb_title ?: '히어로배너 미리보기'); ?></div>
-            <div class="job-card-footer"><span class="job-wage">특수배너</span></div>
-          </div>
-        </div>
-        <div style="font-size:10px;color:#aaa;text-align:center;line-height:1.6;margin-top:4px">
-          💡 이 썸네일은 메인 상단<br>히어로 영역에 표시됩니다.
-        </div>
-        <button type="button" class="tg-save-btn" onclick="saveHero()" style="width:100%;padding:11px;border-radius:12px;font-size:13px;margin-top:10px">💾 저장</button>
+      <div class="hero-bottom-save">
+        <button type="button" class="tg-save-btn" onclick="saveHero()">💾 저장</button>
       </div>
     </div>
   </div>
@@ -358,125 +432,180 @@ var _thumbSelected = '<?php echo addslashes($saved_grad ?: "1"); ?>';
 var _thumbIcon = '<?php echo addslashes($thumb_icon); ?>';
 var _thumbMotion = '<?php echo addslashes($thumb_motion); ?>';
 var _thumbWave = <?php echo $thumb_wave ? 'true' : 'false'; ?>;
-var _thumbTextColor = '<?php echo addslashes($thumb_text_color); ?>';
 var _thumbBorder = '<?php echo addslashes($thumb_border); ?>';
 
 function _applyBannerBg(){
-  var banner=document.getElementById('tg-pv-banner');
-  if(!banner||!_thumbGrads[_thumbSelected])return;
-  var g=_thumbGrads[_thumbSelected];
+  var banner = document.getElementById('hero-pv-card');
+  if(!banner || !_thumbGrads[_thumbSelected]) return;
+  var g = _thumbGrads[_thumbSelected];
   banner.classList.remove('carbon-bg');
   if(_thumbWave){
-    var m=g.match(/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/g);
-    if(m&&m.length>=2){
-      banner.style.background='linear-gradient(135deg,'+m[0]+','+m[1]+','+(m[2]||m[0])+','+m[0]+','+m[1]+')';
-      banner.style.backgroundSize='400% 400%';
-    }else{banner.style.background=g;banner.style.backgroundSize='400% 400%';}
+    var m = g.match(/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/g);
+    if(m && m.length >= 2){
+      banner.style.background = 'linear-gradient(135deg,'+m[0]+','+m[1]+','+(m[2]||m[0])+','+m[0]+','+m[1]+')';
+      banner.style.backgroundSize = '400% 400%';
+    } else {
+      banner.style.background = g;
+      banner.style.backgroundSize = '400% 400%';
+    }
     banner.classList.add('pv-wave-active');
-  }else{
-    banner.style.background=g;banner.style.backgroundSize='';
-    banner.classList.remove('pv-wave-active');
-    if(_thumbSelected==='P3')banner.classList.add('carbon-bg');
-  }
-}
-function _applyBorder(){
-  var card=document.getElementById('tg-pv-card');if(!card)return;
-  var borders={gold:'#FFD700',pink:'#FF1B6B',charcoal:'#3a3a3a',royalblue:'#4169E1',royalpurple:'#7B2FBE'};
-  if(borders[_thumbBorder]){
-    card.style.boxShadow='inset 0 0 0 2px '+borders[_thumbBorder]+', 0 0 0 2px '+borders[_thumbBorder]+', 0 6px 24px rgba(0,0,0,.18)';
   } else {
-    card.style.boxShadow='inset 0 0 0 0.75px #f0e0e8, 0 0 0 0.75px #f0e0e8';
+    banner.style.background = g;
+    banner.style.backgroundSize = '';
+    banner.classList.remove('pv-wave-active');
+    if(_thumbSelected === 'P3') banner.classList.add('carbon-bg');
   }
 }
-function selectGrad(btn){
-  document.querySelectorAll('.color-swatch').forEach(function(b){b.classList.remove('selected');});
+
+function _applyBorder(){
+  var card = document.getElementById('hero-pv-card');
+  if(!card) return;
+  var borders = {gold:'#FFD700',pink:'#FF1B6B',charcoal:'#3a3a3a',royalblue:'#4169E1',royalpurple:'#7B2FBE'};
+  if(borders[_thumbBorder]){
+    card.style.boxShadow = 'inset 0 0 0 3px '+borders[_thumbBorder]+', 0 0 0 3px '+borders[_thumbBorder];
+  } else {
+    card.style.boxShadow = 'none';
+  }
+}
+
+function updatePreview(){
+  var title = document.getElementById('tg-title').value || '홍보문구1 입력';
+  var text  = document.getElementById('tg-text').value || '홍보문구2 입력';
+  var h2    = document.getElementById('hero-pv-h2');
+  var p     = document.getElementById('hero-pv-p');
+
+  if(h2) h2.textContent = title;
+  if(p) p.textContent = text;
+
+  var titleSize  = document.getElementById('tg-title-size').value;
+  var titleColor = document.getElementById('tg-title-color').value;
+  var textSize   = document.getElementById('tg-text-size').value;
+  var textColor  = document.getElementById('tg-text-color').value;
+
+  if(h2){ h2.style.fontSize = titleSize; h2.style.color = titleColor; }
+  if(p){ p.style.fontSize = textSize; p.style.color = textColor; }
+
+  var cnt1 = document.getElementById('tg-title-cnt');
+  var cnt2 = document.getElementById('tg-text-cnt');
+  if(cnt1) cnt1.textContent = Array.from(document.getElementById('tg-title').value).length;
+  if(cnt2) cnt2.textContent = Array.from(document.getElementById('tg-text').value).length;
+}
+
+function setAlign(target, btn){
+  var containerId = target === 'title' ? 'tg-title-align' : 'tg-text-align';
+  document.querySelectorAll('#'+containerId+' .align-btn').forEach(function(b){ b.classList.remove('selected'); });
   btn.classList.add('selected');
-  _thumbSelected=btn.getAttribute('data-grad');
+  var align = btn.getAttribute('data-align');
+  if(target === 'title'){
+    var wrap = document.getElementById('hero-pv-text');
+    if(wrap) wrap.style.textAlign = align;
+  } else {
+    var p = document.getElementById('hero-pv-p');
+    if(p) p.style.textAlign = align;
+  }
+}
+
+function selectGrad(btn){
+  document.querySelectorAll('.color-swatch').forEach(function(b){ b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  _thumbSelected = btn.getAttribute('data-grad');
   _applyBannerBg();
 }
-function updatePreview(){
-  var t=document.getElementById('tg-title'),x=document.getElementById('tg-text');
-  var pt=document.getElementById('tpc-title'),px=document.getElementById('tpc-text');
-  var tv=t.value||'업소명';
-  if(pt){var tLen=Array.from(tv).length;pt.childNodes[0].textContent=tv;pt.style.fontSize=tLen<=6?'14px':tLen<=10?'13px':tLen<=14?'12px':'11px';}
-  if(px){var xv=x.value||'';px.textContent=xv;var xLen=Array.from(xv).length;px.style.fontSize=xLen<=15?'12px':xLen<=25?'11px':xLen<=40?'10px':'9px';}
-  var desc=document.getElementById('tg-pv-desc');
-  if(desc) desc.textContent=tv;
-}
-function countChar(el,spanId){var sp=document.getElementById(spanId);if(sp)sp.textContent=Array.from(el.value).length;}
-function selectTextColor(btn){
-  document.querySelectorAll('#tg-textcolor-grid .txt-color-btn').forEach(function(b){b.classList.remove('selected');});
-  btn.classList.add('selected');
-  _thumbTextColor=btn.getAttribute('data-tcolor')||'rgb(255,255,255)';
-  var pt=document.getElementById('tpc-title');if(pt)pt.style.color=_thumbTextColor;
-}
+
 function selectIcon(btn){
-  document.querySelectorAll('#tg-icon-grid .badge-opt').forEach(function(b){b.classList.remove('selected');});
+  document.querySelectorAll('#tg-icon-grid .badge-opt').forEach(function(b){ b.classList.remove('selected'); });
   btn.classList.add('selected');
-  _thumbIcon=btn.getAttribute('data-icon')||'';
-  var pvIcon=document.getElementById('tg-pv-icon');
-  if(pvIcon){
-    if(_thumbIcon){pvIcon.style.display='';pvIcon.style.background=btn.getAttribute('data-icon-bg')||'#ccc';pvIcon.textContent=btn.getAttribute('data-icon-label')||'';}
-    else{pvIcon.style.display='none';}
+  _thumbIcon = btn.getAttribute('data-icon') || '';
+  var badge = document.getElementById('hero-pv-badge');
+  if(badge){
+    if(_thumbIcon){
+      badge.style.display = '';
+      badge.style.background = btn.getAttribute('data-icon-bg') || '#ccc';
+      badge.textContent = btn.getAttribute('data-icon-label') || '';
+    } else {
+      badge.style.display = 'none';
+    }
   }
 }
+
 function selectMotion(btn){
-  document.querySelectorAll('#tg-motion-grid .motion-btn').forEach(function(b){b.classList.remove('selected');});
+  document.querySelectorAll('#tg-motion-grid .motion-btn').forEach(function(b){ b.classList.remove('selected'); });
   btn.classList.add('selected');
-  _thumbMotion=btn.getAttribute('data-motion')||'';
-  var pt=document.getElementById('tpc-title');if(pt)pt.className=_thumbMotion?'pv-motion-'+_thumbMotion:'';
+  _thumbMotion = btn.getAttribute('data-motion') || '';
+  var h2 = document.getElementById('hero-pv-h2');
+  if(h2) h2.className = _thumbMotion ? 'pv-motion-'+_thumbMotion : '';
 }
-function toggleWave(checked){_thumbWave=checked;_applyBannerBg();}
+
+function toggleWave(checked){ _thumbWave = checked; _applyBannerBg(); }
+
 function selectBorder(btn){
-  document.querySelectorAll('#tg-border-grid .border-btn').forEach(function(b){b.classList.remove('selected');});
+  document.querySelectorAll('#tg-border-grid .border-btn').forEach(function(b){ b.classList.remove('selected'); });
   btn.classList.add('selected');
-  _thumbBorder=btn.getAttribute('data-border')||'';
+  _thumbBorder = btn.getAttribute('data-border') || '';
   _applyBorder();
 }
 
 function searchJr(){
-  var jrId=document.getElementById('hero-jr-id').value.trim();
-  if(!jrId){alert('jr_id를 입력하세요.');return;}
-  var xhr=new XMLHttpRequest();
+  var jrId = document.getElementById('hero-jr-id').value.trim();
+  if(!jrId){ alert('jr_id를 입력하세요.'); return; }
+  var xhr = new XMLHttpRequest();
   xhr.open('GET','./eve_special_banner_update.php?act=search&q='+encodeURIComponent(jrId)+'&type=hero&token=<?php echo $token; ?>');
-  xhr.onload=function(){
-    var box=document.getElementById('jrResult');
-    if(xhr.status!==200){box.style.display='block';box.innerHTML='<span style="color:red">검색 오류</span>';return;}
-    try{var data=JSON.parse(xhr.responseText);}catch(e){box.style.display='block';box.innerHTML='<span style="color:red">파싱 오류</span>';return;}
-    if(!data.length){box.style.display='block';box.innerHTML='<span style="color:red">해당 jr_id의 진행중인 광고를 찾을 수 없습니다.</span>';return;}
-    var r=data[0];
-    box.style.display='block';
-    box.innerHTML='✅ <b>#'+r.jr_id+'</b> '+escHtml(r.jr_company||'—')+' · '+escHtml(r.jr_nickname||'—')+' · '+escHtml(r.mb_id||'—')+' · 남은기간: '+r.remaining;
+  xhr.onload = function(){
+    var box = document.getElementById('jrResult');
+    if(xhr.status !== 200){ box.style.display='block'; box.innerHTML='<span style="color:red">검색 오류</span>'; return; }
+    try{ var data = JSON.parse(xhr.responseText); }catch(e){ box.style.display='block'; box.innerHTML='<span style="color:red">파싱 오류</span>'; return; }
+    if(!data.length){ box.style.display='block'; box.innerHTML='<span style="color:red">해당 jr_id의 진행중인 광고를 찾을 수 없습니다.</span>'; return; }
+    var r = data[0];
+    box.style.display = 'block';
+    box.innerHTML = '✅ <b>#'+r.jr_id+'</b> '+escHtml(r.jr_company||'—')+' · '+escHtml(r.jr_nickname||'—')+' · '+escHtml(r.mb_id||'—')+' · 남은기간: '+r.remaining;
   };
   xhr.send();
 }
 
 function saveHero(){
-  var btn=document.getElementById('tg-save-btn');if(btn)btn.disabled=true;
-  var form=document.createElement('form');
-  form.method='POST';form.action='./eve_special_banner_update.php';
-  var fields={
-    act:'save_hero',
-    sb_id:'<?php echo $sb_id; ?>',
-    jr_id:document.getElementById('hero-jr-id').value.trim(),
-    link:document.getElementById('hero-link').value.trim(),
-    position:document.getElementById('hero-position').value,
-    memo:document.getElementById('hero-memo').value,
-    thumb_gradient:_thumbSelected||'1',
-    thumb_title:(document.getElementById('tg-title')||{}).value||'',
-    thumb_text:(document.getElementById('tg-text')||{}).value||'',
-    thumb_icon:_thumbIcon||'',
-    thumb_motion:_thumbMotion||'',
-    thumb_wave:_thumbWave?'1':'0',
-    thumb_text_color:_thumbTextColor||'rgb(255,255,255)',
-    thumb_border:_thumbBorder||'',
-    token:'<?php echo $token; ?>'
+  var btn = document.getElementById('tg-save-btn'); if(btn) btn.disabled = true;
+
+  var titleAlign = 'left', textAlign = 'left';
+  var ta = document.querySelector('#tg-title-align .align-btn.selected');
+  if(ta) titleAlign = ta.getAttribute('data-align');
+  var xa = document.querySelector('#tg-text-align .align-btn.selected');
+  if(xa) textAlign = xa.getAttribute('data-align');
+
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = './eve_special_banner_update.php';
+  var fields = {
+    act: 'save_hero',
+    sb_id: '<?php echo $sb_id; ?>',
+    jr_id: document.getElementById('hero-jr-id').value.trim(),
+    link: document.getElementById('hero-link').value.trim(),
+    position: document.getElementById('hero-position').value,
+    memo: document.getElementById('hero-memo').value,
+    thumb_gradient: _thumbSelected || '1',
+    thumb_title: (document.getElementById('tg-title') || {}).value || '',
+    thumb_text: (document.getElementById('tg-text') || {}).value || '',
+    thumb_icon: _thumbIcon || '',
+    thumb_motion: _thumbMotion || '',
+    thumb_wave: _thumbWave ? '1' : '0',
+    thumb_text_color: document.getElementById('tg-title-color').value || '#ffffff',
+    thumb_border: _thumbBorder || '',
+    title_size: document.getElementById('tg-title-size').value || '30px',
+    title_align: titleAlign,
+    text_size: document.getElementById('tg-text-size').value || '14px',
+    text_color: document.getElementById('tg-text-color').value || '#ffffff',
+    text_align: textAlign,
+    token: '<?php echo $token; ?>'
   };
-  for(var k in fields){var inp=document.createElement('input');inp.type='hidden';inp.name=k;inp.value=fields[k];form.appendChild(inp);}
-  document.body.appendChild(form);form.submit();
+  for(var k in fields){
+    var inp = document.createElement('input');
+    inp.type = 'hidden'; inp.name = k; inp.value = fields[k];
+    form.appendChild(inp);
+  }
+  document.body.appendChild(form);
+  form.submit();
 }
 
-function escHtml(s){var d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}
+function escHtml(s){ var d=document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
 
 _applyBorder();
 </script>

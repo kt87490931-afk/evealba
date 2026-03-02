@@ -180,8 +180,13 @@ if ($act === 'save_hero') {
         'thumb_icon'       => isset($_POST['thumb_icon']) ? trim($_POST['thumb_icon']) : '',
         'thumb_motion'     => isset($_POST['thumb_motion']) ? trim($_POST['thumb_motion']) : '',
         'thumb_wave'       => isset($_POST['thumb_wave']) ? (int)$_POST['thumb_wave'] : 0,
-        'thumb_text_color' => isset($_POST['thumb_text_color']) ? trim($_POST['thumb_text_color']) : 'rgb(255,255,255)',
+        'thumb_text_color' => isset($_POST['thumb_text_color']) ? trim($_POST['thumb_text_color']) : '#ffffff',
         'thumb_border'     => isset($_POST['thumb_border']) ? trim($_POST['thumb_border']) : '',
+        'title_size'       => isset($_POST['title_size']) ? trim($_POST['title_size']) : '30px',
+        'title_align'      => isset($_POST['title_align']) ? trim($_POST['title_align']) : 'left',
+        'text_size'        => isset($_POST['text_size']) ? trim($_POST['text_size']) : '14px',
+        'text_color'       => isset($_POST['text_color']) ? trim($_POST['text_color']) : '#ffffff',
+        'text_align'       => isset($_POST['text_align']) ? trim($_POST['text_align']) : 'left',
     );
 
     $mb_id = '';
