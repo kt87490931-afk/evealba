@@ -39,6 +39,22 @@ if (!$col_check || !sql_num_rows($col_check)) {
     sql_query("ALTER TABLE {$sb_table} ADD COLUMN sb_link VARCHAR(500) NOT NULL DEFAULT '' COMMENT '클릭 시 이동 URL' AFTER sb_data", false);
 }
 
+// ── sb_type ENUM에 config 추가 (셔플 설정 저장용) ──
+$_enum_check = sql_fetch("SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$sb_table}' AND COLUMN_NAME = 'sb_type'");
+if ($_enum_check && strpos($_enum_check['COLUMN_TYPE'], 'config') === false) {
+    sql_query("ALTER TABLE {$sb_table} MODIFY sb_type ENUM('hero','recommend','config') NOT NULL DEFAULT 'hero'", false);
+}
+
+// ── 셔플 설정 로드 ──
+$hero_shuffle_sec = 5;
+$_cfg_row = sql_fetch("SELECT sb_data FROM {$sb_table} WHERE sb_type = 'config' AND sb_status = 'active' LIMIT 1");
+if ($_cfg_row && $_cfg_row['sb_data']) {
+    $_cfg_json = json_decode($_cfg_row['sb_data'], true);
+    if (isset($_cfg_json['hero_shuffle_sec'])) {
+        $hero_shuffle_sec = max(1, (int)$_cfg_json['hero_shuffle_sec']);
+    }
+}
+
 // ── 현황 조회 ──
 $hero_max    = 10;
 $recommend_max = 6;
@@ -173,6 +189,12 @@ require_once './admin.head.php';
     <div class="sb-section-title">
         <span class="ico">🏆</span> 히어로배너
         <a href="./eve_special_banner_hero_form.php" class="sb-add-btn">+ 히어로배너 생성</a>
+        <span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#555;">
+            ⏱ 셔플 간격
+            <input type="number" id="heroShuffleSec" value="<?php echo $hero_shuffle_sec; ?>" min="1" max="60" style="width:56px;padding:4px 6px;border:1px solid #ddd;border-radius:5px;font-size:12px;text-align:center;">
+            <span style="color:#888;">초</span>
+            <button type="button" class="sb-add-btn" style="padding:4px 10px;font-size:11px;" onclick="saveShuffleSec()">저장</button>
+        </span>
     </div>
 
     <?php if ($hero_cnt === 0) { ?>
@@ -417,6 +439,23 @@ function escHtml(s) {
     var d = document.createElement('div');
     d.appendChild(document.createTextNode(s));
     return d.innerHTML;
+}
+
+function saveShuffleSec() {
+    var sec = parseInt(document.getElementById('heroShuffleSec').value) || 5;
+    if (sec < 1) sec = 1;
+    if (sec > 60) sec = 60;
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = './eve_special_banner_update.php';
+    var fields = {act: 'save_config', hero_shuffle_sec: sec, token: SB_TOKEN};
+    for (var k in fields) {
+        var inp = document.createElement('input');
+        inp.type = 'hidden'; inp.name = k; inp.value = fields[k];
+        form.appendChild(inp);
+    }
+    document.body.appendChild(form);
+    form.submit();
 }
 </script>
 

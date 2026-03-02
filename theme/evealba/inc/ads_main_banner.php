@@ -2,7 +2,8 @@
 /**
  * 히어로 배너 (공통 include)
  * - DB(g5_special_banner)에서 active 히어로배너를 로드하여 동적 렌더링
- * - 메인/채용정보 등 모든 페이지에서 동일 노출
+ * - 복수 배너 등록 시 클라이언트 슬라이드쇼로 자동 전환
+ * - 셔플 간격은 어드민 설정값 사용
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -57,16 +58,29 @@ $_hero_border_colors = array(
 );
 
 $_hero_rows = array();
+$_hero_shuffle_sec = 5;
 $_hero_check = sql_query("SHOW TABLES LIKE '{$_hero_sb_table}'");
 if ($_hero_check && sql_num_rows($_hero_check) > 0) {
     $_hero_res = sql_query("SELECT * FROM {$_hero_sb_table} WHERE sb_type = 'hero' AND sb_status = 'active' ORDER BY sb_position ASC LIMIT 10");
     while ($_hr = sql_fetch_array($_hero_res)) {
         $_hero_rows[] = $_hr;
     }
+    $_hero_cfg = sql_fetch("SELECT sb_data FROM {$_hero_sb_table} WHERE sb_type = 'config' AND sb_status = 'active' LIMIT 1");
+    if ($_hero_cfg && $_hero_cfg['sb_data']) {
+        $_cfg_d = json_decode($_hero_cfg['sb_data'], true);
+        if (isset($_cfg_d['hero_shuffle_sec'])) {
+            $_hero_shuffle_sec = max(1, (int)$_cfg_d['hero_shuffle_sec']);
+        }
+    }
 }
 
 if (!empty($_hero_rows)) :
-$_hb = $_hero_rows[array_rand($_hero_rows)];
+shuffle($_hero_rows);
+$_hero_total = count($_hero_rows);
+?>
+<div class="hero-section">
+  <div class="hero-slideshow" id="heroSlideshow">
+<?php foreach ($_hero_rows as $_hi => $_hb) :
     $_hd = $_hb['sb_data'] ? json_decode($_hb['sb_data'], true) : array();
     if (!is_array($_hd)) $_hd = array();
 
@@ -101,7 +115,6 @@ $_hb = $_hero_rows[array_rand($_hero_rows)];
     $_h_text2_pos_x  = isset($_hd['text2_pos_x']) ? (float)$_hd['text2_pos_x'] : 3;
     $_h_text2_pos_y  = isset($_hd['text2_pos_y']) ? (float)$_hd['text2_pos_y'] : 72;
 
-    // background style
     $_h_bg_style = 'background:' . $_h_gradient . ';';
     if ($_h_wave) {
         preg_match_all('/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/', $_h_gradient, $_h_m);
@@ -111,48 +124,103 @@ $_hb = $_hero_rows[array_rand($_hero_rows)];
         }
     }
 
-    // border style
     $_h_border_style = '';
     if ($_h_border && isset($_hero_border_colors[$_h_border])) {
         $_bc = $_hero_border_colors[$_h_border];
         $_h_border_style = 'box-shadow:inset 0 0 0 2px '.$_bc.', 0 0 0 2px '.$_bc.', 0 2px 8px rgba(0,0,0,.10);';
     }
 
-    // link
     $_h_link = !empty($_hb['sb_link']) ? $_hb['sb_link'] : '';
     if (!$_h_link && !empty($_hb['sb_jr_id'])) {
         $_h_link = G5_URL . '/jobs_view.php?jr_id=' . (int)$_hb['sb_jr_id'];
     }
 
-    // badge
     $_h_badge_html = '';
     if ($_h_icon && isset($_hero_icons[$_h_icon])) {
         $_h_badge_html = '<div class="hero-badge" style="background:'.htmlspecialchars($_hero_icons[$_h_icon]['bg']).'">'.htmlspecialchars($_hero_icons[$_h_icon]['label']).'</div>';
     }
 
-    // motion class
     $_h_motion_cls = $_h_motion ? ' pv-motion-'.htmlspecialchars($_h_motion) : '';
+    $_h_slide_style = $_hi === 0 ? 'opacity:1;z-index:2;' : 'opacity:0;z-index:1;';
 ?>
-<!-- 히어로 배너 (#<?php echo (int)$_hb['sb_id']; ?>) -->
-<div class="hero-section">
-  <?php if ($_h_link) : ?><a href="<?php echo htmlspecialchars($_h_link); ?>" style="text-decoration:none;display:block"><?php endif; ?>
-  <div class="hero-main" style="<?php echo $_h_bg_style . $_h_border_style; ?>">
-    <?php if ($_h_shop_name) : ?>
-    <span class="hero-text" style="position:absolute;left:<?php echo $_h_shop_pos_x; ?>%;top:<?php echo $_h_shop_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_shop_size); ?>;color:<?php echo htmlspecialchars($_h_shop_color); ?>;font-weight:<?php echo htmlspecialchars($_h_shop_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_shop_name); ?></span>
-    <?php endif; ?>
-    <?php if ($_h_title) : ?>
-    <h2 class="hero-text<?php echo $_h_motion_cls; ?>" style="position:absolute;left:<?php echo $_h_title_pos_x; ?>%;top:<?php echo $_h_title_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_title_size); ?>;color:<?php echo htmlspecialchars($_h_title_color); ?>;font-weight:<?php echo htmlspecialchars($_h_title_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_title); ?></h2>
-    <?php endif; ?>
-    <?php if ($_h_text1) : ?>
-    <p class="hero-text" style="position:absolute;left:<?php echo $_h_text1_pos_x; ?>%;top:<?php echo $_h_text1_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text_size); ?>;color:<?php echo htmlspecialchars($_h_text_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text1); ?></p>
-    <?php endif; ?>
-    <?php if ($_h_text2) : ?>
-    <p class="hero-text" style="position:absolute;left:<?php echo $_h_text2_pos_x; ?>%;top:<?php echo $_h_text2_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text2_size); ?>;color:<?php echo htmlspecialchars($_h_text2_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text2_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text2); ?></p>
-    <?php endif; ?>
-    <?php echo $_h_badge_html; ?>
+    <div class="hero-slide" style="<?php echo $_h_slide_style; ?>">
+      <?php if ($_h_link) : ?><a href="<?php echo htmlspecialchars($_h_link); ?>" style="text-decoration:none;display:block;height:100%"><?php endif; ?>
+      <div class="hero-main" style="<?php echo $_h_bg_style . $_h_border_style; ?>">
+        <?php if ($_h_shop_name) : ?>
+        <span class="hero-text" style="position:absolute;left:<?php echo $_h_shop_pos_x; ?>%;top:<?php echo $_h_shop_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_shop_size); ?>;color:<?php echo htmlspecialchars($_h_shop_color); ?>;font-weight:<?php echo htmlspecialchars($_h_shop_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_shop_name); ?></span>
+        <?php endif; ?>
+        <?php if ($_h_title) : ?>
+        <h2 class="hero-text<?php echo $_h_motion_cls; ?>" style="position:absolute;left:<?php echo $_h_title_pos_x; ?>%;top:<?php echo $_h_title_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_title_size); ?>;color:<?php echo htmlspecialchars($_h_title_color); ?>;font-weight:<?php echo htmlspecialchars($_h_title_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_title); ?></h2>
+        <?php endif; ?>
+        <?php if ($_h_text1) : ?>
+        <p class="hero-text" style="position:absolute;left:<?php echo $_h_text1_pos_x; ?>%;top:<?php echo $_h_text1_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text_size); ?>;color:<?php echo htmlspecialchars($_h_text_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text1); ?></p>
+        <?php endif; ?>
+        <?php if ($_h_text2) : ?>
+        <p class="hero-text" style="position:absolute;left:<?php echo $_h_text2_pos_x; ?>%;top:<?php echo $_h_text2_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text2_size); ?>;color:<?php echo htmlspecialchars($_h_text2_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text2_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text2); ?></p>
+        <?php endif; ?>
+        <?php echo $_h_badge_html; ?>
+      </div>
+      <?php if ($_h_link) : ?></a><?php endif; ?>
+    </div>
+<?php endforeach; ?>
   </div>
-  <?php if ($_h_link) : ?></a><?php endif; ?>
+<?php if ($_hero_total > 1) : ?>
+  <div class="hero-dots" id="heroDots">
+    <?php for ($_di = 0; $_di < $_hero_total; $_di++) : ?>
+    <span class="hero-dot<?php echo $_di === 0 ? ' active' : ''; ?>" data-idx="<?php echo $_di; ?>"></span>
+    <?php endfor; ?>
+  </div>
+<?php endif; ?>
 </div>
+<?php if ($_hero_total > 1) : ?>
+<style>
+.hero-slideshow { position:relative; height:190px; border-radius:14px; overflow:hidden; }
+.hero-slide { position:absolute; top:0; left:0; width:100%; height:100%; transition:opacity .8s ease; }
+.hero-slide .hero-main { height:100%; border-radius:0; }
+.hero-dots { display:flex; justify-content:center; gap:6px; margin-top:8px; }
+.hero-dot { width:8px; height:8px; border-radius:50%; background:rgba(0,0,0,.2); cursor:pointer; transition:all .3s; }
+.hero-dot.active { background:var(--hot-pink,#FF1B6B); width:20px; border-radius:4px; }
+@media(max-width:768px){
+  .hero-slideshow { height:150px; }
+}
+</style>
+<script>
+(function(){
+  var slides = document.querySelectorAll('#heroSlideshow .hero-slide');
+  var dots = document.querySelectorAll('#heroDots .hero-dot');
+  var total = slides.length;
+  if (total < 2) return;
+  var cur = 0;
+  var interval = <?php echo $_hero_shuffle_sec; ?> * 1000;
+  var timer;
+
+  function show(idx) {
+    slides[cur].style.opacity = '0';
+    slides[cur].style.zIndex = '1';
+    if (dots[cur]) dots[cur].classList.remove('active');
+    cur = idx % total;
+    slides[cur].style.opacity = '1';
+    slides[cur].style.zIndex = '2';
+    if (dots[cur]) dots[cur].classList.add('active');
+  }
+
+  function next() { show(cur + 1); }
+
+  function start() { timer = setInterval(next, interval); }
+  function stop() { clearInterval(timer); }
+
+  dots.forEach(function(d) {
+    d.addEventListener('click', function() {
+      stop();
+      show(parseInt(this.dataset.idx));
+      start();
+    });
+  });
+
+  start();
+})();
+</script>
+<?php endif; ?>
 <?php
 endif;
 ?>

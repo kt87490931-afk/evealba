@@ -110,15 +110,19 @@ $_fr_gradients = array(
 <?php if (!empty($_fr_rows)) : ?>
 <?php foreach ($_fr_rows as $_fr) :
     $_fr_link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . (int)$_fr['sb_jr_id'];
-    $_fr_company = $_fr['jr_company'] ?: '업소명';
-    $_fr_title = $_fr['jr_title'] ?: ($_fr['jr_subject_display'] ?: '');
-
     $_fr_jd = !empty($_fr['jr_data']) ? json_decode($_fr['jr_data'], true) : array();
+    if (!is_array($_fr_jd)) $_fr_jd = array();
+
+    $_fr_company = $_fr['jr_company'] ?: (!empty($_fr_jd['job_company']) ? $_fr_jd['job_company'] : (!empty($_fr_jd['job_nickname']) ? $_fr_jd['job_nickname'] : '업소명'));
+    $_fr_title = $_fr['jr_title'] ?: ($_fr['jr_subject_display'] ?: (!empty($_fr_jd['job_title']) ? $_fr_jd['job_title'] : ''));
+
     $_fr_wage_text = '';
     if (!empty($_fr_jd['job_tc'])) {
         $_fr_wage_text = $_fr_jd['job_tc'];
-    } elseif (!empty($_fr_jd['job_salary'])) {
-        $_fr_wage_text = $_fr_jd['job_salary'];
+    } elseif (!empty($_fr_jd['job_salary_amt'])) {
+        $_fr_wage_text = $_fr_jd['job_salary_amt'];
+    } elseif (!empty($_fr_jd['job_salary_type'])) {
+        $_fr_wage_text = $_fr_jd['job_salary_type'];
     } elseif (!empty($_fr_title)) {
         $_fr_wage_text = mb_strimwidth($_fr_title, 0, 30, '…');
     }

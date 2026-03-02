@@ -244,4 +244,29 @@ if ($act === 'save_hero') {
     exit;
 }
 
+// ── 셔플 설정 저장 ──
+if ($act === 'save_config') {
+    $hero_shuffle_sec = isset($_POST['hero_shuffle_sec']) ? max(1, min(60, (int)$_POST['hero_shuffle_sec'])) : 5;
+
+    $cfg_data = json_encode(array('hero_shuffle_sec' => $hero_shuffle_sec), JSON_UNESCAPED_UNICODE);
+    $cfg_data_esc = sql_real_escape_string($cfg_data);
+
+    // config ENUM 확인
+    $_enum_check = sql_fetch("SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$sb_table}' AND COLUMN_NAME = 'sb_type'");
+    if ($_enum_check && strpos($_enum_check['COLUMN_TYPE'], 'config') === false) {
+        sql_query("ALTER TABLE {$sb_table} MODIFY sb_type ENUM('hero','recommend','config') NOT NULL DEFAULT 'hero'", false);
+    }
+
+    $existing = sql_fetch("SELECT sb_id FROM {$sb_table} WHERE sb_type = 'config' AND sb_status = 'active' LIMIT 1");
+    if ($existing) {
+        sql_query("UPDATE {$sb_table} SET sb_data = '{$cfg_data_esc}', sb_updated = NOW() WHERE sb_id = " . (int)$existing['sb_id']);
+    } else {
+        sql_query("INSERT INTO {$sb_table} (sb_type, sb_status, sb_position, sb_jr_id, sb_data, sb_created)
+                   VALUES ('config', 'active', 0, 0, '{$cfg_data_esc}', NOW())");
+    }
+
+    alert('셔플 간격이 ' . $hero_shuffle_sec . '초로 저장되었습니다.', './eve_special_banner.php');
+    exit;
+}
+
 alert('잘못된 요청입니다.');
