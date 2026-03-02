@@ -191,8 +191,12 @@ if ($act === 'save_hero') {
         'text2_size'       => isset($_POST['text2_size']) ? trim($_POST['text2_size']) : '14px',
         'text2_color'      => isset($_POST['text2_color']) ? trim($_POST['text2_color']) : '#ffffff',
         'text2_weight'     => isset($_POST['text2_weight']) ? trim($_POST['text2_weight']) : '500',
-        'text_pos_x'       => isset($_POST['text_pos_x']) ? (float)$_POST['text_pos_x'] : 3,
-        'text_pos_y'       => isset($_POST['text_pos_y']) ? (float)$_POST['text_pos_y'] : 50,
+        'title_pos_x'      => isset($_POST['title_pos_x']) ? (float)$_POST['title_pos_x'] : 3,
+        'title_pos_y'      => isset($_POST['title_pos_y']) ? (float)$_POST['title_pos_y'] : 25,
+        'text1_pos_x'      => isset($_POST['text1_pos_x']) ? (float)$_POST['text1_pos_x'] : 3,
+        'text1_pos_y'      => isset($_POST['text1_pos_y']) ? (float)$_POST['text1_pos_y'] : 55,
+        'text2_pos_x'      => isset($_POST['text2_pos_x']) ? (float)$_POST['text2_pos_x'] : 3,
+        'text2_pos_y'      => isset($_POST['text2_pos_y']) ? (float)$_POST['text2_pos_y'] : 72,
     );
 
     $mb_id = '';

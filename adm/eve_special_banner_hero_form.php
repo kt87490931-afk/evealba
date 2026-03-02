@@ -45,8 +45,12 @@ $text_weight  = isset($data['text_weight']) ? trim($data['text_weight']) : '500'
 $text2_size   = isset($data['text2_size']) ? trim($data['text2_size']) : '14px';
 $text2_color  = isset($data['text2_color']) ? trim($data['text2_color']) : '#ffffff';
 $text2_weight = isset($data['text2_weight']) ? trim($data['text2_weight']) : '500';
-$text_pos_x   = isset($data['text_pos_x']) ? (float)$data['text_pos_x'] : 3;
-$text_pos_y   = isset($data['text_pos_y']) ? (float)$data['text_pos_y'] : 50;
+$title_pos_x = isset($data['title_pos_x']) ? (float)$data['title_pos_x'] : 3;
+$title_pos_y = isset($data['title_pos_y']) ? (float)$data['title_pos_y'] : 25;
+$text1_pos_x = isset($data['text1_pos_x']) ? (float)$data['text1_pos_x'] : 3;
+$text1_pos_y = isset($data['text1_pos_y']) ? (float)$data['text1_pos_y'] : 55;
+$text2_pos_x = isset($data['text2_pos_x']) ? (float)$data['text2_pos_x'] : 3;
+$text2_pos_y = isset($data['text2_pos_y']) ? (float)$data['text2_pos_y'] : 72;
 
 $sb_jr_id   = $is_edit ? (int)$sb['sb_jr_id'] : 0;
 $sb_link    = $is_edit ? ($sb['sb_link'] ?? '') : '';
@@ -156,10 +160,12 @@ if ($thumb_wave) {
 .hero-pv-card{position:relative;border-radius:14px;overflow:hidden;height:190px;display:flex;align-items:center;padding:28px;cursor:default}
 .hero-pv-card::before{content:'';position:absolute;top:-50%;right:-10%;width:60%;height:200%;background:radial-gradient(ellipse,rgba(255,27,107,.15),transparent 70%);animation:hero-float 3s ease-in-out infinite;pointer-events:none}
 @keyframes hero-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.hero-pv-text{position:absolute;z-index:2;max-width:85%;cursor:grab;user-select:none;-webkit-user-select:none}
-.hero-pv-text.dragging{cursor:grabbing;opacity:.85}
-.hero-pv-text h2{margin:0;line-height:1.2;text-shadow:0 2px 10px rgba(0,0,0,.5);white-space:pre-wrap;word-break:keep-all}
-.hero-pv-text p{margin:7px 0 0;white-space:pre-wrap;word-break:keep-all}
+.hero-drag-el{position:absolute;z-index:2;max-width:85%;cursor:grab;user-select:none;-webkit-user-select:none;padding:4px 6px;border:2px solid transparent;border-radius:6px;transition:border-color .15s}
+.hero-drag-el:hover{border-color:rgba(255,255,255,.35)}
+.hero-drag-el.drag-selected{border-color:rgba(255,255,255,.8);box-shadow:0 0 8px rgba(255,255,255,.3)}
+.hero-drag-el.dragging{cursor:grabbing;opacity:.85;border-color:#FFD700}
+.hero-drag-el h2{margin:0;line-height:1.2;text-shadow:0 2px 10px rgba(0,0,0,.5);white-space:pre-wrap;word-break:keep-all}
+.hero-drag-el p{white-space:pre-wrap;word-break:keep-all}
 .drag-hint{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,.5);pointer-events:none;z-index:3;white-space:nowrap}
 .hero-pv-badge{position:absolute;top:14px;right:14px;font-weight:900;font-size:12px;padding:5px 12px;border-radius:18px;z-index:10;color:#fff}
 
@@ -273,12 +279,16 @@ if ($thumb_wave) {
       <div class="hero-pv-section">
         <div class="hero-pv-label">👁️ 실제 크기 미리보기 (히어로배너)</div>
         <div class="hero-pv-card<?php echo $thumb_wave ? ' pv-wave-active' : ''; ?><?php echo ($saved_grad === 'P3' && !$thumb_wave) ? ' carbon-bg' : ''; ?>" id="hero-pv-card" style="<?php echo $pv_banner_style; ?>">
-          <div class="hero-pv-text" id="hero-pv-text" style="left:<?php echo $text_pos_x; ?>%;top:<?php echo $text_pos_y; ?>%;transform:translateY(-50%)">
+          <div class="hero-drag-el" id="hero-pv-h2-wrap" data-key="title" style="left:<?php echo $title_pos_x; ?>%;top:<?php echo $title_pos_y; ?>%">
             <h2 id="hero-pv-h2" class="<?php echo $thumb_motion ? 'pv-motion-'.htmlspecialchars($thumb_motion) : ''; ?>" style="font-size:<?php echo htmlspecialchars($title_size); ?>;color:<?php echo htmlspecialchars($thumb_text_color); ?>;font-weight:<?php echo htmlspecialchars($title_weight); ?>"><?php echo htmlspecialchars($thumb_title ?: '썸네일 제목'); ?></h2>
-            <p id="hero-pv-p1" style="font-size:<?php echo htmlspecialchars($text_size); ?>;color:<?php echo htmlspecialchars($text_color); ?>;font-weight:<?php echo htmlspecialchars($text_weight); ?>"><?php echo htmlspecialchars($thumb_text ?: '홍보문구1 입력'); ?></p>
-            <p id="hero-pv-p2" style="font-size:<?php echo htmlspecialchars($text2_size); ?>;color:<?php echo htmlspecialchars($text2_color); ?>;font-weight:<?php echo htmlspecialchars($text2_weight); ?>;margin-top:4px"><?php echo htmlspecialchars($thumb_text2 ?: '홍보문구2 입력'); ?></p>
           </div>
-          <div class="drag-hint">✋ 텍스트를 드래그하여 위치를 조정하세요</div>
+          <div class="hero-drag-el" id="hero-pv-p1-wrap" data-key="text1" style="left:<?php echo $text1_pos_x; ?>%;top:<?php echo $text1_pos_y; ?>%">
+            <p id="hero-pv-p1" style="font-size:<?php echo htmlspecialchars($text_size); ?>;color:<?php echo htmlspecialchars($text_color); ?>;font-weight:<?php echo htmlspecialchars($text_weight); ?>;margin:0"><?php echo htmlspecialchars($thumb_text ?: '홍보문구1 입력'); ?></p>
+          </div>
+          <div class="hero-drag-el" id="hero-pv-p2-wrap" data-key="text2" style="left:<?php echo $text2_pos_x; ?>%;top:<?php echo $text2_pos_y; ?>%">
+            <p id="hero-pv-p2" style="font-size:<?php echo htmlspecialchars($text2_size); ?>;color:<?php echo htmlspecialchars($text2_color); ?>;font-weight:<?php echo htmlspecialchars($text2_weight); ?>;margin:0"><?php echo htmlspecialchars($thumb_text2 ?: '홍보문구2 입력'); ?></p>
+          </div>
+          <div class="drag-hint">✋ 각 텍스트를 클릭하여 선택 후 드래그하세요</div>
           <?php if ($thumb_icon && isset($icons[$thumb_icon])) { ?>
           <div class="hero-pv-badge" id="hero-pv-badge" style="background:<?php echo $icons[$thumb_icon]['bg']; ?>"><?php echo $icons[$thumb_icon]['label']; ?></div>
           <?php } else { ?>
@@ -506,8 +516,11 @@ function _applyBorder(){
   }
 }
 
-var _textPosX = <?php echo $text_pos_x; ?>;
-var _textPosY = <?php echo $text_pos_y; ?>;
+var _pos = {
+  title: {x:<?php echo $title_pos_x; ?>, y:<?php echo $title_pos_y; ?>},
+  text1: {x:<?php echo $text1_pos_x; ?>, y:<?php echo $text1_pos_y; ?>},
+  text2: {x:<?php echo $text2_pos_x; ?>, y:<?php echo $text2_pos_y; ?>}
+};
 
 function updatePreview(){
   var title = document.getElementById('tg-title').value || '썸네일 제목';
@@ -545,52 +558,70 @@ function updatePreview(){
   if(cnt3 && text2El) cnt3.textContent = Array.from(text2El.value).length;
 }
 
-/* ── 드래그 이동 ── */
+/* ── 개별 드래그 이동 ── */
 (function(){
-  var txt = document.getElementById('hero-pv-text');
   var card = document.getElementById('hero-pv-card');
-  if(!txt || !card) return;
-  var dragging = false, startX, startY, startLeft, startTop;
+  if(!card) return;
+  var els = card.querySelectorAll('.hero-drag-el');
+  var activeEl = null, dragging = false, startX, startY, startLeft, startTop;
 
   function getPos(e){
     if(e.touches) return {x: e.touches[0].clientX, y: e.touches[0].clientY};
     return {x: e.clientX, y: e.clientY};
   }
 
-  function onDown(e){
+  els.forEach(function(el){
+    el.addEventListener('mousedown', function(e){ startDrag(el, e); });
+    el.addEventListener('touchstart', function(e){ startDrag(el, e); }, {passive:false});
+  });
+
+  function startDrag(el, e){
     e.preventDefault();
+    e.stopPropagation();
+    els.forEach(function(b){ b.classList.remove('drag-selected'); });
+    el.classList.add('drag-selected');
+    activeEl = el;
     dragging = true;
-    txt.classList.add('dragging');
+    el.classList.add('dragging');
     var pos = getPos(e);
+    var key = el.getAttribute('data-key');
     startX = pos.x; startY = pos.y;
-    startLeft = parseFloat(txt.style.left) || _textPosX;
-    startTop = parseFloat(txt.style.top) || _textPosY;
+    startLeft = _pos[key].x;
+    startTop = _pos[key].y;
   }
+
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('touchmove', onMove, {passive:false});
   function onMove(e){
-    if(!dragging) return;
+    if(!dragging || !activeEl) return;
     e.preventDefault();
     var pos = getPos(e);
     var rect = card.getBoundingClientRect();
     var dx = ((pos.x - startX) / rect.width) * 100;
     var dy = ((pos.y - startY) / rect.height) * 100;
-    var nx = Math.max(0, Math.min(85, startLeft + dx));
-    var ny = Math.max(5, Math.min(95, startTop + dy));
-    txt.style.left = nx + '%';
-    txt.style.top = ny + '%';
-    _textPosX = Math.round(nx * 10) / 10;
-    _textPosY = Math.round(ny * 10) / 10;
+    var nx = Math.max(0, Math.min(90, startLeft + dx));
+    var ny = Math.max(2, Math.min(95, startTop + dy));
+    activeEl.style.left = nx + '%';
+    activeEl.style.top = ny + '%';
+    var key = activeEl.getAttribute('data-key');
+    _pos[key].x = Math.round(nx * 10) / 10;
+    _pos[key].y = Math.round(ny * 10) / 10;
   }
-  function onUp(){
-    if(!dragging) return;
-    dragging = false;
-    txt.classList.remove('dragging');
-  }
-  txt.addEventListener('mousedown', onDown);
-  txt.addEventListener('touchstart', onDown, {passive:false});
-  document.addEventListener('mousemove', onMove);
-  document.addEventListener('touchmove', onMove, {passive:false});
+
   document.addEventListener('mouseup', onUp);
   document.addEventListener('touchend', onUp);
+  function onUp(){
+    if(!dragging || !activeEl) return;
+    dragging = false;
+    activeEl.classList.remove('dragging');
+    activeEl = null;
+  }
+
+  card.addEventListener('click', function(e){
+    if(e.target === card || e.target.classList.contains('drag-hint')){
+      els.forEach(function(b){ b.classList.remove('drag-selected'); });
+    }
+  });
 })();
 
 function selectGrad(btn){
@@ -680,8 +711,12 @@ function saveHero(){
     text2_size: (document.getElementById('tg-text2-size') || {}).value || '14px',
     text2_color: (document.getElementById('tg-text2-color') || {}).value || '#ffffff',
     text2_weight: (document.getElementById('tg-text2-weight') || {}).value || '500',
-    text_pos_x: String(_textPosX),
-    text_pos_y: String(_textPosY),
+    title_pos_x: String(_pos.title.x),
+    title_pos_y: String(_pos.title.y),
+    text1_pos_x: String(_pos.text1.x),
+    text1_pos_y: String(_pos.text1.y),
+    text2_pos_x: String(_pos.text2.x),
+    text2_pos_y: String(_pos.text2.y),
     token: '<?php echo $token; ?>'
   };
   for(var k in fields){

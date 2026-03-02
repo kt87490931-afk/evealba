@@ -88,8 +88,12 @@ foreach ($_hero_rows as $_hb) :
     $_h_text2_size   = isset($_hd['text2_size']) ? $_hd['text2_size'] : '14px';
     $_h_text2_color  = isset($_hd['text2_color']) ? $_hd['text2_color'] : '#ffffff';
     $_h_text2_weight = isset($_hd['text2_weight']) ? $_hd['text2_weight'] : '500';
-    $_h_pos_x        = isset($_hd['text_pos_x']) ? (float)$_hd['text_pos_x'] : 3;
-    $_h_pos_y        = isset($_hd['text_pos_y']) ? (float)$_hd['text_pos_y'] : 50;
+    $_h_title_pos_x  = isset($_hd['title_pos_x']) ? (float)$_hd['title_pos_x'] : 3;
+    $_h_title_pos_y  = isset($_hd['title_pos_y']) ? (float)$_hd['title_pos_y'] : 25;
+    $_h_text1_pos_x  = isset($_hd['text1_pos_x']) ? (float)$_hd['text1_pos_x'] : 3;
+    $_h_text1_pos_y  = isset($_hd['text1_pos_y']) ? (float)$_hd['text1_pos_y'] : 55;
+    $_h_text2_pos_x  = isset($_hd['text2_pos_x']) ? (float)$_hd['text2_pos_x'] : 3;
+    $_h_text2_pos_y  = isset($_hd['text2_pos_y']) ? (float)$_hd['text2_pos_y'] : 72;
 
     // background style
     $_h_bg_style = 'background:' . $_h_gradient . ';';
@@ -127,15 +131,15 @@ foreach ($_hero_rows as $_hb) :
 <div class="hero-section">
   <?php if ($_h_link) : ?><a href="<?php echo htmlspecialchars($_h_link); ?>" style="text-decoration:none;display:block"><?php endif; ?>
   <div class="hero-main" style="<?php echo $_h_bg_style . $_h_border_style; ?>">
-    <div class="hero-text" style="position:absolute;left:<?php echo $_h_pos_x; ?>%;top:<?php echo $_h_pos_y; ?>%;transform:translateY(-50%);max-width:85%">
-      <h2 class="<?php echo $_h_motion_cls; ?>" style="font-size:<?php echo htmlspecialchars($_h_title_size); ?>;color:<?php echo htmlspecialchars($_h_title_color); ?>;font-weight:<?php echo htmlspecialchars($_h_title_weight); ?>"><?php echo htmlspecialchars($_h_title); ?></h2>
-      <?php if ($_h_text1) : ?>
-      <p style="font-size:<?php echo htmlspecialchars($_h_text_size); ?>;color:<?php echo htmlspecialchars($_h_text_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text_weight); ?>"><?php echo htmlspecialchars($_h_text1); ?></p>
-      <?php endif; ?>
-      <?php if ($_h_text2) : ?>
-      <p style="font-size:<?php echo htmlspecialchars($_h_text2_size); ?>;color:<?php echo htmlspecialchars($_h_text2_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text2_weight); ?>;margin-top:4px"><?php echo htmlspecialchars($_h_text2); ?></p>
-      <?php endif; ?>
-    </div>
+    <?php if ($_h_title) : ?>
+    <h2 class="hero-text<?php echo $_h_motion_cls; ?>" style="position:absolute;left:<?php echo $_h_title_pos_x; ?>%;top:<?php echo $_h_title_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_title_size); ?>;color:<?php echo htmlspecialchars($_h_title_color); ?>;font-weight:<?php echo htmlspecialchars($_h_title_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_title); ?></h2>
+    <?php endif; ?>
+    <?php if ($_h_text1) : ?>
+    <p class="hero-text" style="position:absolute;left:<?php echo $_h_text1_pos_x; ?>%;top:<?php echo $_h_text1_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text_size); ?>;color:<?php echo htmlspecialchars($_h_text_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text1); ?></p>
+    <?php endif; ?>
+    <?php if ($_h_text2) : ?>
+    <p class="hero-text" style="position:absolute;left:<?php echo $_h_text2_pos_x; ?>%;top:<?php echo $_h_text2_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text2_size); ?>;color:<?php echo htmlspecialchars($_h_text2_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text2_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text2); ?></p>
+    <?php endif; ?>
     <?php echo $_h_badge_html; ?>
   </div>
   <?php if ($_h_link) : ?></a><?php endif; ?>

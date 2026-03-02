@@ -966,18 +966,17 @@ nav::before {
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-10px)}
 }
-.hero-text h2 {
+h2.hero-text, .hero-main > h2.hero-text {
   font-size:30px; font-weight:900; color:#fff;
   line-height:1.2; text-shadow:0 2px 10px rgba(0,0,0,.5);
   white-space:pre-wrap; word-break:keep-all;
-  margin:0;
+  margin:0; z-index:2;
 }
-.hero-text h2 span { color:var(--gold); font-size:36px; }
-.hero-text p {
+p.hero-text, .hero-main > p.hero-text {
   color:rgba(255,255,255,.9);
-  margin-top:7px; font-size:14px; font-weight:500;
+  font-size:14px; font-weight:500;
   white-space:pre-wrap; word-break:keep-all;
-  margin-bottom:0;
+  margin:0; z-index:2;
 }
 .hero-badge {
   position:absolute; top:14px; right:14px;
@@ -1507,8 +1506,7 @@ footer {
   .mqm-label { font-size:11px; font-weight:700; color:var(--dark); }
   .community-resume-row { grid-template-columns:1fr; }
   .urgency-recommend-row { grid-template-columns:1fr; }
-  .hero-text h2{font-size:26px}
-  .hero-text h2 span{font-size:30px}
+  h2.hero-text{font-size:26px}
   .top-bar-left { display:none; }
   .kakao-btn { display:none; }
   .nav-scroll { padding:0; justify-content:flex-start; }
@@ -1582,9 +1580,8 @@ footer {
   }
   .special-card { grid-column: span 1; }
   .hero-main { height:150px; padding:20px; border-radius:12px; }
-  .hero-text h2 { font-size:20px; }
-  .hero-text h2 span { font-size:24px; }
-  .hero-text p { font-size:13px; }
+  h2.hero-text { font-size:20px; }
+  p.hero-text { font-size:13px; }
   .hero-badge { font-size:11px; padding:4px 10px; }
   .quick-stats { gap:7px; }
   .stat-icon { font-size:18px; margin-bottom:2px; }
