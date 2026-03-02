@@ -767,7 +767,6 @@ $mb_nick = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
 
     <!-- 등록 버튼 -->
     <div class="submit-btn-wrap">
-      <button class="btn-preview" type="button" onclick="alert('이력서 미리보기')">👁 미리보기</button>
       <button class="btn-submit" type="button" onclick="submitResume()">📄 이력서 등록</button>
     </div>
 
@@ -883,7 +882,10 @@ function updateResumeSummary() {
   set('resume-summary-intro', val('resume_intro')||'—');
 
   var nick = val('resume_nick'), contactLabel = radioVal('contact');
-  setHtml('resume-summary-contact-wrap', chip(nick,'aip-chip-gray')+'<span class="aip-sep">·</span>'+chip(contactLabel,'aip-chip-blue'));
+  var snsType = sel('resume_sns_type'), snsId = val('resume_sns_id');
+  var contactParts = chip(nick,'aip-chip-gray')+'<span class="aip-sep">·</span>'+chip(contactLabel,'aip-chip-blue');
+  if(snsId) contactParts += '<span class="aip-sep">·</span>'+chip(snsType+': '+snsId,'aip-chip-blue');
+  setHtml('resume-summary-contact-wrap', contactParts);
 
   var salType=sel('resume_salary_type'), salAmt=val('resume_salary_amt');
   var salaryText = salAmt ? (salType+' '+salAmt+'원') : (salType||'—');
@@ -992,7 +994,7 @@ function filterResumeSubByRegion(regionId, detailId) {
 (function(){
   filterResumeSubByRegion('resume_region', 'resume_region_detail');
   filterResumeSubByRegion('resume_work_region', 'resume_work_region_detail');
-  var ids=['resume_title','resume_nick','resume_phone','resume_age','resume_salary_type','resume_salary_amt','resume_height','resume_weight','resume_size','resume_region','resume_region_detail','resume_edu','resume_job1','resume_job2','resume_work_region','resume_work_region_detail','resume_work_time_type','resume_work_time_start','resume_work_time_end','resume_intro'];
+  var ids=['resume_title','resume_nick','resume_phone','resume_age','resume_salary_type','resume_salary_amt','resume_height','resume_weight','resume_size','resume_region','resume_region_detail','resume_edu','resume_job1','resume_job2','resume_work_region','resume_work_region_detail','resume_work_time_type','resume_work_time_start','resume_work_time_end','resume_intro','resume_sns_type','resume_sns_id'];
   function attach(){ for(var i=0;i<ids.length;i++){ var el=document.getElementById(ids[i]); if(el){ el.addEventListener('input', updateResumeSummary); el.addEventListener('change', updateResumeSummary); } } }
   document.querySelectorAll('input[name="contact"], input[name="work-type"], input[name="mbti"]').forEach(function(el){ el.addEventListener('change', updateResumeSummary); });
   for(var k=0;k<=21;k++){ var amEl=document.getElementById('am-'+k); if(amEl) amEl.addEventListener('change', updateResumeSummary); }
