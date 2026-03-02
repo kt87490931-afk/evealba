@@ -19,6 +19,7 @@ if ($is_member) {
                 'subject' => $row['jr_subject_display'] ?: '[제목없음]',
                 'datetime2' => date('Y-m-d', strtotime($row['jr_datetime'])),
                 'ad_period' => $row['jr_ad_period'] ? $row['jr_ad_period'].'일' : '—',
+                'ad_labels' => isset($row['jr_ad_labels']) ? trim($row['jr_ad_labels']) : '',
                 'jump_used' => isset($row['jr_jump_used']) ? (int)$row['jr_jump_used'] : 0,
                 'jump_total' => isset($row['jr_jump_total']) ? (int)$row['jr_jump_total'] : 0,
                 'view_href' => $jobs_view_url_base.'?jr_id='.$row['jr_id']
@@ -53,6 +54,7 @@ if ($is_member) {
       <div class="board-th">점프 사용</div>
       <div class="board-th">보기</div>
     </div>
+    <div class="mobile-card-header">제목 · 광고유형 · 기간 · 점프사용</div>
     <?php if (count($list) > 0) {
       foreach ($list as $row) { ?>
     <a href="<?php echo $row['view_href']; ?>" class="board-row jobs-ongoing-row">
@@ -61,9 +63,13 @@ if ($is_member) {
         <div class="td-title-inner">
           <span class="post-title-text"><?php echo htmlspecialchars($row['subject']); ?></span>
           <div class="td-mobile-info">
+            <span class="mi-labels"><?php echo !empty($row['ad_labels']) ? htmlspecialchars(str_replace(',', ', ', $row['ad_labels'])) : ''; ?></span>
             <span class="mi-date"><?php echo htmlspecialchars($row['datetime2']); ?></span>
+            <span class="mi-sep">·</span>
             <span class="mi-period"><?php echo htmlspecialchars($row['ad_period']); ?></span>
+            <span class="mi-sep">·</span>
             <span class="status-badge" style="background:#f0f0f0;color:#999;">마감</span>
+            <span class="mi-sep">·</span>
             <span style="font-size:11px;color:#999;">점프 <?php echo number_format($row['jump_used']); ?>/<?php echo number_format($row['jump_total']); ?>회</span>
           </div>
         </div>

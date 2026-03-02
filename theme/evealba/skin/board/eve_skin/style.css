@@ -143,12 +143,23 @@
   .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5) { display:none; }
   .jobs-ongoing-list .thumb-box, .jobs-ongoing-list .thumb-empty { width:76px; height:60px; }
 }
+/* 모바일 카드 헤더 (데스크톱 숨김) */
+.mobile-card-header { display:none; }
+
 @media (max-width:600px) {
+  /* === 공통: 모바일 카드 헤더 === */
+  .mobile-card-header {
+    display:block; padding:8px 14px; font-size:11px; font-weight:700;
+    color:#C9007A; background:#fff8fa; border-radius:8px;
+    margin-bottom:8px; border:1px solid #fae8f0;
+  }
+
   /* === 진행중인 채용정보: 모바일 카드 === */
   .jobs-ongoing-list .jobs-ongoing-thead { display:none; }
   .jobs-ongoing-list .jobs-ongoing-row {
     display:flex; flex-wrap:wrap; align-items:flex-start;
-    padding:14px; margin:0 0 10px; min-height:auto;
+    position:relative; padding:14px 70px 14px 14px;
+    margin:0 0 10px; min-height:auto;
     border-radius:12px; background:#fff;
     box-shadow:0 2px 8px rgba(0,0,0,.05);
     border:1px solid #fae8f0;
@@ -157,25 +168,34 @@
   .jobs-ongoing-list .board-td.td-period,
   .jobs-ongoing-list .board-td.td-status,
   .jobs-ongoing-list .board-td.td-jump { display:none !important; }
-  .jobs-ongoing-list .board-td.td-thumb { flex-shrink:0; margin-right:10px; }
-  .jobs-ongoing-list .mini-thumb { width:48px!important; height:48px!important; }
-  .jobs-ongoing-list .board-td.td-title { flex:1; min-width:0; padding:0 !important; }
-  .jobs-ongoing-list .post-title-text { font-size:14px; font-weight:700; }
-  .jobs-ongoing-list .td-title-bottom { margin-top:4px; }
-  .jobs-ongoing-list .board-td.td-extend {
-    position:absolute; top:14px; right:14px;
+  .jobs-ongoing-list .board-td.td-thumb {
+    flex-shrink:0; margin-right:10px; display:flex !important;
+    align-items:center; justify-content:center;
   }
-  .jobs-ongoing-list .jobs-ongoing-row { position:relative; padding-right:70px; }
+  .jobs-ongoing-list .mini-thumb { width:48px!important; height:48px!important; }
+  .jobs-ongoing-list .board-td.td-title {
+    flex:1; min-width:0; padding:0 !important; text-align:left;
+  }
+  .jobs-ongoing-list .post-title-text { font-size:14px; font-weight:700; text-align:left; }
+  .jobs-ongoing-list .td-title-bottom { display:none; }
+  .jobs-ongoing-list .board-td.td-extend { position:absolute; top:14px; right:14px; }
   .jobs-ongoing-list .btn-extend { padding:6px 14px; font-size:11px; }
   .jobs-ongoing-list .td-mobile-info {
-    display:flex !important; flex-wrap:wrap; align-items:center; gap:6px 10px;
+    display:flex !important; flex-wrap:wrap; align-items:center; gap:4px;
     width:100%; margin-top:10px; padding-top:10px; border-top:1px dashed #eee;
+    text-align:left;
+  }
+  .jobs-ongoing-list .td-mobile-info .mi-labels {
+    width:100%; font-size:11px; font-weight:700; color:#C9007A;
+    background:#FFE4F0; padding:3px 8px; border-radius:6px;
+    margin-bottom:4px; display:inline-block;
   }
   .jobs-ongoing-list .td-mobile-info .mi-date { font-size:11px; color:#888; }
-  .jobs-ongoing-list .td-mobile-info .mi-period { font-size:13px; font-weight:700; color:#333; }
+  .jobs-ongoing-list .td-mobile-info .mi-sep { font-size:10px; color:#ccc; }
+  .jobs-ongoing-list .td-mobile-info .mi-period { font-size:12px; font-weight:700; color:#333; }
   .jobs-ongoing-list .td-mobile-info .mi-jump {
     font-size:12px; font-weight:700; color:#6B21A8;
-    display:flex; align-items:center; gap:4px;
+    display:inline-flex; align-items:center; gap:4px;
   }
   .jobs-ongoing-list .td-mobile-info .btn-jump-inline { font-size:11px; padding:4px 10px; }
 
@@ -192,14 +212,20 @@
   .jobs-ended-list .board-td.td-period,
   .jobs-ended-list .board-td.td-jump-used,
   .jobs-ended-list .board-td.td-view { display:none !important; }
-  .jobs-ended-list .board-td.td-title { flex:1; min-width:0; padding:0 !important; }
-  .jobs-ended-list .post-title-text { font-size:14px; font-weight:700; display:block; }
+  .jobs-ended-list .board-td.td-title { flex:1; min-width:0; padding:0 !important; text-align:left; }
+  .jobs-ended-list .post-title-text { font-size:14px; font-weight:700; display:block; text-align:left; }
   .jobs-ended-list .td-mobile-info {
-    display:flex !important; flex-wrap:wrap; align-items:center; gap:6px 10px;
+    display:flex !important; flex-wrap:wrap; align-items:center; gap:4px;
     width:100%; margin-top:8px; padding-top:8px; border-top:1px dashed #eee;
   }
+  .jobs-ended-list .td-mobile-info .mi-labels {
+    width:100%; font-size:11px; font-weight:700; color:#999;
+    background:#f5f5f5; padding:3px 8px; border-radius:6px;
+    margin-bottom:4px; display:inline-block;
+  }
   .jobs-ended-list .td-mobile-info .mi-date { font-size:11px; color:#888; }
-  .jobs-ended-list .td-mobile-info .mi-period { font-size:13px; font-weight:700; color:#999; }
+  .jobs-ended-list .td-mobile-info .mi-sep { font-size:10px; color:#ccc; }
+  .jobs-ended-list .td-mobile-info .mi-period { font-size:12px; font-weight:700; color:#999; }
 }
 
 /* ===== 연장 모달 ===== */
