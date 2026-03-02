@@ -99,8 +99,12 @@ $_opt_daily_rates = array(
     'wave'    => 1667,
     'border'  => 1000,
 );
-$_author_mb = sql_fetch("SELECT mb_nick FROM g5_member WHERE mb_id = '".addslashes($row['mb_id'])."'");
+$_author_mb = sql_fetch("SELECT mb_nick, mb_1, mb_3, mb_4, mb_5 FROM g5_member WHERE mb_id = '".addslashes($row['mb_id'])."'");
 $nick = $_author_mb['mb_nick'] ?: (isset($data['job_nickname']) ? trim($data['job_nickname']) : $row['jr_nickname']);
+$_biz_company = isset($_author_mb['mb_3']) ? trim($_author_mb['mb_3']) : '';
+$_biz_ceo     = isset($_author_mb['mb_4']) ? trim($_author_mb['mb_4']) : '';
+$_biz_addr    = isset($_author_mb['mb_5']) ? trim($_author_mb['mb_5']) : '';
+$_is_biz      = (isset($_author_mb['mb_1']) && $_author_mb['mb_1'] === 'biz');
 $comp = isset($data['job_company']) ? trim($data['job_company']) : $row['jr_company'];
 $title = isset($data['job_title']) ? trim($data['job_title']) : $row['jr_title'];
 $contact = isset($data['job_contact']) ? trim($data['job_contact']) : '';
@@ -786,7 +790,7 @@ function toggleAutoJump(jrId,on){
       <table class="info-table">
         <tbody>
           <tr><td class="lbl">🏷️ 닉네임</td><td class="val" id="disp-nick"><?php echo htmlspecialchars($nick ?: '—'); ?></td></tr>
-          <tr><td class="lbl">🏪 상호</td><td class="val" id="disp-comp"><?php echo htmlspecialchars($comp ?: '—'); ?></td></tr>
+          <tr><td class="lbl">🏪 상호</td><td class="val" id="disp-comp"><?php echo htmlspecialchars($comp ?: '—'); ?><?php if ($_is_biz) { ?> <button type="button" class="btn-biz-info" onclick="openBizInfoPopup()">기업정보 확인하기</button><?php } ?></td></tr>
           <tr><td class="lbl">📞 연락처</td><td class="val val-pink" id="disp-tel"><?php echo htmlspecialchars($contact); ?></td></tr>
           <tr><td class="lbl">💬 SNS</td><td class="val" id="disp-sns"><?php
             $_img_base = G5_THEME_URL.'/img';
@@ -1990,3 +1994,135 @@ if(typeof window.saveThumb !== 'function'){
   };
 }
 </script>
+
+<?php if ($_is_biz) { ?>
+<div id="biz-info-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:99999;align-items:center;justify-content:center;" onclick="closeBizInfoPopup()">
+  <div class="biz-info-popup" onclick="event.stopPropagation()">
+    <div class="biz-popup-header">
+      <span>🏢 기업정보</span>
+      <button type="button" onclick="closeBizInfoPopup()" class="biz-popup-close">&times;</button>
+    </div>
+    <div class="biz-popup-body">
+      <div class="biz-popup-row">
+        <span class="biz-popup-label">회사명</span>
+        <span class="biz-popup-value"><?php echo htmlspecialchars($_biz_company ?: '—'); ?></span>
+      </div>
+      <div class="biz-popup-row">
+        <span class="biz-popup-label">대표자명</span>
+        <span class="biz-popup-value"><?php echo htmlspecialchars($_biz_ceo ?: '—'); ?></span>
+      </div>
+      <div class="biz-popup-row">
+        <span class="biz-popup-label">회사주소</span>
+        <span class="biz-popup-value"><?php echo htmlspecialchars($_biz_addr ?: '—'); ?></span>
+      </div>
+    </div>
+    <div class="biz-popup-footer">
+      <button type="button" onclick="closeBizInfoPopup()" class="biz-popup-ok">확인</button>
+    </div>
+  </div>
+</div>
+<style>
+.btn-biz-info {
+  display:inline-block;
+  margin-left:8px;
+  padding:4px 12px;
+  font-size:12px;
+  font-weight:700;
+  color:#FF1B6B;
+  background:#fff;
+  border:1.5px solid #FF1B6B;
+  border-radius:6px;
+  cursor:pointer;
+  vertical-align:middle;
+  transition:all .2s;
+}
+.btn-biz-info:hover {
+  background:linear-gradient(135deg,#FF1B6B,#C90050);
+  color:#fff;
+}
+.biz-info-popup {
+  background:#fff;
+  border-radius:16px;
+  width:380px;
+  max-width:90vw;
+  box-shadow:0 8px 40px rgba(0,0,0,.18);
+  overflow:hidden;
+  animation:bizPopIn .25s ease;
+}
+@keyframes bizPopIn {
+  from { transform:scale(.9); opacity:0; }
+  to   { transform:scale(1);  opacity:1; }
+}
+.biz-popup-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 20px;
+  background:linear-gradient(135deg,#FF1B6B,#C90050);
+  color:#fff;
+  font-size:16px;
+  font-weight:800;
+}
+.biz-popup-close {
+  background:none;
+  border:none;
+  color:#fff;
+  font-size:24px;
+  cursor:pointer;
+  line-height:1;
+  padding:0 4px;
+}
+.biz-popup-body {
+  padding:20px;
+}
+.biz-popup-row {
+  display:flex;
+  align-items:flex-start;
+  padding:12px 0;
+  border-bottom:1px solid #f0f0f0;
+}
+.biz-popup-row:last-child {
+  border-bottom:none;
+}
+.biz-popup-label {
+  flex:0 0 80px;
+  font-size:13px;
+  font-weight:700;
+  color:#888;
+}
+.biz-popup-value {
+  flex:1;
+  font-size:14px;
+  font-weight:600;
+  color:#222;
+  word-break:keep-all;
+}
+.biz-popup-footer {
+  padding:0 20px 16px;
+  text-align:center;
+}
+.biz-popup-ok {
+  display:inline-block;
+  padding:10px 40px;
+  background:linear-gradient(135deg,#FF1B6B,#C90050);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:opacity .2s;
+}
+.biz-popup-ok:hover { opacity:.85; }
+</style>
+<script>
+function openBizInfoPopup() {
+  var ov = document.getElementById('biz-info-overlay');
+  if (ov) { ov.style.display = 'flex'; }
+}
+function closeBizInfoPopup() {
+  var ov = document.getElementById('biz-info-overlay');
+  if (ov) { ov.style.display = 'none'; }
+}
+</script>
+<?php } ?>

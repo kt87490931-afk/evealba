@@ -32,20 +32,6 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
           </div>
         </div>
 
-        <!-- 확인문서첨부 -->
-        <div class="form-row">
-          <div class="form-label">확인문서첨부 <span class="req">*</span></div>
-          <div class="form-cell col">
-            <div class="file-row">
-              <button class="btn-file" onclick="triggerFile('doc-file')">📎 파일 선택</button>
-              <input type="file" id="doc-file" style="display:none" onchange="setFileName(this,'doc-fn')">
-              <span class="file-name" id="doc-fn">선택된 파일 없음</span>
-              <button class="btn-file-cancel" onclick="clearFile('doc-file','doc-fn')">✕ 취소</button>
-            </div>
-            <p class="hint-red">첨부 서류 : 사업자등록증, 직업소개사업등록증, 영업허가증 中 택1</p>
-          </div>
-        </div>
-
         <!-- 사업장 위치 확인 -->
         <div class="form-row">
           <div class="form-label">사업장 위치 확인 <span class="req">*</span></div>
@@ -63,7 +49,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
           <div class="form-label">상호 <span class="req">*</span></div>
           <div class="form-cell col">
             <input class="fi fi-md fi-readonly" type="text" id="job_company" name="job_company" placeholder="" readonly>
-            <p class="hint-blue">+ 첨부된 확인문서 검수 후 기재된 상호로 자동등록됩니다.</p>
+            <p class="hint-blue">+ 회원가입 시 등록한 사업자등록증 기준으로 자동등록됩니다.</p>
           </div>
         </div>
 
