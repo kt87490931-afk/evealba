@@ -62,7 +62,7 @@ $rs_date = $r['rs_datetime'] ? substr($r['rs_datetime'], 0, 10) : '';
 
 <link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/css/resume_register.css?v=<?php echo @filemtime(G5_THEME_PATH.'/css/resume_register.css'); ?>">
 
-<div style="max-width:800px;margin:0 auto 30px;">
+<div class="resume-register-page" style="max-width:800px;margin:0 auto 30px;">
 
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
     <div style="display:flex;align-items:center;gap:10px;">
