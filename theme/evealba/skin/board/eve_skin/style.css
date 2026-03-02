@@ -144,26 +144,62 @@
   .jobs-ongoing-list .thumb-box, .jobs-ongoing-list .thumb-empty { width:76px; height:60px; }
 }
 @media (max-width:600px) {
+  /* === 진행중인 채용정보: 모바일 카드 === */
   .jobs-ongoing-list .jobs-ongoing-thead { display:none; }
   .jobs-ongoing-list .jobs-ongoing-row {
-    grid-template-columns:56px 1fr 50px;
-    min-height:auto; padding:10px 6px;
+    display:flex; flex-wrap:wrap; align-items:flex-start;
+    padding:14px; margin:0 0 10px; min-height:auto;
+    border-radius:12px; background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+    border:1px solid #fae8f0;
   }
-  .jobs-ongoing-list .board-td:nth-child(1),
+  .jobs-ongoing-list .board-td.td-num,
   .jobs-ongoing-list .board-td.td-period,
   .jobs-ongoing-list .board-td.td-status,
-  .jobs-ongoing-list .board-td.td-jump { display:none; }
+  .jobs-ongoing-list .board-td.td-jump { display:none !important; }
+  .jobs-ongoing-list .board-td.td-thumb { flex-shrink:0; margin-right:10px; }
+  .jobs-ongoing-list .mini-thumb { width:48px!important; height:48px!important; }
+  .jobs-ongoing-list .board-td.td-title { flex:1; min-width:0; padding:0 !important; }
+  .jobs-ongoing-list .post-title-text { font-size:14px; font-weight:700; }
+  .jobs-ongoing-list .td-title-bottom { margin-top:4px; }
+  .jobs-ongoing-list .board-td.td-extend {
+    position:absolute; top:14px; right:14px;
+  }
+  .jobs-ongoing-list .jobs-ongoing-row { position:relative; padding-right:70px; }
+  .jobs-ongoing-list .btn-extend { padding:6px 14px; font-size:11px; }
   .jobs-ongoing-list .td-mobile-info {
-    display:flex; flex-wrap:wrap; align-items:center; gap:6px;
-    margin-top:6px; padding-top:6px; border-top:1px dashed #eee;
+    display:flex !important; flex-wrap:wrap; align-items:center; gap:6px 10px;
+    width:100%; margin-top:10px; padding-top:10px; border-top:1px dashed #eee;
   }
   .jobs-ongoing-list .td-mobile-info .mi-date { font-size:11px; color:#888; }
-  .jobs-ongoing-list .td-mobile-info .mi-period { font-size:12px; font-weight:700; color:#333; }
-  .jobs-ongoing-list .td-mobile-info .mi-jump { font-size:11px; font-weight:700; color:#6B21A8; display:flex; align-items:center; gap:4px; }
-  .jobs-ongoing-list .mini-thumb { width:48px!important; height:48px!important; }
-  .jobs-ongoing-list .thumb-box, .jobs-ongoing-list .thumb-empty { width:48px; height:48px; }
-  .jobs-ongoing-list .post-title-text { font-size:13px; }
-  .jobs-ongoing-list .btn-extend { padding:5px 10px; font-size:11px; }
+  .jobs-ongoing-list .td-mobile-info .mi-period { font-size:13px; font-weight:700; color:#333; }
+  .jobs-ongoing-list .td-mobile-info .mi-jump {
+    font-size:12px; font-weight:700; color:#6B21A8;
+    display:flex; align-items:center; gap:4px;
+  }
+  .jobs-ongoing-list .td-mobile-info .btn-jump-inline { font-size:11px; padding:4px 10px; }
+
+  /* === 마감된 채용정보: 모바일 카드 === */
+  .jobs-ended-list .jobs-ongoing-thead { display:none !important; }
+  .jobs-ended-list .jobs-ongoing-row {
+    display:flex; flex-wrap:wrap; align-items:flex-start;
+    padding:14px; margin:0 0 10px; min-height:auto;
+    border-radius:12px; background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+    border:1px solid #f0e8f0;
+  }
+  .jobs-ended-list .board-td.td-date,
+  .jobs-ended-list .board-td.td-period,
+  .jobs-ended-list .board-td.td-jump-used,
+  .jobs-ended-list .board-td.td-view { display:none !important; }
+  .jobs-ended-list .board-td.td-title { flex:1; min-width:0; padding:0 !important; }
+  .jobs-ended-list .post-title-text { font-size:14px; font-weight:700; display:block; }
+  .jobs-ended-list .td-mobile-info {
+    display:flex !important; flex-wrap:wrap; align-items:center; gap:6px 10px;
+    width:100%; margin-top:8px; padding-top:8px; border-top:1px dashed #eee;
+  }
+  .jobs-ended-list .td-mobile-info .mi-date { font-size:11px; color:#888; }
+  .jobs-ended-list .td-mobile-info .mi-period { font-size:13px; font-weight:700; color:#999; }
 }
 
 /* ===== 연장 모달 ===== */

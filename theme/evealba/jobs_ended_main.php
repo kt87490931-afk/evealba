@@ -57,10 +57,20 @@ if ($is_member) {
       foreach ($list as $row) { ?>
     <a href="<?php echo $row['view_href']; ?>" class="board-row jobs-ongoing-row">
       <div class="board-td td-date"><?php echo htmlspecialchars($row['datetime2']); ?></div>
-      <div class="board-td td-title"><div class="td-title-inner"><span class="post-title-text"><?php echo htmlspecialchars($row['subject']); ?></span></div></div>
+      <div class="board-td td-title">
+        <div class="td-title-inner">
+          <span class="post-title-text"><?php echo htmlspecialchars($row['subject']); ?></span>
+          <div class="td-mobile-info">
+            <span class="mi-date"><?php echo htmlspecialchars($row['datetime2']); ?></span>
+            <span class="mi-period"><?php echo htmlspecialchars($row['ad_period']); ?></span>
+            <span class="status-badge" style="background:#f0f0f0;color:#999;">마감</span>
+            <span style="font-size:11px;color:#999;">점프 <?php echo number_format($row['jump_used']); ?>/<?php echo number_format($row['jump_total']); ?>회</span>
+          </div>
+        </div>
+      </div>
       <div class="board-td td-period"><?php echo htmlspecialchars($row['ad_period']); ?></div>
-      <div class="board-td" style="font-size:11px;color:#999;"><?php echo number_format($row['jump_used']); ?>/<?php echo number_format($row['jump_total']); ?>회</div>
-      <div class="board-td">보기</div>
+      <div class="board-td td-jump-used" style="font-size:11px;color:#999;"><?php echo number_format($row['jump_used']); ?>/<?php echo number_format($row['jump_total']); ?>회</div>
+      <div class="board-td td-view">보기</div>
     </a>
     <?php }
     } else { ?>
