@@ -72,29 +72,18 @@ $_fr_jr_table = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'jobs_r
 $_fr_rows = array();
 $_fr_tb_check = sql_query("SHOW TABLES LIKE '{$_fr_sb_table}'");
 if ($_fr_tb_check && sql_num_rows($_fr_tb_check) > 0) {
-    $_fr_res = sql_query("SELECT sb.*, jr.jr_company, jr.jr_title, jr.jr_subject_display, jr.jr_data
+    $_fr_res = sql_query("SELECT jr.*
         FROM {$_fr_sb_table} sb
         LEFT JOIN {$_fr_jr_table} jr ON sb.sb_jr_id = jr.jr_id
         WHERE sb.sb_type = 'recommend' AND sb.sb_status = 'active'
         ORDER BY sb.sb_position ASC LIMIT 6");
     while ($_fr_r = sql_fetch_array($_fr_res)) {
-        $_fr_rows[] = $_fr_r;
+        if (!empty($_fr_r['jr_id'])) $_fr_rows[] = $_fr_r;
     }
 }
-$_fr_gradients = array(
-    1  => 'linear-gradient(135deg,rgb(255,65,108),rgb(255,75,43))',
-    2  => 'linear-gradient(135deg,rgb(255,94,98),rgb(255,195,113))',
-    3  => 'linear-gradient(135deg,rgb(238,9,121),rgb(255,106,0))',
-    4  => 'linear-gradient(135deg,rgb(74,0,224),rgb(142,45,226))',
-    5  => 'linear-gradient(135deg,rgb(67,233,123),rgb(56,249,215))',
-    6  => 'linear-gradient(135deg,rgb(29,209,161),rgb(9,132,227))',
-    7  => 'linear-gradient(135deg,rgb(196,113,237),rgb(246,79,89))',
-    8  => 'linear-gradient(135deg,rgb(36,198,220),rgb(81,74,157))',
-    9  => 'linear-gradient(135deg,rgb(0,210,255),rgb(58,123,213))',
-    10 => 'linear-gradient(135deg,rgb(236,64,122),rgb(240,98,146))',
-    11 => 'linear-gradient(135deg,rgb(118,75,162),rgb(102,126,234))',
-    12 => 'linear-gradient(135deg,rgb(72,85,99),rgb(41,50,60))',
-);
+if (!function_exists('render_premium_card') && is_file(G5_PATH . '/extend/jobs_list_helper.php')) {
+    include_once(G5_PATH . '/extend/jobs_list_helper.php');
+}
 ?>
 <div class="float-recommend" id="floatRecommend">
   <button type="button" class="fr-tab" id="frTab" onclick="toggleFloatRecommend()">
@@ -107,33 +96,20 @@ $_fr_gradients = array(
       <button type="button" class="fr-close" onclick="toggleFloatRecommend()">&times;</button>
     </div>
     <div class="fr-list">
-<?php if (!empty($_fr_rows)) : ?>
-<?php foreach ($_fr_rows as $_fr) :
-    $_fr_link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . (int)$_fr['sb_jr_id'];
-    $_fr_jd = !empty($_fr['jr_data']) ? json_decode($_fr['jr_data'], true) : array();
+<?php if (!empty($_fr_rows) && function_exists('render_premium_card')) : ?>
+<?php foreach ($_fr_rows as $_fr_row) : ?>
+      <?php render_premium_card($_fr_row, 'fr-card'); ?>
+<?php endforeach; ?>
+<?php elseif (!empty($_fr_rows)) : ?>
+<?php foreach ($_fr_rows as $_fr_row) :
+    $_fr_jd = !empty($_fr_row['jr_data']) ? json_decode($_fr_row['jr_data'], true) : array();
     if (!is_array($_fr_jd)) $_fr_jd = array();
-
-    $_fr_company = $_fr['jr_company'] ?: (!empty($_fr_jd['job_company']) ? $_fr_jd['job_company'] : (!empty($_fr_jd['job_nickname']) ? $_fr_jd['job_nickname'] : '업소명'));
-    $_fr_title = $_fr['jr_title'] ?: ($_fr['jr_subject_display'] ?: (!empty($_fr_jd['job_title']) ? $_fr_jd['job_title'] : ''));
-
-    $_fr_wage_text = '';
-    if (!empty($_fr_jd['job_tc'])) {
-        $_fr_wage_text = $_fr_jd['job_tc'];
-    } elseif (!empty($_fr_jd['job_salary_amt'])) {
-        $_fr_wage_text = $_fr_jd['job_salary_amt'];
-    } elseif (!empty($_fr_jd['job_salary_type'])) {
-        $_fr_wage_text = $_fr_jd['job_salary_type'];
-    } elseif (!empty($_fr_title)) {
-        $_fr_wage_text = mb_strimwidth($_fr_title, 0, 30, '…');
-    }
-
-    $_fr_sd = !empty($_fr['sb_data']) ? json_decode($_fr['sb_data'], true) : array();
-    $_fr_grad_key = isset($_fr_sd['thumb_gradient']) ? $_fr_sd['thumb_gradient'] : ((int)$_fr['sb_position'] ?: 1);
-    $_fr_grad = isset($_fr_gradients[$_fr_grad_key]) ? $_fr_gradients[$_fr_grad_key] : $_fr_gradients[1];
+    $_fr_link = (defined('G5_URL') ? rtrim(G5_URL, '/') : '') . '/jobs_view.php?jr_id=' . (int)$_fr_row['jr_id'];
+    $_fr_name = $_fr_row['jr_nickname'] ?: ($_fr_row['jr_company'] ?: '업소명');
 ?>
-      <a href="<?php echo htmlspecialchars($_fr_link); ?>" class="fr-card">
-        <div class="fr-banner" style="background:<?php echo $_fr_grad; ?>"><?php echo htmlspecialchars($_fr_company); ?><?php if ($_fr_wage_text) : ?><b><?php echo htmlspecialchars($_fr_wage_text); ?></b><?php endif; ?></div>
-        <div class="fr-info"><div class="fr-name"><?php echo htmlspecialchars($_fr_company); ?></div><?php if ($_fr_wage_text) : ?><div class="fr-wage"><?php echo htmlspecialchars($_fr_wage_text); ?></div><?php endif; ?></div>
+      <a href="<?php echo htmlspecialchars($_fr_link); ?>" class="fr-card" style="display:block;text-decoration:none;color:inherit;">
+        <div class="premium-banner" style="background:linear-gradient(135deg,rgb(255,65,108),rgb(255,75,43))"><?php echo htmlspecialchars($_fr_name); ?></div>
+        <div class="premium-body"><div class="premium-name"><?php echo htmlspecialchars($_fr_name); ?></div></div>
       </a>
 <?php endforeach; ?>
 <?php else : ?>
