@@ -105,6 +105,7 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
                 <th scope="col">입금상태</th>
                 <th scope="col"><?php echo subject_sort_link('jr_ad_period', $qstr); ?>광고기간</a></th>
                 <th scope="col">남은기간</th>
+                <th scope="col">AI상태</th>
                 <th scope="col">바로가기</th>
                 <th scope="col">관리</th>
             </tr>
@@ -159,6 +160,27 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
                     <td class="td_num"><span class="status-badge status-payment-<?php echo $payment_ok ? 'ok' : 'wait'; ?>"><?php echo $payment_label; ?></span></td>
                     <td class="td_num"><?php echo (int)$row['jr_ad_period']; ?>일</td>
                     <td class="td_num"><?php echo $remaining; ?></td>
+                    <?php
+                    $ai_st = '';
+                    $ai_st_label = '—';
+                    $ai_st_class = '';
+                    $_tbq = sql_query("SHOW TABLES LIKE 'g5_jobs_ai_content'", false);
+                    if ($_tbq && sql_num_rows($_tbq)) {
+                        $_aic_row = sql_fetch("SELECT id, version FROM g5_jobs_ai_content WHERE jr_id = '".(int)$row['jr_id']."' AND is_active = 1 LIMIT 1");
+                        if ($_aic_row) {
+                            $ai_st_label = '✅v'.(int)$_aic_row['version'];
+                            $ai_st_class = 'ai-done';
+                        } else {
+                            $_q_row = sql_fetch("SELECT status, error_msg FROM g5_jobs_ai_queue WHERE jr_id = '".(int)$row['jr_id']."' ORDER BY id DESC LIMIT 1");
+                            if ($_q_row) {
+                                if ($_q_row['status'] === 'pending' || $_q_row['status'] === 'processing') { $ai_st_label = '⏳대기'; $ai_st_class = 'ai-wait'; }
+                                elseif ($_q_row['status'] === 'failed') { $ai_st_label = '❌실패'; $ai_st_class = 'ai-fail'; }
+                                elseif ($_q_row['status'] === 'done') { $ai_st_label = '✅완료'; $ai_st_class = 'ai-done'; }
+                            }
+                        }
+                    }
+                    ?>
+                    <td class="td_num"><span class="<?php echo $ai_st_class; ?>"><?php echo $ai_st_label; ?></span></td>
                     <td class="td_mng"><a href="<?php echo $view_url; ?>" class="btn btn_02" target="_blank">보기</a></td>
                     <td class="td_mng td_mng_l">
                         <?php if (!$payment_ok) { ?>
@@ -174,7 +196,7 @@ $ended_cnt = (int)sql_fetch("SELECT count(*) as cnt FROM {$jr_table} WHERE jr_st
                 $i++;
             }
             if ($i == 0) {
-                echo '<tr><td colspan="13" class="empty_table"><span>자료가 없습니다.</span></td></tr>';
+                echo '<tr><td colspan="14" class="empty_table"><span>자료가 없습니다.</span></td></tr>';
             }
             ?>
         </tbody>
@@ -226,6 +248,11 @@ function fjobslist_do(act) {
 }
 </script>
 
+<style>
+.ai-done{color:#2E7D32;font-weight:700;font-size:11px;}
+.ai-wait{color:#E65100;font-weight:700;font-size:11px;}
+.ai-fail{color:#C62828;font-weight:700;font-size:11px;cursor:pointer;}
+</style>
 <?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, "{$_SERVER['SCRIPT_NAME']}?" . ($qstr ? $qstr . '&' : '') . "page="); ?>
 
 <?php

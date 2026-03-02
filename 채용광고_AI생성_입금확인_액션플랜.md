@@ -155,22 +155,68 @@
 
 ---
 
-## Part 5: 톤 선택 반영 및 AI 프롬프트 검증
+## Part 5: jr_data 로드 → 폼 입력 (에디터 연동)
 
 ### 5.1 목표
+
+- 저장된 `jr_data`를 읽어와 채용광고 에디터/폼의 각 input에 자동 입력
+- 기준: `eve_alba_ad_editor_2.html` 구조 (모달 내 input, disp 영역)
+- 현재 상태: **미구현** — 초기값이 전부 하드코딩, DB/API 연동 없음
+
+### 5.2 구현 필요 항목 (준비 여부)
+
+| 항목 | 준비 여부 | 비고 |
+|------|-----------|------|
+| jr_data → input 매핑 정보 (키 이름 일치) | ✅ 준비됨 | job_nickname, job_title, desc_location 등 |
+| jr_id로 jr_data 조회 | ❌ 없음 | API 또는 PHP 페이지에서 조회 로직 필요 |
+| 폼에 jr_data 로드 | ❌ 없음 | PHP value 출력 또는 JS fetch 후 채우기 |
+| 편의사항/키워드/MBTI 체크박스 복원 | ❌ 없음 | selectedBenefits, selectedKeywords, selectedMbti 복원 |
+| AI 섹션 필드(ai_intro 등) → 폼 입력란 매핑 | ❌ 없음 | inp-recruit, inp-location, inp-workenv 등 |
+| eve_alba_ad_editor_2.html ↔ jobs_view_main 연동 | ❌ 없음 | 에디터가 실제 jr_id 기반으로 동작하도록 통합 필요 |
+
+### 5.3 액션 항목
+
+| 순번 | 액션 | 파일 | 산출물 |
+|------|------|------|--------|
+| 5.1 | jr_id 파라미터로 jr_data 조회 API 또는 페이지 생성 | 새 API 또는 jobs_view.php 확장 | jr_data JSON 반환 |
+| 5.2 | eve_alba_ad_editor_2 (또는 통합 뷰): 로드 시 jr_data fetch 후 disp·모달 input 채우기 | theme 또는 에디터 HTML/JS | 폼 자동 로드 |
+| 5.3 | 편의사항·키워드·MBTI 체크박스 복원 로직 | JS | selectedBenefits/Keywords/Mbti 복원 |
+| 5.4 | 저장 시 jr_data 업데이트 API 연동 (기존 jobs_ai_section_save·jobs_basic_info_save 활용) | jobs_ai_section_save.php 등 | 에디터 수정 → DB 반영 |
+
+### 5.4 해결책 (실패 시)
+
+- jr_data 조회 실패: 에러 메시지 표시 후 빈 폼 유지
+- 매핑 누락: jr_data 키 ↔ input id 매핑표를 문서화 후 검수
+- eve_alba_ad_editor_2가 독립 HTML일 경우: jobs_view_main.php 내 편집 모드로 통합하거나, iframe/별도 페이지에서 jr_id 전달받아 동작하도록 수정
+
+### 5.5 참고 파일
+
+| 구분 | 경로 |
+|------|------|
+| 에디터 기준 HTML | c:\Users\DOGE\Downloads\eve_alba_ad_editor_2.html |
+| 채용 상세 뷰 | theme/evealba/jobs_view_main.php |
+| 등록 폼 | theme/evealba/jobs_register_main.php |
+| AI 섹션 저장 | jobs_ai_section_save.php |
+| 기본정보 저장 | jobs_basic_info_save.php |
+
+---
+
+## Part 6: 톤 선택 반영 및 AI 프롬프트 검증
+
+### 6.1 목표
 
 - 채용정보등록 시 선택한 톤(언니/남사장/전문가)이 jr_data.ai_tone에 저장됨
 - 입금확인 후 큐 처리 시 해당 톤으로 AI 생성
 
-### 5.2 액션 항목
+### 6.2 액션 항목
 
 | 순번 | 액션 | 파일 | 산출물 |
 |------|------|------|--------|
-| 5.1 | jobs_register_main 톤 선택 UI → job_data에 ai_tone 저장 확인 | theme/evealba/jobs_register_main.php | 톤 저장 검증 |
-| 5.2 | jobs_ai_queue_process: formData에 ai_tone 전달 확인 | jobs_ai_queue_process.php | 큐 톤 전달 |
-| 5.3 | gemini_api.lib / gemini_config 톤별 프롬프트 동작 검증 | lib/gemini_api.lib.php, extend/gemini_config.php | 톤 반영 확인 |
+| 6.1 | jobs_register_main 톤 선택 UI → job_data에 ai_tone 저장 확인 | theme/evealba/jobs_register_main.php | 톤 저장 검증 |
+| 6.2 | jobs_ai_queue_process: formData에 ai_tone 전달 확인 | jobs_ai_queue_process.php | 큐 톤 전달 |
+| 6.3 | gemini_api.lib / gemini_config 톤별 프롬프트 동작 검증 | lib/gemini_api.lib.php, extend/gemini_config.php | 톤 반영 확인 |
 
-### 5.3 완료 후
+### 6.3 완료 후
 
 - **자동 배포 실행**
 
@@ -191,7 +237,10 @@ Part 3: 섹션별 수정 버튼 및 편집 기능
 Part 4: 입금확인 → AI 생성 · 상태 표시
   → 자동 배포
 
-Part 5: 톤 선택 반영 및 AI 프롬프트 검증
+Part 5: jr_data 로드 → 폼 입력 (에디터 연동)
+  → 자동 배포
+
+Part 6: 톤 선택 반영 및 AI 프롬프트 검증
   → 자동 배포
 ```
 
@@ -208,7 +257,8 @@ Part 5: 톤 선택 반영 및 AI 프롬프트 검증
 | AI 큐 워커 | jobs_ai_queue_process.php |
 | AI 섹션 저장 | jobs_ai_section_save.php |
 | eve 스킨 CSS | theme/evealba/skin/board/eve_skin/style.css |
-| 기준 HTML | c:\Users\DOGE\Downloads\eve_alba_ad_post.html |
+| 기준 HTML (뷰) | c:\Users\DOGE\Downloads\eve_alba_ad_post.html |
+| 에디터 기준 HTML | c:\Users\DOGE\Downloads\eve_alba_ad_editor_2.html |
 
 ---
 

@@ -1,0 +1,111 @@
+<?php
+/**
+ * AI 생성 콘텐츠 헬퍼 (g5_jobs_ai_content 테이블)
+ * 사용자 입력(jr_data)과 AI 생성 데이터를 완전 분리
+ */
+if (!defined('_GNUBOARD_')) exit;
+
+function _aic_table_exists() {
+    static $exists = null;
+    if ($exists !== null) return $exists;
+    $r = sql_query("SHOW TABLES LIKE 'g5_jobs_ai_content'", false);
+    $exists = ($r && sql_num_rows($r) > 0);
+    return $exists;
+}
+
+/**
+ * 활성 AI 콘텐츠 조회 (jr_id별 is_active=1인 최신 1건)
+ * 없으면 null 반환 → 호출부에서 jr_data fallback 처리
+ */
+function aic_get_active($jr_id) {
+    if (!_aic_table_exists()) return null;
+    $jr_id = (int)$jr_id;
+    $row = sql_fetch("SELECT id, ai_data, version, ai_tone, created_at, duration_ms
+                      FROM g5_jobs_ai_content
+                      WHERE jr_id = '{$jr_id}' AND is_active = 1
+                      ORDER BY id DESC LIMIT 1");
+    if (!$row || empty($row['ai_data'])) return null;
+    $data = json_decode($row['ai_data'], true);
+    if (!is_array($data)) return null;
+    $data['_aic_id'] = (int)$row['id'];
+    $data['_version'] = (int)$row['version'];
+    $data['_ai_tone'] = $row['ai_tone'];
+    $data['_created_at'] = $row['created_at'];
+    $data['_duration_ms'] = (int)$row['duration_ms'];
+    return $data;
+}
+
+/**
+ * 새 AI 콘텐츠 저장 (기존 활성 → 비활성, 새 버전 INSERT)
+ * @return int|false 새 버전 번호 또는 실패 시 false
+ */
+function aic_save_new($jr_id, $mb_id, $ai_data, $ai_tone = 'unnie', $duration_ms = 0) {
+    if (!_aic_table_exists()) return false;
+    $jr_id = (int)$jr_id;
+    sql_query("UPDATE g5_jobs_ai_content SET is_active = 0 WHERE jr_id = '{$jr_id}' AND is_active = 1");
+    $vrow = sql_fetch("SELECT COALESCE(MAX(version), 0) + 1 as next_ver FROM g5_jobs_ai_content WHERE jr_id = '{$jr_id}'");
+    $version = isset($vrow['next_ver']) ? (int)$vrow['next_ver'] : 1;
+    $mb_id_esc = sql_escape_string($mb_id);
+    $tone_esc = sql_escape_string($ai_tone);
+    $json_esc = sql_escape_string(json_encode($ai_data, JSON_UNESCAPED_UNICODE));
+    $now = defined('G5_TIME_YMDHIS') ? G5_TIME_YMDHIS : date('Y-m-d H:i:s');
+    $duration_ms = (int)$duration_ms;
+    sql_query("INSERT INTO g5_jobs_ai_content (jr_id, mb_id, version, ai_tone, ai_data, is_active, created_at, duration_ms)
+               VALUES ('{$jr_id}', '{$mb_id_esc}', '{$version}', '{$tone_esc}', '{$json_esc}', 1, '{$now}', '{$duration_ms}')");
+    return $version;
+}
+
+/**
+ * 활성 AI 콘텐츠의 특정 필드 1개 업데이트 (수동 편집용)
+ */
+function aic_update_field($jr_id, $key, $value) {
+    return aic_update_fields($jr_id, array($key => $value));
+}
+
+/**
+ * 활성 AI 콘텐츠의 여러 필드 업데이트 (수동 편집용)
+ */
+function aic_update_fields($jr_id, $fields) {
+    if (!_aic_table_exists()) return false;
+    $jr_id = (int)$jr_id;
+    $row = sql_fetch("SELECT id, ai_data FROM g5_jobs_ai_content WHERE jr_id = '{$jr_id}' AND is_active = 1 ORDER BY id DESC LIMIT 1");
+    if (!$row) return false;
+    $data = json_decode($row['ai_data'], true);
+    if (!is_array($data)) $data = array();
+    foreach ($fields as $k => $v) {
+        $data[$k] = $v;
+    }
+    $json_esc = sql_escape_string(json_encode($data, JSON_UNESCAPED_UNICODE));
+    $aid = (int)$row['id'];
+    sql_query("UPDATE g5_jobs_ai_content SET ai_data = '{$json_esc}' WHERE id = '{$aid}'");
+    return true;
+}
+
+/**
+ * 특정 버전 활성화 (관리자 복원용)
+ */
+function aic_activate_version($jr_id, $version) {
+    if (!_aic_table_exists()) return false;
+    $jr_id = (int)$jr_id;
+    $version = (int)$version;
+    sql_query("UPDATE g5_jobs_ai_content SET is_active = 0 WHERE jr_id = '{$jr_id}'");
+    sql_query("UPDATE g5_jobs_ai_content SET is_active = 1 WHERE jr_id = '{$jr_id}' AND version = '{$version}'");
+    return true;
+}
+
+/**
+ * 버전 이력 조회 (관리자용)
+ */
+function aic_get_versions($jr_id) {
+    if (!_aic_table_exists()) return array();
+    $jr_id = (int)$jr_id;
+    $result = sql_query("SELECT id, version, ai_tone, is_active, created_at, duration_ms
+                         FROM g5_jobs_ai_content
+                         WHERE jr_id = '{$jr_id}'
+                         ORDER BY version DESC");
+    $list = array();
+    while ($row = sql_fetch_array($result)) {
+        $list[] = $row;
+    }
+    return $list;
+}

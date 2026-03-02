@@ -20,6 +20,11 @@ define('_GNUBOARD_', true);
 $g5_path = ['path' => __DIR__];
 include_once __DIR__ . '/common.php';
 
+// 4바이트 이모지(🌸💎👯‍♀️) 저장을 위해 utf8mb4 강제 적용
+if (function_exists('sql_query')) {
+    sql_query("SET NAMES utf8mb4", false);
+}
+
 $log_dir = defined('G5_DATA_PATH') ? G5_DATA_PATH . '/log' : __DIR__ . '/data/log';
 if (!is_dir($log_dir)) @mkdir($log_dir, 0755, true);
 $log_file = $log_dir . '/gemini_ai_queue.log';
@@ -53,6 +58,19 @@ if (!file_exists(G5_LIB_PATH . '/gemini_api.lib.php')) {
     exit(1);
 }
 include_once G5_LIB_PATH . '/gemini_api.lib.php';
+include_once G5_LIB_PATH . '/jobs_ai_content.lib.php';
+
+// 고착 감지: processing 상태가 5분 이상인 항목 자동 리셋
+$stuck_timeout_sec = 300;
+$stuck_rows = sql_query("SELECT id, jr_id, TIMESTAMPDIFF(SECOND, processed_at, NOW()) as stuck_sec
+    FROM g5_jobs_ai_queue
+    WHERE status = 'processing'
+      AND (processed_at IS NULL OR TIMESTAMPDIFF(SECOND, COALESCE(processed_at, created_at), NOW()) > {$stuck_timeout_sec})");
+while ($stuck = sql_fetch_array($stuck_rows)) {
+    $sid = (int)$stuck['id'];
+    sql_query("UPDATE g5_jobs_ai_queue SET status = 'pending', retry_count = 0, error_msg = 'auto-reset from stuck processing' WHERE id = '{$sid}'");
+    _queue_log("STUCK_RESET id={$sid} jr_id={$stuck['jr_id']}");
+}
 
 $t_start = microtime(true);
 $processed = 0;
@@ -64,7 +82,7 @@ for ($i = 0; $i < $limit; $i++) {
     $jr_id = (int)$row['jr_id'];
     sql_query("UPDATE g5_jobs_ai_queue SET status = 'processing' WHERE id = '{$qid}'");
 
-    $jr = sql_fetch("SELECT jr_id, jr_data, jr_subject_display, jr_nickname, jr_company, jr_title FROM g5_jobs_register WHERE jr_id = '{$jr_id}'");
+    $jr = sql_fetch("SELECT jr_id, mb_id, jr_data, jr_subject_display, jr_nickname, jr_company, jr_title FROM g5_jobs_register WHERE jr_id = '{$jr_id}'");
     if (!$jr) {
         sql_query("UPDATE g5_jobs_ai_queue SET status = 'failed', error_msg = 'jr not found', processed_at = '".G5_TIME_YMDHIS."' WHERE id = '{$qid}'");
         _queue_log("SKIP id={$qid} jr_id={$jr_id} jr_not_found");
@@ -72,9 +90,12 @@ for ($i = 0; $i < $limit; $i++) {
     }
 
     $jr_data = $jr['jr_data'] ? json_decode($jr['jr_data'], true) : array();
-    if (!is_array($jr_data) || !empty($jr_data['ai_content']) || !empty($jr_data['ai_intro'])) {
+    if (!is_array($jr_data)) $jr_data = array();
+
+    $existing_aic = aic_get_active($jr_id);
+    if ($existing_aic) {
         sql_query("UPDATE g5_jobs_ai_queue SET status = 'done', processed_at = '".G5_TIME_YMDHIS."' WHERE id = '{$qid}'");
-        _queue_log("SKIP id={$qid} jr_id={$jr_id} already_has_ai");
+        _queue_log("SKIP id={$qid} jr_id={$jr_id} already_has_ai_in_aic");
         continue;
     }
 
@@ -120,21 +141,27 @@ for ($i = 0; $i < $limit; $i++) {
         'keyword' => $keyword,
         'mbti_prefer' => $mbti_prefer,
     );
-    $ai_tone = isset($jr_data['ai_tone']) && in_array($jr_data['ai_tone'], array('unnie', 'boss_male', 'pro')) ? $jr_data['ai_tone'] : 'unnie';
+    $ai_tone = isset($jr_data['ai_tone']) && in_array($jr_data['ai_tone'], array('unnie', 'boss_male', 'pro', 'tough_unnie', 'idol_style', 'partner_pro')) ? $jr_data['ai_tone'] : 'unnie';
     _queue_log("AI_TONE jr_id={$jr_id} tone={$ai_tone}");
 
+    $gen_start = microtime(true);
     $sections = generate_store_description_gemini_sections($formData, $ai_tone);
+    $gen_ms = (int)((microtime(true) - $gen_start) * 1000);
     $use_sections = is_array($sections) && !isset($sections['error']);
     $ai_title = $jr['jr_subject_display'];
     $save_ok = false;
     $err_short = '';
 
     if ($use_sections) {
-        $jr_data['ai_intro'] = $sections['ai_intro'];
-        $jr_data['ai_location'] = $sections['ai_location'];
-        $jr_data['ai_env'] = $sections['ai_env'];
-        $jr_data['ai_benefit'] = $sections['ai_benefit'];
-        $jr_data['ai_wrapup'] = $sections['ai_wrapup'];
+        $ai_save_data = array();
+        $ai_section_keys = array(
+            'ai_intro','ai_card1_title','ai_card1_desc','ai_card2_title','ai_card2_desc',
+            'ai_card3_title','ai_card3_desc','ai_card4_title','ai_card4_desc',
+            'ai_location','ai_env','ai_welfare','ai_qualify','ai_extra','ai_mbti_comment'
+        );
+        foreach ($ai_section_keys as $_sk) {
+            $ai_save_data[$_sk] = isset($sections[$_sk]) ? $sections[$_sk] : '';
+        }
         $first_line = strtok($sections['ai_intro'], "\n");
         $ai_title = $first_line ? mb_substr(trim($first_line), 0, 80) : $jr['jr_subject_display'];
         $save_ok = true;
@@ -142,7 +169,7 @@ for ($i = 0; $i < $limit; $i++) {
         $ai_content = generate_store_description_gemini($formData, $ai_tone);
         $is_err = (strpos($ai_content, '오류') !== false || strpos($ai_content, '설정') !== false || strpos($ai_content, '대기열') !== false || strpos($ai_content, '큐 락') !== false);
         if ($ai_content && !$is_err) {
-            $jr_data['ai_content'] = $ai_content;
+            $ai_save_data = array('ai_content' => $ai_content);
             $first_line = strtok($ai_content, "\n");
             $ai_title = $first_line ? mb_substr(trim($first_line), 0, 80) : $jr['jr_subject_display'];
             $save_ok = true;
@@ -152,18 +179,16 @@ for ($i = 0; $i < $limit; $i++) {
     }
 
     if ($save_ok) {
-        $jr_data_esc = sql_escape_string(json_encode($jr_data, JSON_UNESCAPED_UNICODE));
-        $ai_title_esc = sql_escape_string($ai_title);
-        sql_query("UPDATE g5_jobs_register SET jr_data = '{$jr_data_esc}', jr_subject_display = '{$ai_title_esc}' WHERE jr_id = '{$jr_id}'");
+        $ver = aic_save_new($jr_id, $jr['mb_id'], $ai_save_data, $ai_tone, $gen_ms);
         sql_query("UPDATE g5_jobs_ai_queue SET status = 'done', processed_at = '".G5_TIME_YMDHIS."' WHERE id = '{$qid}'");
-        _queue_log("OK id={$qid} jr_id={$jr_id} sections=" . ($use_sections ? '1' : '0'));
+        _queue_log("OK id={$qid} jr_id={$jr_id} ver={$ver} sections=" . ($use_sections ? '1' : '0') . " ms={$gen_ms}");
         $processed++;
     } else {
         $ret_row = sql_fetch("SELECT retry_count FROM g5_jobs_ai_queue WHERE id = '{$qid}'");
         $retry = isset($ret_row['retry_count']) ? (int)$ret_row['retry_count'] : 0;
         $err_short = mb_substr($err_short ?: 'API 응답 없음', 0, 200);
         $err_esc = sql_escape_string($err_short);
-        $is_retryable = (strpos($err_short, '429') !== false || stripos($err_short, 'quota') !== false || stripos($err_short, 'RESOURCE_EXHAUSTED') !== false || stripos($err_short, 'high demand') !== false || stripos($err_short, 'experiencing') !== false || strpos($err_short, '대기열') !== false || strpos($err_short, '큐 락') !== false || strpos($err_short, 'try again later') !== false);
+        $is_retryable = (strpos($err_short, '429') !== false || stripos($err_short, 'quota') !== false || stripos($err_short, 'RESOURCE_EXHAUSTED') !== false || stripos($err_short, 'high demand') !== false || stripos($err_short, 'experiencing') !== false || strpos($err_short, '대기열') !== false || strpos($err_short, '큐 락') !== false || strpos($err_short, 'try again later') !== false || stripos($err_short, 'expired') !== false || stripos($err_short, 'API key') !== false || stripos($err_short, 'key not valid') !== false);
         if ($retry < 3 && $is_retryable) {
             sql_query("UPDATE g5_jobs_ai_queue SET status = 'pending', retry_count = retry_count + 1, error_msg = '{$err_esc}' WHERE id = '{$qid}'");
             _queue_log("RETRY id={$qid} jr_id={$jr_id} retry=".($retry+1)." msg={$err_short}");

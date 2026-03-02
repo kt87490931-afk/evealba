@@ -61,7 +61,7 @@ if (!function_exists('generate_store_description_gemini')) {
             _gemini_ai_debug_log("API_KEY_OK len=" . strlen($api_key) . " config=" . basename($config_path));
         }
 
-        $role_id = in_array($role_id, ['unnie', 'boss_male', 'pro']) ? $role_id : 'unnie';
+        $role_id = in_array($role_id, ['unnie', 'boss_male', 'pro', 'tough_unnie', 'idol_style', 'partner_pro']) ? $role_id : 'unnie';
         $role = isset($gemini_roles[$role_id]) ? $gemini_roles[$role_id] : $gemini_roles['unnie'];
         $base_prompt = isset($role['prompt']) ? $role['prompt'] : $gemini_roles['unnie']['prompt'];
 
@@ -110,14 +110,18 @@ if (!function_exists('generate_store_description_gemini')) {
 
         $json_instruction = '';
         if ($return_json) {
-            $json_instruction = "\n\n반드시 다음 JSON 형식으로만 응답하세요. 설명 없이 JSON만 반환하세요.\n"
-                . "AI소개글 종합정리 순서: intro → location → env → benefit → wrapup\n"
-                . '{"intro":"인사말 및 편의사항·키워드·MBTI 요약", "location":"업소 위치·교통 안내", "env":"근무환경", "benefit":"혜택·복리후생", "wrapup":"마무리·언니의 약속"}';
+            $json_instruction = "\n\n" . (isset($gemini_section_instruction) ? $gemini_section_instruction : "반드시 JSON 형식으로만 응답하세요.");
         }
 
-        $full_prompt = $base_prompt . "\n" . $data_block . $json_instruction;
+        // 랜덤 스타일 시드 주입: 매 호출마다 다른 톤/관점 유도
+        $style_seed = '';
+        if (function_exists('gemini_get_random_style_seed')) {
+            $style_seed = "\n\n[스타일 지시] " . gemini_get_random_style_seed() . "\n";
+        }
 
-        $model = isset($gemini_model) ? $gemini_model : 'gemini-3-flash-preview';
+        $full_prompt = $base_prompt . $style_seed . "\n" . $data_block . $json_instruction;
+
+        $model = isset($gemini_model) ? $gemini_model : 'gemini-2.0-flash';
         $log_dir = defined('G5_DATA_PATH') ? G5_DATA_PATH . '/log' : (dirname(__DIR__) . '/data/log');
         $lock_file = $log_dir . '/gemini_ai_queue.lock';
         if (!is_dir($log_dir)) @mkdir($log_dir, 0755, true);
@@ -141,13 +145,19 @@ if (!function_exists('generate_store_description_gemini')) {
 
         // 공식 문서: https://ai.google.dev/gemini-api/docs/quickstart - x-goog-api-key 헤더 사용
         $url_base = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent";
+        $temp_val = isset($gemini_temperature) ? (float)$gemini_temperature : 0.95;
+        $top_p_val = isset($gemini_top_p) ? (float)$gemini_top_p : 0.9;
+        $gen_config = array(
+            'temperature' => $temp_val,
+            'maxOutputTokens' => 8000,
+            'topP' => $top_p_val
+        );
+        if ($return_json) {
+            $gen_config['responseMimeType'] = 'application/json';
+        }
         $payload = array(
             'contents' => array(array('parts' => array(array('text' => $full_prompt)))),
-            'generationConfig' => array(
-                'temperature' => 0.8,
-                'maxOutputTokens' => 2000,
-                'topP' => 0.95
-            )
+            'generationConfig' => $gen_config
         );
 
         $ch = curl_init($url_base);
@@ -161,10 +171,15 @@ if (!function_exists('generate_store_description_gemini')) {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         $response = curl_exec($ch);
         $err = curl_error($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         flock($fp, LOCK_UN);
         fclose($fp);
+
+        if (function_exists('_gemini_ai_debug_log')) {
+            _gemini_ai_debug_log("API_RESPONSE http={$http_code} curl_err=" . ($err ?: 'none') . " resp_len=" . strlen($response) . " resp_start=" . mb_substr($response, 0, 200));
+        }
 
         if ($err) {
             return 'API 연결 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
@@ -178,11 +193,14 @@ if (!function_exists('generate_store_description_gemini')) {
         }
 
         $err_msg = isset($result['error']['message']) ? $result['error']['message'] : '알 수 없는 오류';
+        if (function_exists('_gemini_ai_debug_log')) {
+            _gemini_ai_debug_log("API_ERROR http={$http_code} msg={$err_msg} url={$url_base}");
+        }
         return '글 생성 중 오류가 발생했습니다. (' . $err_msg . ')';
     }
 
     /**
-     * 섹션별 AI 생성 (Option A) — ai_intro, ai_location, ai_env, ai_benefit, ai_wrapup
+     * 섹션별 AI 생성 — 14개 키 (intro, card1~4 title/desc, location, env, welfare, qualify, extra, mbti_comment)
      * JSON 형식으로 응답받아 파싱
      */
     if (!function_exists('generate_store_description_gemini_sections')) {
@@ -195,15 +213,15 @@ if (!function_exists('generate_store_description_gemini')) {
             $raw = preg_replace('/^```(?:json)?\s*/i', '', $raw);
             $raw = preg_replace('/\s*```\s*$/', '', $raw);
             $dec = @json_decode($raw, true);
-            if (is_array($dec) && (isset($dec['intro']) || isset($dec['location']) || isset($dec['env']) || isset($dec['benefit']) || isset($dec['wrapup']))) {
-                return array(
-                    'ai_intro' => isset($dec['intro']) ? trim($dec['intro']) : '',
-                    'ai_location' => isset($dec['location']) ? trim($dec['location']) : '',
-                    'ai_env' => isset($dec['env']) ? trim($dec['env']) : '',
-                    'ai_benefit' => isset($dec['benefit']) ? trim($dec['benefit']) : '',
-                    'ai_wrapup' => isset($dec['wrapup']) ? trim($dec['wrapup']) : '',
-                );
+            $expected_keys = array('intro','card1_title','card1_desc','card2_title','card2_desc','card3_title','card3_desc','card4_title','card4_desc','location','env','welfare','qualify','extra','mbti_comment');
+            if (is_array($dec) && (isset($dec['intro']) || isset($dec['card1_title']) || isset($dec['location']))) {
+                $result = array();
+                foreach ($expected_keys as $k) {
+                    $result['ai_' . $k] = isset($dec[$k]) ? trim($dec[$k]) : '';
+                }
+                return $result;
             }
+            if (function_exists('_gemini_ai_debug_log')) _gemini_ai_debug_log("PARSE_FAIL raw_len=" . strlen($raw) . " raw_start=" . mb_substr($raw, 0, 200));
             return array('error' => 'AI 응답 형식 오류. JSON 파싱 실패.');
         }
     }

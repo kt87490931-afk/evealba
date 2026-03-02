@@ -24,15 +24,16 @@ if (!sql_num_rows($tbq)) {
     alert('g5_jobs_ai_queue 테이블이 없습니다.', './jobs_register_list.php');
 }
 
+include_once(G5_LIB_PATH . '/jobs_ai_content.lib.php');
+
 $added = 0;
 foreach ($jr_ids as $jr_id) {
     if (!$jr_id) continue;
-    $row = sql_fetch("SELECT jr_id, jr_payment_confirmed, jr_data FROM g5_jobs_register WHERE jr_id = '{$jr_id}'");
+    $row = sql_fetch("SELECT jr_id, jr_payment_confirmed FROM g5_jobs_register WHERE jr_id = '{$jr_id}'");
     if (!$row || !$row['jr_payment_confirmed']) continue;
 
-    $jr_data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();
-    $has_ai = !empty($jr_data['ai_content']) || !empty($jr_data['ai_intro']);
-    if ($has_ai) continue;
+    $existing_aic = aic_get_active($jr_id);
+    if ($existing_aic) continue;
 
     $q_check = sql_fetch("SELECT id FROM g5_jobs_ai_queue WHERE jr_id = '{$jr_id}' AND status IN ('pending','processing') LIMIT 1", false);
     if ($q_check) continue;
