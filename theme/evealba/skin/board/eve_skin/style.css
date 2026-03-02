@@ -177,15 +177,17 @@
     flex-shrink:0; margin-right:10px; display:flex !important;
     align-items:flex-start; justify-content:center;
   }
-  .jobs-ongoing-list .mini-thumb { width:48px!important; height:48px!important; }
+  .jobs-ongoing-list .mini-thumb { width:60px!important; height:60px!important; }
 
   /* 제목 영역 */
   .jobs-ongoing-list .board-td.td-title,
   .jobs-ended-list .board-td.td-title {
     flex:1; min-width:0; padding:0 !important; text-align:left;
   }
+  .jobs-ongoing-list .td-title-inner,
+  .jobs-ended-list .td-title-inner { align-items:flex-start; }
   .jobs-ongoing-list .post-title-text,
-  .jobs-ended-list .post-title-text { font-size:14px; font-weight:700; text-align:left; }
+  .jobs-ended-list .post-title-text { font-size:14px; font-weight:700; text-align:left; display:block; }
 
   /* 상단 우측: 상태배지 + 연장버튼 */
   .mc-top-right {
