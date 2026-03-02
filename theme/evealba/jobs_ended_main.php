@@ -54,7 +54,6 @@ if ($is_member) {
       <div class="board-th">점프 사용</div>
       <div class="board-th">보기</div>
     </div>
-    <div class="mobile-card-header">제목 · 광고유형 · 기간 · 점프사용</div>
     <?php if (count($list) > 0) {
       foreach ($list as $row) { ?>
     <a href="<?php echo $row['view_href']; ?>" class="board-row jobs-ongoing-row">
@@ -62,15 +61,19 @@ if ($is_member) {
       <div class="board-td td-title">
         <div class="td-title-inner">
           <span class="post-title-text"><?php echo htmlspecialchars($row['subject']); ?></span>
-          <div class="td-mobile-info">
-            <span class="mi-labels"><?php echo !empty($row['ad_labels']) ? htmlspecialchars(str_replace(',', ', ', $row['ad_labels'])) : ''; ?></span>
-            <span class="mi-date"><?php echo htmlspecialchars($row['datetime2']); ?></span>
-            <span class="mi-sep">·</span>
-            <span class="mi-period"><?php echo htmlspecialchars($row['ad_period']); ?></span>
-            <span class="mi-sep">·</span>
+          <div class="mc-top-right">
             <span class="status-badge" style="background:#f0f0f0;color:#999;">마감</span>
-            <span class="mi-sep">·</span>
-            <span style="font-size:11px;color:#999;">점프 <?php echo number_format($row['jump_used']); ?>/<?php echo number_format($row['jump_total']); ?>회</span>
+          </div>
+          <div class="mc-labels" style="color:#999;"><?php echo !empty($row['ad_labels']) ? htmlspecialchars(str_replace(',', ', ', $row['ad_labels'])) : ''; ?></div>
+          <div class="mc-bottom">
+            <span class="mc-bottom-left">
+              <span class="mi-date"><?php echo htmlspecialchars($row['datetime2']); ?></span>
+              <span class="mi-sep">·</span>
+              <span class="mi-period" style="color:#999;"><?php echo htmlspecialchars($row['ad_period']); ?></span>
+            </span>
+            <span class="mc-bottom-right" style="color:#999;font-size:11px;">
+              점프 <?php echo number_format($row['jump_used']); ?>/<?php echo number_format($row['jump_total']); ?>회
+            </span>
           </div>
         </div>
       </div>
