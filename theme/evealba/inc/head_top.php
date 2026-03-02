@@ -179,13 +179,17 @@ $_jobs_base = $_base;
       </div>
       <?php } ?>
 
-      <?php if ($is_admin || !$_is_biz) { ?>
+      <?php if ($is_admin || !$_is_biz) {
+        $_mob_resume_url = '#';
+        $_mob_rs = @sql_fetch("SELECT rs_id FROM g5_resume WHERE mb_id = '".addslashes($member['mb_id'])."' AND rs_status = 'active' LIMIT 1");
+        if ($_mob_rs) $_mob_resume_url = $_jobs_base.'/talent_view.php?rs_id='.(int)$_mob_rs['rs_id'];
+      ?>
       <div class="msm-section">
         <div class="msm-section-title">👩 인재정보 MY PAGE</div>
         <a href="<?php echo $_jobs_base; ?>/resume_register.php" class="msm-link">📄 이력서 리스트</a>
         <a href="#" class="msm-link">📋 채용정보 스크랩</a>
         <a href="#" class="msm-link">👤 맞춤구인정보</a>
-        <a href="#" class="msm-link">⚙️ 맞춤구인 정보설정</a>
+        <a href="<?php echo $_mob_resume_url; ?>" class="msm-link">⚙️ 이력서 수정</a>
         <a href="#" class="msm-link">📝 내가 작성한 게시글</a>
         <a href="#" class="msm-link">💬 내가 작성한 댓글</a>
         <a href="#" class="msm-link">⭐ 즐겨찾기한 게시글</a>

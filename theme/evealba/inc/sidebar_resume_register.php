@@ -10,9 +10,17 @@ $mypage_url = G5_BBS_URL.'/member_confirm.php?url='.urlencode(G5_BBS_URL.'/regis
 $resume_mypage_active = isset($resume_mypage_active) ? $resume_mypage_active : 'resume_list';
 $_rmp_labels = array(
     'resume_list'=>'📄 이력서 리스트','scrap'=>'📋 채용정보 스크랩','matching'=>'👤 맞춤구인정보',
-    'match_setting'=>'⚙️ 맞춤구인 정보설정','my_posts'=>'📝 내가 작성한 게시글',
+    'resume_edit'=>'⚙️ 이력서 수정','my_posts'=>'📝 내가 작성한 게시글',
     'my_comments'=>'💬 내가 작성한 댓글','bookmarks'=>'⭐ 즐겨찾기한 게시글'
 );
+$_my_resume_edit_url = '#';
+if ($is_member) {
+    $_my_rs = @sql_fetch("SELECT rs_id FROM g5_resume WHERE mb_id = '".addslashes($member['mb_id'])."' AND rs_status = 'active' LIMIT 1");
+    if ($_my_rs) {
+        $_tb = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
+        $_my_resume_edit_url = $_tb.'/talent_view.php?rs_id='.(int)$_my_rs['rs_id'];
+    }
+}
 $_rmp_active_label = isset($_rmp_labels[$resume_mypage_active]) ? $_rmp_labels[$resume_mypage_active] : '📄 MY PAGE';
 ?>
 <div class="sidebar-widget sidebar-mypage" id="sidebarResume">
@@ -31,7 +39,7 @@ $_rmp_active_label = isset($_rmp_labels[$resume_mypage_active]) ? $_rmp_labels[$
     <a href="<?php echo $resume_register_url; ?>" class="side-menu-item<?php echo ($resume_mypage_active === 'resume_list') ? ' active' : ''; ?>">📄 이력서 리스트</a>
     <a href="#" class="side-menu-item<?php echo ($resume_mypage_active === 'scrap') ? ' active' : ''; ?>">📋 채용정보 스크랩</a>
     <a href="#" class="side-menu-item<?php echo ($resume_mypage_active === 'matching') ? ' active' : ''; ?>">👤 맞춤구인정보</a>
-    <a href="#" class="side-menu-item<?php echo ($resume_mypage_active === 'match_setting') ? ' active' : ''; ?>">⚙️ 맞춤구인 정보설정</a>
+    <a href="<?php echo $_my_resume_edit_url; ?>" class="side-menu-item<?php echo ($resume_mypage_active === 'resume_edit') ? ' active' : ''; ?>">⚙️ 이력서 수정</a>
     <a href="#" class="side-menu-item<?php echo ($resume_mypage_active === 'my_posts') ? ' active' : ''; ?>">📝 내가 작성한 게시글</a>
     <a href="#" class="side-menu-item<?php echo ($resume_mypage_active === 'my_comments') ? ' active' : ''; ?>">💬 내가 작성한 댓글</a>
     <a href="#" class="side-menu-item<?php echo ($resume_mypage_active === 'bookmarks') ? ' active' : ''; ?>">⭐ 즐겨찾기한 게시글</a>
