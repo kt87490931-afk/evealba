@@ -1197,14 +1197,14 @@ nav::before {
   gap:9px; margin-bottom:0;
 }
 .premium-card {
-  background:#fff; border-radius:11px;
+  background:#fff; border-radius:13px;
   overflow:hidden; border:none;
-  box-shadow:inset 0 0 0 1px #FFB3D1, 0 0 0 1px #FFB3D1;
-  transition:all .25s; cursor:pointer;
+  box-shadow:inset 0 0 0 0.75px #f0e0e8, 0 0 0 0.75px #f0e0e8;
+  transition:transform .25s, box-shadow .25s; cursor:pointer;
 }
 .premium-card:hover {
-  transform:translateY(-3px);
-  box-shadow:inset 0 0 0 1px var(--hot-pink), 0 0 0 1px var(--hot-pink), 0 8px 22px rgba(255,27,107,.25);
+  transform:translateY(-4px);
+  box-shadow:inset 0 0 0 0.75px var(--light-pink), 0 0 0 0.75px var(--light-pink);
 }
 .premium-banner {
   height:68px;
@@ -1303,14 +1303,14 @@ nav::before {
   gap:9px;
 }
 .special-card {
-  background:#fff; border-radius:11px;
+  background:#fff; border-radius:13px;
   overflow:hidden; border:none;
-  box-shadow:inset 0 0 0 1px #FFD700, 0 0 0 1px #FFD700;
-  transition:all .25s; cursor:pointer;
+  box-shadow:inset 0 0 0 0.75px #f0e0e8, 0 0 0 0.75px #f0e0e8;
+  transition:transform .25s, box-shadow .25s; cursor:pointer;
 }
 .special-card:hover {
-  transform:translateY(-3px);
-  box-shadow:inset 0 0 0 1px #FFA500, 0 0 0 1px #FFA500, 0 8px 22px rgba(255,215,0,.3);
+  transform:translateY(-4px);
+  box-shadow:inset 0 0 0 0.75px var(--light-pink), 0 0 0 0.75px var(--light-pink);
 }
 
 /* 급구 + 추천 ROW */

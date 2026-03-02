@@ -151,13 +151,6 @@ function render_job_card($row) {
 
     $carbon_class = ($grad_key === 'P3') ? ' carbon-bg' : '';
 
-    $border_style = '';
-    if ($thumb_border === 'gold') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #FFD700,0 0 0 1.25px #FFD700,0 4px 15px rgba(255,215,0,.35);';
-    elseif ($thumb_border === 'pink') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #FF1B6B,0 0 0 1.25px #FF1B6B,0 4px 15px rgba(255,27,107,.35);';
-    elseif ($thumb_border === 'charcoal') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #444,0 0 0 1.25px #444,0 4px 15px rgba(0,0,0,.25);';
-    elseif ($thumb_border === 'royalblue') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #4169E1,0 0 0 1.25px #4169E1,0 4px 15px rgba(65,105,225,.35);';
-    elseif ($thumb_border === 'royalpurple') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #7B2FBE,0 0 0 1.25px #7B2FBE,0 4px 15px rgba(123,47,190,.35);';
-
     $banner_bg = $grad;
     if ($thumb_wave) {
         preg_match_all('/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/', $grad, $m);
@@ -168,7 +161,7 @@ function render_job_card($row) {
     }
 
     $motion_data = $thumb_motion ? ' data-motion="pv-motion-' . $thumb_motion . '"' : '';
-    $card_style = $border_style ? ' style="' . $border_style . 'border-radius:14px;overflow:hidden;"' : '';
+    $card_style = '';
     $has_anim = ($thumb_wave || $thumb_motion) ? ' data-lazy-anim="1"' : '';
 
     echo '<div class="job-card"' . $card_style . $has_anim . '>';
@@ -229,13 +222,6 @@ function render_premium_card($row, $card_class = 'premium-card') {
         $wage_disp = '급여협의';
     }
 
-    $border_style = '';
-    if ($thumb_border === 'gold') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #FFD700,0 0 0 1.25px #FFD700,0 4px 15px rgba(255,215,0,.35);';
-    elseif ($thumb_border === 'pink') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #FF1B6B,0 0 0 1.25px #FF1B6B,0 4px 15px rgba(255,27,107,.35);';
-    elseif ($thumb_border === 'charcoal') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #444,0 0 0 1.25px #444,0 4px 15px rgba(0,0,0,.25);';
-    elseif ($thumb_border === 'royalblue') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #4169E1,0 0 0 1.25px #4169E1,0 4px 15px rgba(65,105,225,.35);';
-    elseif ($thumb_border === 'royalpurple') $border_style = 'border:none;box-shadow:inset 0 0 0 1.25px #7B2FBE,0 0 0 1.25px #7B2FBE,0 4px 15px rgba(123,47,190,.35);';
-
     $banner_bg = $grad;
     if ($thumb_wave) {
         preg_match_all('/rgb\([^)]+\)|#[0-9a-fA-F]{3,8}/', $grad, $m);
@@ -245,7 +231,7 @@ function render_premium_card($row, $card_class = 'premium-card') {
         }
     }
     $motion_data = $thumb_motion ? ' data-motion="pv-motion-' . $thumb_motion . '"' : '';
-    $card_style = $border_style ? ' style="' . $border_style . 'border-radius:14px;overflow:hidden;"' : '';
+    $card_style = '';
     $has_anim = ($thumb_wave || $thumb_motion) ? ' data-lazy-anim="1"' : '';
 
     echo '<div class="' . $card_class . '"' . $card_style . $has_anim . '>';
