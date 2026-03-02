@@ -790,7 +790,7 @@ function toggleAutoJump(jrId,on){
       <table class="info-table">
         <tbody>
           <tr><td class="lbl">🏷️ 닉네임</td><td class="val" id="disp-nick"><?php echo htmlspecialchars($nick ?: '—'); ?></td></tr>
-          <tr><td class="lbl">🏪 상호</td><td class="val" id="disp-comp"><?php echo htmlspecialchars($comp ?: '—'); ?><?php if ($_is_biz) { ?> <button type="button" class="btn-biz-info" onclick="openBizInfoPopup()">기업정보 확인하기</button><?php } ?></td></tr>
+          <tr><td class="lbl">🏪 상호</td><td class="val" id="disp-comp"><?php echo htmlspecialchars($comp ?: '—'); ?> <button type="button" class="btn-biz-info" onclick="openBizInfoPopup()">기업정보 확인하기</button></td></tr>
           <tr><td class="lbl">📞 연락처</td><td class="val val-pink" id="disp-tel"><?php echo htmlspecialchars($contact); ?></td></tr>
           <tr><td class="lbl">💬 SNS</td><td class="val" id="disp-sns"><?php
             $_img_base = G5_THEME_URL.'/img';
@@ -1995,7 +1995,6 @@ if(typeof window.saveThumb !== 'function'){
 }
 </script>
 
-<?php if ($_is_biz) { ?>
 <div id="biz-info-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:99999;align-items:center;justify-content:center;" onclick="closeBizInfoPopup()">
   <div class="biz-info-popup" onclick="event.stopPropagation()">
     <div class="biz-popup-header">
@@ -2125,4 +2124,3 @@ function closeBizInfoPopup() {
   if (ov) { ov.style.display = 'none'; }
 }
 </script>
-<?php } ?>
