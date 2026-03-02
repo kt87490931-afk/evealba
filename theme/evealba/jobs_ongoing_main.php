@@ -128,11 +128,9 @@ $_icon_map = array(
       <div class="board-th">번호</div>
       <div class="board-th">썸네일</div>
       <div class="board-th th-title">제목</div>
-      <div class="board-th th-date">등록일</div>
       <div class="board-th">기간</div>
       <div class="board-th">상태</div>
       <div class="board-th">점프</div>
-      <div class="board-th">관리</div>
       <div class="board-th">연장</div>
     </div>
 
@@ -167,8 +165,10 @@ $_icon_map = array(
           </div>
         </div>
       </div>
-      <div class="board-td td-date"><?php echo isset($row['datetime2']) ? $row['datetime2'] : ''; ?></div>
-      <div class="board-td td-period"><?php echo isset($row['ad_period']) ? str_replace('일','',$row['ad_period']) : '—'; ?>일/<?php echo isset($row['remaining']) ? $row['remaining'] : '—'; ?></div>
+      <div class="board-td td-period">
+        <span class="period-date"><?php echo isset($row['datetime2']) ? $row['datetime2'] : ''; ?></span>
+        <span class="period-days"><?php echo isset($row['ad_period']) ? str_replace('일','',$row['ad_period']) : '—'; ?>일/<?php echo isset($row['remaining']) ? $row['remaining'] : '—'; ?></span>
+      </div>
       <div class="board-td td-status">
         <span class="status-badge status-<?php echo isset($row['status_class']) ? $row['status_class'] : 'payment-wait'; ?>"><?php echo isset($row['status_label']) ? htmlspecialchars($row['status_label']) : ''; ?></span>
         <?php if (empty($row['can_view'])) { ?><span class="hint-blocked">입금확인 후 이용 가능</span><?php } ?>
@@ -177,13 +177,6 @@ $_icon_map = array(
 <?php if ($row['status'] === 'ongoing') { ?>
         <span class="jump-remain-num" id="jump-remain-<?php echo $row['jr_id']; ?>"><?php echo number_format($row['jump_remain']); ?>회</span>
         <button type="button" class="btn-jump-inline" id="btn-jump-<?php echo $row['jr_id']; ?>" onclick="event.preventDefault();event.stopPropagation();doListJump(<?php echo $row['jr_id']; ?>);" <?php echo $row['jump_remain'] <= 0 ? 'disabled' : ''; ?>>⚡점프</button>
-<?php } else { ?>
-        <span style="color:#ccc;font-size:11px;">—</span>
-<?php } ?>
-      </div>
-      <div class="board-td td-manage">
-<?php if (!empty($row['can_view'])) { ?>
-        <button type="button" class="btn-manage" onclick="event.preventDefault();event.stopPropagation();location.href='<?php echo htmlspecialchars($row['view_href']); ?>';">관리</button>
 <?php } else { ?>
         <span style="color:#ccc;font-size:11px;">—</span>
 <?php } ?>

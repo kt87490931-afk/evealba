@@ -76,7 +76,7 @@
 /* ===== 진행중인 채용정보 리스트 (jobs-ongoing) - eve_alba_board_v2 스타일 ===== */
 .jobs-ongoing-list .jobs-ongoing-thead,
 .jobs-ongoing-list .jobs-ongoing-row {
-  grid-template-columns:54px 110px 1fr 90px 80px 80px 90px 60px 60px;
+  grid-template-columns:54px 110px 1fr 100px 80px 90px 60px;
   align-items:center;
 }
 .jobs-ongoing-list .jobs-ongoing-thead {
@@ -128,8 +128,9 @@
 .jobs-ongoing-list .btn-jump-inline { padding:4px 10px; border:none; border-radius:6px; background:linear-gradient(135deg,#FF1B6B,#C90050); color:#fff; font-size:10px; font-weight:900; cursor:pointer; transition:all .2s; white-space:nowrap; }
 .jobs-ongoing-list .btn-jump-inline:hover { opacity:.9; transform:translateY(-1px); }
 .jobs-ongoing-list .btn-jump-inline:disabled { opacity:.4; cursor:not-allowed; transform:none; }
-.jobs-ongoing-list .btn-manage { display:inline-block; padding:5px 12px; background:#6B21A8; color:#fff; border:none; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; text-decoration:none; transition:all .2s; }
-.jobs-ongoing-list .btn-manage:hover { background:#7C3AED; }
+.jobs-ongoing-list .td-period { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.jobs-ongoing-list .period-date { font-size:11px; color:#888; }
+.jobs-ongoing-list .period-days { font-size:13px; font-weight:700; color:#333; }
 .jobs-ended-list .jobs-ongoing-thead,
 .jobs-ended-list .jobs-ongoing-row { grid-template-columns:90px 1fr 80px 80px 70px; }
 .jobs-payment-list .jobs-ongoing-thead,
@@ -137,19 +138,15 @@
 .jobs-payment-list .board-td.td-price { font-weight:700; color:var(--ev-hot-pink); }
 @media (max-width:900px) {
   .jobs-ongoing-list .jobs-ongoing-thead,
-  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:52px 84px 1fr 80px 80px 60px 60px; }
-  .jobs-ongoing-list .board-th:nth-child(4), .jobs-ongoing-list .board-td:nth-child(4),
-  .jobs-ongoing-list .board-th:nth-child(6), .jobs-ongoing-list .board-td:nth-child(6) { display:none; }
+  .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:52px 84px 1fr 80px 80px 60px; }
+  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5) { display:none; }
   .jobs-ongoing-list .thumb-box, .jobs-ongoing-list .thumb-empty { width:76px; height:60px; }
 }
 @media (max-width:600px) {
   .jobs-ongoing-list .jobs-ongoing-thead,
   .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:72px 1fr 60px 60px; }
   .jobs-ongoing-list .board-th:nth-child(1), .jobs-ongoing-list .board-td:nth-child(1),
-  .jobs-ongoing-list .board-th:nth-child(4), .jobs-ongoing-list .board-td:nth-child(4),
-  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5),
-  .jobs-ongoing-list .board-th:nth-child(6), .jobs-ongoing-list .board-td:nth-child(6),
-  .jobs-ongoing-list .board-th:nth-child(7), .jobs-ongoing-list .board-td:nth-child(7) { display:none; }
+  .jobs-ongoing-list .board-th:nth-child(5), .jobs-ongoing-list .board-td:nth-child(5) { display:none; }
   .jobs-ongoing-list .thumb-box, .jobs-ongoing-list .thumb-empty { width:64px; height:54px; }
   .jobs-ongoing-list .post-title-text { max-width:180px; font-size:12px; }
 }
