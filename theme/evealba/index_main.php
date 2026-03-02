@@ -173,40 +173,68 @@ $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천',
 </div>
 
 <!-- 커뮤니티 + 인재정보 -->
+<?php
+$_bbs = G5_BBS_URL;
+$_base_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
+$_board_tabs = array(
+    array('label'=>'베스트글', 'url'=>$_base_url.'/sudabang.php'),
+    array('label'=>'밤문화이야기', 'url'=>$_bbs.'/board.php?bo_table=night'),
+    array('label'=>'단짝찾기', 'url'=>$_bbs.'/board.php?bo_table=couple'),
+    array('label'=>'법률상담', 'url'=>$_bbs.'/board.php?bo_table=law'),
+);
+$_comm_items = array();
+$_comm_boards = array('night','couple','law');
+foreach ($_comm_boards as $_cb) {
+    $_cb_check = @sql_query("SHOW TABLES LIKE '".G5_TABLE_PREFIX."write_{$_cb}'", false);
+    if ($_cb_check && @sql_num_rows($_cb_check)) {
+        $_cb_rows = sql_query("SELECT wr_id, wr_subject, wr_datetime, wr_good FROM ".G5_TABLE_PREFIX."write_{$_cb} WHERE wr_is_comment = 0 ORDER BY wr_datetime DESC LIMIT 5");
+        while ($_cb_row = sql_fetch_array($_cb_rows)) {
+            $_comm_items[] = array(
+                'subject' => get_text($_cb_row['wr_subject'], 1),
+                'url' => $_bbs.'/board.php?bo_table='.$_cb.'&wr_id='.(int)$_cb_row['wr_id'],
+                'good' => (int)$_cb_row['wr_good'],
+                'time' => substr($_cb_row['wr_datetime'], 5, 11),
+                'board' => $_cb,
+            );
+        }
+    }
+}
+usort($_comm_items, function($a,$b){ return strcmp($b['time'],$a['time']); });
+$_comm_items = array_slice($_comm_items, 0, 5);
+
+$_talent_rows = array();
+$_tl_check = @sql_query("SHOW TABLES LIKE 'g5_resume'", false);
+if ($_tl_check && @sql_num_rows($_tl_check)) {
+    $_tl_q = sql_query("SELECT rs_id, rs_nick, rs_age, rs_gender, rs_title, rs_salary_type, rs_salary_amt, rs_datetime FROM g5_resume WHERE rs_status='active' ORDER BY rs_datetime DESC LIMIT 6");
+    while ($_tl = sql_fetch_array($_tl_q)) { $_talent_rows[] = $_tl; }
+}
+?>
 <div class="community-resume-row">
   <div class="tab-section">
     <div class="tab-header">
-      <button class="tab-btn active">베스트글</button>
-      <button class="tab-btn">밤문화이야기</button>
-      <button class="tab-btn">단짝찾기</button>
-      <button class="tab-btn">법률상담</button>
+<?php foreach ($_board_tabs as $_ti => $_bt) { ?>
+      <a href="<?php echo $_bt['url']; ?>" class="tab-btn<?php echo $_ti===0?' active':''; ?>" style="text-decoration:none;"><?php echo $_bt['label']; ?></a>
+<?php } ?>
     </div>
     <div class="tab-content">
-      <div class="community-item">
-        <span class="comm-badge badge-best">BEST</span>
-        <span class="comm-title">3부 강한 하이퍼 어디에요?</span>
-        <span class="comm-time">방금</span>
-      </div>
-      <div class="community-item">
-        <span class="comm-badge badge-new">NEW</span>
-        <span class="comm-title">근데 일하면서 느낀게... 오히려 짠따언니들 많은거같아요</span>
-        <span class="comm-time">3분</span>
-      </div>
-      <div class="community-item">
-        <span class="comm-badge badge-best">BEST</span>
-        <span class="comm-title">신림 퇴근차 해줘요? 아니면 차비?</span>
-        <span class="comm-time">15분</span>
-      </div>
-      <div class="community-item">
-        <span class="comm-badge badge-night">🌙</span>
-        <span class="comm-title">미래고민 - 서울외곽 노도해서 달에 적금만 300씩</span>
-        <span class="comm-time">30분</span>
-      </div>
-      <div class="community-item">
-        <span class="comm-badge badge-new">NEW</span>
-        <span class="comm-title">손님으로만났는데 알고보니 선배언니였어요</span>
-        <span class="comm-time">1시간</span>
-      </div>
+<?php if (empty($_comm_items)) { ?>
+      <div class="community-item" style="justify-content:center;color:#aaa;font-size:13px;">게시글이 없습니다</div>
+<?php } else { foreach ($_comm_items as $_ci) {
+    $_ci_badge = '';
+    if ($_ci['good'] >= 10) $_ci_badge = '<span class="comm-badge badge-best">BEST</span>';
+    elseif ($_ci['board']==='night') $_ci_badge = '<span class="comm-badge badge-night">🌙</span>';
+    elseif ($_ci['board']==='couple') $_ci_badge = '<span class="comm-badge badge-new">💑</span>';
+    elseif ($_ci['board']==='law') $_ci_badge = '<span class="comm-badge badge-new">⚖️</span>';
+    else $_ci_badge = '<span class="comm-badge badge-new">NEW</span>';
+    $ci_nick = mb_substr(strip_tags($_ci['subject']), 0, 35, 'UTF-8');
+    if (mb_strlen(strip_tags($_ci['subject']), 'UTF-8') > 35) $ci_nick .= '…';
+?>
+      <a href="<?php echo $_ci['url']; ?>" class="community-item" style="text-decoration:none;color:inherit;">
+        <?php echo $_ci_badge; ?>
+        <span class="comm-title"><?php echo $ci_nick; ?></span>
+        <span class="comm-time"><?php echo $_ci['time']; ?></span>
+      </a>
+<?php } } ?>
     </div>
   </div>
   <div class="resume-table">
@@ -221,36 +249,27 @@ $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천',
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="resume-name">수○○</td><td>22/여</td>
-          <td class="resume-title"><a href="#">일구해요 🆕</a></td>
-          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-22</td>
+<?php if (empty($_talent_rows)) { ?>
+        <tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px;">등록된 이력서가 없습니다</td></tr>
+<?php } else { foreach ($_talent_rows as $_tl) {
+    $_tl_name = mb_substr($_tl['rs_nick'], 0, 1, 'UTF-8') . '○○';
+    $_tl_age = (int)$_tl['rs_age'];
+    $_tl_gender = $_tl['rs_gender'] ? mb_substr($_tl['rs_gender'], 0, 1, 'UTF-8') : '';
+    $_tl_title = mb_strlen($_tl['rs_title'], 'UTF-8') > 20 ? mb_substr($_tl['rs_title'], 0, 20, 'UTF-8').'…' : $_tl['rs_title'];
+    $_tl_sal = '';
+    if ((int)$_tl['rs_salary_amt'] > 0) { $_tl_sal = number_format((int)$_tl['rs_salary_amt']).'원'; $_tl_wage_cls = 'wage-fixed'; }
+    else { $_tl_sal = '면접협의'; $_tl_wage_cls = 'wage-neg'; }
+    $_tl_date = substr($_tl['rs_datetime'], 5, 5);
+    $_tl_url = $_base_url.'/talent_view.php?rs_id='.(int)$_tl['rs_id'];
+?>
+        <tr onclick="location.href='<?php echo $_tl_url; ?>'" style="cursor:pointer;">
+          <td class="resume-name"><?php echo htmlspecialchars($_tl_name); ?></td>
+          <td><?php echo $_tl_age; ?>/<?php echo $_tl_gender; ?></td>
+          <td class="resume-title"><a href="<?php echo $_tl_url; ?>"><?php echo htmlspecialchars($_tl_title); ?></a></td>
+          <td><span class="wage-tag <?php echo $_tl_wage_cls; ?>"><?php echo $_tl_sal; ?></span></td>
+          <td><?php echo $_tl_date; ?></td>
         </tr>
-        <tr>
-          <td class="resume-name">힘○○</td><td>27/여</td>
-          <td class="resume-title"><a href="#">77사이즈 구해요 🆕</a></td>
-          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-22</td>
-        </tr>
-        <tr>
-          <td class="resume-name">고○○</td><td>27/여</td>
-          <td class="resume-title"><a href="#">165 68kg 20대후반 일자리 구해요 🆕</a></td>
-          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-21</td>
-        </tr>
-        <tr>
-          <td class="resume-name">잔○○</td><td>35/여</td>
-          <td class="resume-title"><a href="#">ㅇㅍ구해요 🆕</a></td>
-          <td><span class="wage-tag wage-fixed">400만원</span></td><td>02-21</td>
-        </tr>
-        <tr>
-          <td class="resume-name">ㅇ○○</td><td>23/여</td>
-          <td class="resume-title"><a href="#">일 구해봐용 ㅎㅎ 🆕</a></td>
-          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-21</td>
-        </tr>
-        <tr>
-          <td class="resume-name">보○○</td><td>33/여</td>
-          <td class="resume-title"><a href="#">기타구해요 🆕</a></td>
-          <td><span class="wage-tag wage-neg">면접협의</span></td><td>02-21</td>
-        </tr>
+<?php } } ?>
       </tbody>
     </table>
   </div>
