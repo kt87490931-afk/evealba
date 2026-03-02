@@ -2139,9 +2139,8 @@ footer {
 /* ======================== FLOATING RECOMMEND PANEL ======================== */
 .float-recommend {
   position:fixed;
-  right:0;
-  top:50%;
-  transform:translateY(-50%);
+  right:calc((100vw - 1200px) / 2 - 185px);
+  top:120px;
   z-index:900;
   display:flex;
   align-items:flex-start;
@@ -2160,7 +2159,6 @@ footer {
   font-size:11px;
   font-weight:700;
   box-shadow:-2px 2px 10px rgba(255,27,107,.25);
-  writing-mode:horizontal-tb;
   transition:background .2s;
 }
 .fr-tab:hover { background:linear-gradient(180deg,var(--deep-pink),#8B0040); }
@@ -2168,13 +2166,12 @@ footer {
 .fr-tab-text { font-size:10px; letter-spacing:1px; }
 .fr-panel {
   width:185px;
-  max-height:calc(100vh - 120px);
+  max-height:calc(100vh - 140px);
   overflow-y:auto;
   background:#fff;
-  border-radius:12px 0 0 12px;
-  box-shadow:-4px 0 20px rgba(0,0,0,.1);
-  border:1px solid #f0e0e8;
-  border-right:none;
+  border-radius:12px;
+  box-shadow:0 2px 16px rgba(0,0,0,.08);
+  border:0.75px solid #f0e0e8;
 }
 .fr-header {
   display:flex;
@@ -2183,6 +2180,7 @@ footer {
   padding:10px 12px;
   background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink));
   color:#fff;
+  border-radius:12px 12px 0 0;
 }
 .fr-title { font-size:13px; font-weight:800; }
 .fr-close {
@@ -2227,17 +2225,28 @@ footer {
 .fr-name { font-size:11px; font-weight:700; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .fr-wage { font-size:10px; color:var(--gray); margin-top:1px; }
 
-/* >= 1400px: panel always visible, tab hidden */
+/* >= 1400px: panel always visible, positioned beside main grid */
 @media (min-width:1400px) {
+  .float-recommend { right:calc((100vw - 1200px) / 2 - 199px); }
   .fr-tab { display:none !important; }
   .fr-panel { display:block; }
   .fr-close { display:none !important; }
 }
 
-/* 900px ~ 1399px: collapsed by default, tab visible */
-@media (min-width:901px) and (max-width:1399px) {
+/* 1200px ~ 1399px: panel visible but may overlap slightly, close button available */
+@media (min-width:1200px) and (max-width:1399px) {
+  .float-recommend { right:0; }
+  .fr-tab { display:none; }
+  .fr-panel { display:block; }
+  .fr-close { display:block; }
+}
+
+/* 901px ~ 1199px: collapsed tab only */
+@media (min-width:901px) and (max-width:1199px) {
+  .float-recommend { right:0; top:50%; transform:translateY(-50%); }
   .fr-tab { display:flex; }
-  .fr-panel { display:none; }
+  .fr-panel { display:none; border-radius:12px 0 0 12px; }
+  .fr-header { border-radius:12px 0 0 0; }
   .fr-close { display:block; }
   .float-recommend.fr-open .fr-tab { display:none; }
   .float-recommend.fr-open .fr-panel { display:block; }
