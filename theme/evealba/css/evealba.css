@@ -972,7 +972,8 @@ h2.hero-text, .hero-main > h2.hero-text {
   white-space:pre-wrap; word-break:keep-all;
   margin:0; z-index:2;
 }
-p.hero-text, .hero-main > p.hero-text {
+p.hero-text, .hero-main > p.hero-text,
+span.hero-text, .hero-main > span.hero-text {
   color:rgba(255,255,255,.9);
   font-size:14px; font-weight:500;
   white-space:pre-wrap; word-break:keep-all;

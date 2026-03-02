@@ -45,12 +45,19 @@ $text_weight  = isset($data['text_weight']) ? trim($data['text_weight']) : '500'
 $text2_size   = isset($data['text2_size']) ? trim($data['text2_size']) : '14px';
 $text2_color  = isset($data['text2_color']) ? trim($data['text2_color']) : '#ffffff';
 $text2_weight = isset($data['text2_weight']) ? trim($data['text2_weight']) : '500';
+$shop_name    = isset($data['shop_name']) ? trim($data['shop_name']) : '';
+$shop_size    = isset($data['shop_size']) ? trim($data['shop_size']) : '13px';
+$shop_weight  = isset($data['shop_weight']) ? trim($data['shop_weight']) : '700';
+$shop_color   = isset($data['shop_color']) ? trim($data['shop_color']) : '#ffffff';
+
 $title_pos_x = isset($data['title_pos_x']) ? (float)$data['title_pos_x'] : 3;
 $title_pos_y = isset($data['title_pos_y']) ? (float)$data['title_pos_y'] : 25;
 $text1_pos_x = isset($data['text1_pos_x']) ? (float)$data['text1_pos_x'] : 3;
 $text1_pos_y = isset($data['text1_pos_y']) ? (float)$data['text1_pos_y'] : 55;
 $text2_pos_x = isset($data['text2_pos_x']) ? (float)$data['text2_pos_x'] : 3;
 $text2_pos_y = isset($data['text2_pos_y']) ? (float)$data['text2_pos_y'] : 72;
+$shop_pos_x  = isset($data['shop_pos_x']) ? (float)$data['shop_pos_x'] : 3;
+$shop_pos_y  = isset($data['shop_pos_y']) ? (float)$data['shop_pos_y'] : 8;
 
 $sb_jr_id   = $is_edit ? (int)$sb['sb_jr_id'] : 0;
 $sb_link    = $is_edit ? ($sb['sb_link'] ?? '') : '';
@@ -288,6 +295,9 @@ if ($thumb_wave) {
           <div class="hero-drag-el" id="hero-pv-p2-wrap" data-key="text2" style="left:<?php echo $text2_pos_x; ?>%;top:<?php echo $text2_pos_y; ?>%">
             <p id="hero-pv-p2" style="font-size:<?php echo htmlspecialchars($text2_size); ?>;color:<?php echo htmlspecialchars($text2_color); ?>;font-weight:<?php echo htmlspecialchars($text2_weight); ?>;margin:0"><?php echo htmlspecialchars($thumb_text2 ?: '홍보문구2 입력'); ?></p>
           </div>
+          <div class="hero-drag-el" id="hero-pv-shop-wrap" data-key="shop" style="left:<?php echo $shop_pos_x; ?>%;top:<?php echo $shop_pos_y; ?>%">
+            <span id="hero-pv-shop" style="font-size:<?php echo htmlspecialchars($shop_size); ?>;color:<?php echo htmlspecialchars($shop_color); ?>;font-weight:<?php echo htmlspecialchars($shop_weight); ?>"><?php echo htmlspecialchars($shop_name ?: '업소명 입력'); ?></span>
+          </div>
           <div class="drag-hint">✋ 각 텍스트를 클릭하여 선택 후 드래그하세요</div>
           <?php if ($thumb_icon && isset($icons[$thumb_icon])) { ?>
           <div class="hero-pv-badge" id="hero-pv-badge" style="background:<?php echo $icons[$thumb_icon]['bg']; ?>"><?php echo $icons[$thumb_icon]['label']; ?></div>
@@ -299,6 +309,34 @@ if ($thumb_wave) {
 
       <!-- 컨트롤 영역 -->
       <div class="ctrl-grid">
+        <!-- 업소명 -->
+        <div class="ctrl-row">
+          <div class="ctrl-label">🏢 업소명</div>
+          <input type="text" class="ctrl-input" id="tg-shop" maxlength="30" placeholder="예) 강남 하이퍼블릭" value="<?php echo htmlspecialchars($shop_name, ENT_QUOTES); ?>" oninput="updatePreview()">
+          <div class="ctrl-charcount"><span id="tg-shop-cnt"><?php echo mb_strlen($shop_name, 'UTF-8'); ?></span>/30</div>
+        </div>
+        <!-- 업소명 스타일 -->
+        <div class="ctrl-row">
+          <div class="ctrl-label">🎨 업소명 스타일</div>
+          <div class="ctrl-inline">
+            <select id="tg-shop-size" onchange="updatePreview()">
+              <option value="11px"<?php echo $shop_size==='11px'?' selected':''; ?>>소 (11px)</option>
+              <option value="13px"<?php echo $shop_size==='13px'?' selected':''; ?>>중 (13px)</option>
+              <option value="15px"<?php echo $shop_size==='15px'?' selected':''; ?>>대 (15px)</option>
+              <option value="17px"<?php echo $shop_size==='17px'?' selected':''; ?>>특대 (17px)</option>
+            </select>
+            <select id="tg-shop-weight" onchange="updatePreview()">
+              <option value="400"<?php echo $shop_weight==='400'?' selected':''; ?>>보통</option>
+              <option value="500"<?php echo $shop_weight==='500'?' selected':''; ?>>중간</option>
+              <option value="700"<?php echo $shop_weight==='700'?' selected':''; ?>>굵게</option>
+              <option value="900"<?php echo $shop_weight==='900'?' selected':''; ?>>매우굵게</option>
+            </select>
+            <div class="color-pick-wrap">
+              <input type="color" id="tg-shop-color" value="<?php echo (strpos($shop_color,'#')===0) ? htmlspecialchars($shop_color) : '#ffffff'; ?>" onchange="updatePreview()">
+            </div>
+          </div>
+        </div>
+
         <!-- 썸네일 제목 -->
         <div class="ctrl-row">
           <div class="ctrl-label">📌 썸네일 제목 (메인 타이틀)</div>
@@ -517,12 +555,15 @@ function _applyBorder(){
 }
 
 var _pos = {
+  shop:  {x:<?php echo $shop_pos_x; ?>, y:<?php echo $shop_pos_y; ?>},
   title: {x:<?php echo $title_pos_x; ?>, y:<?php echo $title_pos_y; ?>},
   text1: {x:<?php echo $text1_pos_x; ?>, y:<?php echo $text1_pos_y; ?>},
   text2: {x:<?php echo $text2_pos_x; ?>, y:<?php echo $text2_pos_y; ?>}
 };
 
 function updatePreview(){
+  var shopEl = document.getElementById('tg-shop');
+  var shopVal = shopEl ? (shopEl.value || '업소명 입력') : '';
   var title = document.getElementById('tg-title').value || '썸네일 제목';
   var text1 = document.getElementById('tg-text').value || '홍보문구1 입력';
   var text2El = document.getElementById('tg-text2');
@@ -546,13 +587,22 @@ function updatePreview(){
   var text2Weight = (document.getElementById('tg-text2-weight') || {}).value || '500';
   var text2Color  = (document.getElementById('tg-text2-color') || {}).value || '#ffffff';
 
+  var shopSpan = document.getElementById('hero-pv-shop');
+  if(shopSpan) shopSpan.textContent = shopVal;
+  var shopSize   = (document.getElementById('tg-shop-size') || {}).value || '13px';
+  var shopWeight = (document.getElementById('tg-shop-weight') || {}).value || '700';
+  var shopColor  = (document.getElementById('tg-shop-color') || {}).value || '#ffffff';
+  if(shopSpan){ shopSpan.style.fontSize = shopSize; shopSpan.style.fontWeight = shopWeight; shopSpan.style.color = shopColor; }
+
   if(h2){ h2.style.fontSize = titleSize; h2.style.fontWeight = titleWeight; h2.style.color = titleColor; }
   if(p1){ p1.style.fontSize = textSize; p1.style.fontWeight = textWeight; p1.style.color = textColor; }
   if(p2){ p2.style.fontSize = text2Size; p2.style.fontWeight = text2Weight; p2.style.color = text2Color; }
 
+  var cntShop = document.getElementById('tg-shop-cnt');
   var cnt1 = document.getElementById('tg-title-cnt');
   var cnt2 = document.getElementById('tg-text-cnt');
   var cnt3 = document.getElementById('tg-text2-cnt');
+  if(cntShop && shopEl) cntShop.textContent = Array.from(shopEl.value).length;
   if(cnt1) cnt1.textContent = Array.from(document.getElementById('tg-title').value).length;
   if(cnt2) cnt2.textContent = Array.from(document.getElementById('tg-text').value).length;
   if(cnt3 && text2El) cnt3.textContent = Array.from(text2El.value).length;
@@ -695,6 +745,12 @@ function saveHero(){
     position: document.getElementById('hero-position').value,
     memo: document.getElementById('hero-memo').value,
     thumb_gradient: _thumbSelected || '1',
+    shop_name: (document.getElementById('tg-shop') || {}).value || '',
+    shop_size: (document.getElementById('tg-shop-size') || {}).value || '13px',
+    shop_weight: (document.getElementById('tg-shop-weight') || {}).value || '700',
+    shop_color: (document.getElementById('tg-shop-color') || {}).value || '#ffffff',
+    shop_pos_x: String(_pos.shop.x),
+    shop_pos_y: String(_pos.shop.y),
     thumb_title: (document.getElementById('tg-title') || {}).value || '',
     thumb_text: (document.getElementById('tg-text') || {}).value || '',
     thumb_text2: (document.getElementById('tg-text2') || {}).value || '',

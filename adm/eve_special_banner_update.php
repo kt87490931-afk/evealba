@@ -175,6 +175,12 @@ if ($act === 'save_hero') {
 
     $sb_data = array(
         'thumb_gradient'   => isset($_POST['thumb_gradient']) ? trim($_POST['thumb_gradient']) : '1',
+        'shop_name'        => isset($_POST['shop_name']) ? trim($_POST['shop_name']) : '',
+        'shop_size'        => isset($_POST['shop_size']) ? trim($_POST['shop_size']) : '13px',
+        'shop_weight'      => isset($_POST['shop_weight']) ? trim($_POST['shop_weight']) : '700',
+        'shop_color'       => isset($_POST['shop_color']) ? trim($_POST['shop_color']) : '#ffffff',
+        'shop_pos_x'       => isset($_POST['shop_pos_x']) ? (float)$_POST['shop_pos_x'] : 3,
+        'shop_pos_y'       => isset($_POST['shop_pos_y']) ? (float)$_POST['shop_pos_y'] : 8,
         'thumb_title'      => isset($_POST['thumb_title']) ? trim($_POST['thumb_title']) : '',
         'thumb_text'       => isset($_POST['thumb_text']) ? trim($_POST['thumb_text']) : '',
         'thumb_text2'      => isset($_POST['thumb_text2']) ? trim($_POST['thumb_text2']) : '',
