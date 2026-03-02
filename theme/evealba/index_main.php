@@ -176,31 +176,39 @@ $_idx_recomm  = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천',
 <?php
 $_bbs = G5_BBS_URL;
 $_base_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
-$_board_tabs = array(
-    array('label'=>'베스트글', 'url'=>$_base_url.'/sudabang.php'),
-    array('label'=>'밤문화이야기', 'url'=>$_bbs.'/board.php?bo_table=night'),
-    array('label'=>'단짝찾기', 'url'=>$_bbs.'/board.php?bo_table=couple'),
-    array('label'=>'법률상담', 'url'=>$_bbs.'/board.php?bo_table=law'),
+$_pfx = G5_TABLE_PREFIX;
+
+$_tab_data = array(
+    'best'   => array('label'=>'베스트글',     'badge'=>'<span class="comm-badge badge-best">BEST</span>', 'items'=>array()),
+    'night'  => array('label'=>'밤문화이야기', 'badge'=>'<span class="comm-badge badge-night">🌙</span>', 'items'=>array()),
+    'couple' => array('label'=>'단짝찾기',     'badge'=>'<span class="comm-badge badge-new">💑</span>',  'items'=>array()),
+    'law'    => array('label'=>'법률상담',     'badge'=>'<span class="comm-badge badge-new">⚖️</span>', 'items'=>array()),
 );
-$_comm_items = array();
-$_comm_boards = array('night','couple','law');
-foreach ($_comm_boards as $_cb) {
-    $_cb_check = @sql_query("SHOW TABLES LIKE '".G5_TABLE_PREFIX."write_{$_cb}'", false);
-    if ($_cb_check && @sql_num_rows($_cb_check)) {
-        $_cb_rows = sql_query("SELECT wr_id, wr_subject, wr_datetime, wr_good FROM ".G5_TABLE_PREFIX."write_{$_cb} WHERE wr_is_comment = 0 ORDER BY wr_datetime DESC LIMIT 5");
-        while ($_cb_row = sql_fetch_array($_cb_rows)) {
-            $_comm_items[] = array(
-                'subject' => get_text($_cb_row['wr_subject'], 1),
-                'url' => $_bbs.'/board.php?bo_table='.$_cb.'&wr_id='.(int)$_cb_row['wr_id'],
-                'good' => (int)$_cb_row['wr_good'],
-                'time' => substr($_cb_row['wr_datetime'], 5, 11),
-                'board' => $_cb,
-            );
+
+foreach (array('night','couple','law') as $_cb) {
+    $_cb_ok = @sql_query("SHOW TABLES LIKE '{$_pfx}write_{$_cb}'", false);
+    if (!$_cb_ok || !@sql_num_rows($_cb_ok)) continue;
+    $_cb_q = sql_query("SELECT wr_id, wr_subject, wr_datetime, wr_good FROM {$_pfx}write_{$_cb} WHERE wr_is_comment = 0 ORDER BY wr_datetime DESC LIMIT 5");
+    while ($_rw = sql_fetch_array($_cb_q)) {
+        $subj = get_text($_rw['wr_subject'], 1);
+        $subj_short = mb_strlen($subj,'UTF-8') > 35 ? mb_substr($subj,0,35,'UTF-8').'…' : $subj;
+        $item = array(
+            'subject' => $subj_short,
+            'url' => $_bbs.'/board.php?bo_table='.$_cb.'&wr_id='.(int)$_rw['wr_id'],
+            'time' => substr($_rw['wr_datetime'], 5, 11),
+            'good' => (int)$_rw['wr_good'],
+        );
+        $_tab_data[$_cb]['items'][] = $item;
+        if ($item['good'] >= 10) {
+            $_tab_data['best']['items'][] = $item;
         }
     }
 }
-usort($_comm_items, function($a,$b){ return strcmp($b['time'],$a['time']); });
-$_comm_items = array_slice($_comm_items, 0, 5);
+if (empty($_tab_data['best']['items'])) {
+    $all = array_merge($_tab_data['night']['items'], $_tab_data['couple']['items'], $_tab_data['law']['items']);
+    usort($all, function($a,$b){ return strcmp($b['time'],$a['time']); });
+    $_tab_data['best']['items'] = array_slice($all, 0, 5);
+}
 
 $_talent_rows = array();
 $_tl_check = @sql_query("SHOW TABLES LIKE 'g5_resume'", false);
@@ -208,34 +216,28 @@ if ($_tl_check && @sql_num_rows($_tl_check)) {
     $_tl_q = sql_query("SELECT rs_id, rs_nick, rs_age, rs_gender, rs_title, rs_salary_type, rs_salary_amt, rs_datetime FROM g5_resume WHERE rs_status='active' ORDER BY rs_datetime DESC LIMIT 6");
     while ($_tl = sql_fetch_array($_tl_q)) { $_talent_rows[] = $_tl; }
 }
+$_tab_keys = array_keys($_tab_data);
 ?>
 <div class="community-resume-row">
   <div class="tab-section">
     <div class="tab-header">
-<?php foreach ($_board_tabs as $_ti => $_bt) { ?>
-      <a href="<?php echo $_bt['url']; ?>" class="tab-btn<?php echo $_ti===0?' active':''; ?>" style="text-decoration:none;"><?php echo $_bt['label']; ?></a>
+<?php foreach ($_tab_keys as $_ti => $_tk) { ?>
+      <button type="button" class="tab-btn<?php echo $_ti===0?' active':''; ?>" onclick="switchCommTab(this,<?php echo $_ti; ?>)"><?php echo $_tab_data[$_tk]['label']; ?></button>
 <?php } ?>
     </div>
-    <div class="tab-content">
-<?php if (empty($_comm_items)) { ?>
+<?php foreach ($_tab_keys as $_ti => $_tk) { $_items = $_tab_data[$_tk]['items']; $_badge = $_tab_data[$_tk]['badge']; ?>
+    <div class="tab-content" id="commTab<?php echo $_ti; ?>" style="<?php echo $_ti>0?'display:none;':''; ?>">
+<?php if (empty($_items)) { ?>
       <div class="community-item" style="justify-content:center;color:#aaa;font-size:13px;">게시글이 없습니다</div>
-<?php } else { foreach ($_comm_items as $_ci) {
-    $_ci_badge = '';
-    if ($_ci['good'] >= 10) $_ci_badge = '<span class="comm-badge badge-best">BEST</span>';
-    elseif ($_ci['board']==='night') $_ci_badge = '<span class="comm-badge badge-night">🌙</span>';
-    elseif ($_ci['board']==='couple') $_ci_badge = '<span class="comm-badge badge-new">💑</span>';
-    elseif ($_ci['board']==='law') $_ci_badge = '<span class="comm-badge badge-new">⚖️</span>';
-    else $_ci_badge = '<span class="comm-badge badge-new">NEW</span>';
-    $ci_nick = mb_substr(strip_tags($_ci['subject']), 0, 35, 'UTF-8');
-    if (mb_strlen(strip_tags($_ci['subject']), 'UTF-8') > 35) $ci_nick .= '…';
-?>
+<?php } else { foreach ($_items as $_ci) { ?>
       <a href="<?php echo $_ci['url']; ?>" class="community-item" style="text-decoration:none;color:inherit;">
-        <?php echo $_ci_badge; ?>
-        <span class="comm-title"><?php echo $ci_nick; ?></span>
+        <?php echo $_badge; ?>
+        <span class="comm-title"><?php echo $_ci['subject']; ?></span>
         <span class="comm-time"><?php echo $_ci['time']; ?></span>
       </a>
 <?php } } ?>
     </div>
+<?php } ?>
   </div>
   <div class="resume-table">
     <table>
@@ -368,4 +370,11 @@ if ($_tl_check && @sql_num_rows($_tl_check)) {
     </div>
   </div>
 </div>
+<script>
+function switchCommTab(btn, idx) {
+  btn.closest('.tab-section').querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  btn.closest('.tab-section').querySelectorAll('.tab-content').forEach(function(c, i){ c.style.display = i === idx ? '' : 'none'; });
+}
+</script>
 <script src="<?php echo G5_THEME_URL; ?>/js/lazy_anim.js?v=<?php echo G5_CSS_VER; ?>"></script>
