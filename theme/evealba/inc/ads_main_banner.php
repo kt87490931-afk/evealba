@@ -143,9 +143,9 @@ $_hero_total = count($_hero_rows);
     $_h_motion_cls = $_h_motion ? ' pv-motion-'.htmlspecialchars($_h_motion) : '';
     $_h_slide_style = $_hi === 0 ? 'opacity:1;z-index:2;' : 'opacity:0;z-index:1;';
 ?>
-    <div class="hero-slide" style="<?php echo $_h_slide_style; ?>">
+    <div class="hero-slide" style="<?php echo $_h_slide_style . $_h_border_style; ?>">
       <?php if ($_h_link) : ?><a href="<?php echo htmlspecialchars($_h_link); ?>" style="text-decoration:none;display:block;height:100%"><?php endif; ?>
-      <div class="hero-main" style="<?php echo $_h_bg_style . $_h_border_style; ?>">
+      <div class="hero-main" style="<?php echo $_h_bg_style; ?>">
         <?php if ($_h_shop_name) : ?>
         <span class="hero-text" style="position:absolute;left:<?php echo $_h_shop_pos_x; ?>%;top:<?php echo $_h_shop_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_shop_size); ?>;color:<?php echo htmlspecialchars($_h_shop_color); ?>;font-weight:<?php echo htmlspecialchars($_h_shop_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_shop_name); ?></span>
         <?php endif; ?>
@@ -174,8 +174,8 @@ $_hero_total = count($_hero_rows);
 </div>
 <?php if ($_hero_total > 1) : ?>
 <style>
-.hero-slideshow { position:relative; height:190px; border-radius:14px; overflow:hidden; }
-.hero-slide { position:absolute; top:0; left:0; width:100%; height:100%; transition:opacity .8s ease; }
+.hero-slideshow { position:relative; height:190px; border-radius:14px; overflow:visible; }
+.hero-slide { position:absolute; top:0; left:0; width:100%; height:100%; transition:opacity .8s ease; border-radius:14px; overflow:hidden; }
 .hero-slide .hero-main { height:100%; border-radius:0; }
 .hero-dots { display:flex; justify-content:center; gap:6px; margin-top:8px; }
 .hero-dot { width:8px; height:8px; border-radius:50%; background:rgba(0,0,0,.2); cursor:pointer; transition:all .3s; }
