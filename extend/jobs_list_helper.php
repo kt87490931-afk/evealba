@@ -84,7 +84,7 @@ function get_jobs_by_type($ad_type, $limit = 20, $region = '') {
     }
     $limit = (int)$limit;
     $limit_sql = $limit > 0 ? " LIMIT {$limit}" : '';
-    $sql = "SELECT * FROM g5_jobs_register WHERE {$where} ORDER BY jr_id DESC{$limit_sql}";
+    $sql = "SELECT * FROM g5_jobs_register WHERE {$where} ORDER BY IFNULL(jr_jump_datetime, jr_datetime) DESC, jr_id DESC{$limit_sql}";
     $result = sql_query($sql, false);
     $rows = array();
     if ($result) {

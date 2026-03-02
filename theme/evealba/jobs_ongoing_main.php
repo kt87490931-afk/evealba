@@ -226,3 +226,137 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeExtendModal();
 });
 </script>
+
+<?php if ($is_member && $total_count > 0) {
+    $ongoing_list = array();
+    foreach ($list as $_litem) {
+        if ($_litem['status'] === 'ongoing') $ongoing_list[] = $_litem;
+    }
+    if (count($ongoing_list) > 0) {
+?>
+<!-- 점프 추가 구매 -->
+<div id="jump-purchase" class="jp-section">
+  <div class="jp-header">
+    <h2 class="jp-title">🔝 점프옵션 구매하기</h2>
+    <p class="jp-sub">채용정보를 점프시킬수 있는 결제입니다.<br>+ 채용정보를 점프시킬수 있는 결제입니다.</p>
+  </div>
+  <div class="jp-select-row">
+    <label class="jp-label">광고 선택</label>
+    <select id="jp-jr-select" class="jp-select">
+<?php foreach ($ongoing_list as $_ol) { ?>
+      <option value="<?php echo (int)$_ol['jr_id']; ?>"><?php echo htmlspecialchars($_ol['subject']); ?> (<?php echo $_ol['ad_period']; ?>)</option>
+<?php } ?>
+    </select>
+  </div>
+  <table class="jp-table">
+    <thead>
+      <tr>
+        <th class="jp-th-service">서비스</th>
+        <th>유형</th>
+        <th>기간/횟수</th>
+        <th>금액</th>
+        <th>신청</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="5" class="jp-td-service">
+          <strong>채용정보 점프하기</strong>
+          <p>채용정보를 점프시킬수 있는 결제입니다.<br>+ 채용정보를 점프시킬수 있는 결제입니다.</p>
+        </td>
+        <td>클릭별</td><td><strong>200</strong> 회</td>
+        <td class="jp-price">10,000 원</td>
+        <td><input type="checkbox" class="jp-chk" data-pkg="200" data-amt="10000"></td>
+      </tr>
+      <tr>
+        <td>클릭별</td><td><strong>450</strong> 회</td>
+        <td class="jp-price">20,000 원</td>
+        <td><input type="checkbox" class="jp-chk" data-pkg="450" data-amt="20000"></td>
+      </tr>
+      <tr>
+        <td>클릭별</td><td><strong>700</strong> 회</td>
+        <td class="jp-price">30,000 원</td>
+        <td><input type="checkbox" class="jp-chk" data-pkg="700" data-amt="30000"></td>
+      </tr>
+      <tr>
+        <td>클릭별</td><td><strong>1,200</strong> 회</td>
+        <td class="jp-price">50,000 원</td>
+        <td><input type="checkbox" class="jp-chk" data-pkg="1200" data-amt="50000"></td>
+      </tr>
+      <tr>
+        <td>클릭별</td><td><strong>2,000</strong> 회</td>
+        <td class="jp-price">80,000 원</td>
+        <td><input type="checkbox" class="jp-chk" data-pkg="2000" data-amt="80000"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="jp-total-bar">
+    <span>총 신청 금액</span>
+    <strong id="jp-total-amount">0원</strong>
+  </div>
+  <div class="jp-btn-wrap">
+    <button type="button" class="jp-btn-pay" id="jp-btn-pay" onclick="doPurchaseJump()">💳 결제하기</button>
+  </div>
+</div>
+
+<style>
+.jp-section{max-width:800px;margin:20px auto;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);font-family:'Noto Sans KR',sans-serif}
+.jp-header{background:linear-gradient(135deg,#6B21A8,#9333EA);padding:20px 24px;color:#fff}
+.jp-title{font-size:16px;font-weight:900;margin:0 0 6px}
+.jp-sub{font-size:12px;color:rgba(255,255,255,.8);margin:0;line-height:1.6}
+.jp-select-row{padding:14px 24px;border-bottom:1px solid #f0e0e8;display:flex;align-items:center;gap:12px}
+.jp-label{font-size:13px;font-weight:700;color:#333;white-space:nowrap}
+.jp-select{flex:1;padding:8px 12px;border:1.5px solid #f0e0e8;border-radius:8px;font-size:13px;background:#fff;outline:none}
+.jp-table{width:100%;border-collapse:collapse}
+.jp-table th{background:linear-gradient(135deg,#6B21A8,#9333EA);color:#fff;padding:10px 12px;font-size:12px;font-weight:700;text-align:center}
+.jp-th-service{text-align:left;width:40%}
+.jp-table td{padding:10px 12px;text-align:center;border-bottom:1px solid #f0e0e8;font-size:13px;color:#333}
+.jp-td-service{text-align:left;vertical-align:top;padding:16px}
+.jp-td-service strong{display:block;font-size:14px;margin-bottom:6px}
+.jp-td-service p{font-size:11px;color:#888;line-height:1.5;margin:0}
+.jp-price{color:#FF1B6B;font-weight:900;font-size:14px}
+.jp-chk{width:18px;height:18px;accent-color:#6B21A8;cursor:pointer}
+.jp-total-bar{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:linear-gradient(135deg,#6B21A8,#9333EA)}
+.jp-total-bar span{font-size:14px;color:rgba(255,255,255,.9)}
+.jp-total-bar strong{font-size:20px;color:#fff;font-weight:900}
+.jp-btn-wrap{padding:16px 24px;text-align:center}
+.jp-btn-pay{padding:12px 40px;border:none;border-radius:10px;background:linear-gradient(135deg,#6B21A8,#9333EA);color:#fff;font-size:15px;font-weight:900;cursor:pointer;transition:all .2s;box-shadow:0 4px 15px rgba(107,33,168,.3)}
+.jp-btn-pay:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(107,33,168,.4)}
+</style>
+
+<script>
+(function(){
+  var chks = document.querySelectorAll('.jp-chk');
+  chks.forEach(function(c){
+    c.addEventListener('change', function(){
+      var total = 0;
+      chks.forEach(function(cc){if(cc.checked) total += parseInt(cc.getAttribute('data-amt')||0);});
+      document.getElementById('jp-total-amount').textContent = total.toLocaleString()+'원';
+    });
+  });
+})();
+function doPurchaseJump(){
+  var jrId = document.getElementById('jp-jr-select').value;
+  var chks = document.querySelectorAll('.jp-chk:checked');
+  if(chks.length===0){alert('구매할 패키지를 선택해 주세요.');return;}
+  var promises = [];
+  chks.forEach(function(c){
+    var pkg = c.getAttribute('data-pkg');
+    promises.push(
+      fetch('<?php echo rtrim(G5_URL,"/"); ?>/jobs_jump_purchase.php',{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:'jr_id='+jrId+'&package='+pkg,
+        credentials:'same-origin'
+      }).then(function(r){return r.json();})
+    );
+  });
+  Promise.all(promises).then(function(results){
+    var msgs = results.map(function(r){return r.msg;}).join('\n');
+    alert(msgs);
+    chks.forEach(function(c){c.checked=false;});
+    document.getElementById('jp-total-amount').textContent='0원';
+  }).catch(function(){alert('구매 처리 중 오류가 발생했습니다.');});
+}
+</script>
+<?php } } ?>

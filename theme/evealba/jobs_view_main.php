@@ -314,6 +314,127 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 }
 </style>
 
+<?php if ($is_owner && $row['jr_status'] === 'ongoing') {
+    $jmp_remain = isset($row['jr_jump_remain']) ? (int)$row['jr_jump_remain'] : 0;
+    $jmp_used   = isset($row['jr_jump_used']) ? (int)$row['jr_jump_used'] : 0;
+    $jmp_total  = isset($row['jr_jump_total']) ? (int)$row['jr_jump_total'] : 0;
+    $jmp_auto   = isset($row['jr_auto_jump']) ? (int)$row['jr_auto_jump'] : 0;
+    $jmp_next   = isset($row['jr_auto_jump_next']) ? $row['jr_auto_jump_next'] : '';
+    $jmp_last   = isset($row['jr_jump_datetime']) ? $row['jr_jump_datetime'] : '';
+    $jmp_end    = $row['jr_end_date'] ?: '';
+    $jmp_days_left = $jmp_end ? max(0, floor((strtotime($jmp_end) - strtotime(date('Y-m-d'))) / 86400)) : 0;
+    $jmp_interval = ($jmp_remain > 0 && $jmp_days_left > 0)
+        ? max(10, floor(($jmp_days_left * 24 * 60) / $jmp_remain)) : 0;
+?>
+<div class="jump-control-bar" id="jump-control-bar">
+  <div class="jcb-header">
+    <span class="jcb-label">🔝 점프 관리</span>
+    <span class="jcb-remain">잔여 <strong id="jcb-remain-num"><?php echo number_format($jmp_remain); ?></strong>회 / <?php echo number_format($jmp_total); ?>회</span>
+  </div>
+  <div class="jcb-body">
+    <div class="jcb-info">
+      <div class="jcb-stat"><span>사용</span><strong><?php echo number_format($jmp_used); ?>회</strong></div>
+      <div class="jcb-stat"><span>남은기간</span><strong><?php echo $jmp_days_left; ?>일</strong></div>
+      <?php if ($jmp_auto && $jmp_interval) { ?>
+      <div class="jcb-stat"><span>자동간격</span><strong>약 <?php echo $jmp_interval; ?>분</strong></div>
+      <?php } ?>
+      <?php if ($jmp_last) { ?>
+      <div class="jcb-stat"><span>마지막 점프</span><strong><?php echo substr($jmp_last, 5, 11); ?></strong></div>
+      <?php } ?>
+    </div>
+    <div class="jcb-actions">
+      <button type="button" class="jcb-btn jcb-btn-manual" id="btn-manual-jump" onclick="doManualJump(<?php echo $jr_id; ?>)">⚡ 수동 점프</button>
+      <label class="jcb-toggle">
+        <input type="checkbox" id="chk-auto-jump" <?php echo $jmp_auto ? 'checked' : ''; ?> onchange="toggleAutoJump(<?php echo $jr_id; ?>, this.checked)">
+        <span class="jcb-toggle-slider"></span>
+        <span class="jcb-toggle-text">자동 점프</span>
+      </label>
+      <?php if ($jmp_auto && $jmp_next) { ?>
+      <span class="jcb-next" id="jcb-next-time">다음: <?php echo substr($jmp_next, 5, 11); ?></span>
+      <?php } ?>
+    </div>
+  </div>
+  <?php if ($jmp_remain <= 0) { ?>
+  <div class="jcb-empty">잔여 점프 횟수가 없습니다. <a href="<?php echo rtrim(G5_URL,'/'); ?>/jobs_ongoing.php#jump-purchase">점프 추가 구매</a></div>
+  <?php } ?>
+</div>
+<style>
+.jump-control-bar{max-width:958px;margin:0 auto 12px;background:#fff;border:2px solid #FF1B6B;border-radius:14px;overflow:hidden;font-family:'Noto Sans KR',sans-serif}
+.jcb-header{background:linear-gradient(90deg,#FF1B6B,#FF6B35);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+.jcb-label{font-size:13px;font-weight:900;color:#fff}
+.jcb-remain{font-size:12px;color:rgba(255,255,255,.9)}
+.jcb-remain strong{color:#fff;font-size:16px;margin:0 2px}
+.jcb-body{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.jcb-info{display:flex;gap:18px;flex-wrap:wrap}
+.jcb-stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.jcb-stat span{font-size:10px;color:#999}
+.jcb-stat strong{font-size:13px;color:#333;font-weight:700}
+.jcb-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.jcb-btn-manual{padding:8px 20px;border:none;border-radius:10px;background:linear-gradient(135deg,#FF1B6B,#C90050);color:#fff;font-size:13px;font-weight:900;cursor:pointer;transition:all .2s;box-shadow:0 3px 12px rgba(255,27,107,.3)}
+.jcb-btn-manual:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(255,27,107,.4)}
+.jcb-btn-manual:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.jcb-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.jcb-toggle input{display:none}
+.jcb-toggle-slider{width:40px;height:22px;background:#ddd;border-radius:11px;position:relative;transition:background .2s}
+.jcb-toggle-slider::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.jcb-toggle input:checked+.jcb-toggle-slider{background:#FF1B6B}
+.jcb-toggle input:checked+.jcb-toggle-slider::after{transform:translateX(18px)}
+.jcb-toggle-text{font-size:12px;font-weight:700;color:#555}
+.jcb-next{font-size:11px;color:#888;background:#f5f5f5;padding:4px 10px;border-radius:6px}
+.jcb-empty{padding:10px 20px;background:#fff5f8;text-align:center;font-size:12px;color:#FF1B6B;border-top:1px solid #fce8f0}
+.jcb-empty a{color:#FF1B6B;font-weight:700;text-decoration:underline}
+@media(max-width:600px){
+  .jcb-body{flex-direction:column;align-items:stretch}
+  .jcb-info{justify-content:space-around}
+  .jcb-actions{justify-content:center}
+}
+</style>
+<script>
+function doManualJump(jrId){
+  var btn=document.getElementById('btn-manual-jump');
+  if(btn.disabled)return;
+  btn.disabled=true;btn.textContent='⏳ 점프중...';
+  fetch('<?php echo rtrim(G5_URL,"/"); ?>/jobs_jump.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'jr_id='+jrId,
+    credentials:'same-origin'
+  }).then(function(r){return r.json();}).then(function(res){
+    btn.disabled=false;btn.textContent='⚡ 수동 점프';
+    if(res.ok){
+      alert(res.msg+' (잔여: '+res.remain+'회)');
+      document.getElementById('jcb-remain-num').textContent=res.remain.toLocaleString();
+      if(res.remain<=0){btn.disabled=true;}
+    }else{alert(res.msg);}
+  }).catch(function(){btn.disabled=false;btn.textContent='⚡ 수동 점프';alert('점프 처리 중 오류가 발생했습니다.');});
+}
+function toggleAutoJump(jrId,on){
+  fetch('<?php echo rtrim(G5_URL,"/"); ?>/jobs_jump_auto_toggle.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:'jr_id='+jrId+'&auto_jump='+(on?1:0),
+    credentials:'same-origin'
+  }).then(function(r){return r.json();}).then(function(res){
+    if(res.ok){
+      alert(res.msg);
+      var nextEl=document.getElementById('jcb-next-time');
+      if(res.auto_next&&on){
+        if(!nextEl){
+          var acts=document.querySelector('.jcb-actions');
+          var sp=document.createElement('span');sp.className='jcb-next';sp.id='jcb-next-time';
+          sp.textContent='다음: '+res.auto_next.substring(5,16);
+          acts.appendChild(sp);
+        }else{nextEl.textContent='다음: '+res.auto_next.substring(5,16);nextEl.style.display='';}
+      }else if(nextEl){nextEl.style.display='none';}
+    }else{
+      alert(res.msg);
+      document.getElementById('chk-auto-jump').checked=!on;
+    }
+  }).catch(function(){alert('자동 점프 설정 중 오류가 발생했습니다.');document.getElementById('chk-auto-jump').checked=!on;});
+}
+</script>
+<?php } ?>
+
 <?php if ($is_owner) { ?>
 <div class="thumb-gen-wrap" id="thumb-gen-section">
   <div class="tg-section-header">

@@ -58,12 +58,36 @@ foreach ($jr_ids as $k => $v) {
 
     $ad_period = (int)$row['jr_ad_period'] ?: 30;
     $end_date = date('Y-m-d', strtotime("+{$ad_period} days"));
+
+    $ad_labels = isset($row['jr_ad_labels']) ? trim($row['jr_ad_labels']) : '';
+    if (!$ad_labels) {
+        $row2 = sql_fetch("SELECT jr_ad_labels FROM g5_jobs_register WHERE jr_id = '{$id}'");
+        $ad_labels = $row2 ? trim($row2['jr_ad_labels']) : '';
+    }
+    $has_extra_ad = false;
+    $extra_types = array('우대', '프리미엄', '스페셜', '급구', '추천');
+    foreach ($extra_types as $_etype) {
+        if (strpos($ad_labels, $_etype) !== false) { $has_extra_ad = true; break; }
+    }
+    $jump_alloc = 0;
+    if ($has_extra_ad) {
+        if ($ad_period >= 90) $jump_alloc = 3200;
+        elseif ($ad_period >= 60) $jump_alloc = 1900;
+        else $jump_alloc = 900;
+    } else {
+        if ($ad_period >= 90) $jump_alloc = 1200;
+        elseif ($ad_period >= 60) $jump_alloc = 700;
+        else $jump_alloc = 300;
+    }
+
     sql_query("UPDATE g5_jobs_register SET 
         jr_payment_confirmed = 1, 
         jr_approved = 1, 
         jr_status = 'ongoing',
         jr_approved_datetime = '".G5_TIME_YMDHIS."',
-        jr_end_date = '{$end_date}'
+        jr_end_date = '{$end_date}',
+        jr_jump_total = jr_jump_total + {$jump_alloc},
+        jr_jump_remain = jr_jump_remain + {$jump_alloc}
         WHERE jr_id = '{$id}'");
     $confirm_ok++;
 
