@@ -137,7 +137,7 @@ $_hero_total = count($_hero_rows);
 
     $_h_badge_html = '';
     if ($_h_icon && isset($_hero_icons[$_h_icon])) {
-        $_h_badge_html = '<div class="hero-badge" style="background:'.htmlspecialchars($_hero_icons[$_h_icon]['bg']).'">'.htmlspecialchars($_hero_icons[$_h_icon]['label']).'</div>';
+        $_h_badge_html = '<div class="hero-badge" style="background:'.htmlspecialchars($_hero_icons[$_h_icon]['bg'], ENT_QUOTES, 'UTF-8').'">'.htmlspecialchars($_hero_icons[$_h_icon]['label'], ENT_QUOTES, 'UTF-8').'</div>';
     }
 
     $_h_motion_cls = $_h_motion ? ' pv-motion-'.htmlspecialchars($_h_motion) : '';
@@ -147,16 +147,16 @@ $_hero_total = count($_hero_rows);
       <?php if ($_h_link) : ?><a href="<?php echo htmlspecialchars($_h_link); ?>" style="text-decoration:none;display:block;height:100%"><?php endif; ?>
       <div class="hero-main" style="<?php echo $_h_bg_style; ?>">
         <?php if ($_h_shop_name) : ?>
-        <span class="hero-text" style="position:absolute;left:<?php echo $_h_shop_pos_x; ?>%;top:<?php echo $_h_shop_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_shop_size); ?>;color:<?php echo htmlspecialchars($_h_shop_color); ?>;font-weight:<?php echo htmlspecialchars($_h_shop_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_shop_name); ?></span>
+        <span class="hero-text" style="position:absolute;left:<?php echo $_h_shop_pos_x; ?>%;top:<?php echo $_h_shop_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_shop_size, ENT_QUOTES, 'UTF-8'); ?>;color:<?php echo htmlspecialchars($_h_shop_color, ENT_QUOTES, 'UTF-8'); ?>;font-weight:<?php echo htmlspecialchars($_h_shop_weight, ENT_QUOTES, 'UTF-8'); ?>;max-width:85%"><?php echo htmlspecialchars($_h_shop_name, ENT_QUOTES, 'UTF-8'); ?></span>
         <?php endif; ?>
         <?php if ($_h_title) : ?>
-        <h2 class="hero-text<?php echo $_h_motion_cls; ?>" style="position:absolute;left:<?php echo $_h_title_pos_x; ?>%;top:<?php echo $_h_title_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_title_size); ?>;color:<?php echo htmlspecialchars($_h_title_color); ?>;font-weight:<?php echo htmlspecialchars($_h_title_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_title); ?></h2>
+        <h2 class="hero-text<?php echo $_h_motion_cls; ?>" style="position:absolute;left:<?php echo $_h_title_pos_x; ?>%;top:<?php echo $_h_title_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_title_size, ENT_QUOTES, 'UTF-8'); ?>;color:<?php echo htmlspecialchars($_h_title_color, ENT_QUOTES, 'UTF-8'); ?>;font-weight:<?php echo htmlspecialchars($_h_title_weight, ENT_QUOTES, 'UTF-8'); ?>;max-width:85%"><?php echo htmlspecialchars($_h_title, ENT_QUOTES, 'UTF-8'); ?></h2>
         <?php endif; ?>
         <?php if ($_h_text1) : ?>
-        <p class="hero-text" style="position:absolute;left:<?php echo $_h_text1_pos_x; ?>%;top:<?php echo $_h_text1_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text_size); ?>;color:<?php echo htmlspecialchars($_h_text_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text1); ?></p>
+        <p class="hero-text" style="position:absolute;left:<?php echo $_h_text1_pos_x; ?>%;top:<?php echo $_h_text1_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text_size, ENT_QUOTES, 'UTF-8'); ?>;color:<?php echo htmlspecialchars($_h_text_color, ENT_QUOTES, 'UTF-8'); ?>;font-weight:<?php echo htmlspecialchars($_h_text_weight, ENT_QUOTES, 'UTF-8'); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text1, ENT_QUOTES, 'UTF-8'); ?></p>
         <?php endif; ?>
         <?php if ($_h_text2) : ?>
-        <p class="hero-text" style="position:absolute;left:<?php echo $_h_text2_pos_x; ?>%;top:<?php echo $_h_text2_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text2_size); ?>;color:<?php echo htmlspecialchars($_h_text2_color); ?>;font-weight:<?php echo htmlspecialchars($_h_text2_weight); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text2); ?></p>
+        <p class="hero-text" style="position:absolute;left:<?php echo $_h_text2_pos_x; ?>%;top:<?php echo $_h_text2_pos_y; ?>%;font-size:<?php echo htmlspecialchars($_h_text2_size, ENT_QUOTES, 'UTF-8'); ?>;color:<?php echo htmlspecialchars($_h_text2_color, ENT_QUOTES, 'UTF-8'); ?>;font-weight:<?php echo htmlspecialchars($_h_text2_weight, ENT_QUOTES, 'UTF-8'); ?>;max-width:85%"><?php echo htmlspecialchars($_h_text2, ENT_QUOTES, 'UTF-8'); ?></p>
         <?php endif; ?>
         <?php echo $_h_badge_html; ?>
       </div>
