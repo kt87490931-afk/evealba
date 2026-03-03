@@ -2212,7 +2212,7 @@ footer {
   line-height:1;
   padding:0 2px;
 }
-.fr-list { padding:8px 8px 6px; display:flex; flex-direction:column; gap:24px; }
+.fr-list { padding:8px 8px 6px; display:flex; flex-direction:column; gap:30px; }
 .fr-card,
 .fr-list > .fr-card {
   display:block;
