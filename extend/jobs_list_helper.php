@@ -196,12 +196,29 @@ function render_job_card($row) {
  * 프리미엄/스페셜 카드 렌더링 - 에디터 미리보기와 동일하게
  */
 function render_premium_card($row, $card_class = 'premium-card') {
+    static $icon_map = null;
+    if ($icon_map === null) {
+        $icon_map = array(
+            'beginner' => array('label' => '💖 초보환영', 'bg' => '#FF1B6B'),
+            'room' => array('label' => '🏡 원룸제공', 'bg' => '#FF6B35'),
+            'luxury' => array('label' => '💎 고급시설', 'bg' => '#8B00FF'),
+            'black' => array('label' => '📋 블랙 관리', 'bg' => '#333'),
+            'phone' => array('label' => '📱 폰비지급', 'bg' => '#0077B6'),
+            'size' => array('label' => '👗 사이즈X', 'bg' => '#E91E63'),
+            'set' => array('label' => '🎀 세트환영', 'bg' => '#FF9800'),
+            'pickup' => array('label' => '🚗 픽업가능', 'bg' => '#4CAF50'),
+            'member' => array('label' => '🙋 1회원제운영', 'bg' => '#7B1FA2'),
+            'kkongbi' => array('label' => '💰 꽁비지급', 'bg' => '#00897B'),
+        );
+    }
+
     $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
     $grad_key = isset($jr_data['thumb_gradient']) ? $jr_data['thumb_gradient'] : '1';
     $grad = _jlh_get_gradient($grad_key);
     $title = htmlspecialchars($jr_data['thumb_title'] ?? $row['jr_nickname'] ?? $row['jr_company'] ?? '');
     $text = htmlspecialchars($jr_data['thumb_text'] ?? '');
     $text_color = $jr_data['thumb_text_color'] ?? 'rgb(255,255,255)';
+    $thumb_icon = isset($jr_data['thumb_icon']) ? trim($jr_data['thumb_icon']) : '';
     $thumb_border = isset($jr_data['thumb_border']) ? trim($jr_data['thumb_border']) : '';
     $thumb_wave = !empty($jr_data['thumb_wave']);
     $thumb_motion = isset($jr_data['thumb_motion']) ? trim($jr_data['thumb_motion']) : '';
@@ -252,6 +269,10 @@ function render_premium_card($row, $card_class = 'premium-card') {
     echo '<span' . $motion_data . '>' . $title . '</span>';
     if ($text) echo '<br><span' . $motion_data . ' style="font-size:11px;opacity:.85">' . $text . '</span>';
     echo '</div>';
+    if ($thumb_icon && isset($icon_map[$thumb_icon])) {
+        $ic = $icon_map[$thumb_icon];
+        echo '<div class="pv-icon-badge" style="position:absolute;top:7px;right:7px;font-size:10px;font-weight:900;padding:2px 7px;border-radius:9px;z-index:10;color:#fff;background:' . $ic['bg'] . '">' . $ic['label'] . '</div>';
+    }
     $jr_good_val = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
     $company_name = htmlspecialchars($row['jr_nickname'] ?: ($row['jr_company'] ?: ''));
     echo '<div class="premium-body">';
