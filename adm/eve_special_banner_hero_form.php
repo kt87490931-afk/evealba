@@ -340,7 +340,7 @@ if ($thumb_wave) {
         <!-- 썸네일 제목 -->
         <div class="ctrl-row">
           <div class="ctrl-label">📌 썸네일 제목 (메인 타이틀)</div>
-          <input type="text" class="ctrl-input" id="tg-title" maxlength="30" placeholder="예) 강남 룸 80개 1등 대일팀!" value="<?php echo htmlspecialchars($thumb_title, ENT_QUOTES); ?>" oninput="updatePreview()">
+          <input type="text" class="ctrl-input" id="tg-title" maxlength="64" placeholder="예) 강남 룸 80개 1등 대일팀! (이모지 가능)" value="<?php echo htmlspecialchars($thumb_title, ENT_QUOTES); ?>" oninput="updatePreview()">
           <div class="ctrl-charcount"><span id="tg-title-cnt"><?php echo mb_strlen($thumb_title, 'UTF-8'); ?></span>/30</div>
         </div>
         <!-- 썸네일 제목 스타일 -->
@@ -370,7 +370,7 @@ if ($thumb_wave) {
         <!-- 홍보문구1 -->
         <div class="ctrl-row">
           <div class="ctrl-label">📢 홍보문구1</div>
-          <input type="text" class="ctrl-input" id="tg-text" maxlength="60" placeholder="예) 🔥 하이퍼블릭 밀빵OK · 5인1조 픽업OK!!" value="<?php echo htmlspecialchars($thumb_text, ENT_QUOTES); ?>" oninput="updatePreview()">
+          <input type="text" class="ctrl-input" id="tg-text" maxlength="128" placeholder="예) 🔥 하이퍼블릭 밀빵OK · 5인1조 픽업OK!! (이모지 가능)" value="<?php echo htmlspecialchars($thumb_text, ENT_QUOTES); ?>" oninput="updatePreview()">
           <div class="ctrl-charcount"><span id="tg-text-cnt"><?php echo mb_strlen($thumb_text, 'UTF-8'); ?></span>/60</div>
         </div>
         <!-- 홍보문구1 스타일 -->
@@ -399,7 +399,7 @@ if ($thumb_wave) {
         <!-- 홍보문구2 -->
         <div class="ctrl-row">
           <div class="ctrl-label">💬 홍보문구2</div>
-          <input type="text" class="ctrl-input" id="tg-text2" maxlength="60" placeholder="예) 시급 15,000원 · 초보환영 · 당일지급" value="<?php echo htmlspecialchars($thumb_text2, ENT_QUOTES); ?>" oninput="updatePreview()">
+          <input type="text" class="ctrl-input" id="tg-text2" maxlength="128" placeholder="예) 시급 15,000원 · 초보환영 · 당일지급 (이모지 가능)" value="<?php echo htmlspecialchars($thumb_text2, ENT_QUOTES); ?>" oninput="updatePreview()">
           <div class="ctrl-charcount"><span id="tg-text2-cnt"><?php echo mb_strlen($thumb_text2, 'UTF-8'); ?></span>/60</div>
         </div>
         <!-- 홍보문구2 스타일 -->

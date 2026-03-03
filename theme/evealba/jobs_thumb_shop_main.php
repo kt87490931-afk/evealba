@@ -256,14 +256,14 @@ include_once(G5_THEME_PATH . '/inc/float_banners.php');
         <div class="tg-option-price" id="tg-premium-price" style="display:none"></div>
       </div>
       <div class="ctrl-row">
-        <div class="ctrl-label">✏️ 썸네일 제목</div>
-        <input type="text" class="ctrl-input" id="tg-title" maxlength="20" placeholder="업소명" value="<?php echo htmlspecialchars($pv_title, ENT_QUOTES); ?>" oninput="updatePreview();countChar(this,'tg-title-cnt',20)">
-        <div class="ctrl-charcount"><span id="tg-title-cnt"><?php echo mb_strlen($pv_title, 'UTF-8'); ?></span>/20</div>
+        <div class="ctrl-label">✏️ 썸네일 제목 (최대 10자, 이모지 가능)</div>
+        <input type="text" class="ctrl-input" id="tg-title" maxlength="24" placeholder="업소명" value="<?php echo htmlspecialchars(mb_substr($pv_title, 0, 10, 'UTF-8'), ENT_QUOTES); ?>" oninput="enforceMaxChar(this,10);updatePreview();countChar(this,'tg-title-cnt',10)">
+        <div class="ctrl-charcount"><span id="tg-title-cnt"><?php echo mb_strlen(mb_substr($pv_title, 0, 10, 'UTF-8'), 'UTF-8'); ?></span>/10</div>
       </div>
       <div class="ctrl-row">
-        <div class="ctrl-label">💬 홍보 문구</div>
-        <input type="text" class="ctrl-input" id="tg-text" maxlength="60" placeholder="예) 시급 15,000원 · 초보환영" value="<?php echo htmlspecialchars($pv_text, ENT_QUOTES); ?>" oninput="updatePreview();countChar(this,'tg-text-cnt',60)">
-        <div class="ctrl-charcount"><span id="tg-text-cnt"><?php echo mb_strlen($pv_text, 'UTF-8'); ?></span>/60</div>
+        <div class="ctrl-label">💬 홍보 문구 (최대 15자, 이모지 가능)</div>
+        <input type="text" class="ctrl-input" id="tg-text" maxlength="32" placeholder="예) 시급 15,000원 · 초보환영" value="<?php echo htmlspecialchars(mb_substr($pv_text, 0, 15, 'UTF-8'), ENT_QUOTES); ?>" oninput="enforceMaxChar(this,15);updatePreview();countChar(this,'tg-text-cnt',15)">
+        <div class="ctrl-charcount"><span id="tg-text-cnt"><?php echo mb_strlen(mb_substr($pv_text, 0, 15, 'UTF-8'), 'UTF-8'); ?></span>/15</div>
       </div>
       <div class="ctrl-row">
         <div class="ctrl-label">🖊️ 텍스트 컬러</div>
@@ -424,6 +424,10 @@ include_once(G5_THEME_PATH . '/inc/float_banners.php');
   window.countChar = function(el,spanId,max){
     var sp=document.getElementById(spanId);
     if(sp) sp.textContent = (el&&el.value) ? Array.from(el.value).length : 0;
+  };
+  window.enforceMaxChar = function(el,max){
+    var arr = Array.from(el.value);
+    if(arr.length>max) el.value = arr.slice(0,max).join('');
   };
   window.selectTextColor = function(btn){
     document.querySelectorAll('#tg-textcolor-grid .txt-color-btn').forEach(function(b){b.classList.remove('selected');});

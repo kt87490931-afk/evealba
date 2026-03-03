@@ -39,7 +39,10 @@ $allowed_keys = array(
 $updates = array();
 foreach ($allowed_keys as $k) {
     if (isset($_POST[$k])) {
-        $updates[$k] = clean_xss_tags(trim((string)$_POST[$k]));
+        $v = clean_xss_tags(trim((string)$_POST[$k]));
+        if ($k === 'thumb_title') $v = mb_substr($v, 0, 10, 'UTF-8');
+        if ($k === 'thumb_text')  $v = mb_substr($v, 0, 15, 'UTF-8');
+        $updates[$k] = $v;
     }
 }
 if (empty($updates)) {

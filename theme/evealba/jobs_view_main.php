@@ -551,18 +551,18 @@ function toggleAutoJump(jrId,on){
         </div>
       </div>
 
-      <!-- 썸네일 제목 -->
+      <!-- 썸네일 제목 (10자, 이모지 가능) -->
       <div class="ctrl-row">
         <div class="ctrl-label">✏️ 썸네일 제목</div>
-        <input type="text" class="ctrl-input" id="tg-title" maxlength="20" placeholder="업소명을 입력하세요" value="<?php echo htmlspecialchars($thumb_title ?: $nick ?: $comp ?: '', ENT_QUOTES); ?>" oninput="updatePreview();countChar(this,'tg-title-cnt',20)">
-        <div class="ctrl-charcount"><span id="tg-title-cnt"><?php echo mb_strlen($thumb_title ?: $nick ?: $comp ?: '', 'UTF-8'); ?></span>/20</div>
+        <input type="text" class="ctrl-input" id="tg-title" maxlength="24" placeholder="업소명을 입력하세요 (최대 10자)" value="<?php echo htmlspecialchars(mb_substr($thumb_title ?: $nick ?: $comp ?: '', 0, 10, 'UTF-8'), ENT_QUOTES); ?>" oninput="enforceMaxChar(this,10);updatePreview();countChar(this,'tg-title-cnt',10)">
+        <div class="ctrl-charcount"><span id="tg-title-cnt"><?php echo mb_strlen(mb_substr($thumb_title ?: $nick ?: $comp ?: '', 0, 10, 'UTF-8'), 'UTF-8'); ?></span>/10</div>
       </div>
 
-      <!-- 홍보 문구 -->
+      <!-- 홍보 문구 (15자, 이모지 가능) -->
       <div class="ctrl-row">
         <div class="ctrl-label">💬 홍보 문구</div>
-        <input type="text" class="ctrl-input" id="tg-text" maxlength="60" placeholder="예) 시급 15,000원 · 초보환영 · 당일지급" value="<?php echo htmlspecialchars($thumb_text, ENT_QUOTES); ?>" oninput="updatePreview();countChar(this,'tg-text-cnt',60)">
-        <div class="ctrl-charcount"><span id="tg-text-cnt"><?php echo mb_strlen($thumb_text, 'UTF-8'); ?></span>/60</div>
+        <input type="text" class="ctrl-input" id="tg-text" maxlength="32" placeholder="예) 시급 15,000원 · 초보환영 (최대 15자)" value="<?php echo htmlspecialchars(mb_substr($thumb_text, 0, 15, 'UTF-8'), ENT_QUOTES); ?>" oninput="enforceMaxChar(this,15);updatePreview();countChar(this,'tg-text-cnt',15)">
+        <div class="ctrl-charcount"><span id="tg-text-cnt"><?php echo mb_strlen(mb_substr($thumb_text, 0, 15, 'UTF-8'), 'UTF-8'); ?></span>/15</div>
       </div>
 
       <!-- 텍스트 컬러 -->
@@ -1661,6 +1661,10 @@ function toggleAutoJump(jrId,on){
     var len = Array.from(el.value).length;
     var sp = document.getElementById(spanId);
     if(sp) sp.textContent = len;
+  };
+  window.enforceMaxChar = function(el, max){
+    var arr = Array.from(el.value);
+    if(arr.length > max) el.value = arr.slice(0,max).join('');
   };
   window.selectTextColor = function(btn){
     document.querySelectorAll('#tg-textcolor-grid .txt-color-btn').forEach(function(b){b.classList.remove('selected');});
