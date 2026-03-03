@@ -43,6 +43,7 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
 @include_once(G5_LIB_PATH.'/ev_thumb_option.lib.php');
 
 $nav_active = 'thumb_shop';
+if (!isset($jobs_mypage_active)) $jobs_mypage_active = 'thumb_shop';
 $g5['title'] = '썸네일상점 - '.$config['cf_title'];
 include G5_THEME_PATH.'/inc/head_top.php';
 ?>
@@ -51,14 +52,22 @@ include G5_THEME_PATH.'/inc/head_top.php';
 <div class="breadcrumb-bar">
   <div class="breadcrumb-inner">
     <a href="<?php echo G5_URL ?>">🏠 메인</a>
-    <span>›</span>
+    <span class="sep">›</span>
+    <a href="<?php echo G5_BBS_URL; ?>/member_confirm.php?url=<?php echo urlencode(G5_BBS_URL.'/register_form.php'); ?>">회원정보</a>
+    <span class="sep">›</span>
     <span class="current">🛒 썸네일상점</span>
   </div>
 </div>
 
-<!-- PAGE LAYOUT -->
-<div class="page-layout">
+<link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/css/resume_register.css?v=<?php echo @filemtime(G5_THEME_PATH.'/css/resume_register.css'); ?>">
+<!-- PAGE LAYOUT (jobs_view 편집과 동일) -->
+<div class="page-layout jobs-register-page">
+
+  <!-- 좌측 사이드바 (MY PAGE) -->
   <aside class="left-sidebar">
-    <?php include G5_THEME_PATH.'/inc/sidebar_thumb_shop.php'; ?>
+    <?php include G5_THEME_PATH.'/inc/sidebar_jobs_register.php'; ?>
   </aside>
+
+  <!-- 메인 영역 -->
   <div class="main-area">
+    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
