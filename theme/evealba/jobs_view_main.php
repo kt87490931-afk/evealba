@@ -1,6 +1,8 @@
 <?php if (!defined('_GNUBOARD_')) exit;
 include_once(G5_LIB_PATH . '/jobs_ai_content.lib.php');
 include_once(G5_EXTEND_PATH . '/gemini_config.php');
+@include_once(G5_LIB_PATH . '/ev_thumb_option.lib.php');
+@include_once(G5_LIB_PATH . '/ev_coupon.lib.php');
 
 function _jobs_view_msg($msg, $type = 'back') {
     $html = '<div class="jobs-view-msg" style="padding:24px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);margin:16px 0;text-align:center;">';
@@ -220,6 +222,13 @@ $thumb_motion = isset($data['thumb_motion']) ? trim($data['thumb_motion']) : '';
 $thumb_wave = isset($data['thumb_wave']) ? (int)$data['thumb_wave'] : 0;
 $thumb_text_color = isset($data['thumb_text_color']) ? trim($data['thumb_text_color']) : 'rgb(255,255,255)';
 $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
+
+$_paid_options_display = array();
+$_available_coupons = array();
+if (function_exists('ev_thumb_get_paid_options_with_dates')) $_paid_options_display = ev_thumb_get_paid_options_with_dates($jr_id);
+if (function_exists('ev_coupon_list_available_thumb') && $is_member && !empty($member['mb_id'])) {
+    $_available_coupons = ev_coupon_list_available_thumb($member['mb_id'], 999999);
+}
 ?>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/skin/board/eve_skin/style.css?v=<?php echo @filemtime(G5_THEME_PATH.'/skin/board/eve_skin/style.css'); ?>">
@@ -299,6 +308,15 @@ $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 .tg-total-items .tti-row .tti-name{font-weight:500}
 .tg-total-items .tti-row .tti-price{font-weight:700;color:var(--gold,#FFD700)}
 .tg-total-items .tti-empty{font-size:11px;color:rgba(255,255,255,.5);padding:4px 0}
+.tg-coupon-wrap{display:block}
+.tg-coupon-label{display:block;font-size:11px;font-weight:700;color:#666;margin-bottom:6px}
+.tg-coupon-select{width:100%;padding:9px 12px;border:1.5px solid #f0e0e8;border-radius:10px;font-size:12px;background:#fff;color:#333;cursor:pointer}
+.tg-buy-btn{padding:11px;border:none;border-radius:12px;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-size:13px;font-weight:900;cursor:pointer;transition:opacity .2s}
+.tg-buy-btn:hover{opacity:.9}
+.tg-buy-btn:disabled{opacity:.5;cursor:not-allowed}
+.tg-paid-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:4px 0;color:rgba(255,255,255,.9)}
+.tg-paid-row .tg-paid-name{font-weight:500}
+.tg-paid-row .tg-paid-until{color:#81C784;font-weight:700}
 /* 모션 키프레임 */
 @keyframes motion-pulse-scale{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
 @keyframes motion-soft-blink{0%,100%{opacity:1}50%{opacity:.3}}
@@ -682,7 +700,36 @@ function toggleAutoJump(jrId,on){
           <div class="tti-empty">선택된 유료 옵션이 없습니다</div>
         </div>
       </div>
-      <button type="button" class="tg-save-btn" onclick="saveThumb()" style="width:100%;padding:11px;border-radius:12px;font-size:13px">💾 저장</button>
+      <!-- 쿠폰 선택 -->
+      <div class="tg-coupon-wrap" id="tg-coupon-wrap" style="width:100%;margin-top:10px">
+        <label class="tg-coupon-label" for="tg-coupon-select">🎟️ 쿠폰 선택</label>
+        <select id="tg-coupon-select" class="tg-coupon-select" onchange="applyCouponToTotal()">
+          <option value="">쿠폰을 선택하세요</option>
+          <?php foreach ($_available_coupons as $c) {
+            $dtype = $c['ec_discount_type'] ?? 'amount';
+            $dval = (int)($c['ec_discount_value'] ?? 0);
+            $maxd = (int)($c['ec_max_discount'] ?? 0);
+            $label = ($dtype === 'percent') ? $dval.'% 할인'.($maxd ? ' (최대 '.number_format($maxd).'원)' : '') : number_format($dval).'원 할인';
+            echo '<option value="'.(int)$c['ec_id'].'" data-type="'.htmlspecialchars($dtype).'" data-value="'.$dval.'" data-max="'.$maxd.'" data-min="'.(int)($c['ec_min_amount']??0).'">'.htmlspecialchars($c['ec_name']??'').' - '.$label.'</option>';
+          } ?>
+        </select>
+        <div class="tg-coupon-discount" id="tg-coupon-discount" style="display:none;font-size:11px;color:#2E7D32;margin-top:4px"></div>
+      </div>
+      <button type="button" class="tg-buy-btn" id="tg-buy-btn" onclick="purchaseThumbOptions()" style="width:100%;padding:11px;border-radius:12px;font-size:13px;margin-top:10px">🛒 구매하기</button>
+      <button type="button" class="tg-save-btn" id="tg-save-btn-preview" onclick="saveThumb()" style="width:100%;padding:11px;border-radius:12px;font-size:13px;margin-top:8px;background:linear-gradient(135deg,#4CAF50,#2E7D32)">💾 저장</button>
+      <?php if (!empty($_paid_options_display)) { ?>
+      <!-- 내가 구매한 아이템 (유효기간) -->
+      <div class="tg-paid-list-wrap" style="width:100%;margin-top:14px;background:linear-gradient(135deg,#0d1f0d,#1a3d1a);border-radius:12px;padding:12px 14px;border:1px solid rgba(76,175,80,.3)">
+        <div class="tg-paid-header" style="font-size:12px;font-weight:900;color:#81C784;margin-bottom:8px">📦 내가 구매한 아이템</div>
+        <div class="tg-paid-items" id="tg-paid-items">
+          <?php foreach ($_paid_options_display as $po) {
+            $vu = $po['valid_until'];
+            $label = htmlspecialchars($po['label'] ?? $po['key'].'-'.$po['value']);
+            echo '<div class="tg-paid-row"><span class="tg-paid-name">'.$label.'</span><span class="tg-paid-until">~ '.$vu.'</span></div>';
+          } ?>
+        </div>
+      </div>
+      <?php } ?>
     </div>
   </div>
 </div>
@@ -1721,8 +1768,7 @@ function toggleAutoJump(jrId,on){
     }
     _updateOptionPrice('tg-premium-price','premium','프리미엄', isPremium);
 
-    var amtEl = document.getElementById('tg-total-amount');
-    if(amtEl) amtEl.textContent = total.toLocaleString('ko-KR') + ' 원';
+    window._thumbTotalRaw = total;
     var listEl = document.getElementById('tg-total-items');
     if(listEl){
       if(items.length===0){
@@ -1735,9 +1781,57 @@ function toggleAutoJump(jrId,on){
         listEl.innerHTML=html;
       }
     }
+    window.applyCouponToTotal();
+  };
+  window.applyCouponToTotal = function(){
+    var total = window._thumbTotalRaw || 0;
+    var sel = document.getElementById('tg-coupon-select');
+    var amtEl = document.getElementById('tg-total-amount');
+    var discountEl = document.getElementById('tg-coupon-discount');
+    var listEl = document.getElementById('tg-total-items');
+    var discount = 0;
+    var couponLabel = '';
+    if(sel && sel.value && total > 0){
+      var opt = sel.options[sel.selectedIndex];
+      var minAmt = parseInt(opt.getAttribute('data-min')||0,10);
+      if(total >= minAmt){
+        var dtype = opt.getAttribute('data-type')||'amount';
+        var dval = parseInt(opt.getAttribute('data-value')||0,10);
+        var dmax = parseInt(opt.getAttribute('data-max')||0,10);
+        if(dtype === 'percent'){ discount = Math.floor(total * dval / 100); if(dmax>0 && discount>dmax) discount=dmax; }
+        else { discount = dval; }
+        discount = Math.min(discount, total);
+        couponLabel = ' - '+discount.toLocaleString('ko-KR')+'원 할인';
+      }
+    }
+    var finalAmt = Math.max(0, total - discount);
+    if(amtEl) amtEl.textContent = finalAmt.toLocaleString('ko-KR') + ' 원' + (discount ? ' (원가 ' + total.toLocaleString('ko-KR') + '원)' : '');
+    if(discountEl){
+      if(discount){ discountEl.style.display=''; discountEl.textContent='🎟️ 쿠폰 할인 적용됨'+couponLabel; }
+      else { discountEl.style.display='none'; discountEl.textContent=''; }
+    }
+    if(listEl){
+      var coupRow = listEl.querySelector('.tti-row-coupon');
+      if(coupRow) coupRow.remove();
+      if(discount > 0){
+        var r = document.createElement('div'); r.className='tti-row tti-row-coupon';
+        r.innerHTML='<span class="tti-name">🎟️ 쿠폰 할인</span><span class="tti-price" style="color:#81C784">-'+discount.toLocaleString('ko-KR')+'원</span>';
+        listEl.appendChild(r);
+      }
+    }
+    window._thumbCouponDiscount = discount;
+    window._thumbFinalAmount = finalAmt;
+  };
+  window.purchaseThumbOptions = function(){
+    var total = window._thumbFinalAmount || window._thumbTotalRaw || 0;
+    if(total <= 0){ alert('선택된 유료 옵션이 없습니다. 옵션을 선택한 후 구매해 주세요.'); return; }
+    var btn = document.getElementById('tg-buy-btn');
+    if(btn) btn.disabled = true;
+    alert('결제 연동이 준비 중입니다. 잠시 후 이용해 주세요.');
+    if(btn) btn.disabled = false;
   };
   window.saveThumb = function(){
-    var btn = document.getElementById('tg-save-btn');
+    var btn = document.getElementById('tg-save-btn') || document.getElementById('tg-save-btn-preview');
     if(btn) btn.disabled = true;
     var fd = new FormData();
     fd.append('jr_id', jrId);
@@ -1969,7 +2063,7 @@ function toggleAutoJump(jrId,on){
 <script>
 if(typeof window.saveThumb !== 'function'){
   window.saveThumb = function(){
-    var btn = document.getElementById('tg-save-btn');
+    var btn = document.getElementById('tg-save-btn') || document.getElementById('tg-save-btn-preview');
     if(btn) btn.disabled = true;
     var gradBtn = document.querySelector('.color-swatch.selected');
     var iconBtn = document.querySelector('.badge-opt.selected');

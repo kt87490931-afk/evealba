@@ -2273,7 +2273,13 @@ footer {
   .float-recommend.fr-open .fr-panel { display:block; }
 }
 
-/* <= 900px: hidden completely */
+/* <= 900px: fr-tab만 표시 (탭 탭하면 패널 열림) */
 @media (max-width:900px) {
-  .float-recommend { display:none !important; }
+  .float-recommend { display:flex !important; right:0; top:50%; transform:translateY(-50%); }
+  .fr-tab { display:flex !important; }
+  .fr-panel { display:none; border-radius:12px 0 0 12px; }
+  .fr-header { border-radius:12px 0 0 0; }
+  .fr-close { display:block; }
+  .float-recommend.fr-open .fr-tab { display:none !important; }
+  .float-recommend.fr-open .fr-panel { display:block; }
 }

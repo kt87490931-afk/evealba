@@ -78,6 +78,9 @@ jQuery(function($) {
 });
 </script>
 
+<!-- 추천업소 + 카카오톡/채팅/맨위로 플로팅 (썸네일상점은 jobs_thumb_shop_main에서 출력) -->
+<?php if (!defined('_THUMB_SHOP_FLOATS_DONE_')) { include_once(G5_THEME_PATH . '/inc/float_banners.php'); } ?>
+
 <!-- EVE CHAT 모바일 전체화면 -->
 <iframe id="eveChatFrame"
   src="<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php"
