@@ -69,6 +69,7 @@ $jobs_basic_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_basic_info_save.ph
 $jobs_bulk_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_editor_bulk_save.php' : '/jobs_editor_bulk_save.php';
 $jobs_cards_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_editor_cards_save.php' : '/jobs_editor_cards_save.php';
 $jobs_img_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_image_save.php' : '/jobs_image_save.php';
+$jobs_thumb_purchase_url = $jobs_base_url ? $jobs_base_url.'/jobs_thumb_option_purchase.php' : '/jobs_thumb_option_purchase.php';
 
 $status = $row['jr_status'];
 $payment_ok = !empty($row['jr_payment_confirmed']);
@@ -1308,6 +1309,7 @@ function toggleAutoJump(jrId,on){
   var jrId = <?php echo (int)$jr_id; ?>;
   var saveUrl = <?php echo json_encode($jobs_ai_save_url); ?>;
   var basicSaveUrl = <?php echo json_encode($jobs_basic_save_url ?? ''); ?>;
+  var thumbPurchaseUrl = <?php echo json_encode($jobs_thumb_purchase_url ?? ''); ?>;
   var bulkSaveUrl = <?php echo json_encode($jobs_bulk_save_url ?? ''); ?>;
   var cardsSaveUrl = <?php echo json_encode($jobs_cards_save_url ?? ''); ?>;
   var imgSaveUrl = <?php echo json_encode($jobs_img_save_url ?? ''); ?>;
@@ -1826,9 +1828,27 @@ function toggleAutoJump(jrId,on){
     var total = window._thumbFinalAmount || window._thumbTotalRaw || 0;
     if(total <= 0){ alert('선택된 유료 옵션이 없습니다. 옵션을 선택한 후 구매해 주세요.'); return; }
     var btn = document.getElementById('tg-buy-btn');
-    if(btn) btn.disabled = true;
-    alert('결제 연동이 준비 중입니다. 잠시 후 이용해 주세요.');
-    if(btn) btn.disabled = false;
+    if(btn){ btn.disabled = true; btn.textContent = '구매 중...'; }
+    var fd = new FormData();
+    fd.append('jr_id', jrId);
+    fd.append('thumb_icon', _thumbIcon || '');
+    fd.append('thumb_motion', _thumbMotion || '');
+    fd.append('thumb_wave', _thumbWave ? '1' : '0');
+    fd.append('thumb_border', _thumbBorder || '');
+    fd.append('thumb_gradient', _thumbSelected || '1');
+    var sel = document.getElementById('tg-coupon-select');
+    if(sel && sel.value) fd.append('coupon_id', sel.value);
+    fetch(thumbPurchaseUrl, {method:'POST', body:fd, credentials:'same-origin'})
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(btn){ btn.disabled = false; btn.textContent = '🛒 구매하기'; }
+      if(res.ok){ alert('구매가 되었습니다.'); location.reload(); }
+      else alert(res.msg || '구매에 실패했습니다.');
+    })
+    .catch(function(e){
+      if(btn){ btn.disabled = false; btn.textContent = '🛒 구매하기'; }
+      alert('구매 처리 중 오류가 발생했습니다.');
+    });
   };
   window.saveThumb = function(){
     var btn = document.getElementById('tg-save-btn') || document.getElementById('tg-save-btn-preview');
