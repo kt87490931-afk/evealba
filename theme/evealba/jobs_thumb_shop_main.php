@@ -43,6 +43,10 @@ if (sql_num_rows(sql_query("SHOW TABLES LIKE 'g5_jobs_register'", false))) {
 }
 
 $jr_id = isset($_GET['jr_id']) ? (int)$_GET['jr_id'] : 0;
+// 진행중인 광고가 있으면 jr_id 없을 때 첫 번째 자동 선택 (썸네일생성 즉시 표시)
+if (!$jr_id && !empty($ongoing_list)) {
+    $jr_id = (int)$ongoing_list[0]['jr_id'];
+}
 $row = null;
 $data = array();
 $thumb_gradient = $thumb_title = $thumb_text = $thumb_icon = $thumb_motion = '';
@@ -165,21 +169,28 @@ if ($row && isset($data['job_salary_type'])) {
   <p style="margin:0 0 16px;color:#888;">진행중인 채용광고가 없습니다.</p>
   <a href="<?php echo $jobs_base; ?>/jobs_register.php" style="display:inline-block;padding:10px 20px;background:linear-gradient(135deg,#FF1B6B,#C90050);color:#fff;border-radius:8px;text-decoration:none;">채용공고 등록하기</a>
 </div>
-<?php } elseif (!$jr_id) { ?>
+<?php
+define('_THUMB_SHOP_FLOATS_DONE_', true);
+include_once(G5_THEME_PATH . '/inc/float_banners.php');
+} elseif (!$jr_id) { ?>
 <div style="max-width:958px;margin:0 auto;padding:24px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);">
   <h2 style="margin:0 0 8px;font-size:22px;color:#333;">🛒 썸네일상점</h2>
   <p style="margin:0 0 24px;color:#666;font-size:14px;">채용광고 썸네일을 꾸미고 유료 옵션을 구매하세요.</p>
   <label style="display:block;margin-bottom:8px;font-weight:600;color:#333;">적용할 채용광고 선택</label>
   <select id="ts-jr-id" style="padding:10px 12px;border:1px solid #ddd;border-radius:8px;min-width:280px;font-size:14px;" onchange="var v=this.value;if(v)location.href='<?php echo $thumb_shop_url; ?>?jr_id='+v;">
     <option value="">선택하세요</option>
-    <?php foreach ($ongoing_list as $o) {
+    <?php
+    foreach ($ongoing_list as $o) {
       $end = $o['jr_end_date'] ? date('Y-m-d', strtotime($o['jr_end_date'])) : '';
       $label = $o['jr_subject_display'] ?: ('#'.$o['jr_id']);
       echo '<option value="'.(int)$o['jr_id'].'">#'.$o['jr_id'].' '.htmlspecialchars($label).($end ? ' (종료 '.$end.')' : '').'</option>';
     } ?>
   </select>
 </div>
-<?php } else {
+<?php
+define('_THUMB_SHOP_FLOATS_DONE_', true);
+include_once(G5_THEME_PATH . '/inc/float_banners.php');
+} else {
   $saved_grad = $thumb_gradient ?: '1';
   $gradients = array(
     1=>'linear-gradient(135deg,rgb(255,65,108),rgb(255,75,43))',2=>'linear-gradient(135deg,rgb(255,94,98),rgb(255,195,113))',
@@ -336,6 +347,11 @@ if ($row && isset($data['job_salary_type'])) {
     </div>
   </div>
 </div>
+<?php
+// 썸네일생성 섹션 플로팅배너 (추천업소 + CTA)
+define('_THUMB_SHOP_FLOATS_DONE_', true);
+include_once(G5_THEME_PATH . '/inc/float_banners.php');
+?>
 <script>
 (function(){
   var jrId = <?php echo (int)$jr_id; ?>;
