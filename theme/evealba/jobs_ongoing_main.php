@@ -258,15 +258,20 @@ function doListJump(jrId){
     headers:{'Content-Type':'application/x-www-form-urlencoded'},
     body:'jr_id='+jrId,
     credentials:'same-origin'
-  }).then(function(r){return r.json();}).then(function(res){
+  }).then(function(r){
+    return r.text().then(function(t){
+      try{var j=JSON.parse(t);return j;}
+      catch(e){throw new Error(r.status===500?'서버 오류(500)':'응답 오류');}
+    });
+  }).then(function(res){
     btn.disabled=false;btn.textContent='⚡점프';
     if(res.ok){
       alert('점프가 되었습니다! (잔여: '+res.remain+'회)');
       var numEl=document.getElementById('jump-remain-'+jrId);
       if(numEl) numEl.textContent=res.remain.toLocaleString()+'회';
       if(res.remain<=0) btn.disabled=true;
-    }else{alert(res.msg);}
-  }).catch(function(){btn.disabled=false;btn.textContent='⚡점프';alert('점프 처리 중 오류');});
+    }else{alert(res.msg||'점프 처리 실패');}
+  }).catch(function(e){btn.disabled=false;btn.textContent='⚡점프';alert('점프 처리 중 오류: '+(e.message||''));});
 }
 </script>
 

@@ -6,12 +6,27 @@
 @error_reporting(0);
 @ini_set('display_errors', '0');
 ob_start();
-include_once('./_common.php');
+
+$_jump_success = false;
+register_shutdown_function(function () {
+    global $_jump_success;
+    if ($_jump_success) return;
+    $e = error_get_last();
+    if ($e && in_array($e['type'], array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR))) {
+        if (ob_get_level()) ob_end_clean();
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(array('ok' => 0, 'msg' => '서버 오류가 발생했습니다.', 'err' => substr($e['message'], 0, 100)), JSON_UNESCAPED_UNICODE);
+    }
+});
+
+include_once(__DIR__ . '/_common.php');
 ob_end_clean();
 
 header('Content-Type: application/json; charset=utf-8');
 
 function _jump_json($data) {
+    global $_jump_success;
+    $_jump_success = true;
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
     exit;
 }
