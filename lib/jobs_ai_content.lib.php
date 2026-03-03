@@ -106,9 +106,13 @@ function aic_parse_ai_content_to_sections($ai_content) {
     $paragraphs = array_map('trim', $paragraphs);
     $paragraphs = array_values(array_filter($paragraphs));
 
-    // 메타데이터 라인 제외 (예: "최고관리자 | 010-4444-4444 | 카카오:ang77777 | ...")
+    // 메타데이터 라인 제외 (닉네임 | 연락처 | SNS | 제목 | 고용형태 형식)
     $paragraphs = array_filter($paragraphs, function ($p) {
-        if (mb_strlen($p) < 30 && (strpos($p, '|') !== false || preg_match('/\d{3}[-]?\d{3,4}[-]?\d{4}/', $p))) return false;
+        $pipe_count = substr_count($p, '|');
+        $has_phone = (bool)preg_match('/\d{3}[-]?\d{3,4}[-]?\d{4}/', $p);
+        $has_sns = (stripos($p, '카카오') !== false || stripos($p, '라인') !== false || stripos($p, '텔레그램') !== false);
+        if ($pipe_count >= 3 && ($has_phone || $has_sns)) return false;
+        if (mb_strlen($p) < 30 && (strpos($p, '|') !== false || $has_phone)) return false;
         return true;
     });
     $paragraphs = array_values($paragraphs);
