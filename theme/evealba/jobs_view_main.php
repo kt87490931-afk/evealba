@@ -1252,7 +1252,7 @@ function toggleAutoJump(jrId,on){
       <?php if ($is_owner && $is_edit_mode) { ?>
       <a href="<?php echo $jobs_ongoing_url; ?>" class="btn-action btn-list2">📋 목록으로</a>
       <?php } else { ?>
-      <a href="/jobs.php" class="btn-action btn-list2">📋 목록으로</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="btn-action btn-list2">📋 목록으로</a>
       <?php } ?>
     </div>
 </article>

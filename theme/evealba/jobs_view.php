@@ -83,8 +83,10 @@ if ($_jv_is_owner && isset($_GET['mode']) && $_GET['mode'] === 'edit') {
 <meta property="og:title" content="<?php echo htmlspecialchars($_jv_page_title); ?>">
 <meta property="og:description" content="<?php echo htmlspecialchars($_jv_meta_desc); ?>">
 <meta property="og:type" content="website">
-<?php if ($_jv_clean_url) { ?><link rel="canonical" href="http://<?php echo $_SERVER['HTTP_HOST'] . htmlspecialchars($_jv_clean_url); ?>">
-<meta property="og:url" content="http://<?php echo $_SERVER['HTTP_HOST'] . htmlspecialchars($_jv_clean_url); ?>"><?php } ?>
+<?php if ($_jv_clean_url) {
+    $_jv_full_url = (defined('G5_HTTPS_DOMAIN') && G5_HTTPS_DOMAIN) ? rtrim(G5_HTTPS_DOMAIN,'/') . $_jv_clean_url : 'http://' . $_SERVER['HTTP_HOST'] . $_jv_clean_url;
+?><link rel="canonical" href="<?php echo htmlspecialchars($_jv_full_url); ?>">
+<meta property="og:url" content="<?php echo htmlspecialchars($_jv_full_url); ?>"><?php } ?>
 
 <!-- SEO: JSON-LD JobPosting -->
 <script type="application/ld+json">

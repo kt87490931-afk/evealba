@@ -29,7 +29,8 @@ function _jlh_clean_url($row, $jr_data = null) {
     $job1 = isset($jr_data['job_job1']) ? trim($jr_data['job_job1']) : '';
     $jobtype = $job1 ?: '기타';
     $name = $row['jr_nickname'] ?: ($row['jr_company'] ?: '채용');
-    return '/jobs/' . urlencode($region) . '/' . urlencode($jobtype) . '/' . urlencode($name) . '-' . $jr_id;
+    $path = '/jobs/' . urlencode($region) . '/' . urlencode($jobtype) . '/' . urlencode($name) . '-' . $jr_id;
+    return (defined('G5_URL') && G5_URL) ? rtrim(G5_URL, '/') . $path : $path;
 }
 
 $_jlh_gradients = array(

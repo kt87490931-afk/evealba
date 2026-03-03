@@ -191,7 +191,7 @@ $_region_list = array('서울','경기','인천','부산','대구','대전','광
         <div class="section-header">
           <h2 class="section-title" style="font-size:16px">🚨 급구채용</h2>
           <div class="section-actions">
-            <a href="/jobs.php?ad_type=급구" class="section-more">더보기</a>
+            <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php?ad_type='.rawurlencode('급구') : '/jobs.php?ad_type='.rawurlencode('급구'); ?>" class="section-more">더보기</a>
             <button type="button" class="btn-post-ad">광고신청</button>
           </div>
         </div>
@@ -222,7 +222,7 @@ $_region_list = array('서울','경기','인천','부산','대구','대전','광
         <div class="section-header">
           <h2 class="section-title" style="font-size:16px">💖 추천채용</h2>
           <div class="section-actions">
-            <a href="/jobs.php?ad_type=추천" class="section-more">더보기</a>
+            <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php?ad_type='.rawurlencode('추천') : '/jobs.php?ad_type='.rawurlencode('추천'); ?>" class="section-more">더보기</a>
             <button type="button" class="btn-post-ad">광고신청</button>
           </div>
         </div>

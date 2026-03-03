@@ -1,0 +1,31 @@
+<?php
+
+/********************
+    상수 선언
+********************/
+
+// 이 상수가 정의되지 않으면 각각의 개별 페이지는 별도로 실행될 수 없음
+define('_GNUBOARD_', true);
+
+include_once($g5_path['path'].'/version.php');   // 설정 파일
+
+// 기본 시간대 설정
+date_default_timezone_set("Asia/Seoul");
+
+/********************
+    경로 상수
+********************/
+
+/*
+사이트 주소 (도메인 구매 전 IP 사용 시)
+- 공란: 접속한 주소(HTTP_HOST) 자동 사용 → IP(예: http://188.166.179.115) 접속 시 자동 적용
+- IP 사용 시 예: define('G5_DOMAIN', 'http://188.166.179.115');
+- 도메인 구매 후 예: define('G5_DOMAIN', 'https://www.이브알바.com');
+*/
+define('G5_DOMAIN', '');
+
+/*
+보안서버 도메인 (HTTPS)
+회원가입, 글쓰기에 사용되는 https 로 시작되는 주소를 말합니다.
+*/
+define('G5_HTTPS_DOMAIN', '');

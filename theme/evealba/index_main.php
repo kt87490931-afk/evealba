@@ -294,7 +294,7 @@ $_tab_keys = array_keys($_tab_data);
   <div>
     <div class="section-header">
       <h2 class="section-title" style="font-size:16px">급구채용</h2>
-      <a href="/jobs.php?ad_type=급구" class="section-more">더보기 →</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php?ad_type='.rawurlencode('급구') : '/jobs.php?ad_type='.rawurlencode('급구'); ?>" class="section-more">더보기 →</a>
     </div>
     <div class="urgency-list">
 <?php if (!empty($_idx_urgent)) { foreach ($_idx_urgent as $_ug) { render_urgency_card($_ug); } } else { ?>
@@ -322,7 +322,7 @@ $_tab_keys = array_keys($_tab_data);
   <div>
     <div class="section-header">
       <h2 class="section-title" style="font-size:16px">추천채용</h2>
-      <a href="/jobs.php?ad_type=추천" class="section-more">더보기 →</a>
+      <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php?ad_type='.rawurlencode('추천') : '/jobs.php?ad_type='.rawurlencode('추천'); ?>" class="section-more">더보기 →</a>
     </div>
     <div class="recommend-list">
 <?php if (!empty($_idx_recomm)) { foreach ($_idx_recomm as $_rc) { render_recommend_card($_rc); } } else { ?>
