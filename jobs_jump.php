@@ -61,8 +61,22 @@ if (sql_affected_rows() === 0) {
     _jump_json(array('ok' => 0, 'msg' => '점프 처리에 실패했습니다. 다시 시도해 주세요.'));
 }
 
-sql_query("INSERT INTO g5_jobs_jump_log (jr_id, mb_id, jl_type, jl_remain_before, jl_remain_after, jl_datetime)
-    VALUES ('{$jr_id}', '{$mb_id_esc}', 'manual', '{$remain_before}', '{$remain_after}', '{$now}')");
+$log_check = @sql_query("SHOW TABLES LIKE 'g5_jobs_jump_log'", false);
+if (!$log_check || !@sql_num_rows($log_check)) {
+    @sql_query("CREATE TABLE IF NOT EXISTS g5_jobs_jump_log (
+        jl_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        jr_id INT UNSIGNED NOT NULL,
+        mb_id VARCHAR(20) NOT NULL DEFAULT '',
+        jl_type ENUM('manual','auto') NOT NULL DEFAULT 'manual',
+        jl_remain_before INT UNSIGNED NOT NULL DEFAULT 0,
+        jl_remain_after INT UNSIGNED NOT NULL DEFAULT 0,
+        jl_datetime DATETIME NOT NULL,
+        KEY idx_jr_id (jr_id),
+        KEY idx_datetime (jl_datetime)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", false);
+}
+@sql_query("INSERT INTO g5_jobs_jump_log (jr_id, mb_id, jl_type, jl_remain_before, jl_remain_after, jl_datetime)
+    VALUES ('{$jr_id}', '{$mb_id_esc}', 'manual', '{$remain_before}', '{$remain_after}', '{$now}')", false);
 
 $auto_next = '';
 if ((int)$row['jr_auto_jump'] === 1 && $remain_after > 0) {
