@@ -277,6 +277,7 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
 
 <p class="local_desc01" style="margin:12px 0;">
     사이트 기본 메타태그·OG·Twitter·Google 검증·캐노니컬·사이트맵 설정을 관리합니다. 저장 후 적용됩니다.
+    <strong>이 설정은 사이트 전체 &lt;head&gt; 메타태그·favicon·OG 이미지에 반영됩니다.</strong> (evealba 테마)
 </p>
 
 <form name="fsp_seo" id="fsp_seo" method="post" enctype="multipart/form-data" onsubmit="return confirm('저장하시겠습니까?');">
@@ -363,7 +364,7 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
                 <tr>
                     <th scope="row">기본 캐노니컬 URL</th>
                     <td>
-                        <input type="text" name="sp_canonical_url" class="frm_input" value="<?php echo sp_seo_h($seo['sp_canonical_url'] ?? ''); ?>" placeholder="https://scorepoint.co.kr (끝에 / 없이)">
+                        <input type="text" name="sp_canonical_url" class="frm_input" value="<?php echo sp_seo_h($seo['sp_canonical_url'] ?? ''); ?>" placeholder="https://evealba.co.kr (끝에 / 없이)">
                         <p class="frm_info">link rel="canonical" 에 사용. 비우면 자동 미출력.</p>
                         <p class="frm_info" style="margin-top:6px; padding:6px; background:#f0f7ff; border-radius:4px;"><strong>설명:</strong> 검색엔진에 "이 주소가 이 페이지의 대표 주소"라고 알려줍니다. www/비www, http/https 등 중복 수집을 줄이고 SEO에 도움이 됩니다. 홈이면 https://도메인 형태만 입력.</p>
                     </td>

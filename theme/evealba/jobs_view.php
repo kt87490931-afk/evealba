@@ -67,6 +67,15 @@ if ($_jv_row) {
 }
 
 $g5['title'] = $_jv_page_title . ' | ' . $config['cf_title'];
+// 채용 상세 OG 오버라이드 (head.sub.php에서 사용)
+if ($_jv_row) {
+    $g5['og_title'] = $_jv_page_title;
+    $g5['og_description'] = $_jv_meta_desc;
+    if ($_jv_clean_url) {
+        $_jv_full_for_head = (defined('G5_HTTPS_DOMAIN') && G5_HTTPS_DOMAIN) ? rtrim(G5_HTTPS_DOMAIN,'/') . $_jv_clean_url : 'http://' . $_SERVER['HTTP_HOST'] . $_jv_clean_url;
+        $g5['canonical_url'] = $_jv_full_for_head;
+    }
+}
 
 if ($_jv_is_owner && isset($_GET['mode']) && $_GET['mode'] === 'edit') {
     $jobs_mypage_active = 'ongoing';
@@ -78,17 +87,7 @@ if ($_jv_is_owner && isset($_GET['mode']) && $_GET['mode'] === 'edit') {
 ?>
 
 <?php if ($_jv_row) { ?>
-<!-- SEO: Dynamic Meta -->
-<meta name="description" content="<?php echo htmlspecialchars($_jv_meta_desc); ?>">
-<meta property="og:title" content="<?php echo htmlspecialchars($_jv_page_title); ?>">
-<meta property="og:description" content="<?php echo htmlspecialchars($_jv_meta_desc); ?>">
-<meta property="og:type" content="website">
-<?php if ($_jv_clean_url) {
-    $_jv_full_url = (defined('G5_HTTPS_DOMAIN') && G5_HTTPS_DOMAIN) ? rtrim(G5_HTTPS_DOMAIN,'/') . $_jv_clean_url : 'http://' . $_SERVER['HTTP_HOST'] . $_jv_clean_url;
-?><link rel="canonical" href="<?php echo htmlspecialchars($_jv_full_url); ?>">
-<meta property="og:url" content="<?php echo htmlspecialchars($_jv_full_url); ?>"><?php } ?>
-
-<!-- SEO: JSON-LD JobPosting -->
+<!-- SEO: JSON-LD JobPosting (meta/og는 head.sub.php에서 $g5 오버라이드로 출력) -->
 <script type="application/ld+json">
 <?php
 $_jld = array(

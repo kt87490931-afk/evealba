@@ -59,6 +59,55 @@ echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">'.PHP_EOL;
 
 if($config['cf_add_meta'])
     echo $config['cf_add_meta'].PHP_EOL;
+
+// Favicon (evealba)
+$_ev_favicon_url = G5_THEME_URL . '/img/favicon.png';
+$_ev_apple_url  = G5_THEME_URL . '/img/apple-touch-icon.png';
+?>
+<link rel="icon" type="image/png" href="<?php echo $_ev_favicon_url; ?>">
+<link rel="apple-touch-icon" sizes="180x180" href="<?php echo $_ev_apple_url; ?>">
+<?php
+// SEO 메타·OG·Twitter - sp_seo_config 연동 (adm/scorepoint/scorepoint_seo.php)
+if (!defined('G5_IS_ADMIN') || !G5_IS_ADMIN) {
+    @include_once(G5_LIB_PATH . '/ev_seo_head.inc.php');
+    if (!isset($_ev_seo)) $_ev_seo = array();
+    $_ev_meta_desc = !empty($_ev_seo['meta_description']) ? $_ev_seo['meta_description'] : '유흥업소 구인구직 No.1 플랫폼. AI 광고글 자동작성, 무료 썸네일 생성, 실시간 AI 매칭, 24시 AI 상담. evealba.co.kr';
+    $_ev_meta_kw  = !empty($_ev_seo['meta_keywords']) ? $_ev_seo['meta_keywords'] : '이브알바, 유흥알바, 구인구직, 룸살롱, 노래주점, 퍼블릭, 고객접대';
+    $_ev_og_title = (isset($g5['og_title']) && $g5['og_title']) ? $g5['og_title'] : (!empty($_ev_seo['og_title']) ? $_ev_seo['og_title'] : $g5_head_title);
+    $_ev_og_desc  = (isset($g5['og_description']) && $g5['og_description']) ? $g5['og_description'] : (!empty($_ev_seo['og_description']) ? $_ev_seo['og_description'] : $_ev_meta_desc);
+    $_ev_og_img   = (isset($g5['og_image']) && $g5['og_image']) ? $g5['og_image'] : (!empty($_ev_seo['og_image']) ? $_ev_seo['og_image'] : (rtrim(G5_THEME_URL,'/') . '/img/og_image.png'));
+    if ($_ev_og_img && strpos($_ev_og_img, 'http') !== 0) $_ev_og_img = rtrim(G5_URL,'/') . ($_ev_og_img[0]==='/' ? '' : '/') . ltrim($_ev_og_img,'/');
+    $_ev_og_type  = !empty($_ev_seo['og_type']) ? $_ev_seo['og_type'] : 'website';
+    $_ev_tw_card  = !empty($_ev_seo['twitter_card']) ? $_ev_seo['twitter_card'] : 'summary_large_image';
+    $_ev_canonical = (isset($g5['canonical_url']) && $g5['canonical_url']) ? $g5['canonical_url'] : (!empty($_ev_seo['canonical_url']) ? $_ev_seo['canonical_url'] : '');
+    if (!$_ev_canonical && defined('G5_HTTPS_DOMAIN') && G5_HTTPS_DOMAIN) $_ev_canonical = rtrim(G5_HTTPS_DOMAIN,'/') . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
+    if (!$_ev_canonical) $_ev_canonical = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? '/');
+?>
+<meta name="description" content="<?php echo htmlspecialchars($_ev_meta_desc, ENT_QUOTES, 'UTF-8'); ?>">
+<meta name="keywords" content="<?php echo htmlspecialchars($_ev_meta_kw, ENT_QUOTES, 'UTF-8'); ?>">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="<?php echo htmlspecialchars($_ev_og_type, ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="og:site_name" content="이브알바">
+<meta property="og:title" content="<?php echo htmlspecialchars($_ev_og_title, ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="og:description" content="<?php echo htmlspecialchars($_ev_og_desc, ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="og:image" content="<?php echo htmlspecialchars($_ev_og_img, ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="<?php echo htmlspecialchars($_ev_canonical, ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="<?php echo htmlspecialchars($_ev_tw_card, ENT_QUOTES, 'UTF-8'); ?>">
+<meta name="twitter:title" content="<?php echo htmlspecialchars($_ev_og_title, ENT_QUOTES, 'UTF-8'); ?>">
+<meta name="twitter:image" content="<?php echo htmlspecialchars($_ev_og_img, ENT_QUOTES, 'UTF-8'); ?>">
+<?php if ($_ev_canonical) { ?><link rel="canonical" href="<?php echo htmlspecialchars($_ev_canonical, ENT_QUOTES, 'UTF-8'); ?>"><?php } ?>
+<meta name="theme-color" content="#FF1B6B">
+<meta name="msapplication-TileColor" content="#FF1B6B">
+<?php if (!empty($_ev_seo['google_site_verification'])) { ?>
+<meta name="google-site-verification" content="<?php echo htmlspecialchars($_ev_seo['google_site_verification'], ENT_QUOTES, 'UTF-8'); ?>">
+<?php }
+if (!empty($_ev_seo['sp_schema_organization'])) {
+    echo '<script type="application/ld+json">' . "\n" . $_ev_seo['sp_schema_organization'] . "\n" . '</script>';
+}
+}
 ?>
 <title><?php echo $g5_head_title; ?></title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
