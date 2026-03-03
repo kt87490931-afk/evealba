@@ -102,12 +102,12 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       $_ct_items[] = array('badge'=>'[문의]','txt'=>get_text($r2['wr_subject']).($r2['wr_comment']>0?' · 답변완료':''),'url'=>$_ct_burl('ad_inquiry',$r2['wr_id']));
     }
   }
-  $_ct_faq = isset($g5['faq_table'])?$g5['faq_table']:$_ct_pfx.'faq';
-  $chk3 = @sql_query("SHOW TABLES LIKE '{$_ct_faq}'", false);
+  $_ct_faq_write = $_ct_pfx . 'write_faq';
+  $chk3 = @sql_query("SHOW TABLES LIKE '{$_ct_faq_write}'", false);
   if ($chk3 && @sql_num_rows($chk3)) {
-    $res3 = sql_query("SELECT fa_subject FROM {$_ct_faq} WHERE fm_id='1' ORDER BY fa_order ASC LIMIT 3", false);
+    $res3 = sql_query("SELECT wr_id, wr_subject FROM {$_ct_faq_write} WHERE wr_is_comment=0 ORDER BY wr_num ASC, wr_id DESC LIMIT 3", false);
     if ($res3) while ($r3=sql_fetch_array($res3)) {
-      $_ct_items[] = array('badge'=>'[FAQ]','txt'=>get_text($r3['fa_subject']),'url'=>$_ct_bbs.'/faq.php');
+      $_ct_items[] = array('badge'=>'[FAQ]','txt'=>get_text($r3['wr_subject']),'url'=>$_ct_bbs.'/board.php?bo_table=faq&wr_id='.(int)$r3['wr_id']);
     }
   }
   if (empty($_ct_items)) {

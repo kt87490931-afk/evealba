@@ -1,6 +1,14 @@
 <?php
 include_once('./_common.php');
 
+// 게시판 faq 연동: faq.php → board.php?bo_table=faq 리다이렉트
+$faq_redirect = G5_BBS_URL.'/board.php?bo_table=faq';
+header('HTTP/1.1 301 Moved Permanently');
+header('Location: '.$faq_redirect);
+exit;
+exit;
+
+// 아래는 구 FAQ 시스템 (미사용)
 //dbconfig파일에 $g5['faq_table'] , $g5['faq_master_table'] 배열변수가 있는지 체크
 if( !isset($g5['faq_table']) || !isset($g5['faq_master_table']) ){
     die('<meta charset="utf-8">관리자 모드에서 게시판관리->FAQ관리를 먼저 확인해 주세요.');

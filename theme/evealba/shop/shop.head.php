@@ -38,7 +38,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_JS_URL.'/owlcarousel/owl.carou
     		</ul>
             <?php } ?>
 			<ul id="hd_qnb">
-	            <li><a href="<?php echo G5_BBS_URL ?>/faq.php">FAQ</a></li>
+	            <li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=faq">FAQ</a></li>
 	            <li><a href="<?php echo G5_BBS_URL ?>/qalist.php">1:1문의</a></li>
 	            <li><a href="<?php echo G5_SHOP_URL ?>/personalpay.php">개인결제</a></li>
 	            <li><a href="<?php echo G5_SHOP_URL ?>/itemuselist.php">사용후기</a></li> 
@@ -120,7 +120,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_JS_URL.'/owlcarousel/owl.carou
 					<li><a href="<?php echo G5_SHOP_URL; ?>/mypage.php">마이페이지</a></li>
 		            <?php } ?>
 					<li><a href="<?php echo G5_SHOP_URL; ?>/orderinquiry.php">주문내역</a></li>
-					<li><a href="<?php echo G5_BBS_URL ?>/faq.php">FAQ</a></li>
+					<li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=faq">FAQ</a></li>
 		            <li><a href="<?php echo G5_BBS_URL ?>/qalist.php">1:1문의</a></li>
 		            <li><a href="<?php echo G5_SHOP_URL ?>/personalpay.php">개인결제</a></li>
 		            <li><a href="<?php echo G5_SHOP_URL ?>/itemuselist.php">사용후기</a></li>

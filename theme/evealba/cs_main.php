@@ -26,7 +26,7 @@ $_burl = function($bo_table, $wr_id = '') use ($_bbs) {
 $_notice_url = $_burl('notice');
 $_ad_inq_url = $_burl('ad_inquiry');
 $_ad_inq_write = $_bbs . '/write.php?bo_table=ad_inquiry';
-$_faq_url = $_bbs . '/faq.php';
+$_faq_url = $_bbs . '/board.php?bo_table=faq';
 
 // 공지사항 (notice)
 $_notice_rows = array();
@@ -57,12 +57,12 @@ if ($chk2 && @sql_num_rows($chk2)) {
   }
 }
 
-// FAQ (g5_faq)
+// FAQ (게시판 faq 연동 - g5_write_faq)
 $_faq_rows = array();
-$_faq_tbl = isset($g5['faq_table']) && $g5['faq_table'] ? $g5['faq_table'] : $_pfx.'faq';
-$chk_faq = @sql_query("SHOW TABLES LIKE '{$_faq_tbl}'", false);
+$_faq_write_tbl = $_pfx . 'write_faq';
+$chk_faq = @sql_query("SHOW TABLES LIKE '{$_faq_write_tbl}'", false);
 if ($chk_faq && @sql_num_rows($chk_faq)) {
-  $_faq_res = sql_query("SELECT fa_subject, fa_content FROM {$_faq_tbl} WHERE fm_id = '1' ORDER BY fa_order ASC, fa_id ASC LIMIT 15", false);
+  $_faq_res = sql_query("SELECT wr_subject AS fa_subject, wr_content AS fa_content FROM {$_faq_write_tbl} WHERE wr_is_comment = 0 ORDER BY wr_num ASC, wr_id DESC LIMIT 15", false);
   if ($_faq_res) {
     while ($fr = sql_fetch_array($_faq_res)) {
       $_faq_rows[] = $fr;
