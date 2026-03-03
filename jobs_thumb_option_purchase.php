@@ -56,9 +56,28 @@ if ($remaining_days <= 0) {
 
 $tb = 'g5_jobs_thumb_option_paid';
 if (!sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb}'", false))) {
-    $result['msg'] = '구매 기능을 사용할 수 없습니다.';
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    exit;
+    sql_query("CREATE TABLE IF NOT EXISTS `g5_jobs_thumb_option_paid` (
+        `jtp_id` int unsigned NOT NULL AUTO_INCREMENT,
+        `jr_id` int unsigned NOT NULL,
+        `mb_id` varchar(20) NOT NULL DEFAULT '',
+        `jtp_option_key` varchar(50) NOT NULL DEFAULT '',
+        `jtp_option_value` varchar(50) NOT NULL DEFAULT '',
+        `jtp_valid_until` date NOT NULL,
+        `jtp_amount` int NOT NULL DEFAULT 0,
+        `jtp_coupon_id` int unsigned NOT NULL DEFAULT 0,
+        `jtp_coupon_discount` int NOT NULL DEFAULT 0,
+        `jtp_order_id` varchar(100) NOT NULL DEFAULT '',
+        `jtp_created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (`jtp_id`),
+        KEY `jr_id` (`jr_id`),
+        KEY `mb_id` (`mb_id`),
+        KEY `jtp_valid_until` (`jtp_valid_until`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='썸네일 옵션 결제 내역'", false);
+    if (!sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb}'", false))) {
+        $result['msg'] = '구매 기능을 사용할 수 없습니다. (테이블 생성 실패)';
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
 }
 
 include_once(G5_LIB_PATH . '/ev_thumb_option.lib.php');
