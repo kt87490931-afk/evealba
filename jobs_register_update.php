@@ -33,7 +33,7 @@ if (!empty($job_data)) {
 if (!$data || !is_array($data)) {
     // JSON 실패 시 폼 필드에서 직접 추출 (fallback)
     $ai_tone_val = isset($_POST['ai_tone']) ? trim((string)$_POST['ai_tone']) : '';
-    if (!in_array($ai_tone_val, array('unnie', 'boss_male', 'pro'))) $ai_tone_val = 'unnie';
+    if (!in_array($ai_tone_val, array('unnie', 'boss_male', 'pro', 'tough_unnie', 'idol_style', 'partner_pro'))) $ai_tone_val = 'unnie';
     $data = array(
         'job_nickname' => isset($_POST['job_nickname']) ? stripslashes((string)$_POST['job_nickname']) : '',
         'job_company' => isset($_POST['job_company']) ? stripslashes((string)$_POST['job_company']) : '',

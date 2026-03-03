@@ -213,8 +213,14 @@ $sns_telegram = !empty($data['job_telegram']) ? trim($data['job_telegram']) : ''
 $banner_comp = $nick ?: $comp ?: '—';
 $biz_title = isset($data['job_title']) && trim($data['job_title']) !== '' ? trim($data['job_title']) : ($row['jr_title'] ?: ($row['jr_subject_display'] ?? ''));
 
-$saved_theme = isset($data['theme']) ? trim($data['theme']) : 'pink';
-if (!in_array($saved_theme, array('pink', 'black', 'blue'))) $saved_theme = 'pink';
+$_ai_tone = isset($data['ai_tone']) ? trim($data['ai_tone']) : (($_aic && isset($_aic['_ai_tone'])) ? trim($_aic['_ai_tone']) : 'unnie');
+if (!in_array($_ai_tone, array('unnie', 'boss_male', 'pro', 'tough_unnie', 'idol_style', 'partner_pro'))) $_ai_tone = 'unnie';
+$_tone_preset = isset($gemini_tone_presets[$_ai_tone]) ? $gemini_tone_presets[$_ai_tone] : $gemini_tone_presets['unnie'];
+$_default_theme = $_tone_preset['theme'] ?? 'pink';
+$_intro_bar_text = $_tone_preset['intro_bar'] ?? '💖 안녕하세요, 예비 공주님들!';
+$saved_theme = isset($data['theme']) ? trim($data['theme']) : $_default_theme;
+$valid_themes = array('pink', 'charcoal', 'blue', 'red', 'green', 'black');
+if (!in_array($saved_theme, $valid_themes)) $saved_theme = $_default_theme;
 
 $thumb_gradient = isset($data['thumb_gradient']) ? trim($data['thumb_gradient']) : '';
 $thumb_title = isset($data['thumb_title']) ? trim($data['thumb_title']) : '';
@@ -745,14 +751,17 @@ function toggleAutoJump(jrId,on){
   <div class="ts-inner">
     <span class="ts-label">🎨 테마</span>
     <button type="button" class="ts-btn ts-pink<?php echo $saved_theme==='pink'?' active':''; ?>" data-theme="pink"><span class="ts-dot"></span> 핑크</button>
-    <button type="button" class="ts-btn ts-black<?php echo $saved_theme==='black'?' active':''; ?>" data-theme="black"><span class="ts-dot"></span> 블랙</button>
+    <button type="button" class="ts-btn ts-charcoal<?php echo $saved_theme==='charcoal'?' active':''; ?>" data-theme="charcoal"><span class="ts-dot"></span> 차콜</button>
     <button type="button" class="ts-btn ts-blue<?php echo $saved_theme==='blue'?' active':''; ?>" data-theme="blue"><span class="ts-dot"></span> 블루</button>
+    <button type="button" class="ts-btn ts-red<?php echo $saved_theme==='red'?' active':''; ?>" data-theme="red"><span class="ts-dot"></span> 레드</button>
+    <button type="button" class="ts-btn ts-green<?php echo $saved_theme==='green'?' active':''; ?>" data-theme="green"><span class="ts-dot"></span> 그린</button>
+    <button type="button" class="ts-btn ts-black<?php echo $saved_theme==='black'?' active':''; ?>" data-theme="black"><span class="ts-dot"></span> 블랙</button>
     <button type="button" class="ts-btn-save" id="btn-save-theme" onclick="saveThemeChoice()" style="margin-left:8px;padding:5px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-size:11px;font-weight:900;cursor:pointer;">💾 테마저장</button>
   </div>
 </div>
 <?php } ?>
 
-<article id="bo_v" class="ev-view-wrap jobs-view-wrap jobs-view-editor-wrap<?php echo $saved_theme !== 'pink' ? ' theme-'.$saved_theme : ''; ?>">
+<article id="bo_v" class="ev-view-wrap jobs-view-wrap jobs-view-editor-wrap<?php echo $saved_theme !== 'pink' ? ' theme-'.htmlspecialchars($saved_theme) : ''; ?>">
   <?php
   /* ═══ AI 생성 필드 매핑 (jr_data) ═══
    * ai_intro         : 인사말
@@ -882,7 +891,7 @@ function toggleAutoJump(jrId,on){
         <?php if ($can_edit) { ?><button type="button" class="btn-edit" onclick="openModal('recruit')">✏️ 수정</button><?php } ?>
       </div>
       <div class="section-body">
-        <div class="intro-bar">💖 안녕하세요, 예비 공주님들!</div>
+        <div class="intro-bar"><?php echo htmlspecialchars($_intro_bar_text); ?></div>
         <div class="section-text" id="disp-recruit"><?php echo nl2br(htmlspecialchars($ai_intro ?? '')); ?></div>
       </div>
     </div>
@@ -1063,7 +1072,7 @@ function toggleAutoJump(jrId,on){
 
     <!-- CTA 하단 연락처 (톤별 마무리 인사말) -->
     <?php
-      $_cta_tone = isset($data['ai_tone']) ? $data['ai_tone'] : 'unnie';
+      $_cta_tone = $_ai_tone;
       $_cta_default = ['title' => '💌 지금 바로 연락주세요! 기다리고 있을게요~', 'sub' => '자다가 깨서 연락 주셔도 괜찮아요! 🌙 24시간 열려 있어요'];
       $_cta = isset($gemini_closing[$_cta_tone]) ? $gemini_closing[$_cta_tone] : $_cta_default;
     ?>
@@ -1896,12 +1905,13 @@ function toggleAutoJump(jrId,on){
   calcThumbTotal();
 
   var _currentTheme = <?php echo json_encode($saved_theme); ?>;
+  var themeClasses = ['theme-pink','theme-charcoal','theme-blue','theme-red','theme-green','theme-black'];
   function setTheme(theme){
     var article = document.getElementById('bo_v');
     if(!article) return;
-    article.classList.remove('theme-black','theme-blue');
-    if(theme !== 'pink') article.classList.add('theme-'+theme);
-    _currentTheme = theme;
+    themeClasses.forEach(function(c){ article.classList.remove(c); });
+    if(theme && theme !== 'pink') article.classList.add('theme-'+theme);
+    _currentTheme = theme || 'pink';
     document.querySelectorAll('.ts-btn[data-theme]').forEach(function(b){b.classList.remove('active');});
     var btn=document.querySelector('.ts-'+theme);
     if(btn)btn.classList.add('active');

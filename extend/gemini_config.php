@@ -161,3 +161,13 @@ $gemini_closing = [
         'sub'   => '비즈니스 파트너로서 최선의 조건을 제안드리겠습니다. 🛡️',
     ],
 ];
+
+// 톤별 인사말 + 기본 테마 매핑 (6개 톤 = 6개 컬러)
+$gemini_tone_presets = [
+    'unnie'       => ['intro_bar' => '💖 안녕하세요, 예비 공주님들!', 'theme' => 'pink'],
+    'boss_male'   => ['intro_bar' => '☕ 존경하는 분께,', 'theme' => 'charcoal'],
+    'pro'         => ['intro_bar' => '💎 프로를 찾으시는 분께,', 'theme' => 'blue'],
+    'tough_unnie' => ['intro_bar' => '🔥 와줘서 고마워!', 'theme' => 'red'],
+    'idol_style'  => ['intro_bar' => '✨ 안녕~ 반가워요!', 'theme' => 'green'],
+    'partner_pro' => ['intro_bar' => '🤝 존경하는 미래의 비즈니스 파트너 여러분께,', 'theme' => 'black'],
+];

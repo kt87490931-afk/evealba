@@ -12,7 +12,7 @@ if (!$is_member) {
 $jr_id = isset($_POST['jr_id']) ? (int)$_POST['jr_id'] : 0;
 $theme = isset($_POST['theme']) ? trim($_POST['theme']) : 'pink';
 
-if (!$jr_id || !in_array($theme, array('pink', 'black', 'blue'))) {
+if (!$jr_id || !in_array($theme, array('pink', 'charcoal', 'blue', 'red', 'green', 'black'))) {
     echo json_encode(array('success' => false, 'msg' => '잘못된 요청입니다.'));
     exit;
 }

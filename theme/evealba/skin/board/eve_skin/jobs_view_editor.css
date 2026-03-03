@@ -184,17 +184,23 @@
 
 /* ── 테마 스위처 ── */
 #theme-switcher{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #e8e8e8;padding:10px 16px;}
-.ts-inner{max-width:958px;margin:0 auto;display:flex;align-items:center;gap:10px;}
+.ts-inner{max-width:958px;margin:0 auto;display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
 .ts-label{font-size:12px;font-weight:700;color:#888;margin-right:4px;}
 .ts-btn{display:flex;align-items:center;gap:6px;border:2px solid transparent;border-radius:20px;font-size:12px;font-weight:700;padding:6px 16px;cursor:pointer;font-family:inherit;transition:all .2s;background:#f5f5f5;color:#666;}
 .ts-btn .ts-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
 .ts-pink .ts-dot{background:linear-gradient(135deg,#FF6B35,#FF1B6B);}
-.ts-black .ts-dot{background:linear-gradient(135deg,#333,#111);}
+.ts-charcoal .ts-dot{background:linear-gradient(135deg,#4a4a4a,#2c2c2c);}
 .ts-blue .ts-dot{background:linear-gradient(135deg,#1976D2,#0D47A1);}
+.ts-red .ts-dot{background:linear-gradient(135deg,#E53935,#B71C1C);}
+.ts-green .ts-dot{background:linear-gradient(135deg,#43A047,#2E7D32);}
+.ts-black .ts-dot{background:linear-gradient(135deg,#333,#111);}
 .ts-btn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.12);}
 .ts-btn.active.ts-pink{background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(255,27,107,.35);}
-.ts-btn.active.ts-black{background:linear-gradient(135deg,#333,#111);color:#FFD700;border-color:transparent;box-shadow:0 2px 12px rgba(0,0,0,.4);}
+.ts-btn.active.ts-charcoal{background:linear-gradient(135deg,#4a4a4a,#2c2c2c);color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(0,0,0,.35);}
 .ts-btn.active.ts-blue{background:linear-gradient(135deg,#1976D2,#0D47A1);color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(21,101,192,.4);}
+.ts-btn.active.ts-red{background:linear-gradient(135deg,#E53935,#B71C1C);color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(229,57,53,.4);}
+.ts-btn.active.ts-green{background:linear-gradient(135deg,#43A047,#2E7D32);color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(67,160,71,.4);}
+.ts-btn.active.ts-black{background:linear-gradient(135deg,#333,#111);color:#FFD700;border-color:transparent;box-shadow:0 2px 12px rgba(0,0,0,.4);}
 .ts-btn.active .ts-dot{background:rgba(255,255,255,.4);}
 
 /* 테마 오버라이드 */
@@ -229,6 +235,49 @@
 .ev-view-wrap.theme-blue .card-pink .p-card-title{color:#1565C0;}
 .ev-view-wrap.theme-blue .section-text strong{color:#1565C0;}
 .ev-view-wrap.theme-blue .detail-badge{background:linear-gradient(135deg,#1976D2,#1565C0);}
+
+/* 차콜 테마 (세심한 남사장님 톤) */
+.ev-view-wrap.theme-charcoal{
+  --th-main:#5a5a5a; --th-main2:#4a4a4a; --th-dark:#2c2c2c; --th-dark2:#1a1a1a;
+  --th-light:#7a7a7a; --th-pale:#e0e0e0; --pink:#5a5a5a; --deep:#3a3a3a; --light:#7a7a7a; --dark:#2c2c2c; --orange:#6a6a6a; --border:#888;
+}
+.ev-view-wrap.theme-charcoal .top-header{background:linear-gradient(135deg,#2c2c2c,#4a4a4a,#5a5a5a);}
+.ev-view-wrap.theme-charcoal .section{background:#f8f8f8;border-color:#e0e0e0;}
+.ev-view-wrap.theme-charcoal .section-label{color:#4a4a4a;}
+.ev-view-wrap.theme-charcoal .intro-bar{color:#4a4a4a;border-left-color:#4a4a4a;}
+.ev-view-wrap.theme-charcoal .detail-badge{background:linear-gradient(135deg,#5a5a5a,#4a4a4a);}
+.ev-view-wrap.theme-charcoal .cta-footer{background:linear-gradient(135deg,#2c2c2c,#4a4a4a);}
+.ev-view-wrap.theme-charcoal .card-pink{background:linear-gradient(135deg,#f5f5f5,#eeeeee);border-color:#ddd;}
+.ev-view-wrap.theme-charcoal .card-pink .p-card-title{color:#4a4a4a;}
+.ev-view-wrap.theme-charcoal .detail-box{border-left-color:#7a7a7a;}
+
+/* 레드 테마 (화끈한 왕언니 톤) */
+.ev-view-wrap.theme-red{
+  --th-main:#E53935; --th-main2:#C62828; --th-dark:#1a0808; --th-dark2:#0d0404;
+  --th-light:#EF5350; --th-pale:#FFCDD2; --pink:#E53935; --deep:#B71C1C; --light:#EF5350; --dark:#1a0808; --orange:#FF5722; --border:#ffcdd2;
+}
+.ev-view-wrap.theme-red .top-header{background:linear-gradient(135deg,#1a0808,#B71C1C,#E53935);}
+.ev-view-wrap.theme-red .section-label{color:#E53935;}
+.ev-view-wrap.theme-red .intro-bar{color:#E53935;border-left-color:#E53935;}
+.ev-view-wrap.theme-red .detail-badge{background:linear-gradient(135deg,#FF5722,#E53935);}
+.ev-view-wrap.theme-red .cta-footer{background:linear-gradient(135deg,#1a0808,#B71C1C);}
+.ev-view-wrap.theme-red .card-pink{background:linear-gradient(135deg,#ffebee,#ffcdd2);border-color:#ef9a9a;}
+.ev-view-wrap.theme-red .card-pink .p-card-title{color:#C62828;}
+.ev-view-wrap.theme-red .detail-box{border-left-color:#EF5350;}
+
+/* 그린 테마 (화사한 아이돌 톤) */
+.ev-view-wrap.theme-green{
+  --th-main:#43A047; --th-main2:#2E7D32; --th-dark:#0d1f0d; --th-dark2:#061806;
+  --th-light:#66BB6A; --th-pale:#C8E6C9; --pink:#43A047; --deep:#1B5E20; --light:#66BB6A; --dark:#0d1f0d; --orange:#4CAF50; --border:#c8e6c9;
+}
+.ev-view-wrap.theme-green .top-header{background:linear-gradient(135deg,#0d1f0d,#2E7D32,#43A047);}
+.ev-view-wrap.theme-green .section-label{color:#2E7D32;}
+.ev-view-wrap.theme-green .intro-bar{color:#2E7D32;border-left-color:#2E7D32;}
+.ev-view-wrap.theme-green .detail-badge{background:linear-gradient(135deg,#4CAF50,#2E7D32);}
+.ev-view-wrap.theme-green .cta-footer{background:linear-gradient(135deg,#0d1f0d,#2E7D32);}
+.ev-view-wrap.theme-green .card-pink{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-color:#a5d6a7;}
+.ev-view-wrap.theme-green .card-pink .p-card-title{color:#2E7D32;}
+.ev-view-wrap.theme-green .detail-box{border-left-color:#66BB6A;}
 
 /* ── 모달 (eve_alba_ad_editor_3 100%) ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:16px;}
