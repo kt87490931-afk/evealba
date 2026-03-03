@@ -154,7 +154,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sp_seo_form_check']))
     $sp_twitter_card = isset($_POST['sp_twitter_card']) ? trim($_POST['sp_twitter_card']) : 'summary_large_image';
     if ($sp_twitter_card === '') $sp_twitter_card = 'summary_large_image';
     $sp_google_site_verification = isset($_POST['sp_google_site_verification']) ? trim($_POST['sp_google_site_verification']) : '';
-    // content 값만 저장: 따옴표·WWW·공백 제거 후 영문·숫자·일부기호만 유지
+    // content 값만 저장: 메타태그 전체 붙여넣은 경우 content="..." 추출
+    if (preg_match('/content\s*=\s*["\']([^"\']+)["\']/', $sp_google_site_verification, $m)) {
+        $sp_google_site_verification = trim($m[1]);
+    }
     $sp_google_site_verification = preg_replace('/^["\']?\\s*(?:WWW)?["\']?\\s*/i', '', $sp_google_site_verification);
     $sp_google_site_verification = trim(preg_replace('/["\']\\s*$/', '', $sp_google_site_verification));
     $sp_google_site_verification = preg_replace('/[^a-zA-Z0-9_-]/', '', $sp_google_site_verification);
