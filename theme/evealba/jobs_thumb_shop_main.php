@@ -9,7 +9,7 @@ $thumb_shop_url = $jobs_base . '/jobs_thumb_shop.php';
 
 if (!$is_member) {
     echo '<div class="thumb-shop-guest" style="padding:40px 20px;text-align:center;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);">';
-    echo '<h2 style="margin:0 0 12px;font-size:20px;color:#333;">🖼️ 썸네일상점</h2>';
+    echo '<h2 style="margin:0 0 12px;font-size:20px;color:#333;">🛒 썸네일상점</h2>';
     echo '<p style="margin:0 0 20px;color:#666;line-height:1.6;">채용광고 썸네일을 꾸미고 유료 옵션을 구매하려면<br>로그인 후 이용해 주세요.</p>';
     echo '<a href="'.G5_BBS_URL.'/login.php?url='.urlencode($thumb_shop_url).'" style="display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#FF1B6B,#C90050);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;">로그인</a>';
     echo '</div>';
@@ -25,7 +25,7 @@ if ($member['mb_id']) {
 
 if (!$_is_biz) {
     echo '<div class="thumb-shop-personal" style="padding:40px 20px;text-align:center;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);">';
-    echo '<h2 style="margin:0 0 12px;font-size:20px;color:#333;">🖼️ 썸네일상점</h2>';
+    echo '<h2 style="margin:0 0 12px;font-size:20px;color:#333;">🛒 썸네일상점</h2>';
     echo '<p style="margin:0 0 20px;color:#666;line-height:1.6;">썸네일 옵션은 기업회원 전용 서비스입니다.</p>';
     echo '<a href="'.$jobs_base.'/jobs.php'" style="display:inline-block;padding:12px 24px;background:#444;color:#fff;border-radius:8px;text-decoration:none;">채용정보로 이동</a>';
     echo '</div>';
@@ -44,7 +44,7 @@ if ($chk && sql_num_rows($chk)) {
 }
 ?>
 <div class="thumb-shop-main" style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
-  <h2 style="margin:0 0 8px;font-size:22px;color:#333;">🖼️ 썸네일상점</h2>
+  <h2 style="margin:0 0 8px;font-size:22px;color:#333;">🛒 썸네일상점</h2>
   <p style="margin:0 0 24px;color:#666;font-size:14px;">채용광고 썸네일을 꾸미고 유료 옵션을 구매하세요. 구매 시 쿠폰을 적용할 수 있습니다.</p>
 
   <?php if (empty($ongoing_list)) { ?>
