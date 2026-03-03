@@ -26,8 +26,6 @@ $_burl = function($bo_table, $wr_id = '') use ($_bbs) {
 $_notice_url = $_burl('notice');
 $_ad_inq_url = $_burl('ad_inquiry');
 $_ad_inq_write = $_bbs . '/write.php?bo_table=ad_inquiry';
-$_qa_url = $_burl('qa');
-$_qa_write = $_bbs . '/write.php?bo_table=qa';
 $_faq_url = $_bbs . '/faq.php';
 
 // 공지사항 (notice)
@@ -55,19 +53,6 @@ if ($chk2 && @sql_num_rows($chk2)) {
   if ($_ad_res) {
     while ($ar = sql_fetch_array($_ad_res)) {
       $_ad_rows[] = $ar;
-    }
-  }
-}
-
-// Q&A 문의 게시판 (qa)
-$_qa_rows = array();
-$_qa_tb = $_pfx . 'write_qa';
-$chk3 = @sql_query("SHOW TABLES LIKE '{$_qa_tb}'", false);
-if ($chk3 && @sql_num_rows($chk3)) {
-  $_qa_res = sql_query("SELECT wr_id, wr_subject, wr_datetime, wr_comment FROM {$_qa_tb} WHERE wr_is_comment = 0 ORDER BY wr_num ASC, wr_id DESC LIMIT 9", false);
-  if ($_qa_res) {
-    while ($qr = sql_fetch_array($_qa_res)) {
-      $_qa_rows[] = $qr;
     }
   }
 }
@@ -120,12 +105,6 @@ if ($chk_faq && @sql_num_rows($chk_faq)) {
         <div class="cs-entry-title">FAQ 자주하는 질문</div>
         <div class="cs-entry-desc">쉽게 한눈에 확인하는<br>궁금증!</div>
         <span class="cs-entry-btn">FAQ 게시판 →</span>
-      </a>
-      <a href="<?php echo htmlspecialchars($_qa_url, ENT_QUOTES); ?>" class="cs-entry-card">
-        <div class="cs-entry-icon cei-purple">💬</div>
-        <div class="cs-entry-title">Q&amp;A 문의 게시판</div>
-        <div class="cs-entry-desc">무엇이든 물어보세요!</div>
-        <span class="cs-entry-btn">Q&amp;A 게시판 →</span>
       </a>
     </div>
 
@@ -200,10 +179,8 @@ if ($chk_faq && @sql_num_rows($chk_faq)) {
 
     </div>
 
-    <!-- 광고문의 & 일반문의 + Q&A 문의 게시판 -->
+    <!-- 광고문의 & 일반문의 -->
     <div class="cs-grid-2">
-
-      <!-- 광고문의 & 일반문의 -->
       <div id="qna-section" class="cs-board-card bh-qna">
         <div class="cs-board-header">
           <div class="cs-board-title-row">
@@ -240,43 +217,4 @@ if ($chk_faq && @sql_num_rows($chk_faq)) {
 <?php } } ?>
         </div>
       </div>
-
-      <!-- Q&A 문의 게시판 -->
-      <div id="qa-section" class="cs-board-card bh-qna">
-        <div class="cs-board-header">
-          <div class="cs-board-title-row">
-            <span class="cs-board-icon">💬</span>
-            <div>
-              <div class="cs-board-name">Q&amp;A 문의 게시판</div>
-              <div class="cs-board-desc">무엇이든 물어보세요</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:6px;">
-            <a href="<?php echo htmlspecialchars($_qa_url, ENT_QUOTES); ?>" class="board-more">더보기</a>
-            <a href="<?php echo htmlspecialchars($_qa_write, ENT_QUOTES); ?>" class="board-write-btn">✏️ 문의하기</a>
-          </div>
-        </div>
-        <div class="cs-post-list">
-<?php if (empty($_qa_rows)) { ?>
-          <div class="cs-post-item" style="justify-content:center;color:#999;font-size:13px;">등록된 문의가 없습니다</div>
-<?php } else {
-  foreach ($_qa_rows as $_qi => $_qr) {
-    $_subj = get_text($_qr['wr_subject']);
-    $_subj_short = mb_strlen($_subj, 'UTF-8') > 25 ? mb_substr($_subj, 0, 25, 'UTF-8').'…' : $_subj;
-    $_date = substr($_qr['wr_datetime'], 0, 10);
-    $_has_reply = (int)$_qr['wr_comment'] > 0;
-    $_is_new = $_date >= date('Y-m-d', strtotime('-3 days'));
-    $_badge = $_is_new ? 'pb-new' : ($_has_reply ? 'pb-answer' : 'pb-wait');
-    $_badge_txt = $_is_new ? 'NEW' : ($_has_reply ? '답변완료' : '대기중');
-    $_link = $_burl('qa', $_qr['wr_id']);
-?>
-          <div class="cs-post-item">
-            <span class="post-badge <?php echo $_badge; ?>"><?php echo $_badge_txt; ?></span>
-            <a href="<?php echo htmlspecialchars($_link, ENT_QUOTES); ?>" class="post-title"><?php echo htmlspecialchars($_subj_short, ENT_QUOTES); ?></a>
-            <span class="post-meta"><?php echo $_date; ?></span>
-          </div>
-<?php } } ?>
-        </div>
-      </div>
-
     </div>
