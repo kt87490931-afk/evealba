@@ -58,7 +58,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="nav-item<?php echo ($nav_active==='jobs') ? ' active' : ''; ?>"><span class="nav-icon">📋</span>채용정보</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/talent.php' : '/talent.php'; ?>" class="nav-item<?php echo ($nav_active==='talent') ? ' active' : ''; ?>"><span class="nav-icon">👑</span>인재정보</a>
     <a href="javascript:void(0);" class="nav-item" onclick="var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';window.open(u,'eveChatPopup','width='+Math.min(420,screen.availWidth)+',height='+Math.min(720,screen.availHeight)+',scrollbars=no,resizable=yes');return false;"><span class="nav-icon">💬</span>지역별채팅</a>
-    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/sudabang.php' : '/sudabang.php'; ?>" class="nav-item<?php echo ($nav_active==='sudabang') ? ' active' : ''; ?>"><span class="nav-icon">💬</span>이브수다방</a>
+    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/sudabang.php' : '/sudabang.php'; ?>" class="nav-item<?php echo ($nav_active==='sudabang') ? ' active' : ''; ?>"><span class="nav-icon">😆</span>이브수다방</a>
     <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="nav-item<?php echo ($nav_active==='used') ? ' active' : ''; ?>"><span class="nav-icon">🏪</span>중고거래</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/cs.php' : '/cs.php'; ?>" class="nav-item<?php echo ($nav_active==='cs') ? ' active' : ''; ?>"><span class="nav-icon">🎀</span>고객센터</a>
   </div>
@@ -243,7 +243,7 @@ $_jobs_base = $_base;
         <a href="<?php echo $_jobs_base; ?>/jobs.php" class="msm-link">📋 채용정보</a>
         <a href="<?php echo $_jobs_base; ?>/talent.php" class="msm-link">👑 인재정보</a>
         <a href="javascript:void(0);" class="msm-link" onclick="var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';window.open(u,'eveChatPopup','width='+Math.min(420,screen.availWidth)+',height='+Math.min(720,screen.availHeight)+',scrollbars=no,resizable=yes');document.getElementById('mobileSlideMenu').classList.remove('open');document.body.style.overflow='';return false;">💬 지역별채팅</a>
-        <a href="<?php echo $_jobs_base; ?>/sudabang.php" class="msm-link">💬 이브수다방</a>
+        <a href="<?php echo $_jobs_base; ?>/sudabang.php" class="msm-link">😆 이브수다방</a>
         <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="msm-link">🏪 중고거래</a>
         <a href="<?php echo $_jobs_base; ?>/cs.php" class="msm-link">🎀 고객센터</a>
       </div>

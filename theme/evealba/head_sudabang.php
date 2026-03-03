@@ -26,7 +26,7 @@ include G5_THEME_PATH.'/inc/head_top.php';
   <div class="breadcrumb-inner">
     <a href="<?php echo G5_URL ?>">🏠 메인</a>
     <span>›</span>
-    <span class="current">💬 이브수다방</span>
+    <span class="current">😆 이브수다방</span>
   </div>
 </div>
 
