@@ -225,8 +225,10 @@ $thumb_text_color = isset($data['thumb_text_color']) ? trim($data['thumb_text_co
 $thumb_border = isset($data['thumb_border']) ? trim($data['thumb_border']) : '';
 
 $_paid_options_display = array();
+$_paid_options_map = array();
 $_available_coupons = array();
 if (function_exists('ev_thumb_get_paid_options_with_dates')) $_paid_options_display = ev_thumb_get_paid_options_with_dates($jr_id);
+if (function_exists('ev_thumb_get_paid_options')) $_paid_options_map = ev_thumb_get_paid_options($jr_id);
 if (function_exists('ev_coupon_list_available_thumb') && $is_member && !empty($member['mb_id'])) {
     $_available_coupons = ev_coupon_list_available_thumb($member['mb_id'], 999999);
 }
@@ -1587,6 +1589,8 @@ function toggleAutoJump(jrId,on){
   var _thumbWave = <?php echo $thumb_wave ? 'true' : 'false'; ?>;
   var _thumbTextColor = '<?php echo addslashes($thumb_text_color); ?>';
   var _thumbBorder = '<?php echo addslashes($thumb_border); ?>';
+  var _paidOptionsMap = <?php echo json_encode($_paid_options_map); ?>;
+  function _isOptionPaid(key, val){ if(!_paidOptionsMap[key]) return false; return _paidOptionsMap[key].indexOf(val) >= 0; }
 
   function _applyBannerBg(){
     var banner = document.getElementById('tg-pv-banner');
@@ -1737,32 +1741,32 @@ function toggleAutoJump(jrId,on){
     var borderNames = {'gold':'골드 테두리','pink':'핫핑크 테두리','charcoal':'차콜 테두리','royalblue':'로얄블루 테두리','royalpurple':'로얄퍼플 테두리'};
     var premNames = {'P1':'메탈릭골드','P2':'메탈릭실버','P3':'카본','P4':'오로라'};
 
-    if(_thumbIcon && days > 0){
+    if(_thumbIcon && days > 0 && !_isOptionPaid('badge', _thumbIcon)){
       var ic = document.querySelector('#tg-icon-grid .badge-opt.selected');
       var label = ic ? (ic.getAttribute('data-icon-label')||'뱃지') : '뱃지';
       var cost = days * _optDailyRates.badge;
       items.push({name: '💖 '+label+' ('+days+'일)', price: cost});
       total += cost;
     }
-    if(_thumbMotion && days > 0){
+    if(_thumbMotion && days > 0 && !_isOptionPaid('motion', _thumbMotion)){
       var mLabel = motionNames[_thumbMotion] || '모션';
       var cost2 = days * _optDailyRates.motion;
       items.push({name: '✨ '+mLabel+' ('+days+'일)', price: cost2});
       total += cost2;
     }
-    if(_thumbWave && days > 0){
+    if(_thumbWave && days > 0 && !_isOptionPaid('wave', '1')){
       var cost3 = days * _optDailyRates.wave;
       items.push({name: '🌊 배경 웨이브 ('+days+'일)', price: cost3});
       total += cost3;
     }
-    if(_thumbBorder && days > 0){
+    if(_thumbBorder && days > 0 && !_isOptionPaid('border', _thumbBorder)){
       var bLabel = borderNames[_thumbBorder] || '테두리';
       var cost4 = days * _optDailyRates.border;
       items.push({name: '🖼️ '+bLabel+' ('+days+'일)', price: cost4});
       total += cost4;
     }
     var isPremium = _thumbSelected && (String(_thumbSelected).charAt(0)==='P');
-    if(isPremium && days > 0){
+    if(isPremium && days > 0 && !_isOptionPaid('premium_color', _thumbSelected)){
       var pLabel = premNames[_thumbSelected] || '프리미엄 컬러';
       var cost5 = days * _optDailyRates.premium;
       items.push({name: '🎨 '+pLabel+' ('+days+'일)', price: cost5});
