@@ -13,4 +13,6 @@ $menu['menu910'] = array(
     array('910900', 'SEO 최적화', G5_ADMIN_URL . '/scorepoint/scorepoint_seo.php?sub_menu=910900', 'evealba_seo'),
     array('910910', '점프 헬스', G5_ADMIN_URL . '/eve_jump_health.php', 'evealba_jump_health'),
     array('910920', '특수배너 관리', G5_ADMIN_URL . '/eve_special_banner.php', 'evealba_special_banner'),
+    array('910930', '썸네일상점 관리', G5_ADMIN_URL . '/eve_thumb_shop.php', 'evealba_thumb_shop'),
+    array('910940', '쿠폰 관리', G5_ADMIN_URL . '/eve_coupon_list.php', 'evealba_coupon'),
 );

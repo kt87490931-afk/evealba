@@ -49,11 +49,41 @@ if (empty($updates)) {
 }
 
 $mb_id_esc = sql_escape_string($member['mb_id']);
-$row = sql_fetch("SELECT jr_id, jr_data FROM g5_jobs_register WHERE jr_id = '{$jr_id}' AND mb_id = '{$mb_id_esc}'");
+$row = sql_fetch("SELECT jr_id, jr_data, jr_end_date FROM g5_jobs_register WHERE jr_id = '{$jr_id}' AND mb_id = '{$mb_id_esc}'");
 if (!$row) {
     $result['msg'] = '권한이 없거나 데이터가 없습니다.';
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+// 유료 썸네일 옵션 결제 여부 검증 (g5_jobs_thumb_option_paid)
+$tb_paid = 'g5_jobs_thumb_option_paid';
+if (sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb_paid}'", false))) {
+    @include_once(G5_LIB_PATH.'/ev_thumb_option.lib.php');
+    if (function_exists('ev_thumb_is_option_paid')) {
+        $unpaid = array();
+        if (!empty($updates['thumb_icon']) && !ev_thumb_is_option_paid($jr_id, 'badge', $updates['thumb_icon'])) {
+            $unpaid[] = '뱃지';
+        }
+        if (!empty($updates['thumb_motion']) && !ev_thumb_is_option_paid($jr_id, 'motion', $updates['thumb_motion'])) {
+            $unpaid[] = '제목모션';
+        }
+        if (!empty($updates['thumb_wave']) && (int)$updates['thumb_wave'] > 0 && !ev_thumb_is_option_paid($jr_id, 'wave', '1')) {
+            $unpaid[] = '배경웨이브';
+        }
+        if (!empty($updates['thumb_border']) && !ev_thumb_is_option_paid($jr_id, 'border', $updates['thumb_border'])) {
+            $unpaid[] = '테두리';
+        }
+        $grad = isset($updates['thumb_gradient']) ? $updates['thumb_gradient'] : '';
+        if ($grad && preg_match('/^P[1-4]$/', $grad) && !ev_thumb_is_option_paid($jr_id, 'premium_color', $grad)) {
+            $unpaid[] = '유료컬러';
+        }
+        if (!empty($unpaid)) {
+            $result['msg'] = '유료결제가 필요한 상품입니다. (' . implode(', ', $unpaid) . ') 썸네일상점에서 구매해 주세요.';
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+    }
 }
 
 $jr_data = $row['jr_data'] ? json_decode($row['jr_data'], true) : array();

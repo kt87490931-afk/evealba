@@ -56,8 +56,8 @@ $nav_active = isset($nav_active) ? $nav_active : '';
 <nav>
   <div class="nav-scroll">
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="nav-item<?php echo ($nav_active==='jobs') ? ' active' : ''; ?>"><span class="nav-icon">📋</span>채용정보</a>
-    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs.php' : '/jobs.php'; ?>" class="nav-item"><span class="nav-icon">📍</span>지역별채용</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/talent.php' : '/talent.php'; ?>" class="nav-item<?php echo ($nav_active==='talent') ? ' active' : ''; ?>"><span class="nav-icon">👑</span>인재정보</a>
+    <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_thumb_shop.php' : '/jobs_thumb_shop.php'; ?>" class="nav-item<?php echo ($nav_active==='thumb_shop') ? ' active' : ''; ?>"><span class="nav-icon">🖼️</span>썸네일상점</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/sudabang.php' : '/sudabang.php'; ?>" class="nav-item<?php echo ($nav_active==='sudabang') ? ' active' : ''; ?>"><span class="nav-icon">💬</span>이브수다방</a>
     <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="nav-item<?php echo ($nav_active==='used') ? ' active' : ''; ?>"><span class="nav-icon">🏪</span>중고거래</a>
     <a href="<?php echo (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/cs.php' : '/cs.php'; ?>" class="nav-item<?php echo ($nav_active==='cs') ? ' active' : ''; ?>"><span class="nav-icon">🎀</span>고객센터</a>
@@ -66,7 +66,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
 
 <!-- TICKER -->
 <div class="ticker-wrap">
-  <span class="ticker-label"><?php echo ($nav_active==='talent') ? '🌸 신규' : (($nav_active==='sudabang') ? '💬 HOT' : (($nav_active==='used') ? '🛍️ NEW' : (($nav_active==='cs') ? '🎀 고객센터' : '🔥 급구'))); ?></span>
+  <span class="ticker-label"><?php echo ($nav_active==='talent') ? '🌸 신규' : (($nav_active==='thumb_shop') ? '🖼️ 썸네일' : (($nav_active==='sudabang') ? '💬 HOT' : (($nav_active==='used') ? '🛍️ NEW' : (($nav_active==='cs') ? '🎀 고객센터' : '🔥 급구')))); ?></span>
   <div class="ticker-track">
     <div class="ticker-inner">
 <?php if ($nav_active==='talent') { ?>
@@ -117,7 +117,11 @@ $nav_active = isset($nav_active) ? $nav_active : '';
   foreach ($_ct_double as $_ci) {
     echo '<span><a href="'.htmlspecialchars($_ci['url'],ENT_QUOTES).'" style="color:inherit;text-decoration:none;"><b>'.htmlspecialchars($_ci['badge'],ENT_QUOTES).'</b> '.htmlspecialchars(mb_strlen($_ci['txt'],'UTF-8')>28?mb_substr($_ci['txt'],0,28,'UTF-8').'…':$_ci['txt'],ENT_QUOTES).'</a></span>';
   }
-} elseif ($nav_active==='sudabang') { ?>
+} elseif ($nav_active==='thumb_shop') { ?>
+      <span><b>🖼️ 썸네일상점</b> 뱃지·테두리·모션 옵션으로 광고를 더 눈에 띄게!</span>
+      <span><b>쿠폰적용</b> 기업회원 매월 썸네일 할인 쿠폰 지급</span>
+      <span><b>🖼️ 썸네일상점</b> 뱃지·테두리·모션 옵션으로 광고를 더 눈에 띄게!</span>
+<?php } elseif ($nav_active==='sudabang') { ?>
       <span><b>[베스트]</b> 3부 강한 하퍼 어디예요 💬24</span>
       <span><b>[밤문화]</b> 하퍼 담당분들은 잘 안... 💬17</span>
       <span><b>[단짝찾기]</b> 현재 회원님의 헝볼로 같이 일할 단짝찾기 💬8</span>
@@ -237,8 +241,8 @@ $_jobs_base = $_base;
       <div class="msm-section">
         <div class="msm-section-title">📌 메인 메뉴</div>
         <a href="<?php echo $_jobs_base; ?>/jobs.php" class="msm-link">📋 채용정보</a>
-        <a href="<?php echo $_jobs_base; ?>/jobs.php" class="msm-link">📍 지역별채용</a>
         <a href="<?php echo $_jobs_base; ?>/talent.php" class="msm-link">👑 인재정보</a>
+        <a href="<?php echo $_jobs_base; ?>/jobs_thumb_shop.php" class="msm-link">🖼️ 썸네일상점</a>
         <a href="<?php echo $_jobs_base; ?>/sudabang.php" class="msm-link">💬 이브수다방</a>
         <a href="<?php echo G5_BBS_URL; ?>/board.php?bo_table=used" class="msm-link">🏪 중고거래</a>
         <a href="<?php echo $_jobs_base; ?>/cs.php" class="msm-link">🎀 고객센터</a>
