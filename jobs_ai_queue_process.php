@@ -169,7 +169,7 @@ for ($i = 0; $i < $limit; $i++) {
         $ai_content = generate_store_description_gemini($formData, $ai_tone);
         $is_err = (strpos($ai_content, '오류') !== false || strpos($ai_content, '설정') !== false || strpos($ai_content, '대기열') !== false || strpos($ai_content, '큐 락') !== false);
         if ($ai_content && !$is_err) {
-            $ai_save_data = array('ai_content' => $ai_content);
+            $ai_save_data = aic_parse_ai_content_to_sections($ai_content);
             $first_line = strtok($ai_content, "\n");
             $ai_title = $first_line ? mb_substr(trim($first_line), 0, 80) : $jr['jr_subject_display'];
             $save_ok = true;

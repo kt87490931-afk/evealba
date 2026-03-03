@@ -94,6 +94,44 @@ function aic_activate_version($jr_id, $version) {
 }
 
 /**
+ * ai_content(단일 블록)를 문단별로 파싱하여 섹션 키에 매핑
+ * @param string $ai_content AI가 생성한 통합 텍스트
+ * @return array ai_intro, ai_location, ai_env, ai_welfare 등
+ */
+function aic_parse_ai_content_to_sections($ai_content) {
+    $content = trim((string)$ai_content);
+    if ($content === '') return array();
+    $paragraphs = preg_split('/\n\s*\n+/u', $content, -1, PREG_SPLIT_NO_EMPTY);
+    $paragraphs = array_map('trim', $paragraphs);
+    $paragraphs = array_values(array_filter($paragraphs));
+    $out = array();
+    $n = count($paragraphs);
+    if ($n >= 1) {
+        $out['ai_intro'] = $paragraphs[0];
+        $out['ai_location'] = $paragraphs[0];
+        $out['ai_card1_desc'] = $paragraphs[0];
+    }
+    if ($n >= 2) {
+        $out['ai_welfare'] = $paragraphs[1];
+        $out['ai_card3_desc'] = $paragraphs[1];
+    }
+    if ($n >= 3) {
+        $out['ai_env'] = $paragraphs[2];
+        $out['ai_card2_desc'] = $paragraphs[2];
+        $out['ai_qualify'] = $paragraphs[2];
+    }
+    if ($n >= 4) {
+        $out['ai_mbti_comment'] = $paragraphs[3];
+        $out['ai_extra'] = $paragraphs[3];
+    }
+    if ($n >= 5) {
+        $out['ai_card4_desc'] = $paragraphs[4];
+    }
+    $out['ai_content'] = $content;
+    return $out;
+}
+
+/**
  * AI 콘텐츠를 jr_data에 적용 (채용공고 페이지 표시용 fallback)
  * g5_jobs_ai_content의 활성 ai_data를 g5_jobs_register.jr_data에 병합
  * @param int $jr_id
@@ -113,6 +151,14 @@ function aic_apply_to_jr_data($jr_id, $aic_id = null) {
     if (!$row || empty($row['ai_data'])) return false;
     $ai_data = json_decode($row['ai_data'], true);
     if (!is_array($ai_data)) return false;
+
+    $has_sections = !empty($ai_data['ai_intro']) || !empty($ai_data['ai_env']) || !empty($ai_data['ai_welfare']) || !empty($ai_data['ai_location']);
+    if (!$has_sections && !empty($ai_data['ai_content'])) {
+        $parsed = aic_parse_ai_content_to_sections($ai_data['ai_content']);
+        foreach ($parsed as $k => $v) {
+            if (!isset($ai_data[$k]) || $ai_data[$k] === '') $ai_data[$k] = $v;
+        }
+    }
 
     $jr_row = sql_fetch("SELECT jr_data FROM g5_jobs_register WHERE jr_id = '{$jr_id}' LIMIT 1");
     if (!$jr_row) return false;
