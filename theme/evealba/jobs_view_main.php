@@ -1623,7 +1623,7 @@ function toggleAutoJump(jrId,on){
     card.style.outlineOffset = '';
     var borders = {gold:'#FFD700',pink:'#FF1B6B',charcoal:'#3a3a3a',royalblue:'#4169E1',royalpurple:'#7B2FBE'};
     if(borders[_thumbBorder]){
-      card.style.boxShadow = '0 0 0 4px '+borders[_thumbBorder]+', 0 6px 24px rgba(0,0,0,.18)';
+      card.style.boxShadow = '0 0 0 3px '+borders[_thumbBorder]+', 0 6px 24px rgba(0,0,0,.18)';
     } else {
       card.style.boxShadow = '0 0 0 1px #f0e0e8';
     }

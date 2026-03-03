@@ -127,7 +127,7 @@ $_hero_total = count($_hero_rows);
     $_h_border_style = '';
     if ($_h_border && isset($_hero_border_colors[$_h_border])) {
         $_bc = $_hero_border_colors[$_h_border];
-        $_h_border_style = 'box-shadow:0 0 0 4px '.$_bc.', 0 4px 12px rgba(0,0,0,.15);';
+        $_h_border_style = 'box-shadow:0 0 0 3px '.$_bc.', 0 4px 12px rgba(0,0,0,.15);';
     }
 
     $_h_link = !empty($_hb['sb_link']) ? $_hb['sb_link'] : '';

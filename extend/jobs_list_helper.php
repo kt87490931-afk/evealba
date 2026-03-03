@@ -166,7 +166,7 @@ function render_job_card($row) {
     $card_style = '';
     if ($thumb_border && isset($border_colors[$thumb_border])) {
         $bc = $border_colors[$thumb_border];
-        $card_style = ' style="box-shadow:0 0 0 4px '.$bc.', 0 2px 8px rgba(0,0,0,.10)"';
+        $card_style = ' style="box-shadow:0 0 0 3px '.$bc.', 0 2px 8px rgba(0,0,0,.10)"';
     }
     $has_anim = ($thumb_wave || $thumb_motion) ? ' data-lazy-anim="1"' : '';
 
@@ -241,7 +241,7 @@ function render_premium_card($row, $card_class = 'premium-card') {
     $card_style = '';
     if ($thumb_border && isset($border_colors[$thumb_border])) {
         $bc = $border_colors[$thumb_border];
-        $card_style = ' style="box-shadow:0 0 0 4px '.$bc.', 0 2px 8px rgba(0,0,0,.10)"';
+        $card_style = ' style="box-shadow:0 0 0 3px '.$bc.', 0 2px 8px rgba(0,0,0,.10)"';
     }
     $has_anim = ($thumb_wave || $thumb_motion) ? ' data-lazy-anim="1"' : '';
 
