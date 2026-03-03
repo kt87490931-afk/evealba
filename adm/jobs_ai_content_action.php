@@ -12,6 +12,18 @@ check_admin_token();
 $act = isset($_GET['act']) ? trim($_GET['act']) : (isset($_POST['act']) ? trim($_POST['act']) : '');
 $jr_id = isset($_GET['jr_id']) ? (int)$_GET['jr_id'] : (isset($_POST['jr_id']) ? (int)$_POST['jr_id'] : 0);
 
+if ($act === 'apply') {
+    if (!$jr_id) {
+        alert('jr_id가 필요합니다.', './jobs_ai_content_list.php');
+    }
+    $aic_id = isset($_GET['aic_id']) ? (int)$_GET['aic_id'] : null;
+    if (aic_apply_to_jr_data($jr_id, $aic_id ?: null)) {
+        alert("jr_id={$jr_id} AI 콘텐츠를 채용공고에 적용했습니다.", './jobs_ai_content_list.php?jr_id=' . $jr_id);
+    } else {
+        alert('적용할 AI 콘텐츠가 없거나 적용에 실패했습니다.', './jobs_ai_content_list.php?jr_id=' . $jr_id);
+    }
+}
+
 if ($act === 'activate') {
     $version = isset($_GET['version']) ? (int)$_GET['version'] : 0;
     if (!$jr_id || !$version) {

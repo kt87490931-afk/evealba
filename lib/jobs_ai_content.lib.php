@@ -94,6 +94,41 @@ function aic_activate_version($jr_id, $version) {
 }
 
 /**
+ * AI 콘텐츠를 jr_data에 적용 (채용공고 페이지 표시용 fallback)
+ * g5_jobs_ai_content의 활성 ai_data를 g5_jobs_register.jr_data에 병합
+ * @param int $jr_id
+ * @param int|null $aic_id 특정 AI 콘텐츠 ID (null이면 활성 버전 사용)
+ * @return bool
+ */
+function aic_apply_to_jr_data($jr_id, $aic_id = null) {
+    if (!_aic_table_exists()) return false;
+    $jr_id = (int)$jr_id;
+    $row = null;
+    if ($aic_id) {
+        $aid = (int)$aic_id;
+        $row = sql_fetch("SELECT ai_data FROM g5_jobs_ai_content WHERE id = '{$aid}' AND jr_id = '{$jr_id}' LIMIT 1");
+    } else {
+        $row = sql_fetch("SELECT ai_data FROM g5_jobs_ai_content WHERE jr_id = '{$jr_id}' AND is_active = 1 ORDER BY id DESC LIMIT 1");
+    }
+    if (!$row || empty($row['ai_data'])) return false;
+    $ai_data = json_decode($row['ai_data'], true);
+    if (!is_array($ai_data)) return false;
+
+    $jr_row = sql_fetch("SELECT jr_data FROM g5_jobs_register WHERE jr_id = '{$jr_id}' LIMIT 1");
+    if (!$jr_row) return false;
+    $jr_data = $jr_row['jr_data'] ? json_decode($jr_row['jr_data'], true) : array();
+    if (!is_array($jr_data)) $jr_data = array();
+
+    foreach ($ai_data as $k => $v) {
+        if (strpos($k, '_') === 0) continue;
+        $jr_data[$k] = $v;
+    }
+    $json_esc = sql_escape_string(json_encode($jr_data, JSON_UNESCAPED_UNICODE));
+    sql_query("UPDATE g5_jobs_register SET jr_data = '{$json_esc}' WHERE jr_id = '{$jr_id}'");
+    return true;
+}
+
+/**
  * 버전 이력 조회 (관리자용)
  */
 function aic_get_versions($jr_id) {

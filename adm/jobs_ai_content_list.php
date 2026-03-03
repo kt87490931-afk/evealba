@@ -103,6 +103,7 @@ if ($view_id || $view_jr) {
     </div>
 
     <div style="margin:20px 0;text-align:center;">
+        <a href="./jobs_ai_content_action.php?act=apply&jr_id=<?php echo (int)$aic['jr_id']; ?>&aic_id=<?php echo (int)$aic['id']; ?>&token=<?php echo $token; ?>" class="btn btn_02" style="background:#2E7D32;color:#fff;border-color:#2E7D32;" onclick="return confirm('이 AI 콘텐츠를 채용공고 페이지에 적용하시겠습니까?');">✅ 적용</a>
         <a href="<?php echo $jobs_view_url; ?>" class="btn btn_02" target="_blank">📋 광고페이지 보기</a>
         <a href="./jobs_ai_content_action.php?act=regenerate&jr_id=<?php echo (int)$aic['jr_id']; ?>&token=<?php echo $token; ?>" class="btn btn_02" onclick="return confirm('AI를 재생성하시겠습니까? 기존 버전은 보존됩니다.');">🔄 재생성</a>
         <a href="./jobs_ai_content_list.php" class="btn btn_01">← 목록</a>
@@ -259,6 +260,7 @@ if ($has_queue_table) {
                 <td class="td_num"><?php echo $lrow['is_active'] ? '<span style="color:#2E7D32;font-weight:700;">✅활성</span>' : '<span style="color:#999;">비활성</span>'; ?></td>
                 <td class="td_mng">
                     <a href="?view=<?php echo (int)$lrow['id']; ?>" class="btn btn_02">보기</a>
+                    <a href="./jobs_ai_content_action.php?act=apply&jr_id=<?php echo (int)$lrow['jr_id']; ?>&aic_id=<?php echo (int)$lrow['id']; ?>&token=<?php echo $token; ?>" class="btn btn_02" style="margin-left:4px;background:#2E7D32;color:#fff;border-color:#2E7D32;" onclick="return confirm('이 AI 콘텐츠를 채용공고에 적용하시겠습니까?');">적용</a>
                 </td>
             </tr>
         <?php }
