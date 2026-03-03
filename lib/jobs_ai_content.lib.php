@@ -95,6 +95,7 @@ function aic_activate_version($jr_id, $version) {
 
 /**
  * ai_content(단일 블록)를 문단별로 파싱하여 섹션 키에 매핑
+ * 키워드 기반으로 문단 내용을 분류하여 정확한 섹션에 할당
  * @param string $ai_content AI가 생성한 통합 텍스트
  * @return array ai_intro, ai_location, ai_env, ai_welfare 등
  */
@@ -104,29 +105,110 @@ function aic_parse_ai_content_to_sections($ai_content) {
     $paragraphs = preg_split('/\n\s*\n+/u', $content, -1, PREG_SPLIT_NO_EMPTY);
     $paragraphs = array_map('trim', $paragraphs);
     $paragraphs = array_values(array_filter($paragraphs));
+
+    // 메타데이터 라인 제외 (예: "최고관리자 | 010-4444-4444 | 카카오:ang77777 | ...")
+    $paragraphs = array_filter($paragraphs, function ($p) {
+        if (mb_strlen($p) < 30 && (strpos($p, '|') !== false || preg_match('/\d{3}[-]?\d{3,4}[-]?\d{4}/', $p))) return false;
+        return true;
+    });
+    $paragraphs = array_values($paragraphs);
+
+    // 섹션별 키워드 (해당 섹션일 가능성이 높은 단어)
+    $section_keywords = array(
+        'intro'   => array('안녕', '존경', '반갑', '환영', '여러분', '귀하의', '미래의', '파트너'),
+        'location'=> array('역', '도보', '지하철', '인근', '롯데타워', '먹자골목', '교통', '위치', '가깝', '주소', '거리'),
+        'welfare' => array('당일지급', '선불', '순번', '인센티브', '급여', '보상', '협의', '원룸제공', '성형지원', '출퇴근지원'),
+        'env'     => array('시설', '청결', '최신', '인테리어', '근무환경', '초보', '경력', '주말', '투잡', '오픈'),
+        'qualify' => array('초보 가능', '경력자', '우대', '자격', '지원'),
+        'mbti'    => array('MBTI', 'INTP', 'ENTJ', 'ISTJ', 'ENFP', '개성', '프라이버시', '유형'),
+        'extra'   => array('파트너십', '문의', '친구', '함께', '환영', '연락', '연락처', '카카오', '텔레그램'),
+    );
+
     $out = array();
-    $n = count($paragraphs);
-    if ($n >= 1) {
-        $out['ai_intro'] = $paragraphs[0];
-        $out['ai_location'] = $paragraphs[0];
-        $out['ai_card1_desc'] = $paragraphs[0];
+    $assigned = array();
+    $remain = array();
+
+    foreach ($paragraphs as $idx => $p) {
+        $scores = array();
+        foreach ($section_keywords as $sec => $kw_arr) {
+            $scores[$sec] = 0;
+            foreach ($kw_arr as $kw) {
+                if (mb_stripos($p, $kw) !== false) $scores[$sec]++;
+            }
+        }
+        $best = null;
+        $best_score = 0;
+        $order = array('intro','location','welfare','env','qualify','mbti','extra');
+        foreach ($order as $sec) {
+            $sc = isset($scores[$sec]) ? $scores[$sec] : 0;
+            if ($sc > $best_score) { $best_score = $sc; $best = $sec; }
+        }
+        if ($best && $best_score > 0) {
+            $assigned[$best][] = $p;
+        } else {
+            $remain[] = array('text' => $p);
+        }
     }
-    if ($n >= 2) {
-        $out['ai_welfare'] = $paragraphs[1];
-        $out['ai_card3_desc'] = $paragraphs[1];
+
+    // 할당된 문단 → 섹션 매핑
+    $map = array(
+        'intro'   => array('ai_intro', 'ai_location', 'ai_card1_desc'),
+        'location'=> array('ai_location', 'ai_card1_desc'),
+        'welfare' => array('ai_welfare', 'ai_card3_desc'),
+        'env'     => array('ai_env', 'ai_card2_desc', 'ai_qualify'),
+        'qualify' => array('ai_qualify'),
+        'mbti'    => array('ai_mbti_comment'),
+        'extra'   => array('ai_extra', 'ai_card4_desc'),
+    );
+    foreach ($assigned as $sec => $texts) {
+        $merged = implode("\n\n", $texts);
+        if (isset($map[$sec])) {
+            foreach ($map[$sec] as $k) {
+                if (!isset($out[$k]) || $out[$k] === '') $out[$k] = $merged;
+            }
+        }
     }
-    if ($n >= 3) {
-        $out['ai_env'] = $paragraphs[2];
-        $out['ai_card2_desc'] = $paragraphs[2];
-        $out['ai_qualify'] = $paragraphs[2];
+
+    // 미분류 문단: 순서 기반 fallback (인사→급여→환경→MBTI→마무리)
+    $fallback_map = array(
+        0 => array('ai_intro', 'ai_location', 'ai_card1_desc'),
+        1 => array('ai_welfare', 'ai_card3_desc'),
+        2 => array('ai_env', 'ai_card2_desc', 'ai_qualify'),
+        3 => array('ai_mbti_comment'),
+        4 => array('ai_extra', 'ai_card4_desc'),
+    );
+    $pos = 0;
+    foreach ($remain as $r) {
+        $keys = $fallback_map[min($pos, 4)] ?? $fallback_map[4];
+        foreach ($keys as $k) {
+            if (!isset($out[$k]) || $out[$k] === '') { $out[$k] = $r['text']; break; }
+        }
+        $pos++;
     }
-    if ($n >= 4) {
-        $out['ai_mbti_comment'] = $paragraphs[3];
-        $out['ai_extra'] = $paragraphs[3];
+
+    // intro/location 상호 보강: 첫 문단이 인사+위치 통합인 경우
+    if (!empty($out['ai_intro']) && empty($out['ai_location'])) {
+        $intro = $out['ai_intro'];
+        foreach ($section_keywords['location'] as $kw) {
+            if (mb_stripos($intro, $kw) !== false) {
+                $out['ai_location'] = $intro;
+                if (empty($out['ai_card1_desc'])) $out['ai_card1_desc'] = $intro;
+                break;
+            }
+        }
     }
-    if ($n >= 5) {
-        $out['ai_card4_desc'] = $paragraphs[4];
+    if (!empty($out['ai_location']) && empty($out['ai_intro'])) {
+        $loc = $out['ai_location'];
+        foreach ($section_keywords['intro'] as $kw) {
+            if (mb_stripos($loc, $kw) !== false) {
+                $out['ai_intro'] = $loc;
+                if (empty($out['ai_card1_desc'])) $out['ai_card1_desc'] = $loc;
+                break;
+            }
+        }
     }
+    if (!empty($out['ai_intro']) && empty($out['ai_card1_desc'])) $out['ai_card1_desc'] = $out['ai_intro'];
+
     $out['ai_content'] = $content;
     return $out;
 }
