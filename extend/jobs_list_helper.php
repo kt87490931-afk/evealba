@@ -265,14 +265,13 @@ function render_premium_card($row, $card_class = 'premium-card') {
     echo '<div class="' . $card_class . '"' . $card_style . $has_anim . '>';
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
     $wave_data = $thumb_wave ? ' data-wave="animation:wave-shift 6s ease-in-out infinite;background-size:400% 400%;"' : '';
-    echo '<div class="premium-banner' . $carbon_class . '" style="background:' . $banner_bg . ';color:' . $text_color . ';"' . $wave_data . '>';
-    echo '<span' . $motion_data . '>' . $title . '</span>';
-    if ($text) echo '<br><span' . $motion_data . ' style="font-size:11px;opacity:.85">' . $text . '</span>';
-    echo '</div>';
+    echo '<div class="premium-banner' . $carbon_class . '" style="position:relative;background:' . $banner_bg . ';color:' . $text_color . ';"' . $wave_data . '>';
     if ($thumb_icon && isset($icon_map[$thumb_icon])) {
         $ic = $icon_map[$thumb_icon];
         echo '<div class="pv-icon-badge" style="position:absolute;top:7px;right:7px;font-size:10px;font-weight:900;padding:2px 7px;border-radius:9px;z-index:10;color:#fff;background:' . $ic['bg'] . '">' . $ic['label'] . '</div>';
     }
+    echo '<span' . $motion_data . '>' . $title . ($text ? '<br><span style="font-size:11px;opacity:.85">' . $text . '</span>' : '') . '</span>';
+    echo '</div>';
     $jr_good_val = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
     $company_name = htmlspecialchars($row['jr_nickname'] ?: ($row['jr_company'] ?: ''));
     echo '<div class="premium-body">';
