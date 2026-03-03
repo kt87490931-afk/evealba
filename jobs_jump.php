@@ -27,8 +27,42 @@ if (!$jr_id) {
 
 $mb_id_esc = addslashes($member['mb_id']);
 
+// 점프 컬럼/테이블 부트스트랩 (미마이그레이션 서버 대응)
+$col_check = @sql_query("SHOW COLUMNS FROM g5_jobs_register LIKE 'jr_jump_remain'", false);
+if (!$col_check || !@sql_num_rows($col_check)) {
+    $add_cols = array(
+        'jr_jump_remain INT UNSIGNED NOT NULL DEFAULT 0',
+        'jr_jump_used INT UNSIGNED NOT NULL DEFAULT 0',
+        'jr_jump_total INT UNSIGNED NOT NULL DEFAULT 0',
+        'jr_jump_datetime DATETIME DEFAULT NULL',
+        'jr_auto_jump TINYINT UNSIGNED NOT NULL DEFAULT 0',
+        'jr_auto_jump_next DATETIME DEFAULT NULL'
+    );
+    foreach ($add_cols as $def) {
+        $col_name = preg_replace('/\s+.*/', '', $def);
+        $c = @sql_query("SHOW COLUMNS FROM g5_jobs_register LIKE '{$col_name}'", false);
+        if (!$c || !@sql_num_rows($c)) {
+            @sql_query("ALTER TABLE g5_jobs_register ADD COLUMN {$def}", false);
+        }
+    }
+}
+$log_tb = @sql_query("SHOW TABLES LIKE 'g5_jobs_jump_log'", false);
+if (!$log_tb || !@sql_num_rows($log_tb)) {
+    @sql_query("CREATE TABLE IF NOT EXISTS g5_jobs_jump_log (
+        jl_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        jr_id INT UNSIGNED NOT NULL,
+        mb_id VARCHAR(20) NOT NULL DEFAULT '',
+        jl_type ENUM('manual','auto') NOT NULL DEFAULT 'manual',
+        jl_remain_before INT UNSIGNED NOT NULL DEFAULT 0,
+        jl_remain_after INT UNSIGNED NOT NULL DEFAULT 0,
+        jl_datetime DATETIME NOT NULL,
+        KEY idx_jr_id (jr_id),
+        KEY idx_datetime (jl_datetime)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", false);
+}
+
 $row = sql_fetch("SELECT jr_id, mb_id, jr_status, jr_jump_remain, jr_jump_used, jr_jump_total,
-    jr_jump_datetime, jr_end_date, jr_auto_jump, jr_auto_jump_next, jr_ad_labels
+    jr_jump_datetime, jr_end_date, jr_auto_jump, jr_auto_jump_next
     FROM g5_jobs_register WHERE jr_id = '{$jr_id}'");
 
 if (!$row) {
@@ -61,20 +95,6 @@ if (sql_affected_rows() === 0) {
     _jump_json(array('ok' => 0, 'msg' => '점프 처리에 실패했습니다. 다시 시도해 주세요.'));
 }
 
-$log_check = @sql_query("SHOW TABLES LIKE 'g5_jobs_jump_log'", false);
-if (!$log_check || !@sql_num_rows($log_check)) {
-    @sql_query("CREATE TABLE IF NOT EXISTS g5_jobs_jump_log (
-        jl_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        jr_id INT UNSIGNED NOT NULL,
-        mb_id VARCHAR(20) NOT NULL DEFAULT '',
-        jl_type ENUM('manual','auto') NOT NULL DEFAULT 'manual',
-        jl_remain_before INT UNSIGNED NOT NULL DEFAULT 0,
-        jl_remain_after INT UNSIGNED NOT NULL DEFAULT 0,
-        jl_datetime DATETIME NOT NULL,
-        KEY idx_jr_id (jr_id),
-        KEY idx_datetime (jl_datetime)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", false);
-}
 @sql_query("INSERT INTO g5_jobs_jump_log (jr_id, mb_id, jl_type, jl_remain_before, jl_remain_after, jl_datetime)
     VALUES ('{$jr_id}', '{$mb_id_esc}', 'manual', '{$remain_before}', '{$remain_after}', '{$now}')", false);
 
