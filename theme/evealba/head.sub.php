@@ -60,12 +60,11 @@ echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">'.PHP_EOL;
 if($config['cf_add_meta'])
     echo $config['cf_add_meta'].PHP_EOL;
 
-// Favicon (evealba)
+// Favicon (evealba) - 단일 파비콘 파일 사용
 $_ev_favicon_url = G5_THEME_URL . '/img/favicon.png';
-$_ev_apple_url  = G5_THEME_URL . '/img/apple-touch-icon.png';
 ?>
 <link rel="icon" type="image/png" href="<?php echo $_ev_favicon_url; ?>">
-<link rel="apple-touch-icon" sizes="180x180" href="<?php echo $_ev_apple_url; ?>">
+<link rel="apple-touch-icon" sizes="180x180" href="<?php echo $_ev_favicon_url; ?>">
 <?php
 // SEO 메타·OG·Twitter - sp_seo_config 연동 (adm/scorepoint/scorepoint_seo.php)
 if (!defined('G5_IS_ADMIN') || !G5_IS_ADMIN) {
