@@ -1852,6 +1852,7 @@ footer {
 .bh-design .board-more { border-color:rgba(255,255,255,.4); color:#fff; }
 .bh-design .board-write-btn { background:rgba(255,255,255,.2); border:1.5px solid rgba(255,255,255,.4); }
 .cs-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.cs-qna-full { width:100%; margin-bottom:16px; }
 
 @media (max-width:900px) {
   .type-tab-bar { grid-template-columns:repeat(2,1fr); }

@@ -179,8 +179,8 @@ if ($chk_faq && @sql_num_rows($chk_faq)) {
 
     </div>
 
-    <!-- 광고문의 & 일반문의 -->
-    <div class="cs-grid-2">
+    <!-- 광고문의 & 일반문의 (히어로배너와 동일 가로폭) -->
+    <div class="cs-qna-full">
       <div id="qna-section" class="cs-board-card bh-qna">
         <div class="cs-board-header">
           <div class="cs-board-title-row">
