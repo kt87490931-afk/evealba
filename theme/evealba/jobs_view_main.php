@@ -160,9 +160,10 @@ $desc_extra = isset($data['desc_extra']) ? trim($data['desc_extra']) : '';
 
 $_aic = aic_get_active($jr_id);
 $_aic_src = $_aic ? 'aic' : 'jr_data';
+// 적용된 jr_data(병합) 우선 → aic → fallback (적용 버튼 반영 보장)
 $_ai = function($key, $fallback = '') use ($_aic, $data) {
-    if ($_aic && !empty($_aic[$key])) return trim($_aic[$key]);
     if (!empty($data[$key])) return trim($data[$key]);
+    if ($_aic && !empty($_aic[$key])) return trim($_aic[$key]);
     return $fallback;
 };
 

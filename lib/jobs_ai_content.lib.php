@@ -119,9 +119,13 @@ function aic_apply_to_jr_data($jr_id, $aic_id = null) {
     $jr_data = $jr_row['jr_data'] ? json_decode($jr_row['jr_data'], true) : array();
     if (!is_array($jr_data)) $jr_data = array();
 
+    $ai_to_desc = array('ai_location'=>'desc_location','ai_env'=>'desc_env','ai_welfare'=>'desc_benefit','ai_qualify'=>'desc_qualify','ai_extra'=>'desc_extra');
     foreach ($ai_data as $k => $v) {
         if (strpos($k, '_') === 0) continue;
         $jr_data[$k] = $v;
+        if (isset($ai_to_desc[$k]) && $v !== '' && $v !== null) {
+            $jr_data[$ai_to_desc[$k]] = $v;
+        }
     }
     $json_esc = sql_escape_string(json_encode($jr_data, JSON_UNESCAPED_UNICODE));
     sql_query("UPDATE g5_jobs_register SET jr_data = '{$json_esc}' WHERE jr_id = '{$jr_id}'");
