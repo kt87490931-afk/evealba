@@ -1802,7 +1802,7 @@ footer {
 .cs-hero-phone .phone-num { font-family:'Outfit',sans-serif; font-size:30px; font-weight:900; color:var(--gold); display:block; margin:3px 0; text-shadow:0 2px 8px rgba(0,0,0,.4); }
 .cs-hero-phone .phone-hours { font-size:11px; opacity:.8; }
 .cs-entry-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:13px; margin-bottom:20px; }
-.cs-entry-card { background:#fff; border-radius:14px; padding:22px 16px; text-align:center; border:2px solid #f0e0e8; cursor:pointer; transition:all .25s; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+.cs-entry-card { display:block; text-decoration:none; color:inherit; background:#fff; border-radius:14px; padding:22px 16px; text-align:center; border:2px solid #f0e0e8; cursor:pointer; transition:all .25s; box-shadow:0 2px 8px rgba(0,0,0,.05); }
 .cs-entry-card:hover { border-color:var(--hot-pink); transform:translateY(-4px); box-shadow:0 10px 26px rgba(255,27,107,.18); }
 .cs-entry-icon { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; margin:0 auto 12px; }
 .cei-pink { background:linear-gradient(135deg,var(--hot-pink),var(--deep-pink)); }

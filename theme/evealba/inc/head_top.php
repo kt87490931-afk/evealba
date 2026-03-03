@@ -79,16 +79,45 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <span><b>짜○○</b> 여 27세 · 서울 경기 인천 쉬어 야간 구해요 N</span>
       <span><b>수○○</b> 여 22세 · 일구해요 N</span>
       <span><b>cnjzi○○</b> 여 27세 · 20대 77 여자 일 구해요 N</span>
-<?php } elseif ($nav_active==='cs') { ?>
-      <span><b>[공지]</b> 2026 설연휴 휴무 안내</span>
-      <span><b>[FAQ]</b> 개명 했을 경우 어떻게 해야할까요?</span>
-      <span><b>[문의]</b> 광고문의 · 답변완료</span>
-      <span><b>[디자인]</b> 상세이미지 수정 모청드립니다</span>
-      <span><b>[공지]</b> 2026 설연휴 휴무 안내</span>
-      <span><b>[FAQ]</b> 개명 했을 경우 어떻게 해야할까요?</span>
-      <span><b>[문의]</b> 광고문의 · 답변완료</span>
-      <span><b>[디자인]</b> 상세이미지 수정 모청드립니다</span>
-<?php } elseif ($nav_active==='sudabang') { ?>
+<?php } elseif ($nav_active==='cs') {
+  $_ct_items = array();
+  $_ct_pfx = (defined('G5_TABLE_PREFIX') && G5_TABLE_PREFIX) ? G5_TABLE_PREFIX : 'g5_';
+  $_ct_bbs = (defined('G5_BBS_URL') && G5_BBS_URL) ? rtrim(G5_BBS_URL,'/') : '';
+  if (function_exists('get_pretty_url')) {
+    $_ct_burl = function($bt,$id='') { return get_pretty_url($bt,$id); };
+  } else {
+    $_ct_burl = function($bt,$id='') { return (defined('G5_BBS_URL')?G5_BBS_URL:'/bbs').'/board.php?bo_table='.$bt.($id?'&wr_id='.$id:''); };
+  }
+  $chk = @sql_query("SHOW TABLES LIKE '{$_ct_pfx}write_notice'", false);
+  if ($chk && @sql_num_rows($chk)) {
+    $res = sql_query("SELECT wr_id, wr_subject FROM {$_ct_pfx}write_notice WHERE wr_is_comment=0 ORDER BY wr_num ASC LIMIT 3", false);
+    if ($res) while ($r=sql_fetch_array($res)) {
+      $_ct_items[] = array('badge'=>'[공지]','txt'=>get_text($r['wr_subject']),'url'=>$_ct_burl('notice',$r['wr_id']));
+    }
+  }
+  $chk2 = @sql_query("SHOW TABLES LIKE '{$_ct_pfx}write_ad_inquiry'", false);
+  if ($chk2 && @sql_num_rows($chk2)) {
+    $res2 = sql_query("SELECT wr_id, wr_subject, wr_comment FROM {$_ct_pfx}write_ad_inquiry WHERE wr_is_comment=0 ORDER BY wr_id DESC LIMIT 3", false);
+    if ($res2) while ($r2=sql_fetch_array($res2)) {
+      $_ct_items[] = array('badge'=>'[문의]','txt'=>get_text($r2['wr_subject']).($r2['wr_comment']>0?' · 답변완료':''),'url'=>$_ct_burl('ad_inquiry',$r2['wr_id']));
+    }
+  }
+  $_ct_faq = isset($g5['faq_table'])?$g5['faq_table']:$_ct_pfx.'faq';
+  $chk3 = @sql_query("SHOW TABLES LIKE '{$_ct_faq}'", false);
+  if ($chk3 && @sql_num_rows($chk3)) {
+    $res3 = sql_query("SELECT fa_subject FROM {$_ct_faq} WHERE fm_id='1' ORDER BY fa_order ASC LIMIT 3", false);
+    if ($res3) while ($r3=sql_fetch_array($res3)) {
+      $_ct_items[] = array('badge'=>'[FAQ]','txt'=>get_text($r3['fa_subject']),'url'=>$_ct_bbs.'/faq.php');
+    }
+  }
+  if (empty($_ct_items)) {
+    $_ct_items[] = array('badge'=>'[공지]','txt'=>'등록된 게시글이 없습니다','url'=>'#');
+  }
+  $_ct_double = array_merge($_ct_items, $_ct_items);
+  foreach ($_ct_double as $_ci) {
+    echo '<span><a href="'.htmlspecialchars($_ci['url'],ENT_QUOTES).'" style="color:inherit;text-decoration:none;"><b>'.htmlspecialchars($_ci['badge'],ENT_QUOTES).'</b> '.htmlspecialchars(mb_strlen($_ci['txt'],'UTF-8')>28?mb_substr($_ci['txt'],0,28,'UTF-8').'…':$_ci['txt'],ENT_QUOTES).'</a></span>';
+  }
+} elseif ($nav_active==='sudabang') { ?>
       <span><b>[베스트]</b> 3부 강한 하퍼 어디예요 💬24</span>
       <span><b>[밤문화]</b> 하퍼 담당분들은 잘 안... 💬17</span>
       <span><b>[단짝찾기]</b> 현재 회원님의 헝볼로 같이 일할 단짝찾기 💬8</span>

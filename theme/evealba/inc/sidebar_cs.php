@@ -13,9 +13,9 @@ if (!defined('_GNUBOARD_')) exit;
   <div class="widget-body">
     <div class="side-cs-list">
       <a href="#notice-section" class="side-cs-item active"><span>📢</span> 공지사항</a>
-      <a href="#qna-section" class="side-cs-item"><span>💬</span> Q&amp;A 문의게시판</a>
+      <a href="#qna-section" class="side-cs-item"><span>💬</span> 광고문의 &amp; 일반문의</a>
       <a href="#faq-section" class="side-cs-item"><span>❓</span> FAQ 자주하는 질문</a>
-      <a href="#" class="side-cs-item"><span>🎨</span> 디자인 문의</a>
+      <a href="#qa-section" class="side-cs-item"><span>💬</span> Q&amp;A 문의 게시판</a>
     </div>
   </div>
 </div>

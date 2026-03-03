@@ -1,8 +1,89 @@
 <?php
 /**
- * 고객센터 메인 영역 (eve_alba_cs.html 100% 동일)
+ * 고객센터 메인 영역 - DB 연동 (공지/광고문의/FAQ)
  */
 if (!defined('_GNUBOARD_')) exit;
+
+$_bbs = (defined('G5_BBS_URL') && G5_BBS_URL) ? rtrim(G5_BBS_URL, '/') : '';
+if (!$_bbs && defined('G5_URL') && G5_URL) {
+  $_bbs = rtrim(G5_URL, '/') . '/' . (defined('G5_BBS_DIR') ? G5_BBS_DIR : 'bbs');
+}
+if (!$_bbs) $_bbs = '/bbs';
+$_pfx = (defined('G5_TABLE_PREFIX') && G5_TABLE_PREFIX) ? G5_TABLE_PREFIX : 'g5_';
+
+// URL 생성 헬퍼 (G5_BBS_URL 기반, 절대경로 보장)
+$_burl = function($bo_table, $wr_id = '') use ($_bbs) {
+  if (function_exists('get_pretty_url')) {
+    $u = get_pretty_url($bo_table, $wr_id ?: '');
+    if ($u && (strpos($u, 'http') === 0 || strpos($u, '/') === 0)) return $u;
+  }
+  $base = (defined('G5_BBS_URL') && G5_BBS_URL) ? rtrim(G5_BBS_URL, '/') : $_bbs;
+  $u = $base . '/board.php?bo_table=' . $bo_table;
+  if ($wr_id) $u .= '&wr_id=' . $wr_id;
+  return $u;
+};
+
+$_notice_url = $_burl('notice');
+$_ad_inq_url = $_burl('ad_inquiry');
+$_ad_inq_write = $_bbs . '/write.php?bo_table=ad_inquiry';
+$_qa_url = $_burl('qa');
+$_qa_write = $_bbs . '/write.php?bo_table=qa';
+$_faq_url = $_bbs . '/faq.php';
+
+// 공지사항 (notice)
+$_notice_rows = array();
+$_notice_tb = $_pfx . 'write_notice';
+$chk = @sql_query("SHOW TABLES LIKE '{$_notice_tb}'", false);
+if ($chk && @sql_num_rows($chk)) {
+  $r = sql_fetch("SELECT COUNT(*) as c FROM {$_notice_tb} WHERE wr_is_comment = 0");
+  if ($r && (int)$r['c'] > 0) {
+    $_notice_res = sql_query("SELECT wr_id, wr_subject, wr_datetime FROM {$_notice_tb} WHERE wr_is_comment = 0 ORDER BY wr_num ASC, wr_id DESC LIMIT 9", false);
+    if ($_notice_res) {
+      while ($nr = sql_fetch_array($_notice_res)) {
+        $_notice_rows[] = $nr;
+      }
+    }
+  }
+}
+
+// 광고문의 & 일반문의 (ad_inquiry) - 부모글만
+$_ad_rows = array();
+$_ad_tb = $_pfx . 'write_ad_inquiry';
+$chk2 = @sql_query("SHOW TABLES LIKE '{$_ad_tb}'", false);
+if ($chk2 && @sql_num_rows($chk2)) {
+  $_ad_res = sql_query("SELECT wr_id, wr_subject, wr_datetime, wr_comment FROM {$_ad_tb} WHERE wr_is_comment = 0 ORDER BY wr_num ASC, wr_id DESC LIMIT 9", false);
+  if ($_ad_res) {
+    while ($ar = sql_fetch_array($_ad_res)) {
+      $_ad_rows[] = $ar;
+    }
+  }
+}
+
+// Q&A 문의 게시판 (qa)
+$_qa_rows = array();
+$_qa_tb = $_pfx . 'write_qa';
+$chk3 = @sql_query("SHOW TABLES LIKE '{$_qa_tb}'", false);
+if ($chk3 && @sql_num_rows($chk3)) {
+  $_qa_res = sql_query("SELECT wr_id, wr_subject, wr_datetime, wr_comment FROM {$_qa_tb} WHERE wr_is_comment = 0 ORDER BY wr_num ASC, wr_id DESC LIMIT 9", false);
+  if ($_qa_res) {
+    while ($qr = sql_fetch_array($_qa_res)) {
+      $_qa_rows[] = $qr;
+    }
+  }
+}
+
+// FAQ (g5_faq)
+$_faq_rows = array();
+$_faq_tbl = isset($g5['faq_table']) && $g5['faq_table'] ? $g5['faq_table'] : $_pfx.'faq';
+$chk_faq = @sql_query("SHOW TABLES LIKE '{$_faq_tbl}'", false);
+if ($chk_faq && @sql_num_rows($chk_faq)) {
+  $_faq_res = sql_query("SELECT fa_subject, fa_content FROM {$_faq_tbl} WHERE fm_id = '1' ORDER BY fa_order ASC, fa_id ASC LIMIT 15", false);
+  if ($_faq_res) {
+    while ($fr = sql_fetch_array($_faq_res)) {
+      $_faq_rows[] = $fr;
+    }
+  }
+}
 ?>
     <!-- CS 히어로 배너 -->
     <div class="cs-hero">
@@ -20,26 +101,32 @@ if (!defined('_GNUBOARD_')) exit;
       </div>
     </div>
 
-    <!-- 3대 진입 카드 -->
+    <!-- 3대 진입 카드 (게시판 페이지로 직접 이동) -->
     <div class="cs-entry-grid">
-      <div class="cs-entry-card" onclick="document.getElementById('notice-section').scrollIntoView({behavior:'smooth'})">
+      <a href="<?php echo htmlspecialchars($_notice_url, ENT_QUOTES); ?>" class="cs-entry-card">
         <div class="cs-entry-icon cei-pink">📢</div>
         <div class="cs-entry-title">NOTICE 공지사항</div>
         <div class="cs-entry-desc">사이트의 공지내용을<br>알려드립니다.</div>
         <span class="cs-entry-btn">공지사항 게시판 →</span>
-      </div>
-      <div class="cs-entry-card" onclick="document.getElementById('qna-section').scrollIntoView({behavior:'smooth'})">
+      </a>
+      <a href="<?php echo htmlspecialchars($_ad_inq_url, ENT_QUOTES); ?>" class="cs-entry-card">
         <div class="cs-entry-icon cei-purple">💬</div>
         <div class="cs-entry-title">Q&amp;A 문의게시판</div>
         <div class="cs-entry-desc">무엇이든 물어보세요!<br>광고문의 &amp; 일반문의</div>
         <span class="cs-entry-btn">광고문의 &amp; 일반문의 →</span>
-      </div>
-      <div class="cs-entry-card" onclick="document.getElementById('faq-section').scrollIntoView({behavior:'smooth'})">
+      </a>
+      <a href="<?php echo htmlspecialchars($_faq_url, ENT_QUOTES); ?>" class="cs-entry-card">
         <div class="cs-entry-icon cei-blue">❓</div>
         <div class="cs-entry-title">FAQ 자주하는 질문</div>
         <div class="cs-entry-desc">쉽게 한눈에 확인하는<br>궁금증!</div>
         <span class="cs-entry-btn">FAQ 게시판 →</span>
-      </div>
+      </a>
+      <a href="<?php echo htmlspecialchars($_qa_url, ENT_QUOTES); ?>" class="cs-entry-card">
+        <div class="cs-entry-icon cei-purple">💬</div>
+        <div class="cs-entry-title">Q&amp;A 문의 게시판</div>
+        <div class="cs-entry-desc">무엇이든 물어보세요!</div>
+        <span class="cs-entry-btn">Q&amp;A 게시판 →</span>
+      </a>
     </div>
 
     <!-- 공지사항 + FAQ (2열) -->
@@ -55,54 +142,26 @@ if (!defined('_GNUBOARD_')) exit;
               <div class="cs-board-desc">운영팀 공지 · 이벤트 안내</div>
             </div>
           </div>
-          <a href="#" class="board-more">더보기 →</a>
+          <a href="<?php echo htmlspecialchars($_notice_url, ENT_QUOTES); ?>" class="board-more">더보기 →</a>
         </div>
         <div class="cs-post-list">
+<?php if (empty($_notice_rows)) { ?>
+          <div class="cs-post-item" style="justify-content:center;color:#999;font-size:13px;">등록된 공지가 없습니다</div>
+<?php } else {
+  foreach ($_notice_rows as $_ni => $_nr) {
+    $_subj = get_text($_nr['wr_subject']);
+    $_subj_short = mb_strlen($_subj, 'UTF-8') > 35 ? mb_substr($_subj, 0, 35, 'UTF-8').'…' : $_subj;
+    $_date = substr($_nr['wr_datetime'], 0, 10);
+    $_badge = ($_ni < 3) ? 'pb-notice' : (($_date >= date('Y-m-d', strtotime('-3 days'))) ? 'pb-new' : 'pb-hot');
+    $_badge_txt = ($_ni < 3) ? '공지' : (($_date >= date('Y-m-d', strtotime('-3 days'))) ? 'NEW' : 'HOT');
+    $_link = $_burl('notice', $_nr['wr_id']);
+?>
           <div class="cs-post-item">
-            <span class="post-badge pb-notice">공지</span>
-            <a href="#" class="post-title">2026 설연휴 휴무 안내</a>
-            <span class="post-meta">2026-01-20</span>
+            <span class="post-badge <?php echo $_badge; ?>"><?php echo $_badge_txt; ?></span>
+            <a href="<?php echo htmlspecialchars($_link, ENT_QUOTES); ?>" class="post-title"><?php echo htmlspecialchars($_subj_short, ENT_QUOTES); ?></a>
+            <span class="post-meta"><?php echo $_date; ?></span>
           </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-notice">공지</span>
-            <a href="#" class="post-title">2026년 설레는 설맞이 댓글 이벤트</a>
-            <span class="post-meta">2026-01-15</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-notice">공지</span>
-            <a href="#" class="post-title">2026년 신정 및 사내교육 휴무 공지</a>
-            <span class="post-meta">2025-12-30</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-notice">공지</span>
-            <a href="#" class="post-title">2025년 이브알바 워크숍 및 크리스마스 휴무 안내</a>
-            <span class="post-meta">2025-12-20</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-new">NEW</span>
-            <a href="#" class="post-title">사업자 관련 서류 미제출 안내</a>
-            <span class="post-meta">2025-12-10</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-hot">HOT</span>
-            <a href="#" class="post-title">퀸퀸퀸을 찾아라! 마음 따뜻해지는 글, 나만 아는 꿀팁, 공감가는 글 작성 이벤...</a>
-            <span class="post-meta">2025-12-05</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-notice">공지</span>
-            <a href="#" class="post-title">굿바이 2025! 따뜻한 댓글 이벤트</a>
-            <span class="post-meta">2025-11-30</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-notice">공지</span>
-            <a href="#" class="post-title">채용공고 열람 이벤트 안내</a>
-            <span class="post-meta">2025-11-20</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-notice">공지</span>
-            <a href="#" class="post-title">채용공고 신규 등록 및 수정시 사업장 위치 항목 추가 안내</a>
-            <span class="post-meta">2025-11-15</span>
-          </div>
+<?php } } ?>
         </div>
       </div>
 
@@ -116,82 +175,35 @@ if (!defined('_GNUBOARD_')) exit;
               <div class="cs-board-desc">클릭하면 답변이 펼쳐집니다</div>
             </div>
           </div>
-          <a href="#" class="board-more">더보기 →</a>
+          <a href="<?php echo htmlspecialchars($_faq_url, ENT_QUOTES); ?>" class="board-more">더보기 →</a>
         </div>
         <div class="faq-list">
-          <div class="faq-item">
+<?php if (empty($_faq_rows)) { ?>
+          <div class="faq-item" style="text-align:center;color:#999;font-size:13px;">등록된 FAQ가 없습니다</div>
+<?php } else {
+  foreach ($_faq_rows as $_fi => $_fq) {
+    $_q = get_text($_fq['fa_subject']);
+    $_a = get_text($_fq['fa_content']);
+    $_open = ($_fi === 0) ? ' open' : '';
+?>
+          <div class="faq-item<?php echo $_open; ?>">
             <div class="faq-question" onclick="toggleFaq(this)">
               <div class="faq-q-icon">Q</div>
-              <div class="faq-q-text">개명 했을 경우 어떻게 해야할까요?</div>
+              <div class="faq-q-text"><?php echo htmlspecialchars($_q, ENT_QUOTES); ?></div>
               <span class="faq-chevron">▼</span>
             </div>
-            <div class="faq-answer">개명 후 회원정보 수정 페이지에서 이름을 변경해 주세요. 본인인증이 필요하며, 인증 과정에서 변경된 이름이 반영됩니다.</div>
+            <div class="faq-answer"><?php echo htmlspecialchars($_a, ENT_QUOTES); ?></div>
           </div>
-          <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">
-              <div class="faq-q-icon">Q</div>
-              <div class="faq-q-text">이브알바 PC화면이 제대로 안보여요</div>
-              <span class="faq-chevron">▼</span>
-            </div>
-            <div class="faq-answer">브라우저 캐시 삭제 후 새로고침 해주세요 (Ctrl+Shift+Del). 크롬 최신 버전 사용을 권장드립니다. 계속 문제가 있으시면 고객센터로 연락 주세요.</div>
-          </div>
-          <div class="faq-item open">
-            <div class="faq-question" onclick="toggleFaq(this)">
-              <div class="faq-q-icon">Q</div>
-              <div class="faq-q-text">중복 가입이 가능한가요?</div>
-              <span class="faq-chevron">▼</span>
-            </div>
-            <div class="faq-answer">동일한 휴대폰 번호로는 중복 가입이 불가합니다. 이미 가입된 번호로 재가입 시도 시 기존 계정으로 로그인 안내가 표시됩니다.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">
-              <div class="faq-q-icon">Q</div>
-              <div class="faq-q-text">회원정보 수정에서 휴대전화 인증을 받았는데 정보 수정이 안돼요</div>
-              <span class="faq-chevron">▼</span>
-            </div>
-            <div class="faq-answer">인증 후 5분 이내에 수정을 완료해 주세요. 시간 초과 시 인증이 만료됩니다. 계속 문제가 있으시면 1:1 문의를 이용해 주세요.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">
-              <div class="faq-q-icon">Q</div>
-              <div class="faq-q-text">나의 채용정보 노출여부와 유료옵션 확인하기</div>
-              <span class="faq-chevron">▼</span>
-            </div>
-            <div class="faq-answer">마이페이지 → 채용공고 관리에서 확인하실 수 있습니다. 유료 옵션(우대/프리미엄/스페셜 등) 만료일도 같은 페이지에서 확인 가능합니다.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">
-              <div class="faq-q-icon">Q</div>
-              <div class="faq-q-text">구인광고 등록을 하려면 어떻게 해야 하나요?</div>
-              <span class="faq-chevron">▼</span>
-            </div>
-            <div class="faq-answer">상단 [채용공고 등록] 버튼을 클릭하시거나 고객센터(1588-0000)로 연락 주시면 안내해 드립니다. 기업회원 가입 후 바로 등록 가능합니다.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">
-              <div class="faq-q-icon">Q</div>
-              <div class="faq-q-text">이브알바에서 카드결제했는데 카드명세서의 내용이 다르나요?</div>
-              <span class="faq-chevron">▼</span>
-            </div>
-            <div class="faq-answer">PG사 정책에 따라 카드명세서에는 결제대행사명이 표기될 수 있습니다. 이는 정상 결제 처리된 것이므로 안심하셔도 됩니다.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">
-              <div class="faq-q-icon">Q</div>
-              <div class="faq-q-text">결제오류 발생시 참고하세요!!</div>
-              <span class="faq-chevron">▼</span>
-            </div>
-            <div class="faq-answer">결제 오류 발생 시 고객센터(1588-0000)로 연락해 주시거나 문의게시판에 오류 내용과 시간을 남겨주세요. 빠르게 처리해 드리겠습니다.</div>
-          </div>
+<?php } } ?>
         </div>
       </div>
 
     </div>
 
-    <!-- Q&A 문의게시판 + 디자인 문의 (2열) -->
+    <!-- 광고문의 & 일반문의 + Q&A 문의 게시판 -->
     <div class="cs-grid-2">
 
-      <!-- Q&A 문의게시판 -->
+      <!-- 광고문의 & 일반문의 -->
       <div id="qna-section" class="cs-board-card bh-qna">
         <div class="cs-board-header">
           <div class="cs-board-title-row">
@@ -202,128 +214,68 @@ if (!defined('_GNUBOARD_')) exit;
             </div>
           </div>
           <div style="display:flex;gap:6px;">
-            <a href="#" class="board-more">더보기</a>
-            <a href="#" class="board-write-btn">✏️ 문의하기</a>
+            <a href="<?php echo htmlspecialchars($_ad_inq_url, ENT_QUOTES); ?>" class="board-more">더보기</a>
+            <a href="<?php echo htmlspecialchars($_ad_inq_write, ENT_QUOTES); ?>" class="board-write-btn">✏️ 문의하기</a>
           </div>
         </div>
         <div class="cs-post-list">
+<?php if (empty($_ad_rows)) { ?>
+          <div class="cs-post-item" style="justify-content:center;color:#999;font-size:13px;">등록된 문의가 없습니다</div>
+<?php } else {
+  foreach ($_ad_rows as $_ai => $_ar) {
+    $_subj = get_text($_ar['wr_subject']);
+    $_subj_short = mb_strlen($_subj, 'UTF-8') > 25 ? mb_substr($_subj, 0, 25, 'UTF-8').'…' : $_subj;
+    $_date = substr($_ar['wr_datetime'], 0, 10);
+    $_has_reply = (int)$_ar['wr_comment'] > 0;
+    $_is_new = $_date >= date('Y-m-d', strtotime('-3 days'));
+    $_badge = $_is_new ? 'pb-new' : ($_has_reply ? 'pb-answer' : 'pb-wait');
+    $_badge_txt = $_is_new ? 'NEW' : ($_has_reply ? '답변완료' : '대기중');
+    $_link = $_burl('ad_inquiry', $_ar['wr_id']);
+?>
           <div class="cs-post-item">
-            <span class="post-badge pb-answer">답변완료</span>
-            <a href="#" class="post-title">광고문의</a>
-            <span class="post-meta">2026-02-22</span>
+            <span class="post-badge <?php echo $_badge; ?>"><?php echo $_badge_txt; ?></span>
+            <a href="<?php echo htmlspecialchars($_link, ENT_QUOTES); ?>" class="post-title"><?php echo htmlspecialchars($_subj_short, ENT_QUOTES); ?></a>
+            <span class="post-meta"><?php echo $_date; ?></span>
           </div>
-          <div class="cs-post-item reply-item">
-            <span class="reply-arrow">└</span>
-            <span class="post-badge pb-answer">답변</span>
-            <a href="#" class="post-title">답변드립니다</a>
-            <span class="post-meta">2026-02-22</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-wait">대기중</span>
-            <a href="#" class="post-title">정지 사유</a>
-            <span class="post-meta">2026-02-21</span>
-          </div>
-          <div class="cs-post-item reply-item">
-            <span class="reply-arrow">└</span>
-            <span class="post-badge pb-answer">답변</span>
-            <a href="#" class="post-title">답변드립니다</a>
-            <span class="post-meta">2026-02-21</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-new">NEW</span>
-            <a href="#" class="post-title">일반문의</a>
-            <span class="post-meta">2026-02-20</span>
-          </div>
-          <div class="cs-post-item reply-item">
-            <span class="reply-arrow">└</span>
-            <span class="post-badge pb-answer">답변</span>
-            <a href="#" class="post-title">답변드립니다</a>
-            <span class="post-meta">2026-02-20</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-wait">대기중</span>
-            <a href="#" class="post-title">채용공고 등록 문의드립니다</a>
-            <span class="post-meta">2026-02-19</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-answer">답변완료</span>
-            <a href="#" class="post-title">광고 옵션 변경 관련 문의</a>
-            <span class="post-meta">2026-02-18</span>
-          </div>
-          <div class="cs-post-item reply-item">
-            <span class="reply-arrow">└</span>
-            <span class="post-badge pb-answer">답변</span>
-            <a href="#" class="post-title">답변드립니다</a>
-            <span class="post-meta">2026-02-18</span>
-          </div>
+<?php } } ?>
         </div>
       </div>
 
-      <!-- 디자인 문의 -->
-      <div class="cs-board-card bh-design">
+      <!-- Q&A 문의 게시판 -->
+      <div id="qa-section" class="cs-board-card bh-qna">
         <div class="cs-board-header">
           <div class="cs-board-title-row">
-            <span class="cs-board-icon">🎨</span>
+            <span class="cs-board-icon">💬</span>
             <div>
-              <div class="cs-board-name">디자인 문의</div>
-              <div class="cs-board-desc">배너·이미지 수정 요청</div>
+              <div class="cs-board-name">Q&amp;A 문의 게시판</div>
+              <div class="cs-board-desc">무엇이든 물어보세요</div>
             </div>
           </div>
           <div style="display:flex;gap:6px;">
-            <a href="#" class="board-more">더보기</a>
-            <a href="#" class="board-write-btn">✏️ 문의하기</a>
+            <a href="<?php echo htmlspecialchars($_qa_url, ENT_QUOTES); ?>" class="board-more">더보기</a>
+            <a href="<?php echo htmlspecialchars($_qa_write, ENT_QUOTES); ?>" class="board-write-btn">✏️ 문의하기</a>
           </div>
         </div>
         <div class="cs-post-list">
+<?php if (empty($_qa_rows)) { ?>
+          <div class="cs-post-item" style="justify-content:center;color:#999;font-size:13px;">등록된 문의가 없습니다</div>
+<?php } else {
+  foreach ($_qa_rows as $_qi => $_qr) {
+    $_subj = get_text($_qr['wr_subject']);
+    $_subj_short = mb_strlen($_subj, 'UTF-8') > 25 ? mb_substr($_subj, 0, 25, 'UTF-8').'…' : $_subj;
+    $_date = substr($_qr['wr_datetime'], 0, 10);
+    $_has_reply = (int)$_qr['wr_comment'] > 0;
+    $_is_new = $_date >= date('Y-m-d', strtotime('-3 days'));
+    $_badge = $_is_new ? 'pb-new' : ($_has_reply ? 'pb-answer' : 'pb-wait');
+    $_badge_txt = $_is_new ? 'NEW' : ($_has_reply ? '답변완료' : '대기중');
+    $_link = $_burl('qa', $_qr['wr_id']);
+?>
           <div class="cs-post-item">
-            <span class="post-badge pb-new">NEW</span>
-            <a href="#" class="post-title">상세이미지 수정 모청드립니다</a>
-            <span class="post-meta">2026-02-23</span>
+            <span class="post-badge <?php echo $_badge; ?>"><?php echo $_badge_txt; ?></span>
+            <a href="<?php echo htmlspecialchars($_link, ENT_QUOTES); ?>" class="post-title"><?php echo htmlspecialchars($_subj_short, ENT_QUOTES); ?></a>
+            <span class="post-meta"><?php echo $_date; ?></span>
           </div>
-          <div class="cs-post-item reply-item">
-            <span class="reply-arrow">└</span>
-            <span class="post-badge pb-answer">답변</span>
-            <a href="#" class="post-title">답변드립니다</a>
-            <span class="post-meta">2026-02-23</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-wait">대기중</span>
-            <a href="#" class="post-title">텔레아이디 변경</a>
-            <span class="post-meta">2026-02-22</span>
-          </div>
-          <div class="cs-post-item reply-item">
-            <span class="reply-arrow">└</span>
-            <span class="post-badge pb-answer">답변</span>
-            <a href="#" class="post-title">답변드립니다</a>
-            <span class="post-meta">2026-02-22</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-new">NEW</span>
-            <a href="#" class="post-title">디자인변경</a>
-            <span class="post-meta">2026-02-21</span>
-          </div>
-          <div class="cs-post-item reply-item">
-            <span class="reply-arrow">└</span>
-            <span class="post-badge pb-answer">답변</span>
-            <a href="#" class="post-title">답변드립니다</a>
-            <span class="post-meta">2026-02-21</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-answer">답변완료</span>
-            <a href="#" class="post-title">배너 이미지 사이즈 문의</a>
-            <span class="post-meta">2026-02-20</span>
-          </div>
-          <div class="cs-post-item reply-item">
-            <span class="reply-arrow">└</span>
-            <span class="post-badge pb-answer">답변</span>
-            <a href="#" class="post-title">답변드립니다 (배너 규격 안내)</a>
-            <span class="post-meta">2026-02-20</span>
-          </div>
-          <div class="cs-post-item">
-            <span class="post-badge pb-wait">대기중</span>
-            <a href="#" class="post-title">우대 배너 색상 변경 요청드립니다</a>
-            <span class="post-meta">2026-02-19</span>
-          </div>
+<?php } } ?>
         </div>
       </div>
 
