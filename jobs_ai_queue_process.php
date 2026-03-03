@@ -180,8 +180,9 @@ for ($i = 0; $i < $limit; $i++) {
 
     if ($save_ok) {
         $ver = aic_save_new($jr_id, $jr['mb_id'], $ai_save_data, $ai_tone, $gen_ms);
+        aic_apply_to_jr_data($jr_id);
         sql_query("UPDATE g5_jobs_ai_queue SET status = 'done', processed_at = '".G5_TIME_YMDHIS."' WHERE id = '{$qid}'");
-        _queue_log("OK id={$qid} jr_id={$jr_id} ver={$ver} sections=" . ($use_sections ? '1' : '0') . " ms={$gen_ms}");
+        _queue_log("OK id={$qid} jr_id={$jr_id} ver={$ver} applied=1 sections=" . ($use_sections ? '1' : '0') . " ms={$gen_ms}");
         $processed++;
     } else {
         $ret_row = sql_fetch("SELECT retry_count FROM g5_jobs_ai_queue WHERE id = '{$qid}'");
