@@ -1658,9 +1658,11 @@ function toggleAutoJump(jrId,on){
     }
   };
   window.countChar = function(el, spanId, max){
-    var len = Array.from(el.value).length;
+    var str = (el && el.value) || '';
+    var len = Array.from(str).length;
     var sp = document.getElementById(spanId);
     if(sp) sp.textContent = len;
+    if(max && len > max && el) el.value = Array.from(str).slice(0, max).join('');
   };
   window.enforceMaxChar = function(el, max){
     var arr = Array.from(el.value);
