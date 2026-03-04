@@ -40,6 +40,23 @@ if ($action === 'approve') {
 
     @insert_point($mb_id, $config['cf_register_point'], '기업회원 가입 승인', '@member', $mb_id, '기업회원승인');
 
+    // B안: 승인 시 쿠폰 자동 발급 (줄광고3달무료, 채용공고30%할인 각 1장)
+    $tb_coupon = 'g5_ev_coupon';
+    $tb_issue = 'g5_ev_coupon_issue';
+    if (sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb_coupon}'", false))) {
+        $signup_coupons = array('줄광고3달무료', '채용공고30%할인');
+        foreach ($signup_coupons as $cname) {
+            $c = sql_fetch("SELECT ec_id FROM {$tb_coupon} WHERE ec_name = '".sql_escape_string($cname)."' AND ec_target = 'biz' AND ec_is_active = 1 LIMIT 1");
+            if ($c) {
+                $eid = (int)$c['ec_id'];
+                $ex = sql_fetch("SELECT eci_id FROM {$tb_issue} WHERE ec_id = '{$eid}' AND mb_id = '{$mb_id_esc}' LIMIT 1");
+                if (!$ex) {
+                    sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$eid}', '{$mb_id_esc}')", false);
+                }
+            }
+        }
+    }
+
     $res['ok'] = 1;
     $res['msg'] = $mb_id . ' 기업회원이 승인되었습니다.';
 
