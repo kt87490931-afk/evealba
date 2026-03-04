@@ -66,7 +66,7 @@ $search_keyword = isset($_GET['st']) ? trim($_GET['st']) : '';
       </div>
       <a href="<?php echo $row['view_href']; ?>" class="msg-body">
         <div class="msg-hrow">
-          <span class="msg-sender"><?php echo get_text($row['name']); ?></span>
+          <span class="msg-sender"><?php echo $row['name']; ?></span>
           <?php if (!$readed) { ?><span class="mbadge new">미열람</span><?php } ?>
         </div>
         <div class="msg-title"><?php echo $readed ? get_text($memo_preview) : '<b>'.get_text($memo_preview).'</b>'; ?></div>

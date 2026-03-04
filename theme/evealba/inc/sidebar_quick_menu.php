@@ -20,7 +20,7 @@ $memo_badge = ($memo_unread > 0) ? min(99, $memo_unread) : 0;
       <a href="<?php echo $_base; ?>/jobs.php" class="quick-link-btn"><span class="ql-icon">📍</span>지역별 채용</a>
       <a href="<?php echo $_base; ?>/sudabang.php" class="quick-link-btn"><span class="ql-icon">💬</span>수다방</a>
       <a href="javascript:void(0);" class="quick-link-btn" onclick="var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';var w=Math.min(420,screen.availWidth),h=Math.min(720,screen.availHeight),l=Math.round((screen.availWidth-w)/2),t=Math.round((screen.availHeight-h)/2);window.open(u,'eveChatPopup','width='+w+',height='+h+',left='+l+',top='+t+',scrollbars=no,resizable=yes');"><span class="ql-icon">💬</span>채팅</a>
-      <a href="<?php echo G5_BBS_URL; ?>/memo.php" class="quick-link-btn ql-memo"><span class="ql-icon">📩</span>쪽지<?php if ($memo_badge > 0) { ?><span class="ql-memo-badge">+<?php echo $memo_badge; ?></span><?php } ?></a>
+      <a href="<?php echo G5_BBS_URL; ?>/memo.php" class="quick-link-btn ql-memo"><span class="ql-icon">📩</span><span class="ql-memo-label">쪽지<?php if ($memo_badge > 0) { ?> <span class="ql-memo-badge">+<?php echo $memo_badge; ?></span><?php } ?></span></a>
     </div>
   </div>
 </div>
