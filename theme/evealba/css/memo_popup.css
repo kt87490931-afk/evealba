@@ -172,10 +172,11 @@ body.memo-popup-body {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(255,27,107,0.07);
+  min-width: 0;
 }
 .msg-header {
   display: grid;
-  grid-template-columns: 36px 1fr 120px 100px 80px;
+  grid-template-columns: 36px minmax(0, 1fr) 120px 100px 80px;
   align-items: center;
   padding: 8px 16px;
   background: linear-gradient(90deg, #FF1B6B 0%, #FF6FA8 100%);
@@ -193,11 +194,12 @@ body.memo-popup-body {
 .msg-header span.col-status { text-align: center; }
 .msg-row {
   display: grid;
-  grid-template-columns: 36px 1fr 120px 100px 80px;
+  grid-template-columns: 36px minmax(0, 1fr) 120px 100px 80px;
   align-items: center;
   padding: 0 16px;
   gap: 0 12px;
   height: 48px;
+  min-height: 48px;
   border-bottom: 1px solid #FFE0ED;
   background: #fff;
   cursor: pointer;
@@ -244,6 +246,8 @@ body.memo-popup-body {
   align-items: center;
   gap: 8px;
   min-width: 0;
+  width: 100%;
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
 }
@@ -275,6 +279,8 @@ body.memo-popup-body {
 .msg-status {
   display: flex;
   justify-content: center;
+  flex-shrink: 0;
+  min-width: 60px;
 }
 .msg-status .badge {
   display: inline-block;
