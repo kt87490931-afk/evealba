@@ -25,16 +25,20 @@ $ev_login_action = G5_HTTPS_BBS_URL . '/login_check.php';
   <div class="widget-body">
 <?php if ($is_member) {
     $ev_member_type = '👩이브회원';
+    $ev_member_class = 'ev-member-type-eve';
     if (!empty($member['mb_id'])) {
         $mb_id_esc = sql_escape_string($member['mb_id']);
         $row = sql_fetch("SELECT 1 as is_biz FROM {$g5['member_table']} WHERE mb_id = '{$mb_id_esc}' AND (mb_1 = 'biz' OR mb_1 = 'business') LIMIT 1");
-        if ($row && !empty($row['is_biz'])) $ev_member_type = '🏢기업회원';
+        if ($row && !empty($row['is_biz'])) {
+            $ev_member_type = '🏢기업회원';
+            $ev_member_class = 'ev-member-type-biz';
+        }
     }
 ?>
     <div class="login-logged">
       <div class="login-logged-info">
         <strong><?php echo get_text($member['mb_nick']); ?></strong>님 접속중
-        <div class="login-member-type"><?php echo $ev_member_type; ?></div>
+        <span class="login-member-type-badge <?php echo $ev_member_class; ?>"><?php echo $ev_member_type; ?></span>
       </div>
       <div class="login-logged-actions">
         <a href="<?php echo G5_BBS_URL; ?>/member_confirm.php?url=<?php echo urlencode(G5_BBS_URL.'/register_form.php'); ?>">마이페이지</a>
