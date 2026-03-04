@@ -47,8 +47,8 @@
   background:linear-gradient(135deg,var(--dark2) 0%,var(--pink) 55%,var(--light) 100%);
   border-radius:16px 16px 0 0;padding:28px 32px 24px;position:relative;overflow:hidden;
 }
-.top-header::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.07);border-radius:50%;}
-.top-header::after{content:'';position:absolute;bottom:-20px;right:80px;width:90px;height:90px;background:rgba(255,255,255,.05);border-radius:50%;}
+.top-header::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.07);border-radius:50%;pointer-events:none;}
+.top-header::after{content:'';position:absolute;bottom:-20px;right:80px;width:90px;height:90px;background:rgba(255,255,255,.05);border-radius:50%;pointer-events:none;}
 .top-header .biz-badge{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:11px;font-weight:700;padding:3px 14px;border-radius:20px;letter-spacing:.5px;margin-bottom:10px;}
 .top-header .biz-name{font-size:28px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.2;margin-bottom:6px;}
 .top-header .biz-title{font-size:14px;color:rgba(255,255,255,.88);font-weight:500;margin-bottom:14px;}

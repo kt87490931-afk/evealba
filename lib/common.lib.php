@@ -1938,6 +1938,20 @@ function sql_num_rows($result)
 }
 
 
+function sql_affected_rows($link=null)
+{
+    global $g5;
+
+    if(!$link)
+        $link = $g5['connect_db'];
+
+    if(function_exists('mysqli_affected_rows') && G5_MYSQLI_USE)
+        return mysqli_affected_rows($link);
+    else
+        return function_exists('mysql_affected_rows') ? mysql_affected_rows($link) : 0;
+}
+
+
 function sql_field_names($table, $link=null)
 {
     global $g5;

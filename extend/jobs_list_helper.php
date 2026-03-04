@@ -290,6 +290,15 @@ function render_premium_card($row, $card_class = 'premium-card') {
 }
 
 /**
+ * 글내용 길이 제한 + 말줄임 (기본 50자)
+ */
+function _jlh_cut_desc($text, $len = 50) {
+    $raw = trim(preg_replace('/\s+/', ' ', (string)$text));
+    if ($raw === '') return '';
+    return mb_strlen($raw) > $len ? mb_substr($raw, 0, $len, 'UTF-8') . '...' : $raw;
+}
+
+/**
  * 급구 카드 렌더링
  */
 function render_urgency_card($row) {
@@ -297,15 +306,17 @@ function render_urgency_card($row) {
     $jr_id = (int)$row['jr_id'];
     $link = _jlh_clean_url($row, $jr_data);
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
-    $location = htmlspecialchars($jr_data['desc_location'] ?? '');
-    $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 30, 'UTF-8'));
+    $title_raw = $row['jr_title'] ?: ($jr_data['job_title'] ?? '');
+    $content_raw = $jr_data['desc_location'] ?? ($jr_data['ai_intro'] ?? '');
+    $title = htmlspecialchars(_jlh_cut_desc($title_raw, 50));
+    $content = htmlspecialchars(_jlh_cut_desc($content_raw, 50));
 
     $jr_good_val = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
     echo '<div class="urgency-card">';
     echo '<div class="urgency-name">' . $nickname . '</div>';
-    if ($location) echo '<div class="urgency-area">' . $location . '</div>';
-    if ($desc) echo '<div class="urgency-desc">' . $desc . '</div>';
+    if ($title) echo '<div class="urgency-area">' . $title . '</div>';
+    if ($content) echo '<div class="urgency-desc">' . $content . '</div>';
     if ($jr_good_val > 0) echo '<div class="job-good-badge" style="margin-top:4px;">❤️ ' . number_format($jr_good_val) . '</div>';
     echo '</div>';
     echo '</a>';
@@ -319,14 +330,16 @@ function render_recommend_card($row) {
     $jr_id = (int)$row['jr_id'];
     $link = _jlh_clean_url($row, $jr_data);
     $nickname = htmlspecialchars($row['jr_nickname'] ?: $row['jr_company']);
-    $location = htmlspecialchars($jr_data['desc_location'] ?? '');
-    $desc = htmlspecialchars(mb_substr($row['jr_title'] ?: ($jr_data['job_title'] ?? ''), 0, 40, 'UTF-8'));
+    $title_raw = $row['jr_title'] ?: ($jr_data['job_title'] ?? '');
+    $content_raw = $jr_data['desc_location'] ?? ($jr_data['ai_intro'] ?? '');
+    $title = htmlspecialchars(_jlh_cut_desc($title_raw, 50));
+    $content = htmlspecialchars(_jlh_cut_desc($content_raw, 50));
 
     $jr_good_val = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
     echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
     echo '<div class="recommend-card">';
-    echo '<div><div class="rec-name">' . $nickname . ' <span class="rec-area">' . $location . '</span></div>';
-    echo '<div class="rec-desc">' . $desc . '</div></div>';
+    echo '<div><div class="rec-name">' . $nickname . ($title ? ' <span class="rec-area">' . $title . '</span>' : '') . '</div>';
+    echo '<div class="rec-desc">' . $content . '</div></div>';
     echo '<div class="rec-right"><div class="rec-wage">' . $nickname . '</div>';
     if ($jr_good_val > 0) echo '<div class="job-good-badge">❤️ ' . number_format($jr_good_val) . '</div>';
     echo '</div>';
@@ -369,7 +382,9 @@ function _jlh_extract_fields($row) {
     $f['location'] = htmlspecialchars($jr_data['desc_location'] ?? '');
     $f['region'] = _jlh_region_name($jr_data['job_work_region_1'] ?? '');
     $f['subregion'] = _jlh_region_detail_name($jr_data['job_work_region_detail_1'] ?? '');
-    $f['title'] = htmlspecialchars($row['jr_title'] ?: ($jr_data['job_title'] ?? ''));
+    $title_raw = $row['jr_title'] ?: ($jr_data['job_title'] ?? '');
+    $f['title'] = htmlspecialchars($title_raw);
+    $f['title_short'] = htmlspecialchars(_jlh_cut_desc($title_raw, 50));
     $f['job1'] = htmlspecialchars($jr_data['job_job1'] ?? '');
     $f['job2'] = htmlspecialchars($jr_data['job_job2'] ?? '');
     $f['salary_type'] = $jr_data['job_salary_type'] ?? '';
@@ -424,7 +439,7 @@ function render_job_list_row($row) {
     echo '<td class="td-type">' . ($f['job1'] ?: '-') . ($f['job2'] ? '<br>' . $f['job2'] : '') . '</td>';
     echo '<td class="col-gender td-gender">여<br>-</td>';
     echo '<td class="list-title-cell">';
-    echo '<a href="' . $f['link'] . '" class="list-job-title">' . $f['title'] . '</a>';
+    echo '<a href="' . $f['link'] . '" class="list-job-title" title="' . $f['title'] . '">' . $f['title_short'] . '</a>';
     if ($benefit_html || $tags_html) {
         echo '<div class="list-title-bottom">';
         if ($benefit_html) echo '<div class="benefit-tags">' . $benefit_html . '</div>';
@@ -463,8 +478,8 @@ function render_job_list_mobile($row) {
 
     $job_type = ($f['job1'] ?: '-') . ($f['job2'] ? ' ' . $f['job2'] : '');
 
-    echo '<a href="' . $f['link'] . '" class="job-card-m">';
-    echo '<div class="job-card-m-row row-1"><span class="job-card-m-region">' . ($f['region'] ?: '-') . '</span><span class="job-card-m-title">' . $f['title'] . '</span></div>';
+    echo '<a href="' . $f['link'] . '" class="job-card-m" title="' . $f['title'] . '">';
+    echo '<div class="job-card-m-row row-1"><span class="job-card-m-region">' . ($f['region'] ?: '-') . '</span><span class="job-card-m-title">' . $f['title_short'] . '</span></div>';
     echo '<div class="job-card-m-row row-2"><span class="job-card-m-region2">' . htmlspecialchars($f['subregion']) . '</span>';
     if ($tags_html) echo '<span class="job-card-m-tags">' . $tags_html . '</span>';
     echo '</div>';

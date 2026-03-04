@@ -8,21 +8,56 @@
 ob_start();
 
 $_jump_success = false;
+$_jump_err_out = null;
 register_shutdown_function(function () {
-    global $_jump_success;
+    global $_jump_success, $_jump_err_out;
     if ($_jump_success) return;
+    if ($_jump_err_out !== null) {
+        if (ob_get_level()) ob_end_clean();
+        if (!headers_sent()) header('Content-Type: application/json; charset=utf-8');
+        echo $_jump_err_out;
+        return;
+    }
     $e = error_get_last();
     if ($e && in_array($e['type'], array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR))) {
+        $errMsg = substr($e['message'], 0, 500);
+        $logDir = (defined('G5_DATA_PATH') ? G5_DATA_PATH : __DIR__) . '/log';
+        if (is_dir($logDir) || @mkdir($logDir, 0755, true)) {
+            @file_put_contents($logDir . '/jobs_jump_error.log', date('Y-m-d H:i:s') . ' ' . $errMsg . "\n", FILE_APPEND | LOCK_EX);
+        }
         if (ob_get_level()) ob_end_clean();
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(array('ok' => 0, 'msg' => '서버 오류가 발생했습니다.', 'err' => substr($e['message'], 0, 100)), JSON_UNESCAPED_UNICODE);
+        if (!headers_sent()) header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(array('ok' => 0, 'msg' => '서버 오류가 발생했습니다.', 'err' => $errMsg), JSON_UNESCAPED_UNICODE);
     }
 });
 
-include_once(__DIR__ . '/_common.php');
+$_jump_log_err = function ($msg) {
+    $logDir = (defined('G5_DATA_PATH') ? G5_DATA_PATH : __DIR__) . '/log';
+    if (is_dir($logDir) || @mkdir($logDir, 0755, true)) {
+        @file_put_contents($logDir . '/jobs_jump_error.log', date('Y-m-d H:i:s') . ' ' . $msg . "\n", FILE_APPEND | LOCK_EX);
+    }
+};
+set_exception_handler(function (Throwable $t) use ($_jump_log_err) {
+    $err = $t->getMessage() . ' @ ' . basename($t->getFile()) . ':' . $t->getLine();
+    if (is_callable($_jump_log_err)) $_jump_log_err($err);
+    $GLOBALS['_jump_err_out'] = json_encode(array('ok' => 0, 'msg' => '예외 발생', 'err' => $err), JSON_UNESCAPED_UNICODE);
+});
+
+try {
+    @chdir(__DIR__);
+    $inc = __DIR__ . '/_common.php';
+    if (!is_file($inc)) {
+        $_jump_err_out = json_encode(array('ok' => 0, 'msg' => '_common.php 없음', 'err' => $inc), JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    include_once($inc);
+} catch (Throwable $t) {
+    $_jump_err_out = json_encode(array('ok' => 0, 'msg' => '초기화 오류', 'err' => $t->getMessage() . ' @ ' . $t->getFile() . ':' . $t->getLine()), JSON_UNESCAPED_UNICODE);
+    exit;
+}
 ob_end_clean();
 
-header('Content-Type: application/json; charset=utf-8');
+if (!headers_sent()) header('Content-Type: application/json; charset=utf-8');
 
 function _jump_json($data) {
     global $_jump_success;
@@ -31,8 +66,13 @@ function _jump_json($data) {
     exit;
 }
 
+try {
 if (!$is_member) {
     _jump_json(array('ok' => 0, 'msg' => '로그인이 필요합니다.'));
+}
+
+if (empty($member) || empty($member['mb_id'])) {
+    _jump_json(array('ok' => 0, 'msg' => '회원 정보를 확인할 수 없습니다.'));
 }
 
 $jr_id = isset($_POST['jr_id']) ? (int)$_POST['jr_id'] : 0;
@@ -134,3 +174,6 @@ _jump_json(array(
     'jump_datetime' => $now,
     'auto_next' => $auto_next
 ));
+} catch (Throwable $t) {
+    _jump_json(array('ok' => 0, 'msg' => '처리 중 오류', 'err' => $t->getMessage() . ' @ ' . basename($t->getFile()) . ':' . $t->getLine()));
+}

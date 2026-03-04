@@ -204,7 +204,6 @@ $_jobs_base = $_base;
       <?php if ($is_admin || $_is_biz) { ?>
       <div class="msm-section">
         <div class="msm-section-title">👑 채용정보 MY PAGE</div>
-        <a href="<?php echo $_jobs_base; ?>/jobs_register.php" class="msm-link">📝 채용정보등록</a>
         <a href="<?php echo $_jobs_base; ?>/jobs_ongoing.php" class="msm-link">📋 진행중인 채용정보</a>
         <a href="<?php echo $_jobs_base; ?>/jobs_ended.php" class="msm-link">📁 마감된 채용정보</a>
         <a href="<?php echo $_jobs_base; ?>/jobs_jump_shop.php" class="msm-link">🔝 점프옵션 구매하기</a>

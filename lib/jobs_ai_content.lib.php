@@ -230,9 +230,9 @@ function aic_apply_to_jr_data($jr_id, $aic_id = null) {
     $row = null;
     if ($aic_id) {
         $aid = (int)$aic_id;
-        $row = sql_fetch("SELECT ai_data FROM g5_jobs_ai_content WHERE id = '{$aid}' AND jr_id = '{$jr_id}' LIMIT 1");
+        $row = sql_fetch("SELECT ai_data, ai_tone FROM g5_jobs_ai_content WHERE id = '{$aid}' AND jr_id = '{$jr_id}' LIMIT 1");
     } else {
-        $row = sql_fetch("SELECT ai_data FROM g5_jobs_ai_content WHERE jr_id = '{$jr_id}' AND is_active = 1 ORDER BY id DESC LIMIT 1");
+        $row = sql_fetch("SELECT ai_data, ai_tone FROM g5_jobs_ai_content WHERE jr_id = '{$jr_id}' AND is_active = 1 ORDER BY id DESC LIMIT 1");
     }
     if (!$row || empty($row['ai_data'])) return false;
     $ai_data = json_decode($row['ai_data'], true);
@@ -251,6 +251,7 @@ function aic_apply_to_jr_data($jr_id, $aic_id = null) {
     $jr_data = $jr_row['jr_data'] ? json_decode($jr_row['jr_data'], true) : array();
     if (!is_array($jr_data)) $jr_data = array();
 
+    if (!empty($row['ai_tone'])) $jr_data['ai_tone'] = trim($row['ai_tone']);
     $ai_to_desc = array('ai_location'=>'desc_location','ai_env'=>'desc_env','ai_welfare'=>'desc_benefit','ai_qualify'=>'desc_qualify','ai_extra'=>'desc_extra');
     foreach ($ai_data as $k => $v) {
         if (strpos($k, '_') === 0) continue;

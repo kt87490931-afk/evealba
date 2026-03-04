@@ -70,6 +70,7 @@ $jobs_bulk_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_editor_bulk_save.ph
 $jobs_cards_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_editor_cards_save.php' : '/jobs_editor_cards_save.php';
 $jobs_img_save_url = $jobs_base_url ? $jobs_base_url.'/jobs_image_save.php' : '/jobs_image_save.php';
 $jobs_thumb_purchase_url = $jobs_base_url ? $jobs_base_url.'/jobs_thumb_option_purchase.php' : '/jobs_thumb_option_purchase.php';
+$jobs_scrap_url = $jobs_base_url ? $jobs_base_url.'/jobs_scrap.php' : '/jobs_scrap.php';
 
 $status = $row['jr_status'];
 $payment_ok = !empty($row['jr_payment_confirmed']);
@@ -779,7 +780,8 @@ function toggleAutoJump(jrId,on){
   <!-- eve_alba_ad_editor_3 디자인 100% -->
   <div class="page-wrap jobs-ad-post">
     <!-- 상단 배너 (eve_alba_ad_editor_3 top-header) -->
-    <div class="top-header">
+    <div class="top-header" style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px;">
+      <div class="top-header-left" style="flex:1;min-width:0;">
       <?php if ($jobtype) { ?><div class="biz-badge" id="disp-biztype">🏮 <?php echo htmlspecialchars($jobtype); ?></div><?php } ?>
       <?php if ($banner_comp && $banner_comp !== '—') { ?><div class="biz-name" id="disp-bizname">🌸 <?php echo htmlspecialchars($banner_comp); ?></div><?php } ?>
       <?php if ($biz_title) { ?><div class="biz-title" id="disp-biztitle"><?php echo htmlspecialchars($biz_title); ?></div><?php } ?>
@@ -788,6 +790,26 @@ function toggleAutoJump(jrId,on){
         <span class="tag tag-pay" id="disp-pay-tag" style="<?php echo !$salary_disp?'display:none':''; ?>"><?php echo $salary_disp ? '💰 '.htmlspecialchars($salary_disp) : ''; ?></span>
         <?php if ($amenity) { $a1 = explode(',', $amenity); $a1 = array_slice(array_map('trim', $a1), 0, 2); foreach ($a1 as $a) { if ($a) { ?><span class="tag tag-daily">✅ <?php echo htmlspecialchars($a); ?></span><?php } } } ?>
       </div>
+      </div>
+      <?php
+      $_show_scrap = $is_member;
+      $_scraped = false;
+      $_jr_scrap_count = 0;
+      $tb_scrap = sql_query("SHOW TABLES LIKE 'g5_jobs_scrap'", false);
+      if ($tb_scrap && sql_num_rows($tb_scrap)) {
+        $_sc = sql_fetch("SELECT COUNT(*) as cnt FROM g5_jobs_scrap WHERE jr_id = '".(int)$jr_id."'");
+        $_jr_scrap_count = (int)($_sc['cnt'] ?? 0);
+        if ($_show_scrap) {
+          $_chk = sql_fetch("SELECT 1 FROM g5_jobs_scrap WHERE jr_id = '".(int)$jr_id."' AND mb_id = '".addslashes($member['mb_id'])."' LIMIT 1");
+          $_scraped = (bool)$_chk;
+        }
+      }
+      if ($_show_scrap) {
+      ?>
+      <button type="button" id="btn-job-scrap" class="btn-job-scrap-header<?php echo $_scraped ? ' scraped' : ''; ?>" onclick="doJobScrap(<?php echo (int)$jr_id; ?>)" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:1px solid rgba(0,0,0,.3);background:rgba(0,0,0,.55);color:#fff;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;position:relative;z-index:5;">
+        <span class="scrap-icon">⭐</span> 스크랩
+      </button>
+      <?php } ?>
     </div>
 
     <!-- ════════ 🖼️ 업소 이미지 슬라이더 ════════ -->
@@ -1090,9 +1112,9 @@ function toggleAutoJump(jrId,on){
       <?php if ($nick && $nick !== '—') { ?><div class="cta-watermark">🌸 이브알바 EVE ALBA — <?php echo htmlspecialchars($nick); ?></div><?php } ?>
     </div>
 
-    <!-- 추천하기 -->
+    <!-- 추천하기 · 스크랩 -->
     <?php if ($row['jr_status'] === 'ongoing') { ?>
-    <div class="jobs-good-area" style="display:flex;align-items:center;justify-content:center;gap:14px;padding:24px 0;margin:0 auto;">
+    <div class="jobs-good-area" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:14px;padding:24px 0;margin:0 auto;">
       <?php if ($is_member) { ?>
       <button type="button" id="jobs-good-btn" class="btn-rec" onclick="doJobsGood()" style="display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border:none;border-radius:30px;background:linear-gradient(135deg,#FF1B6B,#FF6B35);color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(255,27,107,.3);transition:transform .15s,box-shadow .15s;">
         <span style="font-size:18px;">👍</span> 추천하기
@@ -1106,6 +1128,26 @@ function toggleAutoJump(jrId,on){
         <span style="font-size:20px;">❤️</span>
         <span id="jobs-good-count" style="font-size:18px;font-weight:900;color:#FF1B6B;"><?php echo number_format($_jr_good); ?></span>
       </div>
+      <?php if ($is_member) {
+        $_scraped_bottom = isset($_scraped) ? $_scraped : false;
+        $_scrap_cnt = isset($_jr_scrap_count) ? $_jr_scrap_count : 0;
+      ?>
+      <button type="button" id="btn-job-scrap-bottom" class="btn-rec<?php echo $_scraped_bottom ? ' scraped' : ''; ?>" onclick="doJobScrap(<?php echo (int)$jr_id; ?>)" style="display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border:none;border-radius:30px;background:<?php echo $_scraped_bottom ? 'linear-gradient(135deg,#FFD700,#FFA500)' : 'linear-gradient(135deg,#FF1B6B,#FF6B35)'; ?>;color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(255,27,107,.3);transition:transform .15s,box-shadow .15s;">
+        <span class="scrap-icon-bottom">⭐</span> 스크랩
+      </button>
+      <div style="display:flex;align-items:center;gap:6px;padding:10px 20px;background:rgba(255,215,0,.2);border-radius:30px;">
+        <span style="font-size:20px;">⭐</span>
+        <span id="jobs-scrap-count" style="font-size:18px;font-weight:900;color:#C90050;"><?php echo number_format($_scrap_cnt); ?></span>
+      </div>
+      <?php } else { ?>
+      <button type="button" class="btn-rec" onclick="alert('회원만 스크랩할 수 있습니다.')" style="display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border:none;border-radius:30px;background:#ccc;color:#fff;font-size:15px;font-weight:700;cursor:pointer;">
+        <span style="font-size:18px;">⭐</span> 스크랩
+      </button>
+      <div style="display:flex;align-items:center;gap:6px;padding:10px 20px;background:rgba(255,215,0,.2);border-radius:30px;">
+        <span style="font-size:20px;">⭐</span>
+        <span id="jobs-scrap-count" style="font-size:18px;font-weight:900;color:#C90050;"><?php echo number_format(isset($_jr_scrap_count) ? $_jr_scrap_count : 0); ?></span>
+      </div>
+      <?php } ?>
     </div>
     <?php if ($is_member) { ?>
     <div id="jobs-good-info" style="text-align:center;font-size:12px;color:#999;margin-top:-12px;padding-bottom:16px;">오늘 <?php echo $_jr_good_used; ?>/<?php echo $_jr_good_limit; ?> 사용</div>
@@ -2074,6 +2116,26 @@ function toggleAutoJump(jrId,on){
   window.saveImgSlider=saveImgSlider;
   window.goSlide=goSlide; window.prevSlide=prevSlide; window.nextSlide=nextSlide;
 
+  window.doJobScrap=function(jid){
+    var hdr=document.getElementById('btn-job-scrap'),btm=document.getElementById('btn-job-scrap-bottom');
+    var btn=hdr||btm;if(!btn)return;
+    if(hdr)hdr.disabled=true;if(btm)btm.disabled=true;
+    var fd=new FormData();fd.append('jr_id',jid);fd.append('action',btn.classList.contains('scraped')?'remove':'add');
+    fetch('<?php echo addslashes($jobs_scrap_url); ?>',{method:'POST',body:fd,credentials:'same-origin'})
+    .then(function(r){return r.json();})
+    .then(function(res){
+      var hdr=document.getElementById('btn-job-scrap'),btm=document.getElementById('btn-job-scrap-bottom');
+      if(hdr)hdr.disabled=false;if(btm)btm.disabled=false;
+      if(res.ok){
+        var scraped=!!res.scraped;
+        if(hdr){scraped?hdr.classList.add('scraped'):hdr.classList.remove('scraped');}
+        if(btm){scraped?btm.classList.add('scraped'):btm.classList.remove('scraped');btm.style.background=scraped?'linear-gradient(135deg,#FFD700,#FFA500)':'linear-gradient(135deg,#FF1B6B,#FF6B35)';}
+        var cntEl=document.getElementById('jobs-scrap-count');if(cntEl)cntEl.textContent=(res.count||0).toLocaleString();
+        alert(res.msg);
+      }else{alert(res.msg||'스크랩 처리에 실패했습니다.');}
+    })
+    .catch(function(){var h=document.getElementById('btn-job-scrap'),b=document.getElementById('btn-job-scrap-bottom');if(h)h.disabled=false;if(b)b.disabled=false;alert('스크랩 처리 중 오류가 발생했습니다.');});
+  };
   window.doJobsGood=function(){
     var btn=document.getElementById('jobs-good-btn');
     if(!btn)return;

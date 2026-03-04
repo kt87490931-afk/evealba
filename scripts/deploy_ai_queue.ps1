@@ -19,6 +19,7 @@ Write-Host ""
 
 $files = @(
     @{ src = "$ROOT\extend\gemini_config.php"; dest = "$REMOTE_PATH/extend/" },
+    @{ src = "$ROOT\extend\jobs_list_helper.php"; dest = "$REMOTE_PATH/extend/" },
     @{ src = "$ROOT\lib\gemini_api.lib.php"; dest = "$REMOTE_PATH/lib/" },
     @{ src = "$ROOT\lib\jobs_ai_content.lib.php"; dest = "$REMOTE_PATH/lib/" },
     @{ src = "$ROOT\jobs_ai_queue_process.php"; dest = "$REMOTE_PATH/" },
@@ -34,11 +35,14 @@ $files = @(
     @{ src = "$ROOT\adm\jobs_ai_content_action.php"; dest = "$REMOTE_PATH/adm/" },
     @{ src = "$ROOT\adm\jobs_ai_queue_add.php"; dest = "$REMOTE_PATH/adm/" },
     @{ src = "$ROOT\theme\evealba\jobs_view_main.php"; dest = "$REMOTE_PATH/theme/evealba/" },
+    @{ src = "$ROOT\jobs_scrap.php"; dest = "$REMOTE_PATH/" },
+    @{ src = "$ROOT\cron_auto_jump.php"; dest = "$REMOTE_PATH/" },
     @{ src = "$ROOT\theme\evealba\skin\board\eve_skin\jobs_view_editor.css"; dest = "$REMOTE_PATH/theme/evealba/skin/board/eve_skin/" },
     @{ src = "$ROOT\migrations\009_create_jobs_ai_queue.sql"; dest = "$REMOTE_PATH/migrations/" },
     @{ src = "$ROOT\migrations\010_create_jobs_ai_content.sql"; dest = "$REMOTE_PATH/migrations/" },
     @{ src = "$ROOT\migrations\migrate_ai_data.php"; dest = "$REMOTE_PATH/migrations/" },
-    @{ src = "$ROOT\scripts\setup_ai_queue_cron.sh"; dest = "$REMOTE_PATH/scripts/" }
+    @{ src = "$ROOT\scripts\setup_ai_queue_cron.sh"; dest = "$REMOTE_PATH/scripts/" },
+    @{ src = "$ROOT\scripts\setup_auto_jump_cron.sh"; dest = "$REMOTE_PATH/scripts/" }
 )
 
 foreach ($f in $files) {
@@ -57,7 +61,8 @@ ssh -o StrictHostKeyChecking=accept-new $REMOTE_HOST "mkdir -p $REMOTE_PATH/them
 
 Write-Host ""
 Write-Host "배포 완료."
-Write-Host "서버에서 다음 실행:"
+Write-Host "서버에서 다음 실행 (필요 시):"
 Write-Host "  cd /var/www/evealba"
 Write-Host "  php run_migration.php"
 Write-Host "  bash scripts/setup_ai_queue_cron.sh"
+Write-Host "  bash scripts/setup_auto_jump_cron.sh"

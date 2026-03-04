@@ -260,8 +260,14 @@ function doListJump(jrId){
     credentials:'same-origin'
   }).then(function(r){
     return r.text().then(function(t){
-      try{var j=JSON.parse(t);return j;}
-      catch(e){throw new Error(r.status===500?'서버 오류(500)':'응답 오류');}
+      var j=null;
+      try{j=JSON.parse(t);}catch(e){
+        var m=t.match(/\{[\s\S]*\}$/);
+        if(m){try{j=JSON.parse(m[0]);}catch(e2){}}
+      }
+      if(j&&typeof j==='object') return j;
+      if(r.status===500) console.error('[jobs_jump 500] 응답본문:', t.slice(0,500));
+      throw new Error(r.status===500 ? '서버 오류(500)' : '응답 오류');
     });
   }).then(function(res){
     btn.disabled=false;btn.textContent='⚡점프';
@@ -270,8 +276,12 @@ function doListJump(jrId){
       var numEl=document.getElementById('jump-remain-'+jrId);
       if(numEl) numEl.textContent=res.remain.toLocaleString()+'회';
       if(res.remain<=0) btn.disabled=true;
-    }else{alert(res.msg||'점프 처리 실패');}
-  }).catch(function(e){btn.disabled=false;btn.textContent='⚡점프';alert('점프 처리 중 오류: '+(e.message||''));});
+    }else{
+      var fullMsg=(res.msg||'점프 처리 실패')+(res.err?'\n\n[상세] '+res.err:'');
+      if(res.err) console.error('[jobs_jump]', res.err);
+      alert(fullMsg);
+    }
+  }).catch(function(e){btn.disabled=false;btn.textContent='⚡점프';console.error('[jobs_jump]', e);alert('점프 처리 중 오류: '+(e.message||''));});
 }
 </script>
 

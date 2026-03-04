@@ -1,7 +1,7 @@
 <?php
 /**
  * 채용공고 등록 페이지 전용 좌측 사이드바
- * - MY PAGE 메뉴 5개: 채용정보등록, 진행중인 채용정보, 마감된 채용정보, 유료결제 내역, 회원정보 수정
+ * - MY PAGE 메뉴: 진행중/마감된 채용정보, 점프옵션 구매, 유료결제 내역, 회원정보 수정
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -10,14 +10,13 @@ $jobs_register_url = $jobs_base_url ? $jobs_base_url.'/jobs_register.php' : '/jo
 $jobs_ongoing_url = $jobs_base_url ? $jobs_base_url.'/jobs_ongoing.php' : '/jobs_ongoing.php';
 $jobs_ended_url = $jobs_base_url ? $jobs_base_url.'/jobs_ended.php' : '/jobs_ended.php';
 $jobs_jump_shop_url = $jobs_base_url ? $jobs_base_url.'/jobs_jump_shop.php' : '/jobs_jump_shop.php';
-$jobs_thumb_shop_url = $jobs_base_url ? $jobs_base_url.'/jobs_thumb_shop.php' : '/jobs_thumb_shop.php';
 $jobs_payment_url = $jobs_base_url ? $jobs_base_url.'/jobs_payment_history.php' : '/jobs_payment_history.php';
 $jobs_mem_confirm_url = G5_BBS_URL.'/member_confirm.php?url='.urlencode(G5_BBS_URL.'/register_form.php');
 
 $jobs_mypage_active = isset($jobs_mypage_active) ? $jobs_mypage_active : 'register';
 $_jmp_labels = array(
-    'register'=>'📝 채용정보등록','ongoing'=>'📋 진행중인 채용정보','ended'=>'📁 마감된 채용정보',
-    'thumb_shop'=>'🛒 썸네일상점','jump_shop'=>'🔝 점프옵션 구매하기','payment'=>'💳 유료결제 내역','member'=>'⚙️ 회원정보 수정'
+    'ongoing'=>'📋 진행중인 채용정보','ended'=>'📁 마감된 채용정보',
+    'jump_shop'=>'🔝 점프옵션 구매하기','payment'=>'💳 유료결제 내역','member'=>'⚙️ 회원정보 수정'
 );
 $_jmp_active_label = isset($_jmp_labels[$jobs_mypage_active]) ? $_jmp_labels[$jobs_mypage_active] : '📋 MY PAGE';
 ?>
@@ -35,10 +34,8 @@ $_jmp_active_label = isset($_jmp_labels[$jobs_mypage_active]) ? $_jmp_labels[$jo
     <span class="smt-arrow">▼</span>
   </button>
   <div class="side-menu-list">
-    <a href="<?php echo $jobs_register_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'register') ? ' active' : ''; ?>">📝 채용정보등록</a>
     <a href="<?php echo $jobs_ongoing_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'ongoing') ? ' active' : ''; ?>">📋 진행중인 채용정보</a>
     <a href="<?php echo $jobs_ended_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'ended') ? ' active' : ''; ?>">📁 마감된 채용정보</a>
-    <a href="<?php echo $jobs_thumb_shop_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'thumb_shop') ? ' active' : ''; ?>">🛒 썸네일상점</a>
     <a href="<?php echo $jobs_jump_shop_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'jump_shop') ? ' active' : ''; ?>">🔝 점프옵션 구매하기</a>
     <a href="<?php echo $jobs_payment_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'payment') ? ' active' : ''; ?>">💳 유료결제 내역</a>
     <a href="<?php echo $jobs_mem_confirm_url; ?>" class="side-menu-item<?php echo ($jobs_mypage_active === 'member') ? ' active' : ''; ?>">⚙️ 회원정보 수정</a>

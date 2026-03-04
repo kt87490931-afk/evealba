@@ -48,7 +48,7 @@ if (!defined('_GNUBOARD_')) exit;
   <div class="widget-title">📄 고용형태</div>
   <div class="widget-body">
     <div class="employ-list">
-      <a href="#" class="employ-item">🌙 낮</a>
+      <a href="#" class="employ-item">☀️ 낮</a>
       <a href="#" class="employ-item">🌙 저녁</a>
       <a href="#" class="employ-item">🏠 숙식</a>
       <a href="#" class="employ-item">🤝 협의</a>
@@ -62,11 +62,12 @@ if (!defined('_GNUBOARD_')) exit;
   <div class="widget-title">📢 광고 섹션</div>
   <div class="widget-body">
     <div class="side-section-links">
-      <a href="#" class="side-section-link">▶ 우대등록채용정보<span class="badge-ad">광고신청</span></a>
-      <a href="#" class="side-section-link">▶ 프리미엄채용정보<span class="badge-ad">광고신청</span></a>
-      <a href="#" class="side-section-link">▶ 스페셜채용정보<span class="badge-ad">광고신청</span></a>
-      <a href="#" class="side-section-link">▶ 급구채용정보<span class="badge-ad">광고신청</span></a>
-      <a href="#" class="side-section-link">▶ 추천채용정보<span class="badge-ad">광고신청</span></a>
+      <?php $jobs_register_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_register.php' : '/jobs_register.php'; ?>
+      <a href="<?php echo htmlspecialchars($jobs_register_url); ?>" class="side-section-link">▶ 우대등록채용정보<span class="badge-ad">광고신청</span></a>
+      <a href="<?php echo htmlspecialchars($jobs_register_url); ?>" class="side-section-link">▶ 프리미엄채용정보<span class="badge-ad">광고신청</span></a>
+      <a href="<?php echo htmlspecialchars($jobs_register_url); ?>" class="side-section-link">▶ 스페셜채용정보<span class="badge-ad">광고신청</span></a>
+      <a href="<?php echo htmlspecialchars($jobs_register_url); ?>" class="side-section-link">▶ 급구채용정보<span class="badge-ad">광고신청</span></a>
+      <a href="<?php echo htmlspecialchars($jobs_register_url); ?>" class="side-section-link">▶ 추천채용정보<span class="badge-ad">광고신청</span></a>
     </div>
   </div>
 </div>
