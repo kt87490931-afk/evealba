@@ -2316,3 +2316,10 @@ footer {
   .float-recommend.fr-open .fr-tab { display:none !important; }
   .float-recommend.fr-open .fr-panel { display:block; }
 }
+
+/* 모바일 프리미엄채용정보 3열 강제 (768px 이하) */
+@media (max-width:768px) {
+  .main-area .section-wrap .premium-grid,
+  .section-wrap .premium-grid,
+  div.premium-grid { grid-template-columns:repeat(3,1fr) !important; gap:8px !important; }
+}
