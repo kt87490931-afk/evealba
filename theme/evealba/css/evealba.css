@@ -2317,9 +2317,17 @@ footer {
   .float-recommend.fr-open .fr-panel { display:block; }
 }
 
-/* 모바일 프리미엄채용정보 3열 강제 (768px 이하) */
+/* 모바일 프리미엄채용정보 3열 강제 (768px 이하) - special-grid와 동일 */
 @media (max-width:768px) {
   .main-area .section-wrap .premium-grid,
   .section-wrap .premium-grid,
   div.premium-grid { grid-template-columns:repeat(3,1fr) !important; gap:8px !important; }
+}
+
+/* 모바일 프리미엄 3열 최종 강제 (600px 이하, 캐시 무효화) */
+@media (max-width:600px) {
+  body .main-area .section-wrap .premium-grid,
+  body .section-wrap div.premium-grid,
+  .section-wrap .premium-grid,
+  div.premium-grid { grid-template-columns:repeat(3,1fr) !important; gap:8px !important; min-width:0; }
 }
