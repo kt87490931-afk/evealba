@@ -64,19 +64,10 @@ $search_keyword = isset($_GET['st']) ? trim($_GET['st']) : '';
       <div class="msg-chk">
         <input type="checkbox" class="msg-checkbox" name="me_id[]" value="<?php echo $row['me_id']; ?>" id="me_id_<?php echo $row['me_id']; ?>">
       </div>
-      <a href="<?php echo $row['view_href']; ?>" class="msg-body">
-        <div class="msg-hrow">
-          <span class="msg-sender"><?php echo get_text($row['mb_nick'] ?: '정보없음'); ?></span>
-          <?php if (!$readed) { ?><span class="mbadge new">미열람</span><?php } ?>
-        </div>
-        <div class="msg-title"><?php echo $readed ? get_text($memo_preview) : '<b>'.get_text($memo_preview).'</b>'; ?></div>
-        <div class="msg-preview"><?php echo get_text($memo_preview); ?></div>
-      </a>
-      <div class="msg-meta">
-        <span class="msg-date"><?php echo $row['send_datetime']; ?></span>
-        <span class="msg-st<?php echo $readed ? '' : ' unread'; ?>"><?php echo $readed ? '열람' : '미열람'; ?></span>
-        <a href="<?php echo $row['del_href']; ?>" onclick="del(this.href); return false;" class="memo-del" title="삭제"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-      </div>
+      <span class="msg-sender"><?php echo get_text($row['mb_nick'] ?: '정보없음'); ?></span>
+      <a href="<?php echo $row['view_href']; ?>" class="msg-content"><?php echo $readed ? get_text($memo_preview) : '<b>'.get_text($memo_preview).'</b>'; ?></a>
+      <span class="msg-date"><?php echo $row['send_datetime']; ?></span>
+      <span class="msg-st<?php echo $readed ? '' : ' unread'; ?>"><?php echo $readed ? '열람' : '미열람'; ?></span>
     </li>
     <?php } ?>
   </ul>
