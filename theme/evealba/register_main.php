@@ -738,7 +738,7 @@ function doJoin() {
         document.getElementById('complete-msg').innerHTML =
           '🏢 기업회원 가입 신청이 완료되었습니다.<br>'
           + '<strong style="color:var(--hot-pink);">관리자 승인 후 로그인이 가능합니다.</strong><br>'
-          + '승인까지 영업일 기준 1~2일 소요됩니다.';
+          + '사업자등록증의 내용과 일치하면 5분이내에 승인이 됩니다. 승인이 안될시 고객센터로 문의주세요.';
       } else {
         document.getElementById('ci-type').textContent = '👤 개인회원';
         document.getElementById('complete-msg').innerHTML =

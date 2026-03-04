@@ -671,9 +671,9 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
                 <td class="ad-td ad-price">70,000 원<br>125,000 원<br>170,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="70000" data-label="줄광고 30일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="125000" data-label="줄광고 60일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="170000" data-label="줄광고 90일" onchange="calcTotal()">
+                    <input type="checkbox" data-price="70000" data-label="줄광고 30일" data-period="30" data-line-ad="1" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="125000" data-label="줄광고 60일" data-period="60" data-line-ad="1" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="170000" data-label="줄광고 90일" data-period="90" data-line-ad="1" onchange="onAdCheckChange(this)">
                   </div>
                 </td>
               </tr>
@@ -702,9 +702,9 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
                 <td class="ad-td ad-price">230,000 원<br>415,000 원<br>550,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="230000" data-label="우대 30일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="415000" data-label="우대 60일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="550000" data-label="우대 90일" onchange="calcTotal()">
+                    <input type="checkbox" data-price="230000" data-label="우대 30일" data-period="30" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="415000" data-label="우대 60일" data-period="60" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="550000" data-label="우대 90일" data-period="90" onchange="onAdCheckChange(this)">
                   </div>
                 </td>
               </tr>
@@ -720,9 +720,9 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
                 <td class="ad-td ad-price">180,000 원<br>325,000 원<br>430,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="180000" data-label="프리미엄 30일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="325000" data-label="프리미엄 60일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="430000" data-label="프리미엄 90일" onchange="calcTotal()">
+                    <input type="checkbox" data-price="180000" data-label="프리미엄 30일" data-period="30" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="325000" data-label="프리미엄 60일" data-period="60" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="430000" data-label="프리미엄 90일" data-period="90" onchange="onAdCheckChange(this)">
                   </div>
                 </td>
               </tr>
@@ -738,9 +738,9 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
                 <td class="ad-td ad-price">130,000 원<br>235,000 원<br>310,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="130000" data-label="스페셜 30일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="235000" data-label="스페셜 60일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="310000" data-label="스페셜 90일" onchange="calcTotal()">
+                    <input type="checkbox" data-price="130000" data-label="스페셜 30일" data-period="30" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="235000" data-label="스페셜 60일" data-period="60" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="310000" data-label="스페셜 90일" data-period="90" onchange="onAdCheckChange(this)">
                   </div>
                 </td>
               </tr>
@@ -756,9 +756,9 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
                 <td class="ad-td ad-price">150,000 원<br>285,000 원<br>420,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="150000" data-label="급구 30일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="285000" data-label="급구 60일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="420000" data-label="급구 90일" onchange="calcTotal()">
+                    <input type="checkbox" data-price="150000" data-label="급구 30일" data-period="30" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="285000" data-label="급구 60일" data-period="60" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="420000" data-label="급구 90일" data-period="90" onchange="onAdCheckChange(this)">
                   </div>
                 </td>
               </tr>
@@ -774,9 +774,9 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
                 <td class="ad-td ad-price">100,000 원<br>185,000 원<br>240,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="100000" data-label="추천 30일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="185000" data-label="추천 60일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="240000" data-label="추천 90일" onchange="calcTotal()">
+                    <input type="checkbox" data-price="100000" data-label="추천 30일" data-period="30" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="185000" data-label="추천 60일" data-period="60" onchange="onAdCheckChange(this)">
+                    <input type="checkbox" data-price="240000" data-label="추천 90일" data-period="90" onchange="onAdCheckChange(this)">
                   </div>
                 </td>
               </tr>
@@ -1085,6 +1085,30 @@ var _lineAdPrice = {30:70000, 60:125000, 90:170000};
 var _availableCoupons = [];
 var _selectedLineAd = null;
 var _selectedAd = null;
+var _LINE_AD_ERR_MSG = '줄광고는 필수입니다. 줄광고와 동일한 기간을 선택해주세요.';
+
+/** 줄광고 필수·기간일치 검증. 오류 시 메시지 반환, 정상 시 null */
+function validateLineAdAndPeriod() {
+  var linePeriod = null;
+  var boxPeriods = [];
+  document.querySelectorAll('.ad-table input[type="checkbox"][data-price][data-period]:checked').forEach(function(cb){
+    var p = parseInt(cb.dataset.period, 10);
+    if (cb.dataset.lineAd === '1') linePeriod = p;
+    else boxPeriods.push(p);
+  });
+  if (boxPeriods.length > 0 && !linePeriod) return _LINE_AD_ERR_MSG;
+  if (linePeriod && boxPeriods.length > 0) {
+    for (var i = 0; i < boxPeriods.length; i++) { if (boxPeriods[i] !== linePeriod) return _LINE_AD_ERR_MSG; }
+  }
+  return null;
+}
+
+/** 광고 체크박스 변경 시 검증 → 위반 시 되돌리고 경고 */
+function onAdCheckChange(cb) {
+  var err = validateLineAdAndPeriod();
+  if (err) { cb.checked = !cb.checked; alert(err); }
+  if (typeof calcTotal === 'function') calcTotal();
+}
 
 function getLineAndBoxAmounts() {
   var line = 0, box = 0;
@@ -1282,8 +1306,10 @@ function checkPayment() {
     if(/줄광고\s*60/.test(lb)) adPeriod=60;
     if(/줄광고\s*90/.test(lb)) adPeriod=90;
   });
-  if(total === 0){
-    alert('광고 옵션을 1개 이상 선택해주세요. (줄광고 필수)');
+  var lineAdErr = validateLineAdAndPeriod();
+  if (lineAdErr) { alert(lineAdErr); return; }
+  if (total === 0){
+    alert(_LINE_AD_ERR_MSG);
     return;
   }
   var finalAmount = parseInt(document.getElementById('total_amount_hidden').value) || total;

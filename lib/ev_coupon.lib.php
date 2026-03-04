@@ -71,8 +71,8 @@ function ev_coupon_list_available_ad($mb_id, $line_amount, $box_amount) {
     $line_ad_price = array(30 => 70000, 60 => 125000, 90 => 170000);
     while ($row = sql_fetch_array($res)) {
         if ($row['ec_type'] === 'line_ad_free') {
-            $req = isset($row['ec_line_ad_days']) && isset($line_ad_price[(int)$row['ec_line_ad_days']]) ? $line_ad_price[(int)$row['ec_line_ad_days']] : 170000;
-            if ($line_amount >= $req) $list[] = $row;
+            /* 줄광고 쿠폰은 항상 목록에 포함 (선택 전에도 노출). 할인 적용 여부는 결제 시 line_amount로 검증 */
+            $list[] = $row;
         } else {
             if ($box_amount >= (int)($row['ec_min_amount'] ?? 0)) $list[] = $row;
         }
