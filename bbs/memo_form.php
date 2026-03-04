@@ -39,7 +39,11 @@ if ($me_recv_mb_id)
 $memo_recv_count = (int)sql_fetch("SELECT count(*) as cnt FROM {$g5['memo_table']} WHERE me_recv_mb_id = '{$member['mb_id']}' AND me_type='recv'")['cnt'];
 $memo_unread_count = function_exists('get_memo_not_read') ? get_memo_not_read($member['mb_id']) : 0;
 $memo_send_count = (int)sql_fetch("SELECT count(*) as cnt FROM {$g5['memo_table']} WHERE me_send_mb_id = '{$member['mb_id']}' AND me_type='send'")['cnt'];
-$member_type = (isset($member['mb_1']) && $member['mb_1'] === 'biz') ? '기업회원' : '일반회원';
+$member_type = '일반회원';
+if (isset($member['mb_id']) && $member['mb_id']) {
+    $row = sql_fetch("SELECT mb_1 FROM {$g5['member_table']} WHERE mb_id = '" . sql_escape_string($member['mb_id']) . "'");
+    if ($row && isset($row['mb_1']) && $row['mb_1'] === 'biz') $member_type = '기업회원';
+}
 $memo_current_tab = 'form';
 
 $g5['title'] = '쪽지 보내기';
