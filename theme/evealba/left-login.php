@@ -100,9 +100,11 @@ $box_height = 205;
             <div class="ev-login-nick">
                 <strong class="ev-login-nick-text"><?php echo get_text($member['mb_nick']); ?></strong>
                 <span>님 접속중</span>
-                <span class="ev-login-member-type-badge <?php echo $ev_member_badge_class; ?>"><?php echo $ev_member_type_label; ?></span>
             </div>
             <a href="<?php echo G5_BBS_URL; ?>/logout.php" class="ev-logout-link">로그아웃</a>
+        </div>
+        <div class="ev-login-member-type-wrap">
+            <span class="ev-login-member-type-badge <?php echo $ev_member_badge_class; ?>"><?php echo $ev_member_type_label; ?></span>
         </div>
         <div class="ev-login-body">
             <div class="ev-login-grade">
@@ -159,9 +161,10 @@ $box_height = 205;
 .ev-login-header-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
 .ev-login-nick{ font-size:12px; color:#222; }
 .ev-login-nick-text{ color:#5c3d7a; font-weight:900; }
-.ev-login-member-type-badge{ display:inline-block; margin-top:4px; padding:3px 10px; border-radius:12px; font-size:10px; font-weight:700; }
-.ev-login-member-type-badge.ev-member-type-eve{ background:#ffd6e0; color:#b71c4a; }
-.ev-login-member-type-badge.ev-member-type-biz{ background:#b3e5fc; color:#0277bd; }
+.ev-login-member-type-wrap{ display:block; margin:4px 0 6px 0; text-align:left; }
+.ev-login-member-type-badge{ display:inline-block; padding:4px 12px; border-radius:12px; font-size:10px; font-weight:700; background-color:#ffd6e0 !important; color:#b71c4a !important; }
+.ev-login-member-type-badge.ev-member-type-eve{ background-color:#ffd6e0 !important; color:#b71c4a !important; }
+.ev-login-member-type-badge.ev-member-type-biz{ background-color:#b3e5fc !important; color:#0277bd !important; }
 .ev-logout-link{ font-size:11px; color:#fff; background:#5c3d7a; padding:4px 8px; border-radius:10px; text-decoration:none; line-height:1; }
 .ev-logout-link:hover{ opacity:.9; }
 .ev-login-body{ display:flex; }

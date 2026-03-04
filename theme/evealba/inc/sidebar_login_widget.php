@@ -38,6 +38,8 @@ $ev_login_action = G5_HTTPS_BBS_URL . '/login_check.php';
     <div class="login-logged">
       <div class="login-logged-info">
         <strong><?php echo get_text($member['mb_nick']); ?></strong>님 접속중
+      </div>
+      <div class="login-member-type-wrap">
         <span class="login-member-type-badge <?php echo $ev_member_class; ?>"><?php echo $ev_member_type; ?></span>
       </div>
       <div class="login-logged-actions">
