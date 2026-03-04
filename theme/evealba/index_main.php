@@ -29,6 +29,18 @@ if ($_sb_check && sql_num_rows($_sb_check) > 0) {
     while ($_sb_r = sql_fetch_array($_sb_res)) {
         if (!empty($_sb_r['jr_id'])) $_idx_recommend[] = $_sb_r;
     }
+    /* 추천업소 셔플: config recommend_shuffle_min > 0이면 시간 기반 랜덤 순서 */
+    if (count($_idx_recommend) > 1) {
+        $_sb_cfg = sql_fetch("SELECT sb_data FROM {$_sb_table} WHERE sb_type = 'config' AND sb_status = 'active' LIMIT 1");
+        if ($_sb_cfg && $_sb_cfg['sb_data']) {
+            $_sb_cfg_d = json_decode($_sb_cfg['sb_data'], true);
+            if (!empty($_sb_cfg_d['recommend_shuffle_min'])) {
+                $_sb_shuffle = max(1, min(60, (int)$_sb_cfg_d['recommend_shuffle_min']));
+                mt_srand((int)(time() / 60 / $_sb_shuffle));
+                shuffle($_idx_recommend);
+            }
+        }
+    }
 }
 ?>
 <!-- 빠른 통계 (데스크톱) -->

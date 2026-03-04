@@ -47,11 +47,15 @@ if ($_enum_check && strpos($_enum_check['COLUMN_TYPE'], 'config') === false) {
 
 // ── 셔플 설정 로드 ──
 $hero_shuffle_sec = 5;
+$recommend_shuffle_min = 0;
 $_cfg_row = sql_fetch("SELECT sb_data FROM {$sb_table} WHERE sb_type = 'config' AND sb_status = 'active' LIMIT 1");
 if ($_cfg_row && $_cfg_row['sb_data']) {
     $_cfg_json = json_decode($_cfg_row['sb_data'], true);
     if (isset($_cfg_json['hero_shuffle_sec'])) {
         $hero_shuffle_sec = max(1, (int)$_cfg_json['hero_shuffle_sec']);
+    }
+    if (isset($_cfg_json['recommend_shuffle_min'])) {
+        $recommend_shuffle_min = max(0, min(60, (int)$_cfg_json['recommend_shuffle_min']));
     }
 }
 
@@ -270,6 +274,12 @@ require_once './admin.head.php';
         <?php } else { ?>
             <span style="font-size:11px;color:#C62828;font-weight:400;">슬롯이 가득 찼습니다 (<?php echo $recommend_max; ?>/<?php echo $recommend_max; ?>)</span>
         <?php } ?>
+        <span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#555;">
+            🔄 셔플 간격
+            <input type="number" id="recommendShuffleMin" value="<?php echo (int)$recommend_shuffle_min; ?>" min="0" max="60" placeholder="0" style="width:56px;padding:4px 6px;border:1px solid #ddd;border-radius:5px;font-size:12px;text-align:center;" title="0=끔, 1~60=해당 분마다 순서 변경">
+            <span style="color:#888;">분 (0=끔)</span>
+            <button type="button" class="sb-add-btn pink" style="padding:4px 10px;font-size:11px;" onclick="saveRecommendShuffle()">저장</button>
+        </span>
     </div>
 
     <?php if ($recommend_cnt === 0) { ?>
@@ -445,10 +455,33 @@ function saveShuffleSec() {
     var sec = parseInt(document.getElementById('heroShuffleSec').value) || 5;
     if (sec < 1) sec = 1;
     if (sec > 60) sec = 60;
+    var recMin = parseInt(document.getElementById('recommendShuffleMin').value) || 0;
+    if (recMin < 0) recMin = 0;
+    if (recMin > 60) recMin = 60;
     var form = document.createElement('form');
     form.method = 'POST';
     form.action = './eve_special_banner_update.php';
-    var fields = {act: 'save_config', hero_shuffle_sec: sec, token: SB_TOKEN};
+    var fields = {act: 'save_config', hero_shuffle_sec: sec, recommend_shuffle_min: recMin, token: SB_TOKEN};
+    for (var k in fields) {
+        var inp = document.createElement('input');
+        inp.type = 'hidden'; inp.name = k; inp.value = fields[k];
+        form.appendChild(inp);
+    }
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function saveRecommendShuffle() {
+    var recMin = parseInt(document.getElementById('recommendShuffleMin').value) || 0;
+    if (recMin < 0) recMin = 0;
+    if (recMin > 60) recMin = 60;
+    var sec = parseInt(document.getElementById('heroShuffleSec').value) || 5;
+    if (sec < 1) sec = 1;
+    if (sec > 60) sec = 60;
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = './eve_special_banner_update.php';
+    var fields = {act: 'save_config', hero_shuffle_sec: sec, recommend_shuffle_min: recMin, token: SB_TOKEN};
     for (var k in fields) {
         var inp = document.createElement('input');
         inp.type = 'hidden'; inp.name = k; inp.value = fields[k];

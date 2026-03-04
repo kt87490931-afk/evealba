@@ -2,7 +2,8 @@
 if (!defined('_GNUBOARD_')) exit;
 
 /* 채용정보/인재정보 등 반응형 레이아웃 페이지: 메인과 동일한 tail 사용 (추천업소 플로팅배너 포함) */
-if (G5_IS_MOBILE && !defined('_JOBS_') && !defined('_TALENT_')) {
+$_ev_use_pc_tail = defined('_JOBS_') || defined('_JOBS_REGION_') || defined('_JOBS_VIEW_') || defined('_JOBS_REGISTER_') || defined('_JOBS_ONGOING_') || defined('_JOBS_ENDED_') || defined('_JOBS_JUMP_SHOP_') || defined('_TALENT_') || defined('_TALENT_VIEW_');
+if (G5_IS_MOBILE && !$_ev_use_pc_tail) {
     include_once(G5_THEME_MOBILE_PATH.'/tail.php');
     return;
 }

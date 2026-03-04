@@ -38,6 +38,30 @@ if ($_show_all_sections || $_atf === '추천') {
 if ($_show_all_sections) {
     $_jobs_list = function_exists('get_jobs_by_type') ? get_jobs_by_type('줄광고', 20) : array();
 } else { $_jobs_list = array(); }
+
+// 모바일 추천업소: special_banner recommend (플로팅 대신 메인 영역 썸네일)
+$_jobs_recommend = array();
+$_jrec_sb = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'special_banner';
+$_jrec_jr = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'jobs_register';
+$_jrec_chk = sql_query("SHOW TABLES LIKE '{$_jrec_sb}'");
+if ($_jrec_chk && sql_num_rows($_jrec_chk) > 0) {
+    $_jrec_res = sql_query("SELECT jr.* FROM {$_jrec_sb} sb LEFT JOIN {$_jrec_jr} jr ON sb.sb_jr_id = jr.jr_id WHERE sb.sb_type = 'recommend' AND sb.sb_status = 'active' ORDER BY sb.sb_position ASC LIMIT 6");
+    while ($_jrec_r = sql_fetch_array($_jrec_res)) {
+        if (!empty($_jrec_r['jr_id'])) $_jobs_recommend[] = $_jrec_r;
+    }
+    /* 추천업소 셔플: config recommend_shuffle_min > 0이면 시간 기반 랜덤 순서 */
+    if (count($_jobs_recommend) > 1) {
+        $_jrec_cfg = sql_fetch("SELECT sb_data FROM {$_jrec_sb} WHERE sb_type = 'config' AND sb_status = 'active' LIMIT 1");
+        if ($_jrec_cfg && $_jrec_cfg['sb_data']) {
+            $_jrec_cfg_d = json_decode($_jrec_cfg['sb_data'], true);
+            if (!empty($_jrec_cfg_d['recommend_shuffle_min'])) {
+                $_jrec_shuffle = max(1, min(60, (int)$_jrec_cfg_d['recommend_shuffle_min']));
+                mt_srand((int)(time() / 60 / $_jrec_shuffle));
+                shuffle($_jobs_recommend);
+            }
+        }
+    }
+}
 ?>
     <!-- 검색 필터 박스 -->
     <?php
@@ -104,6 +128,23 @@ if ($_show_all_sections) {
         <button type="button" class="btn-reset">초기화</button>
       </div>
     </form>
+
+    <!-- 모바일 전용 추천업소 (PC에서는 숨김, 우대채용정보 위) -->
+<?php if (!function_exists('render_premium_card')) { @include_once(G5_PATH . '/extend/jobs_list_helper.php'); } ?>
+    <div class="mobile-recommend">
+      <div class="section-header">
+        <h2 class="section-title">💎 추천업소</h2>
+      </div>
+      <div class="mobile-recommend-grid">
+<?php if (!empty($_jobs_recommend) && function_exists('render_premium_card')) {
+  foreach ($_jobs_recommend as $_rec) { render_premium_card($_rec, 'mobile-rec-card'); }
+} else { ?>
+        <div class="mobile-rec-card mobile-rec-empty">
+          <div class="mobile-rec-info" style="padding:20px;text-align:center;color:#999;font-size:13px;">등록된 추천업소가 없습니다.</div>
+        </div>
+<?php } ?>
+      </div>
+    </div>
 
     <!-- 우대채용정보 -->
 <?php if ($_show_all_sections || $_atf === '우대') { ?>

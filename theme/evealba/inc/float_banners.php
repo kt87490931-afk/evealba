@@ -17,12 +17,25 @@ if ($_fr_tb_check && sql_num_rows($_fr_tb_check) > 0) {
     while ($_fr_r = sql_fetch_array($_fr_res)) {
         if (!empty($_fr_r['jr_id'])) $_fr_rows[] = $_fr_r;
     }
+    /* 추천업소 셔플: config의 recommend_shuffle_min > 0이면 시간 기반 랜덤 순서 */
+    $_fr_shuffle_min = 0;
+    $_fr_cfg = sql_fetch("SELECT sb_data FROM {$_fr_sb_table} WHERE sb_type = 'config' AND sb_status = 'active' LIMIT 1");
+    if ($_fr_cfg && $_fr_cfg['sb_data']) {
+        $_fr_cfg_d = json_decode($_fr_cfg['sb_data'], true);
+        if (!empty($_fr_cfg_d['recommend_shuffle_min']) && count($_fr_rows) > 1) {
+            $_fr_shuffle_min = max(1, min(60, (int)$_fr_cfg_d['recommend_shuffle_min']));
+            mt_srand((int)(time() / 60 / $_fr_shuffle_min));
+            shuffle($_fr_rows);
+        }
+    }
 }
 if (!function_exists('render_premium_card') && is_file(G5_PATH . '/extend/jobs_list_helper.php')) {
     include_once(G5_PATH . '/extend/jobs_list_helper.php');
 }
 ?>
-<!-- FLOATING RECOMMEND + CTA -->
+<?php /* 모바일에서는 추천업소를 메인 영역 썸네일로 표시하므로 플로팅배너 미출력 */ ?>
+<?php if (!G5_IS_MOBILE) : ?>
+<!-- FLOATING RECOMMEND (PC 전용) -->
 <div class="float-recommend" id="floatRecommend">
   <button type="button" class="fr-tab" id="frTab" onclick="toggleFloatRecommend()">
     <span class="fr-tab-icon">💎</span>
@@ -80,6 +93,7 @@ function toggleFloatRecommend(){var el=document.getElementById('floatRecommend')
   pos();
 })();
 </script>
+<?php endif; ?>
 <div class="floating-cta">
   <a href="#" class="float-btn float-kakao" title="카카오톡 문의"><img src="<?php echo G5_THEME_URL; ?>/img/logo_kakao.svg" alt="카카오톡" style="width:26px;height:26px;"></a>
   <button type="button" class="float-btn float-chat" id="chatOpen" title="실시간 채팅" onclick="if(typeof toggleEveChat==='function')toggleEveChat();else if(typeof toggleEveChatMobile==='function')toggleEveChatMobile();return false;">💬</button>

@@ -247,8 +247,9 @@ if ($act === 'save_hero') {
 // ── 셔플 설정 저장 ──
 if ($act === 'save_config') {
     $hero_shuffle_sec = isset($_POST['hero_shuffle_sec']) ? max(1, min(60, (int)$_POST['hero_shuffle_sec'])) : 5;
+    $recommend_shuffle_min = isset($_POST['recommend_shuffle_min']) ? max(0, min(60, (int)$_POST['recommend_shuffle_min'])) : 0;
 
-    $cfg_data = json_encode(array('hero_shuffle_sec' => $hero_shuffle_sec), JSON_UNESCAPED_UNICODE);
+    $cfg_data = json_encode(array('hero_shuffle_sec' => $hero_shuffle_sec, 'recommend_shuffle_min' => $recommend_shuffle_min), JSON_UNESCAPED_UNICODE);
     $cfg_data_esc = sql_real_escape_string($cfg_data);
 
     // config ENUM 확인
@@ -265,7 +266,13 @@ if ($act === 'save_config') {
                    VALUES ('config', 'active', 0, 0, '{$cfg_data_esc}', NOW())");
     }
 
-    alert('셔플 간격이 ' . $hero_shuffle_sec . '초로 저장되었습니다.', './eve_special_banner.php');
+    $msg = '히어로 ' . $hero_shuffle_sec . '초';
+    if ($recommend_shuffle_min > 0) {
+        $msg .= ', 추천업소 ' . $recommend_shuffle_min . '분';
+    } else {
+        $msg .= ', 추천업소 셔플 끔';
+    }
+    alert('셔플 설정이 저장되었습니다. (' . $msg . ')', './eve_special_banner.php');
     exit;
 }
 

@@ -2317,15 +2317,9 @@ footer {
   .float-recommend.fr-open .fr-panel { display:block; }
 }
 
-/* <= 900px: fr-tab만 표시 (탭 탭하면 패널 열림) */
+/* <= 900px: 추천업소 플로팅 숨김 (모바일은 메인 영역 썸네일로 표시) */
 @media (max-width:900px) {
-  .float-recommend { display:flex !important; right:0; top:50%; transform:translateY(-50%); }
-  .fr-tab { display:flex !important; }
-  .fr-panel { display:none; border-radius:12px 0 0 12px; }
-  .fr-header { border-radius:12px 0 0 0; }
-  .fr-close { display:block; }
-  .float-recommend.fr-open .fr-tab { display:none !important; }
-  .float-recommend.fr-open .fr-panel { display:block; }
+  .float-recommend { display:none !important; }
 }
 
 /* 모바일 프리미엄채용정보 3열 강제 (768px 이하) - special-grid와 동일 */
