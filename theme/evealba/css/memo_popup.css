@@ -165,6 +165,23 @@ body.memo-popup-body {
 .msg-toolbar-title span { color: var(--hot-pink); }
 .msg-toolbar-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .msg-search-form { margin: 0; display: flex; }
+.msg-list-header {
+  display: grid;
+  grid-template-columns: 36px 100px 1fr 90px 70px;
+  gap: 14px;
+  padding: 10px 18px 8px;
+  background: linear-gradient(135deg, #fff8fb, #fff5f9);
+  border-bottom: 2px solid var(--pale-pink);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--hot-pink);
+  align-items: center;
+}
+.msg-h-chk { }
+.msg-h-sender { }
+.msg-h-content { min-width: 0; }
+.msg-h-date { text-align: center; }
+.msg-h-st { }
 .msg-list { list-style: none; margin: 0; padding: 12px 0; display: flex; flex-direction: column; gap: 10px; }
 .msg-item {
   display: grid;
@@ -292,5 +309,6 @@ body.memo-popup-body {
   .tw-stat { border-right: none; padding: 0 12px; }
   .memo-tabs-wrap { border-left: none; border-top: 1px solid var(--pale-pink); width: 100%; }
   .tab-btn { font-size: 12px; padding: 11px 6px; min-width: 0; }
+  .msg-list-header { grid-template-columns: 28px 80px 1fr 75px 60px; gap: 10px; padding: 8px 12px 6px; font-size: 11px; }
   .msg-item { grid-template-columns: 28px 80px 1fr 75px 60px; gap: 10px; padding: 10px 12px; }
 }
