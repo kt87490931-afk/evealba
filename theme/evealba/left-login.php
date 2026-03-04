@@ -85,10 +85,18 @@ $box_height = 205;
         <span class="ev-login-top-right">오늘 방문자수 <?php echo number_format($sp_visit_today); ?></span>
     </div>
     <div class="ev-login-main ev-login-main-logged">
+        <?php
+        $ev_member_type_label = '👩이브회원';
+        if (!empty($member['mb_id'])) {
+            $row = sql_fetch("SELECT 1 as is_biz FROM {$g5['member_table']} WHERE mb_id = '".sql_real_escape_string($member['mb_id'])."' AND (mb_1 = 'biz' OR mb_1 = 'business') LIMIT 1");
+            if ($row && !empty($row['is_biz'])) $ev_member_type_label = '🏢기업회원';
+        }
+        ?>
         <div class="ev-login-header-row">
             <div class="ev-login-nick">
                 <strong class="ev-login-nick-text"><?php echo get_text($member['mb_nick']); ?></strong>
                 <span>님 접속중</span>
+                <div class="ev-login-member-type"><?php echo $ev_member_type_label; ?></div>
             </div>
             <a href="<?php echo G5_BBS_URL; ?>/logout.php" class="ev-logout-link">로그아웃</a>
         </div>
@@ -147,6 +155,7 @@ $box_height = 205;
 .ev-login-header-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
 .ev-login-nick{ font-size:12px; color:#222; }
 .ev-login-nick-text{ color:#5c3d7a; font-weight:900; }
+.ev-login-member-type{ font-size:11px; margin-top:2px; color:#7a5c8a; }
 .ev-logout-link{ font-size:11px; color:#fff; background:#5c3d7a; padding:4px 8px; border-radius:10px; text-decoration:none; line-height:1; }
 .ev-logout-link:hover{ opacity:.9; }
 .ev-login-body{ display:flex; }
