@@ -23,7 +23,8 @@ $nav_active = '';
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/default.css?ver=<?php echo G5_CSS_VER ?>">
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/evealba.css?ver=<?php echo G5_CSS_VER ?>">
-<link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_popup.css?ver=<?php echo G5_CSS_VER ?>">
+<?php $_memo_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/memo_popup.css')) ? filemtime(G5_THEME_PATH.'/css/memo_popup.css') : G5_CSS_VER; ?>
+<link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_popup.css?ver=<?php echo $_memo_css_ver ?>">
 <link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_full.css?ver=<?php echo G5_CSS_VER ?>">
 <link rel="stylesheet" href="<?php echo G5_JS_URL ?>/font-awesome/css/font-awesome.min.css">
 <script src="<?php echo G5_JS_URL ?>/jquery-1.12.4.min.js"></script>
