@@ -51,15 +51,17 @@ $search_keyword = isset($_GET['st']) ? trim($_GET['st']) : '';
     <div class="memo-list-actions">
       <a href="<?php echo $memo_form_url; ?>" class="memo-btn-write">✉️ 쪽지 쓰기</a>
     </div>
-  <?php if ($list_count > 0) { ?>
-  <div class="msg-list-header">
-    <span class="msg-h-chk"></span>
-    <span class="msg-h-date">시간</span>
-    <span class="msg-h-sender">보낸이</span>
-    <span class="msg-h-content">내용</span>
-    <span class="msg-h-st">열람</span>
-  </div>
-  <ul class="msg-list">
+  <?php if ($list_count > 0) {
+    $col_sender_label = ($memo_current_tab === 'send') ? '받는이' : '보낸이';
+  ?>
+  <div class="msg-list-wrap">
+    <div class="msg-header">
+      <span></span>
+      <span class="col-content">내용</span>
+      <span class="col-sender"><?php echo $col_sender_label; ?></span>
+      <span class="col-date">날짜</span>
+      <span class="col-status">열람</span>
+    </div>
     <?php
     for ($i=0; $i<$list_count; $i++) {
       $row = $list[$i];
@@ -67,17 +69,17 @@ $search_keyword = isset($_GET['st']) ? trim($_GET['st']) : '';
       $memo_preview = utf8_strcut(strip_tags($row['me_memo']), 50, '..');
       $item_class = $readed ? '' : ' unread';
     ?>
-    <li class="msg-item<?php echo $item_class; ?>">
-      <div class="msg-chk">
-        <input type="checkbox" class="msg-checkbox" name="me_id[]" value="<?php echo $row['me_id']; ?>" id="me_id_<?php echo $row['me_id']; ?>">
-      </div>
-      <span class="msg-date"><?php echo $row['send_datetime']; ?></span>
+    <div class="msg-row<?php echo $item_class; ?>" onclick="var t=event.target; if(!t.closest('input')) location.href='<?php echo addslashes($row['view_href']); ?>';">
+      <input type="checkbox" class="msg-checkbox" name="me_id[]" value="<?php echo $row['me_id']; ?>" id="me_id_<?php echo $row['me_id']; ?>">
+      <a href="<?php echo $row['view_href']; ?>" class="msg-content" onclick="event.stopPropagation();">
+        <span class="msg-content-text"><?php echo $readed ? get_text($memo_preview) : get_text($memo_preview); ?></span>
+      </a>
       <span class="msg-sender"><?php echo get_text($row['mb_nick'] ?: '정보없음'); ?></span>
-      <a href="<?php echo $row['view_href']; ?>" class="msg-content"><?php echo $readed ? get_text($memo_preview) : '<b>'.get_text($memo_preview).'</b>'; ?></a>
-      <span class="msg-st<?php echo $readed ? '' : ' unread'; ?>"><?php echo $readed ? '열람' : '미열람'; ?></span>
-    </li>
+      <span class="msg-date"><?php echo $row['send_datetime']; ?></span>
+      <div class="msg-status"><span class="badge <?php echo $readed ? 'read-badge' : 'unread-badge'; ?>"><?php echo $readed ? '열람' : '미열람'; ?></span></div>
+    </div>
     <?php } ?>
-  </ul>
+  </div>
   <?php } else { ?>
   <div class="empty-state">
     <div class="empty-icon">📭</div>
