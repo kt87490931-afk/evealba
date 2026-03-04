@@ -57,7 +57,7 @@ $search_keyword = isset($_GET['st']) ? trim($_GET['st']) : '';
     for ($i=0; $i<$list_count; $i++) {
       $row = $list[$i];
       $readed = (substr($row['me_read_datetime'],0,1) != '0');
-      $memo_preview = utf8_strcut(strip_tags($row['me_memo']), 30, '..');
+      $memo_preview = utf8_strcut(strip_tags($row['me_memo']), 50, '..');
       $item_class = $readed ? '' : ' unread';
     ?>
     <li class="msg-item<?php echo $item_class; ?>">
@@ -66,7 +66,7 @@ $search_keyword = isset($_GET['st']) ? trim($_GET['st']) : '';
       </div>
       <a href="<?php echo $row['view_href']; ?>" class="msg-body">
         <div class="msg-hrow">
-          <span class="msg-sender"><?php echo $row['name']; ?></span>
+          <span class="msg-sender"><?php echo get_text($row['mb_nick'] ?: '정보없음'); ?></span>
           <?php if (!$readed) { ?><span class="mbadge new">미열람</span><?php } ?>
         </div>
         <div class="msg-title"><?php echo $readed ? get_text($memo_preview) : '<b>'.get_text($memo_preview).'</b>'; ?></div>
