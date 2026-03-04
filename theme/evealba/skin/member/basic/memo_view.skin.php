@@ -1,6 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
-$nick = get_sideview($mb['mb_id'], $mb['mb_nick'], $mb['mb_email'], $mb['mb_homepage']);
+$sender_nick = get_text($mb['mb_nick'] ?: '정보없음');
 if ($kind == "recv") {
     $kind_str = "보낸";
     $kind_date = "받은";
@@ -26,27 +26,34 @@ $memo_form_url = G5_BBS_URL.'/memo_form.php';
   </a>
 </div>
 
-<div class="content-card">
-  <div class="msg-toolbar">
-    <span class="msg-toolbar-title">쪽지 내용</span>
+<div class="message-card memo-view-card">
+  <div class="card-header memo-view-header">
+    <i class="fa fa-envelope" aria-hidden="true"></i>
+    <h2>쪽지 내용</h2>
   </div>
-  <article id="memo_view_contents" style="padding:18px;">
-    <div class="msg-hrow" style="margin-bottom:12px;">
-      <span class="msg-sender"><?php echo $nick; ?></span>
-      <span style="font-size:12px;color:#888;"><i class="fa fa-clock-o"></i> <?php echo $memo['me_send_datetime']; ?></span>
-      <a href="<?php echo $list_link; ?>" class="btn-tb" style="margin-left:auto;"><i class="fa fa-list"></i> 목록</a>
-      <a href="<?php echo $del_link; ?>" onclick="del(this.href); return false;" class="btn-tb danger"><i class="fa fa-trash-o"></i> 삭제</a>
+  <div class="card-meta memo-view-meta">
+    <div class="sender-badge">
+      <span class="sender-name"><?php echo $sender_nick; ?></span>
     </div>
-    <div class="memo_btn" style="margin-bottom:14px;">
-      <?php if ($prev_link) { ?><a href="<?php echo $prev_link; ?>" class="btn-tb"><i class="fa fa-chevron-left"></i> 이전쪽지</a><?php } ?>
-      <?php if ($next_link) { ?><a href="<?php echo $next_link; ?>" class="btn-tb">다음쪽지 <i class="fa fa-chevron-right"></i></a><?php } ?>
+    <span class="meta-divider">|</span>
+    <div class="send-date">
+      <i class="fa fa-clock-o" aria-hidden="true"></i>
+      <?php echo $memo['me_send_datetime']; ?>
     </div>
-    <div style="font-size:14px;color:#444;line-height:1.8;">
-      <?php echo conv_content($memo['me_memo'], 0); ?>
+    <div class="meta-actions">
+      <a href="<?php echo $list_link; ?>" class="btn btn-list"><i class="fa fa-list"></i> 목록</a>
+      <a href="<?php echo $del_link; ?>" onclick="del(this.href); return false;" class="btn btn-delete"><i class="fa fa-trash-o"></i> 삭제</a>
     </div>
-  </article>
-  <div class="win_btn" style="border-top:2px solid var(--pale-pink);padding:14px 18px;">
-    <?php if ($kind == 'recv') { ?><a href="<?php echo $memo_form_url; ?>?me_id=<?php echo $memo['me_id']; ?>" class="memo-btn-write" style="display:inline-flex;margin-right:8px;">↩ 답장</a><?php } ?>
-    <button type="button" onclick="if(window.history.length>1){history.back();}else{location.href='<?php echo G5_URL; ?>';} return false;" class="btn_close">뒤로</button>
+  </div>
+  <div class="card-nav memo-view-nav">
+    <?php if ($prev_link) { ?><a href="<?php echo $prev_link; ?>" class="btn-prev"><i class="fa fa-chevron-left"></i> 이전쪽지</a><?php } ?>
+    <?php if ($next_link) { ?><a href="<?php echo $next_link; ?>" class="btn-prev">다음쪽지 <i class="fa fa-chevron-right"></i></a><?php } ?>
+  </div>
+  <div class="card-body memo-view-body">
+    <div class="message-text"><?php echo conv_content($memo['me_memo'], 0); ?></div>
+  </div>
+  <div class="card-footer memo-view-footer">
+    <?php if ($kind == 'recv') { ?><a href="<?php echo $memo_form_url; ?>?me_id=<?php echo $memo['me_id']; ?>" class="btn btn-reply"><i class="fa fa-reply"></i> 답장</a><?php } ?>
+    <button type="button" onclick="if(window.history.length>1){history.back();}else{location.href='<?php echo G5_URL; ?>';} return false;" class="btn-back">뒤로</button>
   </div>
 </div>

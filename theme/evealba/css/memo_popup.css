@@ -370,6 +370,149 @@ body.memo-popup-body {
 .btn-reset:hover { background: var(--pale-pink); color: var(--hot-pink); }
 .memo-recv-fixed { font-size: 13px; color: var(--dark); font-weight: 700; }
 
+/* ── 쪽지 읽기 (message-view.html) ── */
+.message-card.memo-view-card {
+  max-width: 860px;
+  margin: 0 auto 24px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(255, 80, 120, 0.08);
+}
+.memo-view-header.card-header {
+  background: linear-gradient(135deg, #ff6b8a 0%, #ff4470 100%);
+  padding: 18px 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.memo-view-header.card-header .fa { font-size: 20px; color: #fff; }
+.memo-view-header.card-header h2 {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+.memo-view-meta.card-meta {
+  background: #fff0f3;
+  border-bottom: 1px solid #ffe0e8;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.memo-view-meta .sender-badge { display: flex; align-items: center; gap: 8px; }
+.memo-view-meta .sender-name { font-size: 14px; font-weight: 600; color: #333; }
+.memo-view-meta .meta-divider { color: #ddd; font-size: 12px; }
+.memo-view-meta .send-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #999;
+  font-size: 13px;
+}
+.memo-view-meta .send-date .fa { color: #bbb; font-size: 13px; }
+.memo-view-meta .meta-actions { margin-left: auto; display: flex; gap: 8px; }
+.memo-view-meta .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  cursor: pointer;
+}
+.memo-view-meta .btn-list {
+  background: #fff;
+  color: #555;
+  border: 1px solid #ddd;
+}
+.memo-view-meta .btn-list:hover { background: #f5f5f5; border-color: #bbb; color: inherit; }
+.memo-view-meta .btn-delete {
+  background: #fff0f3;
+  color: #ff4470;
+  border: 1px solid #ffb8c8;
+}
+.memo-view-meta .btn-delete:hover { background: #ffe0e8; color: #ff4470; }
+.memo-view-nav.card-nav { padding: 14px 28px 0; }
+.memo-view-nav .btn-prev {
+  background: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  font-family: inherit;
+  transition: all 0.18s ease;
+  margin-right: 8px;
+}
+.memo-view-nav .btn-prev:hover { background: #f5f5f5; border-color: #bbb; color: inherit; }
+.memo-view-body.card-body {
+  padding: 28px 28px 32px;
+  min-height: 160px;
+}
+.memo-view-body .message-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #333;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+.memo-view-body .message-text p { margin: 0 0 0.8em; }
+.memo-view-body .message-text p:last-child { margin-bottom: 0; }
+.memo-view-footer.card-footer {
+  border-top: 1px solid #f2f2f2;
+  padding: 20px 28px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.memo-view-footer .btn-reply {
+  background: linear-gradient(135deg, #ff6b8a 0%, #ff4470 100%);
+  color: #fff;
+  padding: 11px 28px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(255, 68, 112, 0.35);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+}
+.memo-view-footer .btn-reply:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 68, 112, 0.45);
+  color: #fff;
+}
+.memo-view-footer .btn-back {
+  background: #f0f0f0;
+  color: #666;
+  padding: 11px 28px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.18s ease;
+}
+.memo-view-footer .btn-back:hover { background: #e0e0e0; }
+
 @media (max-width: 800px) {
   .tab-btn { font-size: 12px; padding: 11px 6px; }
   .tab-btn-icon { font-size: 17px; }
