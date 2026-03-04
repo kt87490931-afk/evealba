@@ -162,9 +162,9 @@ $box_height = 205;
 .ev-login-nick{ font-size:12px; color:#222; }
 .ev-login-nick-text{ color:#5c3d7a; font-weight:900; }
 .ev-login-member-type-wrap{ display:block; margin:4px 0 6px 0; text-align:left; }
-.ev-login-member-type-badge{ display:inline-block; padding:4px 12px; border-radius:12px; font-size:10px; font-weight:700; background-color:#ffd6e0 !important; color:#b71c4a !important; }
-.ev-login-member-type-badge.ev-member-type-eve{ background-color:#ffd6e0 !important; color:#b71c4a !important; }
-.ev-login-member-type-badge.ev-member-type-biz{ background-color:#b3e5fc !important; color:#0277bd !important; }
+.ev-login-member-type-badge{ display:inline-block; padding:4px 12px; border-radius:12px; font-size:10px; font-weight:700; background-color:#ffd6e0 !important; color:#000 !important; }
+.ev-login-member-type-badge.ev-member-type-eve{ background-color:#ffd6e0 !important; color:#000 !important; }
+.ev-login-member-type-badge.ev-member-type-biz{ background-color:#b3e5fc !important; color:#000 !important; }
 .ev-logout-link{ font-size:11px; color:#fff; background:#5c3d7a; padding:4px 8px; border-radius:10px; text-decoration:none; line-height:1; }
 .ev-logout-link:hover{ opacity:.9; }
 .ev-login-body{ display:flex; }

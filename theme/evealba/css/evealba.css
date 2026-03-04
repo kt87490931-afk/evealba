@@ -887,9 +887,9 @@ nav::before {
 .login-logged { padding:8px 0; text-align:center; }
 .login-logged-info { font-size:13px; color:var(--text-dark); margin-bottom:8px; }
 .login-member-type-wrap { display:block; margin:6px 0 8px 0; text-align:center; }
-.login-member-type-badge { display:inline-block; padding:5px 14px; border-radius:14px; font-size:11px; font-weight:700; background-color:#ffd6e0 !important; color:#b71c4a !important; }
-.login-member-type-badge.ev-member-type-eve { background-color:#ffd6e0 !important; color:#b71c4a !important; }
-.login-member-type-badge.ev-member-type-biz { background-color:#b3e5fc !important; color:#0277bd !important; }
+.login-member-type-badge { display:inline-block; padding:5px 14px; border-radius:14px; font-size:11px; font-weight:700; background-color:#ffd6e0 !important; color:#000 !important; }
+.login-member-type-badge.ev-member-type-eve { background-color:#ffd6e0 !important; color:#000 !important; }
+.login-member-type-badge.ev-member-type-biz { background-color:#b3e5fc !important; color:#000 !important; }
 .login-logged-info strong { color:var(--hot-pink); }
 .login-logged-actions { display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap; font-size:11px; }
 .login-logged-actions a { color:var(--gray); transition:color .2s; }
