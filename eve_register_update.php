@@ -254,6 +254,19 @@ if ($mb_1 !== 'biz') {
     @insert_point($mb_id, $config['cf_register_point'], '회원가입 축하', '@member', $mb_id, '회원가입');
 }
 
+// 회원가입 시 자동 쪽지 (이브알바 전용 경로)
+$tb_memo_cfg = 'g5_ev_memo_config';
+if (sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb_memo_cfg}'", false))) {
+    $cfg = sql_fetch("SELECT em_join_memo_on, em_join_memo_general, em_join_memo_biz FROM {$tb_memo_cfg} WHERE emc_id = 1");
+    if ($cfg && !empty($cfg['em_join_memo_on'])) {
+        include_once G5_LIB_PATH . '/ev_memo.lib.php';
+        $content = ($mb_1 === 'biz')
+            ? (trim($cfg['em_join_memo_biz'] ?? '') ?: '이브알바에 기업회원으로 가입해 주셔서 감사합니다. 승인 후 서비스를 이용하실 수 있습니다.')
+            : (trim($cfg['em_join_memo_general'] ?? '') ?: '이브알바에 가입해 주셔서 감사합니다.');
+        ev_send_memo($mb_id, $content, '');
+    }
+}
+
 $res['ok'] = 1;
 $res['msg'] = $mb_1 === 'biz'
     ? '기업회원 가입 신청이 완료되었습니다. 관리자 승인 후 로그인이 가능합니다.'

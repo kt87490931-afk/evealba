@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $issued_mb_ids[] = $mb_id;
         }
         if ($send_memo && !empty($issued_mb_ids)) {
-            $memo_content = get_text($ec['ec_name']) . ' 쿠폰이 발급되었습니다. 마이페이지에서 확인해 주세요.';
+            $memo_content = get_text($ec['ec_name']) . ' 쿠폰이 발급되었습니다. 항상 이브알바를 찾아주셔서 감사합니다.';
             foreach ($issued_mb_ids as $mb_id) {
                 ev_send_memo($mb_id, $memo_content, '');
             }

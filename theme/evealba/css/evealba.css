@@ -910,7 +910,14 @@ nav::before {
 .quick-link-btn:hover { background:var(--pale-pink); color:var(--hot-pink); }
 .quick-link-btn.ql-memo { position:relative; }
 .ql-memo-label { display:inline-flex; align-items:center; gap:4px; }
-.ql-memo-badge { display:inline-block; background:#c0392b !important; color:#fff !important; font-size:10px; font-weight:900; padding:2px 5px; border-radius:4px; line-height:1; min-width:18px; text-align:center; }
+.ql-memo-badge {
+  display:inline-block; background:#c0392b !important; color:#fff !important; font-size:10px; font-weight:900; padding:2px 5px; border-radius:4px; line-height:1; min-width:18px; text-align:center;
+  animation: ql-memo-badge-blink 2s ease-in-out infinite;
+}
+@keyframes ql-memo-badge-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
 .ql-icon { font-size:20px; }
 .region-grid {
   display:grid;
