@@ -15,6 +15,10 @@ $row = array(
     'ec_name' => '',
     'ec_target' => 'biz',
     'ec_type' => 'ad',
+    'ec_issue_type' => 'manual',
+    'ec_auto_trigger' => '',
+    'ec_issue_target_scope' => 'all',
+    'ec_issue_target_mb_id' => '',
     'ec_discount_type' => 'percent',
     'ec_discount_value' => 0,
     'ec_min_amount' => 0,
@@ -148,6 +152,44 @@ $disc_type_labels = array('percent' => '할인율(%)', 'amount' => '할인금액
         </td>
       </tr>
       <tr>
+        <th scope="row"><label for="ec_issue_type">발급유형</label></th>
+        <td>
+          <select name="ec_issue_type" id="ec_issue_type" class="frm_input">
+            <option value="manual" <?php echo ($row['ec_issue_type'] ?? 'manual') === 'manual' ? 'selected' : ''; ?>>수동</option>
+            <option value="auto" <?php echo ($row['ec_issue_type'] ?? '') === 'auto' ? 'selected' : ''; ?>>자동</option>
+          </select>
+          <span class="frm_info">수동: 관리자가 직접 발급. 자동: 조건에 맞으면 시스템이 자동 발급</span>
+        </td>
+      </tr>
+      <tr id="tr_auto_trigger" style="<?php echo ($row['ec_issue_type'] ?? '') === 'auto' ? '' : 'display:none;'; ?>">
+        <th scope="row"><label for="ec_auto_trigger">자동 발급 시점</label></th>
+        <td>
+          <select name="ec_auto_trigger" id="ec_auto_trigger" class="frm_input">
+            <option value="">선택</option>
+            <option value="on_approval" <?php echo ($row['ec_auto_trigger'] ?? '') === 'on_approval' ? 'selected' : ''; ?>>가입인증 후</option>
+            <option value="monthly_1st" <?php echo ($row['ec_auto_trigger'] ?? '') === 'monthly_1st' ? 'selected' : ''; ?>>매월 1일</option>
+          </select>
+          <span class="frm_info">가입인증 후: 기업회원 승인 시 즉시 발급. 매월 1일: 매월 1일 크론 실행 시 전체 기업회원에게 발급</span>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row"><label for="ec_issue_target_scope">발급대상</label></th>
+        <td>
+          <select name="ec_issue_target_scope" id="ec_issue_target_scope" class="frm_input">
+            <option value="all" <?php echo ($row['ec_issue_target_scope'] ?? 'all') === 'all' ? 'selected' : ''; ?>>전체</option>
+            <option value="individual" <?php echo ($row['ec_issue_target_scope'] ?? '') === 'individual' ? 'selected' : ''; ?>>개인</option>
+          </select>
+          <span class="frm_info">전체: 대상 회원 전체. 개인: 지정한 회원ID에만 발급</span>
+        </td>
+      </tr>
+      <tr id="tr_target_mb_id" style="<?php echo ($row['ec_issue_target_scope'] ?? '') === 'individual' ? '' : 'display:none;'; ?>">
+        <th scope="row"><label for="ec_issue_target_mb_id">대상 회원ID</label></th>
+        <td>
+          <input type="text" name="ec_issue_target_mb_id" id="ec_issue_target_mb_id" value="<?php echo htmlspecialchars($row['ec_issue_target_mb_id'] ?? ''); ?>" class="frm_input" size="20" placeholder="회원ID">
+          <span class="frm_info">개인 발급 시 이 회원에게만 발급됩니다</span>
+        </td>
+      </tr>
+      <tr>
         <th scope="row"><label for="ec_is_active">상태</label></th>
         <td>
           <select name="ec_is_active" id="ec_is_active" class="frm_input">
@@ -171,8 +213,26 @@ function frm_check(f) {
   if (!f.ec_name.value.trim()) { alert('쿠폰명을 입력하세요.'); f.ec_name.focus(); return false; }
   var v = parseInt(f.ec_discount_value.value, 10);
   if (isNaN(v) || v < 0) { alert('할인율/금액을 입력하세요.'); f.ec_discount_value.focus(); return false; }
+  if (f.ec_issue_type.value === 'auto' && !f.ec_auto_trigger.value) {
+    alert('자동 발급 선택 시 시점(가입인증 후/매월 1일)을 선택하세요.');
+    f.ec_auto_trigger.focus(); return false;
+  }
+  if (f.ec_issue_target_scope.value === 'individual' && !f.ec_issue_target_mb_id.value.trim()) {
+    alert('개인 발급 선택 시 대상 회원ID를 입력하세요.');
+    f.ec_issue_target_mb_id.focus(); return false;
+  }
   return true;
 }
+document.addEventListener('DOMContentLoaded', function() {
+  var issueType = document.getElementById('ec_issue_type');
+  var scope = document.getElementById('ec_issue_target_scope');
+  function toggle() {
+    document.getElementById('tr_auto_trigger').style.display = issueType.value === 'auto' ? '' : 'none';
+    document.getElementById('tr_target_mb_id').style.display = scope.value === 'individual' ? '' : 'none';
+  }
+  if (issueType) issueType.addEventListener('change', toggle);
+  if (scope) scope.addEventListener('change', toggle);
+});
 </script>
 
 <?php require_once G5_ADMIN_PATH . '/admin.tail.php'; ?>

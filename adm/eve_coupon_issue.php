@@ -73,15 +73,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$g5['title'] = '쿠폰 발급: ' . htmlspecialchars($ec['ec_name']);
+$type_map = array('thumb'=>'썸네일','ad'=>'채용공고','line_ad_free'=>'줄광고무료','gift'=>'기프티콘');
+$type_txt = $type_map[$ec['ec_type'] ?? ''] ?? $ec['ec_type'];
+$trigger_map = array('on_approval'=>'가입인증 후','monthly_1st'=>'매월 1일');
+$it = $ec['ec_issue_type'] ?? '';
+$at = trim($ec['ec_auto_trigger'] ?? '');
+$auto_txt = ($it === 'auto' && isset($trigger_map[$at])) ? $trigger_map[$at] : '';
+
+$g5['title'] = '쿠폰 발급/내역: ' . htmlspecialchars($ec['ec_name']);
 require_once G5_ADMIN_PATH . '/admin.head.php';
 
 $issued_cnt = sql_fetch("SELECT COUNT(*) AS c FROM {$tb_issue} WHERE ec_id = '{$ec_id}'");
 $used_cnt = sql_fetch("SELECT COUNT(*) AS c FROM {$tb_issue} WHERE ec_id = '{$ec_id}' AND eci_used = 1");
+$this_month = date('Y-m');
+$month_issued = sql_fetch("SELECT COUNT(*) AS c FROM {$tb_issue} WHERE ec_id = '{$ec_id}' AND DATE_FORMAT(eci_issued_at, '%Y-%m') = '{$this_month}'");
+$month_used = sql_fetch("SELECT COUNT(*) AS c FROM {$tb_issue} WHERE ec_id = '{$ec_id}' AND eci_used = 1 AND DATE_FORMAT(eci_used_at, '%Y-%m') = '{$this_month}'");
+
+$tab = isset($_GET['tab']) ? preg_replace('/[^a-z]/', '', $_GET['tab']) : 'all';
 ?>
 <div class="local_desc01 local_desc">
-  <p><strong><?php echo htmlspecialchars($ec['ec_name']); ?></strong> 쿠폰을 개별 또는 일괄로 발급합니다.</p>
-  <p>발급 현황: 총 <?php echo number_format($issued_cnt['c'] ?? 0); ?>장 / 사용 <?php echo number_format($used_cnt['c'] ?? 0); ?>장</p>
+  <p><strong><?php echo htmlspecialchars($ec['ec_name']); ?></strong> (유형: <?php echo $type_txt; ?>)</p>
+  <p>발급 현황: 총 <strong><?php echo number_format($issued_cnt['c'] ?? 0); ?></strong>장 발급 / <strong><?php echo number_format($used_cnt['c'] ?? 0); ?></strong>장 사용</p>
+  <p>이번 달: 발급 <strong><?php echo number_format($month_issued['c'] ?? 0); ?></strong>건 / 사용 <strong><?php echo number_format($month_used['c'] ?? 0); ?></strong>건</p>
+  <?php if ($auto_txt) { ?><p style="color:#2E7D32;">※ <?php echo $auto_txt; ?> 자동 발급</p><?php } ?>
 </div>
 
 <?php if ($msg) { ?><p style="padding:10px;background:#e8f5e9;color:#2E7D32;border-radius:6px;"><?php echo htmlspecialchars($msg); ?></p><?php } ?>
@@ -106,31 +120,44 @@ $used_cnt = sql_fetch("SELECT COUNT(*) AS c FROM {$tb_issue} WHERE ec_id = '{$ec
 </div>
 
 <div class="tbl_head01 tbl_wrap" style="margin-top:24px;">
-  <h3>최근 발급 내역</h3>
+  <h3>발급/사용 내역</h3>
+  <ul class="tab_ul" style="margin:10px 0;padding:0;list-style:none;display:flex;gap:10px;">
+    <li><a href="?ec_id=<?php echo $ec_id; ?>&tab=all" class="btn btn_03 <?php echo $tab === 'all' ? 'btn_active' : ''; ?>">전체</a></li>
+    <li><a href="?ec_id=<?php echo $ec_id; ?>&tab=issued" class="btn btn_03 <?php echo $tab === 'issued' ? 'btn_active' : ''; ?>">발급된 쿠폰</a></li>
+    <li><a href="?ec_id=<?php echo $ec_id; ?>&tab=used" class="btn btn_03 <?php echo $tab === 'used' ? 'btn_active' : ''; ?>">사용한 쿠폰</a></li>
+  </ul>
   <table>
     <thead>
       <tr>
         <th>회원ID</th>
+        <th>회원명</th>
         <th>발급일</th>
         <th>사용여부</th>
+        <th>사용일</th>
       </tr>
     </thead>
     <tbody>
       <?php
-      $r = sql_query("SELECT i.*, m.mb_name FROM {$tb_issue} i LEFT JOIN {$g5['member_table']} m ON i.mb_id = m.mb_id WHERE i.ec_id = '{$ec_id}' ORDER BY i.eci_issued_at DESC LIMIT 30");
+      $where = "i.ec_id = '{$ec_id}'";
+      if ($tab === 'issued') $where .= " AND i.eci_used = 0";
+      if ($tab === 'used') $where .= " AND i.eci_used = 1";
+      $r = sql_query("SELECT i.*, m.mb_name FROM {$tb_issue} i LEFT JOIN {$g5['member_table']} m ON i.mb_id = m.mb_id WHERE {$where} ORDER BY i.eci_issued_at DESC LIMIT 100");
       $empty = true;
       while ($row = sql_fetch_array($r)) { $empty = false; ?>
       <tr>
         <td><?php echo htmlspecialchars($row['mb_id']); ?></td>
+        <td><?php echo htmlspecialchars($row['mb_name'] ?? '-'); ?></td>
         <td><?php echo htmlspecialchars($row['eci_issued_at'] ?? ''); ?></td>
         <td><?php echo !empty($row['eci_used']) ? '사용' : '미사용'; ?></td>
+        <td><?php echo !empty($row['eci_used']) ? htmlspecialchars($row['eci_used_at'] ?? '-') : '-'; ?></td>
       </tr>
       <?php }
       if ($empty) { ?>
-      <tr><td colspan="3" class="empty_table">발급 내역이 없습니다.</td></tr>
+      <tr><td colspan="5" class="empty_table">발급 내역이 없습니다.</td></tr>
       <?php } ?>
     </tbody>
   </table>
+  <p class="tbl_desc">최근 100건 표시</p>
 </div>
 
 <p style="margin-top:20px;"><a href="./eve_coupon_list.php" class="btn btn_02">목록</a></p>

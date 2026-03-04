@@ -35,6 +35,11 @@ $ec_use_limit = isset($_POST['ec_use_limit']) ? (int)$_POST['ec_use_limit'] : 0;
 $ec_issue_limit_per_member = isset($_POST['ec_issue_limit_per_member']) ? (int)$_POST['ec_issue_limit_per_member'] : 0;
 $ec_is_active = isset($_POST['ec_is_active']) ? (int)$_POST['ec_is_active'] : 1;
 
+$ec_issue_type = isset($_POST['ec_issue_type']) && $_POST['ec_issue_type'] === 'auto' ? 'auto' : 'manual';
+$ec_auto_trigger = ($ec_issue_type === 'auto' && isset($_POST['ec_auto_trigger']) && in_array($_POST['ec_auto_trigger'], array('on_approval','monthly_1st'))) ? $_POST['ec_auto_trigger'] : null;
+$ec_issue_target_scope = isset($_POST['ec_issue_target_scope']) && $_POST['ec_issue_target_scope'] === 'individual' ? 'individual' : 'all';
+$ec_issue_target_mb_id = ($ec_issue_target_scope === 'individual' && isset($_POST['ec_issue_target_mb_id'])) ? trim(preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['ec_issue_target_mb_id'])) : '';
+
 if (!$ec_name) {
     alert('쿠폰명을 입력하세요.', './eve_coupon_form.php?w='.$w.'&ec_id='.$ec_id);
 }
@@ -57,16 +62,24 @@ if (in_array('ec_issue_from', $check_cols)) {
     $it = $ec_issue_to ? "'".sql_escape_string($ec_issue_to)."'" : 'NULL';
     $set_ext = ", ec_issue_from = {$if}, ec_issue_to = {$it}, ec_issue_limit_per_member = ".(int)$ec_issue_limit_per_member;
 }
+$at_esc = $ec_auto_trigger ? "'".sql_escape_string($ec_auto_trigger)."'" : 'NULL';
+$mbid_esc = $ec_issue_target_mb_id ? "'".sql_escape_string($ec_issue_target_mb_id)."'" : 'NULL';
+if (in_array('ec_issue_type', $check_cols)) {
+    $set_ext .= ", ec_issue_type = '".sql_escape_string($ec_issue_type)."', ec_auto_trigger = {$at_esc}, ec_issue_target_scope = '".sql_escape_string($ec_issue_target_scope)."', ec_issue_target_mb_id = {$mbid_esc}";
+}
 
 if ($w === 'u' && $ec_id) {
     $row = sql_fetch("SELECT ec_id FROM {$tb} WHERE ec_id = '{$ec_id}'");
     if (!$row) alert('쿠폰을 찾을 수 없습니다.', './eve_coupon_list.php');
 
     $set = "ec_name = '{$n}', ec_target = '{$ec_target_esc}', ec_type = '{$ec_type_esc}', ec_discount_type = '{$ec_discount_type}', ec_discount_value = ".(int)$ec_discount_value.", ec_min_amount = ".(int)$ec_min_amount.", ec_max_discount = ".(int)$ec_max_discount.", ec_valid_from = {$vf}, ec_valid_to = {$vt}, ec_use_limit = ".(int)$ec_use_limit.", ec_is_active = ".(int)$ec_is_active;
-    if ($cols_ext) {
+    if (in_array('ec_issue_from', $check_cols)) {
         $if = $ec_issue_from ? "'".sql_escape_string($ec_issue_from)."'" : 'NULL';
         $it = $ec_issue_to ? "'".sql_escape_string($ec_issue_to)."'" : 'NULL';
         $set .= ", ec_issue_from = {$if}, ec_issue_to = {$it}, ec_issue_limit_per_member = ".(int)$ec_issue_limit_per_member;
+    }
+    if (in_array('ec_issue_type', $check_cols)) {
+        $set .= ", ec_issue_type = '".sql_escape_string($ec_issue_type)."', ec_auto_trigger = {$at_esc}, ec_issue_target_scope = '".sql_escape_string($ec_issue_target_scope)."', ec_issue_target_mb_id = {$mbid_esc}";
     }
     sql_query("UPDATE {$tb} SET {$set} WHERE ec_id = '{$ec_id}'");
     alert('수정되었습니다.', './eve_coupon_list.php');

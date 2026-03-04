@@ -40,18 +40,32 @@ if ($action === 'approve') {
 
     @insert_point($mb_id, $config['cf_register_point'], '기업회원 가입 승인', '@member', $mb_id, '기업회원승인');
 
-    // B안: 승인 시 쿠폰 자동 발급 (줄광고3달무료, 채용공고30%할인 각 1장)
+    // B안: 승인 시 쿠폰 자동 발급 (ec_issue_type=auto, ec_auto_trigger=on_approval)
     $tb_coupon = 'g5_ev_coupon';
     $tb_issue = 'g5_ev_coupon_issue';
     if (sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb_coupon}'", false))) {
-        $signup_coupons = array('줄광고3달무료', '채용공고30%할인');
-        foreach ($signup_coupons as $cname) {
-            $c = sql_fetch("SELECT ec_id FROM {$tb_coupon} WHERE ec_name = '".sql_escape_string($cname)."' AND ec_target = 'biz' AND ec_is_active = 1 LIMIT 1");
-            if ($c) {
+        $cols_check = array();
+        $cr = sql_query("SHOW COLUMNS FROM {$tb_coupon}", false);
+        while ($r = sql_fetch_array($cr)) $cols_check[] = $r['Field'];
+        $use_new = in_array('ec_issue_type', $cols_check) && in_array('ec_auto_trigger', $cols_check);
+        if ($use_new) {
+            $crs = sql_query("SELECT ec_id, ec_issue_target_scope, ec_issue_target_mb_id FROM {$tb_coupon} WHERE ec_issue_type = 'auto' AND ec_auto_trigger = 'on_approval' AND ec_target = 'biz' AND ec_is_active = 1", false);
+            if ($crs) while ($c = sql_fetch_array($crs)) {
+                $scope = $c['ec_issue_target_scope'] ?? 'all';
+                $target_mb = trim($c['ec_issue_target_mb_id'] ?? '');
+                if ($scope === 'individual' && $target_mb !== '' && $target_mb !== $mb_id) continue;
                 $eid = (int)$c['ec_id'];
                 $ex = sql_fetch("SELECT eci_id FROM {$tb_issue} WHERE ec_id = '{$eid}' AND mb_id = '{$mb_id_esc}' LIMIT 1");
-                if (!$ex) {
-                    sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$eid}', '{$mb_id_esc}')", false);
+                if (!$ex) sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$eid}', '{$mb_id_esc}')", false);
+            }
+        } else {
+            $signup_coupons = array('줄광고3달무료', '채용공고30%할인');
+            foreach ($signup_coupons as $cname) {
+                $c = sql_fetch("SELECT ec_id FROM {$tb_coupon} WHERE ec_name = '".sql_escape_string($cname)."' AND ec_target = 'biz' AND ec_is_active = 1 LIMIT 1");
+                if ($c) {
+                    $eid = (int)$c['ec_id'];
+                    $ex = sql_fetch("SELECT eci_id FROM {$tb_issue} WHERE ec_id = '{$eid}' AND mb_id = '{$mb_id_esc}' LIMIT 1");
+                    if (!$ex) sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$eid}', '{$mb_id_esc}')", false);
                 }
             }
         }
