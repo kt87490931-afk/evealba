@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `g5_ev_coupon` (
   `ec_code` varchar(32) NOT NULL DEFAULT '' COMMENT '쿠폰코드',
   `ec_name` varchar(200) NOT NULL DEFAULT '',
   `ec_target` varchar(20) NOT NULL DEFAULT 'biz' COMMENT 'biz=기업회원, personal=일반회원',
-  `ec_type` varchar(30) NOT NULL DEFAULT 'thumb' COMMENT 'thumb=썸네일, ad=광고, gift=기프티콘',
+  `ec_type` varchar(30) NOT NULL DEFAULT 'thumb' COMMENT 'thumb=썸네일, ad=광고, line_ad_free=줄광고무료, gift=기프티콘',
   `ec_discount_type` varchar(20) NOT NULL DEFAULT 'percent' COMMENT 'percent=율, amount=금액',
   `ec_discount_value` int NOT NULL DEFAULT 0 COMMENT '할인율(%) 또는 할인금액(원)',
   `ec_min_amount` int NOT NULL DEFAULT 0 COMMENT '최소 결제금액',
