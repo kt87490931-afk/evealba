@@ -114,7 +114,8 @@ if (!empty($_ev_seo['sp_schema_organization'])) {
 $shop_css = '';
 if (defined('_SHOP_')) $shop_css = '_shop';
 echo '<link rel="stylesheet" href="'.run_replace('head_css_url', G5_THEME_CSS_URL.'/'.(G5_IS_MOBILE?'mobile':'default').$shop_css.'.css?ver='.G5_CSS_VER, G5_THEME_URL).'">'.PHP_EOL;
-echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba.css?ver='.G5_CSS_VER.'">'.PHP_EOL;
+$_evealba_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/evealba.css')) ? filemtime(G5_THEME_PATH.'/css/evealba.css') : G5_CSS_VER;
+echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba.css?ver='.$_evealba_css_ver.'">'.PHP_EOL;
 ?>
 <!--[if lte IE 8]>
 <script src="<?php echo G5_JS_URL ?>/html5.js"></script>

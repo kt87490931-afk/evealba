@@ -912,11 +912,16 @@ nav::before {
 .ql-memo-label { display:inline-flex; align-items:center; gap:4px; }
 .ql-memo-badge {
   display:inline-block; background:#c0392b !important; color:#fff !important; font-size:10px; font-weight:900; padding:2px 5px; border-radius:4px; line-height:1; min-width:18px; text-align:center;
+  -webkit-animation: ql-memo-badge-blink 2s ease-in-out infinite;
   animation: ql-memo-badge-blink 2s ease-in-out infinite;
+}
+@-webkit-keyframes ql-memo-badge-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 @keyframes ql-memo-badge-blink {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  50% { opacity: 0; }
 }
 .ql-icon { font-size:20px; }
 .region-grid {
