@@ -1,7 +1,8 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
 
-if (G5_IS_MOBILE) {
+/* 채용정보/인재정보 등 반응형 레이아웃 페이지: 메인과 동일한 tail 사용 (추천업소 플로팅배너 포함) */
+if (G5_IS_MOBILE && !defined('_JOBS_') && !defined('_TALENT_')) {
     include_once(G5_THEME_MOBILE_PATH.'/tail.php');
     return;
 }
