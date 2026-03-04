@@ -16,4 +16,5 @@ $menu['menu910'] = array(
     array('910920', '특수배너 관리', G5_ADMIN_URL . '/eve_special_banner.php', 'evealba_special_banner'),
     array('910930', '썸네일상점 관리', G5_ADMIN_URL . '/eve_thumb_shop.php', 'evealba_thumb_shop'),
     array('910940', '쿠폰 관리', G5_ADMIN_URL . '/eve_coupon_list.php', 'evealba_coupon'),
+    array('910950', '쪽지관리', G5_ADMIN_URL . '/eve_memo_manage.php', 'evealba_memo'),
 );

@@ -7,6 +7,8 @@ require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'w');
 
+include_once G5_LIB_PATH . '/ev_memo.lib.php';
+
 $ec_id = isset($_GET['ec_id']) ? (int)$_GET['ec_id'] : 0;
 if (!$ec_id) alert('쿠폰을 선택하세요.', './eve_coupon_list.php');
 
@@ -47,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif ($action === 'bulk') {
         $target = isset($_POST['bulk_target']) ? trim($_POST['bulk_target']) : 'all_biz';
+        $send_memo = isset($_POST['send_memo']) && $_POST['send_memo'] == '1';
         $mb_list = array();
         if ($target === 'all_biz') {
             $r = sql_query("SELECT mb_id FROM {$g5['member_table']} WHERE mb_1 = 'biz' AND mb_7 = 'approved'");
@@ -55,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $limit = (int)($ec['ec_issue_limit_per_member'] ?? 0);
         $ec_use_limit = (int)($ec['ec_use_limit'] ?? 0);
         $issued = 0;
+        $issued_mb_ids = array();
         foreach ($mb_list as $mb_id) {
             if ($ec_use_limit > 0) {
                 $total = sql_fetch("SELECT COUNT(*) AS c FROM {$tb_issue} WHERE ec_id = '{$ec_id}'");
@@ -68,8 +72,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($ex) continue;
             sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$ec_id}', '".sql_escape_string($mb_id)."')", false);
             $issued++;
+            $issued_mb_ids[] = $mb_id;
         }
-        $msg = '전체 기업회원 중 ' . $issued . '명에게 발급되었습니다.';
+        if ($send_memo && !empty($issued_mb_ids)) {
+            $memo_content = get_text($ec['ec_name']) . ' 쿠폰이 발급되었습니다. 마이페이지에서 확인해 주세요.';
+            foreach ($issued_mb_ids as $mb_id) {
+                ev_send_memo($mb_id, $memo_content, '');
+            }
+        }
+        $msg = '전체 기업회원 중 ' . $issued . '명에게 발급되었습니다.' . ($send_memo && $issued > 0 ? ' (쪽지 발송 완료)' : '');
     }
 }
 
@@ -115,6 +126,7 @@ $tab = isset($_GET['tab']) ? preg_replace('/[^a-z]/', '', $_GET['tab']) : 'all';
     <input type="hidden" name="action" value="bulk">
     <input type="hidden" name="bulk_target" value="all_biz">
     <p>승인된 기업회원(mb_1='biz', mb_7='approved') 전체에게 발급합니다. 이미 보유한 회원은 제외됩니다.</p>
+    <p><label><input type="checkbox" name="send_memo" value="1"> 발급 시 쪽지 동시 발송</label></p>
     <button type="submit" class="btn btn_02" onclick="return confirm('전체 기업회원에게 발급하시겠습니까?');">전체 기업회원 발급</button>
   </form>
 </div>
