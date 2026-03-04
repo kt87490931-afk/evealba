@@ -1615,7 +1615,7 @@ footer {
   .job-card-banner { height:72px; font-size:12px; }
   .job-wage { font-size:12px; }
   .job-badge { font-size:10px; }
-  .premium-grid { grid-template-columns:repeat(2,1fr); gap:8px; }
+  .premium-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
   .premium-banner { height:58px; font-size:11px; }
   .premium-name { font-size:11px; }
   .premium-wage { font-size:11px; }

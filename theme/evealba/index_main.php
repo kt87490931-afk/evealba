@@ -155,14 +155,14 @@ if ($_sb_check && sql_num_rows($_sb_check) > 0) {
   </div>
 </div>
 
-<!-- 프리미엄채용정보 -->
+<!-- 프리미엄채용정보 (우대채용정보와 동일 카드 구조) -->
 <div class="section-wrap">
   <div class="section-header">
     <h2 class="section-title">프리미엄채용정보</h2>
   </div>
 <?php if (!empty($_idx_premium)) { ?>
   <div class="premium-grid">
-    <?php foreach ($_idx_premium as $_p) { render_premium_card($_p); } ?>
+    <?php foreach ($_idx_premium as $_p) { render_job_card($_p); } ?>
   </div>
 <?php } else { include_once dirname(__FILE__).'/inc/ads_premium.php'; } ?>
 </div>
@@ -272,14 +272,14 @@ $_tab_keys = array_keys($_tab_data);
   </div>
 </div>
 
-<!-- 스페셜채용정보 -->
+<!-- 스페셜채용정보 (우대채용정보와 동일 카드 구조) -->
 <div class="section-wrap">
   <div class="section-header">
     <h2 class="section-title">스페셜채용정보</h2>
   </div>
 <?php if (!empty($_idx_special)) { ?>
   <div class="special-grid">
-    <?php foreach ($_idx_special as $_s) { render_premium_card($_s, 'special-card'); } ?>
+    <?php foreach ($_idx_special as $_s) { render_job_card($_s); } ?>
   </div>
 <?php } else { include_once dirname(__FILE__).'/inc/ads_special.php'; } ?>
 </div>
