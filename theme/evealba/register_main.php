@@ -165,7 +165,7 @@
             <input class="fi fi-md" id="inp-id" name="mb_id" type="text" placeholder="아이디를 입력해주세요" oninput="checkIdFormat()" required maxlength="10">
             <button class="btn-id-check" type="button" onclick="checkIdDuplicate()">중복확인</button>
           </div>
-          <span class="fi-hint" id="id-hint">영문소문자 10자 이내로 입력해주세요.</span>
+          <span class="fi-hint" id="id-hint">영문, 숫자 4~10자로 입력해주세요.</span>
         </div>
       </div>
 
@@ -502,8 +502,8 @@ function checkIdFormat() {
   idChecked = false; checkedId = '';
   var val = document.getElementById('inp-id').value;
   var hint = document.getElementById('id-hint');
-  if(val.length === 0) { hint.textContent = '영문소문자 10자 이내로 입력해주세요.'; hint.className = 'fi-hint'; }
-  else if(!/^[a-z]+$/.test(val)) { hint.textContent = '⚠ 영문소문자만 사용 가능합니다.'; hint.className = 'fi-hint err'; }
+  if(val.length === 0) { hint.textContent = '영문, 숫자 4~10자로 입력해주세요.'; hint.className = 'fi-hint'; }
+  else if(!/^[a-zA-Z0-9]+$/.test(val)) { hint.textContent = '⚠ 영문, 숫자만 사용 가능합니다.'; hint.className = 'fi-hint err'; }
   else if(val.length < 4) { hint.textContent = '⚠ 4자 이상 입력해주세요.'; hint.className = 'fi-hint err'; }
   else if(val.length > 10) { hint.textContent = '⚠ 10자 이내로 입력해주세요.'; hint.className = 'fi-hint err'; }
   else { hint.textContent = '✅ 사용 가능한 형식입니다. 중복확인을 해주세요.'; hint.className = 'fi-hint ok'; }
@@ -511,7 +511,7 @@ function checkIdFormat() {
 
 function checkIdDuplicate() {
   var val = document.getElementById('inp-id').value.trim();
-  if(!val || val.length < 4) { alert('아이디를 먼저 입력해주세요 (영문 4~10자).'); return; }
+  if(!val || val.length < 4) { alert('아이디를 먼저 입력해주세요 (영문, 숫자 4~10자).'); return; }
   var hint = document.getElementById('id-hint');
   hint.textContent = '⏳ 확인중...'; hint.className = 'fi-hint';
   fetch(_baseUrl + '/eve_check_id.php', {
@@ -663,8 +663,8 @@ function doJoin() {
   var hp = document.getElementById('inp-hp').value.trim();
   var jobType = document.getElementById('inp-job-type').value;
 
-  if(!id || id.length < 4 || id.length > 10) { alert('아이디를 입력해주세요 (영문 4~10자).'); return; }
-  if(!/^[a-z]+$/.test(id)) { alert('아이디는 영문소문자만 사용 가능합니다.'); return; }
+  if(!id || id.length < 4 || id.length > 10) { alert('아이디를 입력해주세요 (영문, 숫자 4~10자).'); return; }
+  if(!/^[a-zA-Z0-9]+$/.test(id)) { alert('아이디는 영문, 숫자만 사용 가능합니다.'); return; }
   if(!idChecked || checkedId !== id) { alert('아이디 중복확인을 해주세요.'); return; }
   if(!pw || pw.length < 4) { alert('비밀번호를 입력해주세요 (4자 이상).'); return; }
   if(pw.length > 12) { alert('비밀번호는 12자 이하로 입력해주세요.'); return; }

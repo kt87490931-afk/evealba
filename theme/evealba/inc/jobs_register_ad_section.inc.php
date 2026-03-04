@@ -14,11 +14,6 @@ if (!defined('_GNUBOARD_')) exit;
       </div>
       <div class="sec-body">
 
-        <div class="total-bar">
-          <span class="total-bar-text">🛒 총 신청 금액</span>
-          <span class="total-bar-amount" id="totalAmount">0 원</span>
-        </div>
-
         <div style="overflow-x:auto;padding:0 0 4px;">
           <table class="ad-table" style="min-width:600px;">
             <thead>
@@ -145,22 +140,6 @@ if (!defined('_GNUBOARD_')) exit;
                   </div>
                 </td>
               </tr>
-              <tr class="ad-tr" style="background:#f0faf8;">
-                <td class="ad-td td-svc">
-                  <div class="ad-svc-name" style="color:#00897B;">굵은글씨 적용</div>
-                  <div class="ad-svc-desc">채용정보의 제목을 굵게 표시되어 어디든 눈에 띌수 있도록 표시</div>
-                </td>
-                <td class="ad-td ad-type">기간별</td>
-                <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
-                <td class="ad-td ad-price">30,000 원<br>55,000 원<br>70,000 원</td>
-                <td class="ad-td ad-chk">
-                  <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="30000" data-label="굵은글씨 30일" onchange="typeof calcTotal==='function'&&calcTotal()">
-                    <input type="checkbox" data-price="55000" data-label="굵은글씨 60일" onchange="typeof calcTotal==='function'&&calcTotal()">
-                    <input type="checkbox" data-price="70000" data-label="굵은글씨 90일" onchange="typeof calcTotal==='function'&&calcTotal()">
-                  </div>
-                </td>
-              </tr>
               <tr class="ad-tr">
                 <td colspan="5" class="ad-td" style="background:#e8f5e9;color:#2E7D32;font-weight:700;font-size:12px;text-align:left;">
                   💡 옵션만 결제하실 경우 광고노출이 되지않습니다.
@@ -199,9 +178,30 @@ if (!defined('_GNUBOARD_')) exit;
           </div>
         </div>
 
-        <div class="total-bottom-bar">
-          <span class="tbb-label">💳 총 신청 금액</span>
-          <span class="tbb-amount" id="totalAmount2">0 원</span>
+        <div class="total-coupon-bar" id="totalCouponBar">
+          <div class="tcb-left">
+            <div class="tcb-row">
+              <span class="tcb-label">🛒 총 신청 금액</span>
+              <span class="tcb-amount" id="totalAmount">0 원</span>
+            </div>
+            <div class="tcb-coupon-row">
+              <label class="tcb-coupon-label">줄광고 할인쿠폰</label>
+              <select id="couponLineAdSelect" class="tcb-coupon-select" onchange="typeof onCouponChange==='function'&&onCouponChange()">
+                <option value="">▼ 선택</option>
+              </select>
+            </div>
+            <div class="tcb-coupon-row">
+              <label class="tcb-coupon-label">채용공고 할인쿠폰</label>
+              <select id="couponAdSelect" class="tcb-coupon-select" onchange="typeof onCouponChange==='function'&&onCouponChange()">
+                <option value="">▼ 선택</option>
+              </select>
+            </div>
+            <div class="tcb-coupon-detail" id="couponDetail"></div>
+          </div>
+          <div class="tcb-right">
+            <div class="tcb-label">변경된 총 신청 금액</div>
+            <div class="tcb-final" id="totalAmount2">0 원</div>
+          </div>
         </div>
 
       </div>

@@ -356,3 +356,28 @@
 .jobs-register-page .mbti-group-sp .mbti-card.selected{border-color:#AD1457;background:linear-gradient(135deg,#fdf0f5,#fce4ec);}
 .jobs-register-page .mbti-group-sp .mbti-card.selected .mbti-dot{background:#AD1457;border-color:#AD1457;}
 @media(max-width:900px){ .jobs-register-page .mbti-grid{grid-template-columns:repeat(2,1fr);} }
+
+/* 채용등록: 총액+쿠폰 5:5 바 (이브알바 스타일) */
+.jobs-register-page .total-coupon-bar{margin:14px 18px 0;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(255,27,107,.12);border:2px solid var(--pale-pink);display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;min-height:140px;}
+.jobs-register-page .tcb-left{background:linear-gradient(180deg,#fff8fb 0%,#fff5f9 100%);padding:18px 20px;display:flex;flex-direction:column;gap:12px;border-right:2px solid var(--pale-pink);}
+.jobs-register-page .tcb-row{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px dashed var(--pale-pink);}
+.jobs-register-page .tcb-left .tcb-label{font-size:13px;font-weight:700;color:var(--dark);}
+.jobs-register-page .tcb-amount{font-size:20px;font-weight:900;color:var(--hot-pink);}
+.jobs-register-page .tcb-coupon-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.jobs-register-page .tcb-coupon-label{font-size:12px;font-weight:700;color:var(--dark);white-space:nowrap;min-width:100px;}
+.jobs-register-page .tcb-coupon-select{flex:1;min-width:130px;padding:10px 14px;border-radius:10px;border:2px solid #f0e0e8;background:#fff;color:var(--text-dark);font-size:13px;font-weight:600;transition:border-color .2s,box-shadow .2s;cursor:pointer;font-family:inherit;}
+.jobs-register-page .tcb-coupon-select:hover{border-color:var(--light-pink);}
+.jobs-register-page .tcb-coupon-select:focus{outline:none;border-color:var(--hot-pink);box-shadow:0 0 0 3px rgba(255,27,107,.12);}
+.jobs-register-page .tcb-coupon-select option{background:#fff;color:#222;}
+.jobs-register-page .tcb-coupon-detail{font-size:12px;color:var(--hot-pink);font-weight:700;padding:6px 10px;background:linear-gradient(135deg,#fff0f5,#fff8fb);border-radius:8px;border:1px solid var(--pale-pink);min-height:36px;}
+.jobs-register-page .tcb-right{background:linear-gradient(135deg,var(--dark2) 0%,#5C0040 50%,var(--hot-pink) 100%);padding:20px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.jobs-register-page .tcb-right .tcb-label{font-size:12px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:8px;}
+.jobs-register-page .tcb-final{font-size:26px;font-weight:900;color:var(--gold);text-shadow:0 1px 3px rgba(0,0,0,.3);letter-spacing:-0.5px;}
+@media(max-width:768px){
+  .jobs-register-page .total-coupon-bar{grid-template-columns:1fr;min-height:auto;}
+  .jobs-register-page .tcb-left{border-right:none;border-bottom:2px solid var(--pale-pink);padding:16px 18px;}
+  .jobs-register-page .tcb-right{padding:18px 20px;border-top:2px solid var(--pale-pink);background:linear-gradient(135deg,var(--dark2),#5C0040);}
+  .jobs-register-page .tcb-final{font-size:22px;}
+  .jobs-register-page .tcb-coupon-row{flex-direction:column;align-items:stretch;}
+  .jobs-register-page .tcb-coupon-label{min-width:auto;}
+}

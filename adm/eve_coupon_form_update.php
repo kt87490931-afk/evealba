@@ -40,6 +40,12 @@ $ec_auto_trigger = ($ec_issue_type === 'auto' && isset($_POST['ec_auto_trigger']
 $ec_issue_target_scope = isset($_POST['ec_issue_target_scope']) && $_POST['ec_issue_target_scope'] === 'individual' ? 'individual' : 'all';
 $ec_issue_target_mb_id = ($ec_issue_target_scope === 'individual' && isset($_POST['ec_issue_target_mb_id'])) ? trim(preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['ec_issue_target_mb_id'])) : '';
 
+$ec_line_ad_days = 0;
+if ($ec_type === 'line_ad_free' && isset($_POST['ec_line_ad_days'])) {
+    $d = (int)$_POST['ec_line_ad_days'];
+    if (in_array($d, array(30, 60, 90))) $ec_line_ad_days = $d;
+}
+
 if (!$ec_name) {
     alert('쿠폰명을 입력하세요.', './eve_coupon_form.php?w='.$w.'&ec_id='.$ec_id);
 }
@@ -67,6 +73,9 @@ $mbid_esc = $ec_issue_target_mb_id ? "'".sql_escape_string($ec_issue_target_mb_i
 if (in_array('ec_issue_type', $check_cols)) {
     $set_ext .= ", ec_issue_type = '".sql_escape_string($ec_issue_type)."', ec_auto_trigger = {$at_esc}, ec_issue_target_scope = '".sql_escape_string($ec_issue_target_scope)."', ec_issue_target_mb_id = {$mbid_esc}";
 }
+if (in_array('ec_line_ad_days', $check_cols)) {
+    $set_ext .= ", ec_line_ad_days = ".(int)$ec_line_ad_days;
+}
 
 if ($w === 'u' && $ec_id) {
     $row = sql_fetch("SELECT ec_id FROM {$tb} WHERE ec_id = '{$ec_id}'");
@@ -80,6 +89,9 @@ if ($w === 'u' && $ec_id) {
     }
     if (in_array('ec_issue_type', $check_cols)) {
         $set .= ", ec_issue_type = '".sql_escape_string($ec_issue_type)."', ec_auto_trigger = {$at_esc}, ec_issue_target_scope = '".sql_escape_string($ec_issue_target_scope)."', ec_issue_target_mb_id = {$mbid_esc}";
+    }
+    if (in_array('ec_line_ad_days', $check_cols)) {
+        $set .= ", ec_line_ad_days = ".(int)$ec_line_ad_days;
     }
     sql_query("UPDATE {$tb} SET {$set} WHERE ec_id = '{$ec_id}'");
     alert('수정되었습니다.', './eve_coupon_list.php');

@@ -58,7 +58,7 @@ function ev_coupon_list_available_ad($mb_id, $line_amount, $box_amount) {
     $tb_issue = 'g5_ev_coupon_issue';
     if (!sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb}'", false))) return array();
     $mb_esc = addslashes($mb_id);
-    $sql = "SELECT c.ec_id, c.ec_name, c.ec_type, c.ec_discount_type, c.ec_discount_value, c.ec_min_amount, c.ec_max_discount
+    $sql = "SELECT c.ec_id, c.ec_name, c.ec_type, c.ec_discount_type, c.ec_discount_value, c.ec_min_amount, c.ec_max_discount, c.ec_line_ad_days
         FROM {$tb} c
         INNER JOIN {$tb_issue} i ON c.ec_id = i.ec_id AND i.mb_id = '{$mb_esc}' AND i.eci_used = 0
         WHERE c.ec_target = 'biz' AND c.ec_type IN ('ad','line_ad_free') AND c.ec_is_active = 1
@@ -68,9 +68,11 @@ function ev_coupon_list_available_ad($mb_id, $line_amount, $box_amount) {
     $res = sql_query($sql, false);
     if (!$res) return array();
     $list = array();
+    $line_ad_price = array(30 => 70000, 60 => 125000, 90 => 170000);
     while ($row = sql_fetch_array($res)) {
         if ($row['ec_type'] === 'line_ad_free') {
-            if ($line_amount >= 170000) $list[] = $row;
+            $req = isset($row['ec_line_ad_days']) && isset($line_ad_price[(int)$row['ec_line_ad_days']]) ? $line_ad_price[(int)$row['ec_line_ad_days']] : 170000;
+            if ($line_amount >= $req) $list[] = $row;
         } else {
             if ($box_amount >= (int)($row['ec_min_amount'] ?? 0)) $list[] = $row;
         }
@@ -83,7 +85,10 @@ function ev_coupon_list_available_ad($mb_id, $line_amount, $box_amount) {
  */
 function ev_coupon_calc_ad_discount($ec, $line_amount, $box_amount) {
     if ($ec['ec_type'] === 'line_ad_free') {
-        return ($line_amount >= 170000) ? 170000 : 0;
+        $line_ad_price = array(30 => 70000, 60 => 125000, 90 => 170000);
+        $req = isset($ec['ec_line_ad_days']) && isset($line_ad_price[(int)$ec['ec_line_ad_days']]) ? $line_ad_price[(int)$ec['ec_line_ad_days']] : 170000;
+        $disc = isset($line_ad_price[(int)($ec['ec_line_ad_days'] ?? 0)]) ? $line_ad_price[(int)$ec['ec_line_ad_days']] : 170000;
+        return ($line_amount >= $req) ? $disc : 0;
     }
     return ev_coupon_calc_discount($ec, $box_amount);
 }

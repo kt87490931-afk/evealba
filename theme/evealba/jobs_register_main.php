@@ -6,6 +6,8 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
 <input type="hidden" name="total_amount" id="total_amount_hidden" value="0">
 <input type="hidden" name="ad_period" id="ad_period_hidden" value="30">
 <input type="hidden" name="ad_labels" id="ad_labels_hidden" value="">
+<input type="hidden" name="coupon_line_ad" id="coupon_line_ad_hidden" value="">
+<input type="hidden" name="coupon_ad" id="coupon_ad_hidden" value="">
 
     <div class="page-title-bar">
       <h2 class="page-title">📝 채용정보등록</h2>
@@ -638,12 +640,6 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
       </div>
       <div class="sec-body">
 
-        <!-- 총 신청금액 바 -->
-        <div class="total-bar">
-          <span class="total-bar-text">🛒 총 신청 금액</span>
-          <span class="total-bar-amount" id="totalAmount">0 원</span>
-        </div>
-
         <!-- 광고 서비스 표 -->
         <div style="overflow-x:auto;padding:0 0 4px;">
           <table class="ad-table" style="min-width:600px;">
@@ -785,24 +781,6 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
                 </td>
               </tr>
 
-              <!-- 굵은글씨 -->
-              <tr class="ad-tr" style="background:#f0faf8;">
-                <td class="ad-td td-svc">
-                  <div class="ad-svc-name" style="color:#00897B;">굵은글씨 적용</div>
-                  <div class="ad-svc-desc">채용정보의 제목을 굵게 표시되어 어디든 눈에 띌수 있도록 표시</div>
-                </td>
-                <td class="ad-td ad-type">기간별</td>
-                <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
-                <td class="ad-td ad-price">30,000 원<br>55,000 원<br>70,000 원</td>
-                <td class="ad-td ad-chk">
-                  <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="30000" data-label="굵은글씨 30일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="55000" data-label="굵은글씨 60일" onchange="calcTotal()">
-                    <input type="checkbox" data-price="70000" data-label="굵은글씨 90일" onchange="calcTotal()">
-                  </div>
-                </td>
-              </tr>
-
               <!-- 음선상중 안내 -->
               <tr class="ad-tr">
                 <td colspan="5" class="ad-td" style="background:#e8f5e9;color:#2E7D32;font-weight:700;font-size:12px;text-align:left;">
@@ -843,26 +821,31 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
           </div>
         </div>
 
-        <!-- 할인 배너 -->
-        <div class="discount-banner">
-          <div class="discount-banner-inner">
-            <div class="db-left">
-              <div class="db-title">🎉 구인효과UP!<br>1년패키지출시<br>신뢰도UP!!</div>
-              <div class="db-sub">장기 계약으로 더 큰 혜택을 누려보세요!</div>
-              <span class="db-btn">자세히 보기 →</span>
+        <!-- 하단 총액 + 쿠폰 (5:5 분할, 모바일 반응형) -->
+        <div class="total-coupon-bar" id="totalCouponBar">
+          <div class="tcb-left">
+            <div class="tcb-row">
+              <span class="tcb-label">🛒 총 신청 금액</span>
+              <span class="tcb-amount" id="totalAmount">0 원</span>
             </div>
-            <div class="db-right">
-              <div class="db-rate">60일 결제시 <b>10% 할인</b></div>
-              <div class="db-rate">90일 결제시 <b>20% 할인</b></div>
-              <div class="db-val">360일 결제시<br>25% 할인+추가혜택!</div>
+            <div class="tcb-coupon-row">
+              <label class="tcb-coupon-label">줄광고 할인쿠폰</label>
+              <select id="couponLineAdSelect" class="tcb-coupon-select" onchange="onCouponChange()">
+                <option value="">▼ 선택</option>
+              </select>
             </div>
+            <div class="tcb-coupon-row">
+              <label class="tcb-coupon-label">채용공고 할인쿠폰</label>
+              <select id="couponAdSelect" class="tcb-coupon-select" onchange="onCouponChange()">
+                <option value="">▼ 선택</option>
+              </select>
+            </div>
+            <div class="tcb-coupon-detail" id="couponDetail"></div>
           </div>
-        </div>
-
-        <!-- 하단 총액 -->
-        <div class="total-bottom-bar">
-          <span class="tbb-label">💳 총 신청 금액</span>
-          <span class="tbb-amount" id="totalAmount2">0 원</span>
+          <div class="tcb-right">
+            <div class="tcb-label">변경된 총 신청 금액</div>
+            <div class="tcb-final" id="totalAmount2">0 원</div>
+          </div>
         </div>
 
       </div>
@@ -1097,17 +1080,134 @@ function clearFile(inputId, spanId) {
   container.innerHTML = html;
 })();
 
-/* 광고 금액 계산 */
-function calcTotal() {
-  var total = 0;
-  document.querySelectorAll('[data-price]').forEach(function(chk){
-    if(chk.checked) total += parseInt(chk.dataset.price);
+/* 광고 금액 계산 (줄광고/박스 분리, 쿠폰 반영) */
+var _lineAdPrice = {30:70000, 60:125000, 90:170000};
+var _availableCoupons = [];
+var _selectedLineAd = null;
+var _selectedAd = null;
+
+function getLineAndBoxAmounts() {
+  var line = 0, box = 0;
+  document.querySelectorAll('.ad-table input[type="checkbox"][data-price]:checked').forEach(function(cb){
+    var p = parseInt(cb.dataset.price||0);
+    var lb = (cb.dataset.label||'');
+    if(/줄광고\s*\d+/.test(lb)) line += p;
+    else box += p;
   });
+  return {line: line, box: box};
+}
+
+function fetchCoupons(line, box, callback) {
+  var url = '<?php echo (defined("G5_URL") && G5_URL) ? rtrim(G5_URL,"/") : ""; ?>/jobs_register_coupons_ajax.php?line_amount=' + line + '&box_amount=' + box;
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.onreadystatechange = function(){
+    if(xhr.readyState === 4){
+      try { _availableCoupons = JSON.parse(xhr.responseText || '[]'); } catch(e){ _availableCoupons = []; }
+      if(callback) callback();
+    }
+  };
+  xhr.send();
+}
+
+function buildCouponOptions() {
+  var selLine = document.getElementById('couponLineAdSelect');
+  var selAd = document.getElementById('couponAdSelect');
+  var detail = document.getElementById('couponDetail');
+  if(!selLine || !selAd) return;
+  var lineAd = _availableCoupons.filter(function(c){ return c.ec_type === 'line_ad_free'; });
+  var ad = _availableCoupons.filter(function(c){ return c.ec_type === 'ad'; });
+  var h1 = '<option value="">▼ 선택</option>';
+  lineAd.forEach(function(c){ h1 += '<option value="'+c.ec_id+'" data-ec=\''+JSON.stringify(c).replace(/'/g,"\\'")+'\'>'+ (c.ec_name||'줄광고할인') +'</option>'; });
+  var h2 = '<option value="">▼ 선택</option>';
+  ad.forEach(function(c){ h2 += '<option value="'+c.ec_id+'" data-ec=\''+JSON.stringify(c).replace(/'/g,"\\'")+'\'>'+ (c.ec_name||'채용공고할인') +'</option>'; });
+  selLine.innerHTML = h1;
+  selAd.innerHTML = h2;
+  _selectedLineAd = null;
+  _selectedAd = null;
+  if(detail) detail.innerHTML = '';
+}
+
+function onCouponChange() {
+  var selLine = document.getElementById('couponLineAdSelect');
+  var selAd = document.getElementById('couponAdSelect');
+  var detail = document.getElementById('couponDetail');
+  if(!selLine || !selAd) return;
+  _selectedLineAd = null;
+  _selectedAd = null;
+  if(selLine.value) {
+    var opt = selLine.options[selLine.selectedIndex];
+    if(opt && opt.dataset.ec) { try { _selectedLineAd = JSON.parse(opt.dataset.ec); } catch(e){} }
+  }
+  if(selAd.value) {
+    var opt = selAd.options[selAd.selectedIndex];
+    if(opt && opt.dataset.ec) { try { _selectedAd = JSON.parse(opt.dataset.ec); } catch(e){} }
+  }
+  if(detail) {
+    var txt = [];
+    if(_selectedLineAd) txt.push(_selectedLineAd.ec_name||'줄광고할인');
+    if(_selectedAd) txt.push(_selectedAd.ec_name||'채용공고할인');
+    detail.textContent = txt.length ? txt.join(', ') + ' 적용' : '';
+  }
+  updateTotalAndFinal();
+}
+
+function calcCouponDiscount() {
+  var amounts = getLineAndBoxAmounts();
+  var disc = 0;
+  if(_selectedLineAd && _selectedLineAd.ec_type === 'line_ad_free') {
+    var req = _lineAdPrice[parseInt(_selectedLineAd.ec_line_ad_days||90)] || 170000;
+    if(amounts.line >= req) disc += (req);
+  }
+  if(_selectedAd && _selectedAd.ec_type === 'ad') {
+    if(_selectedAd.ec_discount_type === 'percent') {
+      var d = Math.floor(amounts.box * _selectedAd.ec_discount_value / 100);
+      if(_selectedAd.ec_max_discount > 0 && d > _selectedAd.ec_max_discount) d = _selectedAd.ec_max_discount;
+      disc += d;
+    } else disc += parseInt(_selectedAd.ec_discount_value||0);
+  }
+  return disc;
+}
+
+function updateTotalAndFinal() {
+  var amounts = getLineAndBoxAmounts();
+  var total = amounts.line + amounts.box;
+  var disc = calcCouponDiscount();
+  var final = Math.max(0, total - disc);
   var fmt = total.toLocaleString('ko-KR') + ' 원';
+  var fmtFinal = final.toLocaleString('ko-KR') + ' 원';
   var el1 = document.getElementById('totalAmount');
   var el2 = document.getElementById('totalAmount2');
   if(el1) el1.textContent = fmt;
-  if(el2) el2.textContent = fmt;
+  if(el2) el2.textContent = fmtFinal;
+  document.getElementById('total_amount_hidden').value = final;
+  var lineId = _selectedLineAd ? _selectedLineAd.ec_id : '';
+  var adId = _selectedAd ? _selectedAd.ec_id : '';
+  var h1 = document.getElementById('coupon_line_ad_hidden');
+  var h2 = document.getElementById('coupon_ad_hidden');
+  if(h1) h1.value = lineId;
+  if(h2) h2.value = adId;
+}
+
+function calcTotal() {
+  var prevLine = _selectedLineAd ? _selectedLineAd.ec_id : '';
+  var prevAd = _selectedAd ? _selectedAd.ec_id : '';
+  var amounts = getLineAndBoxAmounts();
+  fetchCoupons(amounts.line, amounts.box, function(){
+    buildCouponOptions();
+    var selLine = document.getElementById('couponLineAdSelect');
+    var selAd = document.getElementById('couponAdSelect');
+    if(prevLine && selLine) { selLine.value = prevLine; var o = selLine.options[selLine.selectedIndex]; if(o && o.dataset.ec) try{ _selectedLineAd = JSON.parse(o.dataset.ec); }catch(e){} }
+    if(prevAd && selAd) { selAd.value = prevAd; var o = selAd.options[selAd.selectedIndex]; if(o && o.dataset.ec) try{ _selectedAd = JSON.parse(o.dataset.ec); }catch(e){} }
+    var detail = document.getElementById('couponDetail');
+    if(detail && (_selectedLineAd || _selectedAd)) {
+      var txt = [];
+      if(_selectedLineAd) txt.push(_selectedLineAd.ec_name||'줄광고할인');
+      if(_selectedAd) txt.push(_selectedAd.ec_name||'채용공고할인');
+      detail.textContent = txt.join(', ') + ' 적용';
+    }
+    updateTotalAndFinal();
+  });
 }
 
 /* 전체 약관 동의 */
@@ -1186,12 +1286,13 @@ function checkPayment() {
     alert('광고 옵션을 1개 이상 선택해주세요. (줄광고 필수)');
     return;
   }
+  var finalAmount = parseInt(document.getElementById('total_amount_hidden').value) || total;
   try {
     document.getElementById('job_data_hidden').value = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
   } catch (e) {
     document.getElementById('job_data_hidden').value = JSON.stringify(data);
   }
-  document.getElementById('total_amount_hidden').value = total;
+  document.getElementById('total_amount_hidden').value = finalAmount;
   document.getElementById('ad_period_hidden').value = adPeriod;
   document.getElementById('ad_labels_hidden').value = adLabels.join(',');
   document.getElementById('fjobregister').submit();
@@ -1236,6 +1337,7 @@ function showSalaryWarn(){
   if(t) t.addEventListener('change',showSalaryWarn);
   if(j) j.addEventListener('change',showSalaryWarn);
 })();
+if(typeof calcTotal==='function') calcTotal();
 
 function openSalaryGuide(){ document.getElementById('modal-salary-guide').style.display='flex'; }
 function closeSalaryGuide(){ document.getElementById('modal-salary-guide').style.display='none'; }

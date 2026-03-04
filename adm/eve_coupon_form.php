@@ -15,6 +15,7 @@ $row = array(
     'ec_name' => '',
     'ec_target' => 'biz',
     'ec_type' => 'ad',
+    'ec_line_ad_days' => 0,
     'ec_issue_type' => 'manual',
     'ec_auto_trigger' => '',
     'ec_issue_target_scope' => 'all',
@@ -88,6 +89,18 @@ $disc_type_labels = array('percent' => '할인율(%)', 'amount' => '할인금액
             <option value="<?php echo $v; ?>" <?php echo ($row['ec_type'] ?? 'ad') === $v ? 'selected' : ''; ?>><?php echo $l; ?></option>
             <?php } ?>
           </select>
+        </td>
+      </tr>
+      <tr id="tr_line_ad_days" style="<?php echo ($row['ec_type'] ?? '') === 'line_ad_free' ? '' : 'display:none;'; ?>">
+        <th scope="row"><label for="ec_line_ad_days">줄광고 무료 기간</label></th>
+        <td>
+          <select name="ec_line_ad_days" id="ec_line_ad_days" class="frm_input">
+            <option value="0">선택</option>
+            <option value="30" <?php echo (int)($row['ec_line_ad_days'] ?? 0) === 30 ? 'selected' : ''; ?>>30일</option>
+            <option value="60" <?php echo (int)($row['ec_line_ad_days'] ?? 0) === 60 ? 'selected' : ''; ?>>60일</option>
+            <option value="90" <?php echo (int)($row['ec_line_ad_days'] ?? 0) === 90 ? 'selected' : ''; ?>>90일</option>
+          </select>
+          <span class="frm_info">30일=70,000원 / 60일=125,000원 / 90일=170,000원 (할인금액에 자동 반영)</span>
         </td>
       </tr>
       <tr>
@@ -221,17 +234,35 @@ function frm_check(f) {
     alert('개인 발급 선택 시 대상 회원ID를 입력하세요.');
     f.ec_issue_target_mb_id.focus(); return false;
   }
+  if (f.ec_type.value === 'line_ad_free' && (!f.ec_line_ad_days || f.ec_line_ad_days.value === '0')) {
+    alert('줄광고 무료 선택 시 기간(30일/60일/90일)을 선택하세요.');
+    if (f.ec_line_ad_days) f.ec_line_ad_days.focus(); return false;
+  }
   return true;
 }
 document.addEventListener('DOMContentLoaded', function() {
   var issueType = document.getElementById('ec_issue_type');
   var scope = document.getElementById('ec_issue_target_scope');
+  var ecType = document.getElementById('ec_type');
+  var lineAdDays = document.getElementById('ec_line_ad_days');
+  var discountValue = document.getElementById('ec_discount_value');
+  var priceMap = {30:70000, 60:125000, 90:170000};
   function toggle() {
-    document.getElementById('tr_auto_trigger').style.display = issueType.value === 'auto' ? '' : 'none';
-    document.getElementById('tr_target_mb_id').style.display = scope.value === 'individual' ? '' : 'none';
+    document.getElementById('tr_auto_trigger').style.display = issueType && issueType.value === 'auto' ? '' : 'none';
+    document.getElementById('tr_target_mb_id').style.display = scope && scope.value === 'individual' ? '' : 'none';
+    var tr = document.getElementById('tr_line_ad_days');
+    if (tr) tr.style.display = ecType && ecType.value === 'line_ad_free' ? '' : 'none';
+    if (ecType && ecType.value === 'line_ad_free' && lineAdDays && lineAdDays.value && priceMap[lineAdDays.value] && discountValue) {
+      discountValue.value = priceMap[lineAdDays.value];
+    }
   }
   if (issueType) issueType.addEventListener('change', toggle);
   if (scope) scope.addEventListener('change', toggle);
+  if (ecType) ecType.addEventListener('change', toggle);
+  if (lineAdDays) lineAdDays.addEventListener('change', function() {
+    if (ecType && ecType.value === 'line_ad_free' && priceMap[this.value] && discountValue) discountValue.value = priceMap[this.value];
+  });
+  toggle();
 });
 </script>
 

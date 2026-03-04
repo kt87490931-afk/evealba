@@ -2128,6 +2128,117 @@ footer {
 .total-bottom-bar { background:linear-gradient(135deg,var(--dark2),var(--dark)); border-radius:10px; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; margin:14px 18px 0; }
 .tbb-label { font-size:13px; color:rgba(255,255,255,.8); }
 .tbb-amount { font-size:22px; font-weight:900; color:var(--gold); }
+
+/* 총액+쿠폰 5:5 바 (이브알바 스타일, 반응형) */
+.total-coupon-bar {
+  margin:14px 18px 0;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(255,27,107,.12);
+  border:2px solid var(--pale-pink);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  align-items:stretch;
+  min-height:140px;
+}
+.tcb-left {
+  background:linear-gradient(180deg,#fff8fb 0%,#fff5f9 100%);
+  padding:18px 20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  border-right:2px solid var(--pale-pink);
+}
+.tcb-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-bottom:8px;
+  border-bottom:1px dashed var(--pale-pink);
+}
+.tcb-label { font-size:13px; font-weight:700; color:var(--dark); display:flex; align-items:center; gap:6px; }
+.tcb-label::before { content:'🛒'; }
+.tcb-amount { font-size:20px; font-weight:900; color:var(--hot-pink); }
+.tcb-coupon-row {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.tcb-coupon-label {
+  font-size:12px;
+  font-weight:700;
+  color:var(--dark);
+  white-space:nowrap;
+  min-width:100px;
+}
+.tcb-coupon-select {
+  flex:1;
+  min-width:130px;
+  padding:10px 14px;
+  border-radius:10px;
+  border:2px solid #f0e0e8;
+  background:#fff;
+  color:var(--text-dark);
+  font-size:13px;
+  font-weight:600;
+  transition:border-color .2s, box-shadow .2s;
+  cursor:pointer;
+  font-family:inherit;
+}
+.tcb-coupon-select:hover { border-color:var(--light-pink); }
+.tcb-coupon-select:focus {
+  outline:none;
+  border-color:var(--hot-pink);
+  box-shadow:0 0 0 3px rgba(255,27,107,.12);
+}
+.tcb-coupon-select option { background:#fff; color:#222; }
+.tcb-coupon-detail {
+  font-size:12px;
+  color:var(--hot-pink);
+  font-weight:700;
+  padding:6px 10px;
+  background:linear-gradient(135deg,#fff0f5,#fff8fb);
+  border-radius:8px;
+  border:1px solid var(--pale-pink);
+  min-height:36px;
+}
+.tcb-right {
+  background:linear-gradient(135deg,var(--dark2) 0%,#5C0040 50%,var(--hot-pink) 100%);
+  padding:20px 24px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.tcb-right .tcb-label {
+  font-size:12px;
+  font-weight:700;
+  color:rgba(255,255,255,.9);
+  margin-bottom:8px;
+}
+.tcb-right .tcb-label::before { content:'💳 '; }
+.tcb-final {
+  font-size:26px;
+  font-weight:900;
+  color:var(--gold);
+  text-shadow:0 1px 3px rgba(0,0,0,.3);
+  letter-spacing:-0.5px;
+}
+@media (max-width:768px) {
+  .total-coupon-bar { grid-template-columns:1fr; min-height:auto; }
+  .tcb-left { border-right:none; border-bottom:2px solid var(--pale-pink); padding:16px 18px; }
+  .tcb-right {
+    padding:18px 20px;
+    border-top:2px solid var(--pale-pink);
+    background:linear-gradient(135deg,var(--dark2),#5C0040);
+  }
+  .tcb-final { font-size:22px; }
+  .tcb-coupon-row { flex-direction:column; align-items:stretch; }
+  .tcb-coupon-label { min-width:auto; }
+}
 .terms-section { padding:14px 18px; }
 .terms-all-check { display:flex; align-items:center; gap:8px; padding:10px 14px; background:var(--pale-pink); border-radius:8px; margin-bottom:12px; cursor:pointer; }
 .terms-all-check input { accent-color:var(--hot-pink); width:16px; height:16px; cursor:pointer; }
