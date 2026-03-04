@@ -1510,7 +1510,9 @@ footer {
   .hamburger-btn span { display:block; width:22px; height:2.5px; background:#C9007A; border-radius:2px; }
   .mobile-recommend { display:block; }
   .featured-grid { grid-template-columns:repeat(2,1fr); }
-  .premium-grid { grid-template-columns:repeat(3,1fr) !important; }
+  .premium-grid,
+  .main-area .premium-grid,
+  .section-wrap .premium-grid { grid-template-columns:repeat(3,1fr) !important; }
   .special-grid { grid-template-columns:repeat(3,1fr); }
   .quick-stats { display:none !important; }
   .mobile-quick-menu {
@@ -1615,7 +1617,9 @@ footer {
   .job-card-banner { height:72px; font-size:12px; }
   .job-wage { font-size:12px; }
   .job-badge { font-size:10px; }
-  .premium-grid { grid-template-columns:repeat(3,1fr) !important; gap:8px; }
+  .premium-grid,
+  .main-area .premium-grid,
+  .section-wrap .premium-grid { grid-template-columns:repeat(3,1fr) !important; gap:8px; }
   .premium-banner { height:58px; font-size:11px; }
   .premium-name { font-size:11px; }
   .premium-wage { font-size:11px; }
@@ -1641,6 +1645,9 @@ footer {
 @media (max-width:380px) {
   .quick-stats { display:none !important; }
   .mqm-label { font-size:10px; }
+  .premium-grid,
+  .main-area .premium-grid,
+  .section-wrap .premium-grid { grid-template-columns:repeat(3,1fr) !important; }
 }
 
 /* 모바일 빠른 메뉴 (데스크톱에서 숨김) */
