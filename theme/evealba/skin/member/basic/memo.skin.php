@@ -54,9 +54,9 @@ $search_keyword = isset($_GET['st']) ? trim($_GET['st']) : '';
   <?php if ($list_count > 0) { ?>
   <div class="msg-list-header">
     <span class="msg-h-chk"></span>
+    <span class="msg-h-date">시간</span>
     <span class="msg-h-sender">보낸이</span>
     <span class="msg-h-content">내용</span>
-    <span class="msg-h-date">시간</span>
     <span class="msg-h-st">열람</span>
   </div>
   <ul class="msg-list">
@@ -71,9 +71,9 @@ $search_keyword = isset($_GET['st']) ? trim($_GET['st']) : '';
       <div class="msg-chk">
         <input type="checkbox" class="msg-checkbox" name="me_id[]" value="<?php echo $row['me_id']; ?>" id="me_id_<?php echo $row['me_id']; ?>">
       </div>
+      <span class="msg-date"><?php echo $row['send_datetime']; ?></span>
       <span class="msg-sender"><?php echo get_text($row['mb_nick'] ?: '정보없음'); ?></span>
       <a href="<?php echo $row['view_href']; ?>" class="msg-content"><?php echo $readed ? get_text($memo_preview) : '<b>'.get_text($memo_preview).'</b>'; ?></a>
-      <span class="msg-date"><?php echo $row['send_datetime']; ?></span>
       <span class="msg-st<?php echo $readed ? '' : ' unread'; ?>"><?php echo $readed ? '열람' : '미열람'; ?></span>
     </li>
     <?php } ?>
