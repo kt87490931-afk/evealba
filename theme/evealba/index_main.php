@@ -73,14 +73,20 @@ if ($_sb_check && sql_num_rows($_sb_check) > 0) {
 </div>
 
 <!-- 빠른 메뉴 (모바일) -->
-<?php $_qm_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL, '/') : ''; ?>
+<?php
+$_qm_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL, '/') : '';
+$_qm_memo_badge = 0;
+if (!empty($is_member) && !empty($member['mb_id']) && function_exists('get_memo_not_read')) {
+  $_qm_memo_badge = min(99, (int)get_memo_not_read($member['mb_id']));
+}
+?>
 <div class="mobile-quick-menu">
   <a href="<?php echo $_qm_base; ?>/jobs_register.php" class="mqm-btn"><span class="mqm-icon">📋</span><span class="mqm-label">채용공고 등록</span></a>
   <a href="<?php echo $_qm_base; ?>/resume_register.php" class="mqm-btn"><span class="mqm-icon">👩</span><span class="mqm-label">이력서 등록</span></a>
   <a href="<?php echo $_qm_base; ?>/jobs.php" class="mqm-btn"><span class="mqm-icon">📍</span><span class="mqm-label">지역별 채용</span></a>
   <a href="<?php echo $_qm_base; ?>/sudabang.php" class="mqm-btn"><span class="mqm-icon">💬</span><span class="mqm-label">수다방</span></a>
   <a href="javascript:void(0);" class="mqm-btn" onclick="var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';window.open(u,'eveChatPopup','width='+Math.min(420,screen.availWidth)+',height='+Math.min(720,screen.availHeight)+',scrollbars=no,resizable=yes');"><span class="mqm-icon">💬</span><span class="mqm-label">채팅</span></a>
-  <a href="<?php echo G5_BBS_URL; ?>/memo.php" class="mqm-btn"><span class="mqm-icon">📩</span><span class="mqm-label">쪽지</span></a>
+  <a href="<?php echo G5_BBS_URL; ?>/memo.php" class="mqm-btn mqm-memo"><span class="mqm-icon">📩</span><span class="mqm-label">쪽지</span><?php if ($_qm_memo_badge > 0) { ?><span class="ql-memo-badge">+<?php echo $_qm_memo_badge; ?></span><?php } ?></a>
 </div>
 
 <!-- 공지 -->

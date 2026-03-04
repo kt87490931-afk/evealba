@@ -843,7 +843,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
             <div class="tcb-coupon-detail" id="couponDetail"></div>
           </div>
           <div class="tcb-right">
-            <div class="tcb-label">변경된 총 신청 금액</div>
+            <div class="tcb-label">할인 후 신청금액</div>
             <div class="tcb-final" id="totalAmount2">0 원</div>
           </div>
         </div>

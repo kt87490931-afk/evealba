@@ -908,6 +908,8 @@ nav::before {
   text-align:center;
 }
 .quick-link-btn:hover { background:var(--pale-pink); color:var(--hot-pink); }
+.quick-link-btn.ql-memo { position:relative; }
+.ql-memo-badge { position:absolute; top:4px; right:4px; background:#e74c3c; color:#fff !important; font-size:10px; font-weight:900; padding:2px 5px; border-radius:4px; line-height:1; min-width:18px; text-align:center; }
 .ql-icon { font-size:20px; }
 .region-grid {
   display:grid;
@@ -1530,6 +1532,7 @@ footer {
     transition:all .2s; cursor:pointer;
   }
   .mqm-btn:hover, .mqm-btn:active { border-color:var(--hot-pink); box-shadow:0 4px 14px rgba(255,27,107,.15); }
+  .mqm-btn.mqm-memo { position:relative; }
   .mqm-icon { font-size:22px; margin-bottom:4px; }
   .mqm-label { font-size:11px; font-weight:700; color:var(--dark); }
   .community-resume-row { grid-template-columns:1fr; }
