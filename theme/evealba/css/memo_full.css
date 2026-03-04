@@ -107,6 +107,11 @@ body.memo-page-body .memo-page-layout { margin: 0 auto 24px; padding: 0; display
 }
 .tab-header.memo-tabs .tbb.orange { background: var(--orange); }
 
+/* 쪽지 내용 카드 - 히어로영역과 동일 가로 958px */
+body.memo-page-body .message-card.memo-view-card {
+  width: 958px;
+  max-width: 100%;
+}
 /* 쪽지 본문 카드 - 이브알바 박스 간격: 탭과 content-card 사이 여백 */
 .main-area.memo-main .content-card {
   border-radius: 0 0 14px 14px;
@@ -118,7 +123,8 @@ body.memo-page-body .memo-page-layout { margin: 0 auto 24px; padding: 0; display
 @media (max-width: 1000px) {
   body.memo-page-body .memo-page-layout,
   body.memo-page-body .main-area .hero-section,
-  body.memo-page-body .main-area .hero-main { width: 100%; }
+  body.memo-page-body .main-area .hero-main,
+  body.memo-page-body .message-card.memo-view-card { width: 100%; }
   .memo-top-widget { width: 100%; flex-wrap: wrap; }
   .memo-tw-cell { flex: 1 1 25%; min-width: 0; }
   .tab-header.memo-tabs { width: 100%; }

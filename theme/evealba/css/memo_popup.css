@@ -370,9 +370,10 @@ body.memo-popup-body {
 .btn-reset:hover { background: var(--pale-pink); color: var(--hot-pink); }
 .memo-recv-fixed { font-size: 13px; color: var(--dark); font-weight: 700; }
 
-/* ── 쪽지 읽기 (message-view.html) ── */
+/* ── 쪽지 읽기 (message-view.html) - 히어로영역과 동일 958px ── */
 .message-card.memo-view-card {
-  max-width: 860px;
+  width: 958px;
+  max-width: 100%;
   margin: 0 auto 24px;
   background: #fff;
   border-radius: 16px;
