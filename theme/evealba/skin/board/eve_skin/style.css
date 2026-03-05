@@ -137,6 +137,36 @@
 .jobs-payment-list .jobs-ongoing-thead,
 .jobs-payment-list .jobs-ongoing-row { grid-template-columns:120px 1fr 100px 70px 80px; }
 .jobs-payment-list .board-td.td-price { font-weight:700; color:var(--ev-hot-pink); }
+
+/* ===== 채용정보 스크랩 리스트 (jobs-scrap-list) ===== */
+.jobs-scrap-list .board-btns { display:flex; gap:8px; align-items:center; }
+.jobs-scrap-list .btn-delete { padding:8px 16px; background:#fff; color:#666; border:1.5px solid #e0e0e0; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; }
+.jobs-scrap-list .btn-delete:hover { border-color:var(--ev-hot-pink); color:var(--ev-hot-pink); }
+.jobs-scrap-list .jobs-scrap-thead,
+.jobs-scrap-list .jobs-scrap-row { display:grid; grid-template-columns:36px 130px 1fr 80px 90px; align-items:center; }
+.jobs-scrap-list .jobs-scrap-thead { background:linear-gradient(135deg,var(--ev-orange),var(--ev-hot-pink)); padding:10px 12px; }
+.jobs-scrap-list .jobs-scrap-row { border-bottom:1px solid #fae8f0; padding:0; }
+.jobs-scrap-list .jobs-scrap-row:hover { background:#fff8fb; }
+.jobs-scrap-list .board-th { text-align:center; font-size:12px; font-weight:700; color:#fff; }
+.jobs-scrap-list .board-th.td-title { text-align:left; }
+.jobs-scrap-list .board-th.td-status,
+.jobs-scrap-list .board-th.td-manage { text-align:right; padding-right:12px; }
+.jobs-scrap-list .board-td { padding:11px 12px; font-size:12px; color:#555; }
+.jobs-scrap-list .board-td.td-chk { display:flex; align-items:center; justify-content:center; }
+.jobs-scrap-list .board-td.td-date { font-size:12px; color:#888; min-width:0; }
+.jobs-scrap-list .board-td.td-title { text-align:left; }
+.jobs-scrap-list .board-td.td-title .post-title-text { font-size:13px; font-weight:600; color:#222; text-decoration:none; }
+.jobs-scrap-list .board-td.td-title .post-title-text:hover { color:var(--ev-hot-pink); }
+.jobs-scrap-list .board-td.td-status,
+.jobs-scrap-list .board-td.td-manage { text-align:right; }
+.jobs-scrap-list .board-td.td-manage .btn-view { padding:6px 14px; font-size:12px; }
+@media (max-width:768px) {
+  .jobs-scrap-list .jobs-scrap-thead,
+  .jobs-scrap-list .jobs-scrap-row { grid-template-columns:36px 1fr 70px 70px; }
+  .jobs-scrap-list .board-th.td-date,
+  .jobs-scrap-list .board-td.td-date { display:none; }
+}
+
 @media (max-width:900px) {
   .jobs-ongoing-list .jobs-ongoing-thead,
   .jobs-ongoing-list .jobs-ongoing-row { grid-template-columns:52px 84px 1fr 80px 80px 60px; }

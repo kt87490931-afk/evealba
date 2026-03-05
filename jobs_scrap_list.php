@@ -55,6 +55,7 @@ if ($tb_check && sql_num_rows($tb_check)) {
 </div>
 
 <div id="bo_list" class="ev-board-list jobs-scrap-list" style="width:100%;">
+  <form name="fscraplist" id="fscraplist" method="post" action="<?php echo $jobs_base_url ? $jobs_base_url.'/jobs_scrap_delete.php' : '/jobs_scrap_delete.php'; ?>" onsubmit="return fscraplist_submit(this);">
   <div class="board-topbar">
     <div class="board-topbar-left">
       <h2 class="board-page-title">채용정보 스크랩</h2>
@@ -62,26 +63,34 @@ if ($tb_check && sql_num_rows($tb_check)) {
     </div>
     <div class="board-btns">
       <a href="<?php echo $jobs_base_url ? $jobs_base_url.'/jobs.php' : '/jobs.php'; ?>" class="btn-write">📋 채용정보 보기</a>
+      <?php if (count($list) > 0) { ?>
+      <button type="submit" name="btn_delete" class="btn-delete">🗑️ 삭제</button>
+      <?php } ?>
     </div>
   </div>
 
-  <div class="board-wrap jobs-ongoing-wrap">
-    <div class="board-thead jobs-ongoing-thead">
-      <div class="board-th">스크랩일시</div>
+  <div class="board-wrap jobs-scrap-wrap">
+    <div class="board-thead jobs-scrap-thead">
+      <div class="board-th td-chk"><input type="checkbox" id="chkall" onclick="if(this.checked){document.querySelectorAll('.chk-js').forEach(function(c){c.checked=true;});}else{document.querySelectorAll('.chk-js').forEach(function(c){c.checked=false;});}"><label for="chkall" class="sound_only">전체선택</label></div>
+      <div class="board-th td-date">스크랩일시</div>
       <div class="board-th td-title">채용정보</div>
-      <div class="board-th">상태</div>
-      <div class="board-th">관리</div>
+      <div class="board-th td-status">상태</div>
+      <div class="board-th td-manage">관리</div>
     </div>
     <?php if (count($list) > 0) {
       foreach ($list as $row) { ?>
-    <div class="board-row jobs-ongoing-row" style="cursor:default;">
+    <div class="board-row jobs-scrap-row">
+      <div class="board-td td-chk">
+        <input type="checkbox" name="js_id[]" value="<?php echo (int)$row['js_id']; ?>" id="chk_<?php echo (int)$row['js_id']; ?>" class="chk-js">
+        <label for="chk_<?php echo (int)$row['js_id']; ?>" class="sound_only"><?php echo htmlspecialchars($row['subject']); ?> 선택</label>
+      </div>
       <div class="board-td td-date"><?php echo htmlspecialchars($row['datetime2']); ?></div>
       <div class="board-td td-title">
-        <a href="<?php echo htmlspecialchars($row['view_url']); ?>" class="post-title-text" style="text-decoration:none;color:inherit;"><?php echo htmlspecialchars($row['subject']); ?></a>
+        <a href="<?php echo htmlspecialchars($row['view_url']); ?>" class="post-title-text"><?php echo htmlspecialchars($row['subject']); ?></a>
       </div>
       <div class="board-td td-status"><span class="status-badge"><?php echo htmlspecialchars($row['status_label']); ?></span></div>
-      <div class="board-td">
-        <a href="<?php echo htmlspecialchars($row['view_url']); ?>" class="btn-write" style="padding:6px 14px;font-size:12px;">보기</a>
+      <div class="board-td td-manage">
+        <a href="<?php echo htmlspecialchars($row['view_url']); ?>" class="btn-write btn-view">보기</a>
       </div>
     </div>
     <?php }
@@ -95,7 +104,16 @@ if ($tb_check && sql_num_rows($tb_check)) {
     </div>
     <?php } ?>
   </div>
+  </form>
 </div>
+<script>
+function fscraplist_submit(f){
+  var checked = f.querySelectorAll('.chk-js:checked');
+  if (!checked.length) { alert('삭제할 항목을 선택해주세요.'); return false; }
+  if (!confirm('선택한 '+checked.length+'건을 삭제하시겠습니까?')) return false;
+  return true;
+}
+</script>
 
 <?php
     include_once(G5_THEME_PATH.'/tail.php');
