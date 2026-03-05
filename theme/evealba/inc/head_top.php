@@ -64,112 +64,42 @@ $nav_active = isset($nav_active) ? $nav_active : '';
   </div>
 </nav>
 
-<!-- TICKER -->
+<!-- TICKER: 모든 페이지 동일 급구광고 (메인·채용정보·인재정보·이브수다방·중고거래·고객센터) -->
 <div class="ticker-wrap">
-  <span class="ticker-label"><?php echo ($nav_active==='talent') ? '🌸 신규' : (($nav_active==='thumb_shop') ? '🛒 썸네일' : (($nav_active==='sudabang') ? '💬 HOT' : (($nav_active==='used') ? '🛍️ NEW' : (($nav_active==='cs') ? '🎀 고객센터' : '🔥 급구')))); ?></span>
+  <span class="ticker-label">🔥 급구</span>
   <div class="ticker-track">
     <div class="ticker-inner">
-<?php if ($nav_active==='talent') { ?>
-      <span><b>마○○</b> 여 26세 · 룸싸롱 · 강남 구해요 N</span>
-      <span><b>짜○○</b> 여 27세 · 서울 경기 인천 쉬어 야간 구해요 N</span>
-      <span><b>넬○○</b> 여 33세 · 160 66kg 일종 둘론 일자리 구합니다 N</span>
-      <span><b>수○○</b> 여 22세 · 일구해요 N</span>
-      <span><b>cnjzi○○</b> 여 27세 · 20대 77 여자 일 구해요 N</span>
-      <span><b>마○○</b> 여 26세 · 룸싸롱 · 강남 구해요 N</span>
-      <span><b>짜○○</b> 여 27세 · 서울 경기 인천 쉬어 야간 구해요 N</span>
-      <span><b>수○○</b> 여 22세 · 일구해요 N</span>
-      <span><b>cnjzi○○</b> 여 27세 · 20대 77 여자 일 구해요 N</span>
-<?php } elseif ($nav_active==='cs') {
-  $_ct_items = array();
-  $_ct_pfx = (defined('G5_TABLE_PREFIX') && G5_TABLE_PREFIX) ? G5_TABLE_PREFIX : 'g5_';
-  $_ct_bbs = (defined('G5_BBS_URL') && G5_BBS_URL) ? rtrim(G5_BBS_URL,'/') : '';
-  if (function_exists('get_pretty_url')) {
-    $_ct_burl = function($bt,$id='') { return get_pretty_url($bt,$id); };
-  } else {
-    $_ct_burl = function($bt,$id='') { return (defined('G5_BBS_URL')?G5_BBS_URL:'/bbs').'/board.php?bo_table='.$bt.($id?'&wr_id='.$id:''); };
-  }
-  $chk = @sql_query("SHOW TABLES LIKE '{$_ct_pfx}write_notice'", false);
-  if ($chk && @sql_num_rows($chk)) {
-    $res = sql_query("SELECT wr_id, wr_subject FROM {$_ct_pfx}write_notice WHERE wr_is_comment=0 ORDER BY wr_num ASC LIMIT 3", false);
-    if ($res) while ($r=sql_fetch_array($res)) {
-      $_ct_items[] = array('badge'=>'[공지]','txt'=>get_text($r['wr_subject']),'url'=>$_ct_burl('notice',$r['wr_id']));
+<?php
+$_ticker_urgent = array();
+if (function_exists('get_jobs_by_type')) {
+    $_ticker_urgent = get_jobs_by_type('급구', 30);
+}
+if (!empty($_ticker_urgent)) {
+    $_ticker_spans = '';
+    foreach ($_ticker_urgent as $_tu) {
+        $_tu_data = is_string($_tu['jr_data']) ? @json_decode($_tu['jr_data'], true) : (array)$_tu['jr_data'];
+        $_tu_region = '';
+        if (!empty($_tu_data['desc_location'])) {
+            $_tu_region = trim(explode(' ', trim($_tu_data['desc_location']))[0]);
+        }
+        $_tu_name = htmlspecialchars($_tu['jr_nickname'] ?: $_tu['jr_company']);
+        $_tu_promo = '';
+        if (!empty($_tu_data['desc_promo'])) {
+            $_tu_promo = htmlspecialchars(mb_substr($_tu_data['desc_promo'], 0, 25, 'UTF-8'));
+        } elseif (!empty($_tu['jr_title'])) {
+            $_tu_promo = htmlspecialchars(mb_substr($_tu['jr_title'], 0, 25, 'UTF-8'));
+        }
+        $_tu_text = '<span><b>[' . htmlspecialchars($_tu_region ?: '전국') . '] ' . $_tu_name . '</b>';
+        if ($_tu_promo) $_tu_text .= ' ' . $_tu_promo;
+        $_tu_text .= '</span>';
+        $_ticker_spans .= $_tu_text;
     }
-  }
-  $chk2 = @sql_query("SHOW TABLES LIKE '{$_ct_pfx}write_ad_inquiry'", false);
-  if ($chk2 && @sql_num_rows($chk2)) {
-    $res2 = sql_query("SELECT wr_id, wr_subject, wr_comment FROM {$_ct_pfx}write_ad_inquiry WHERE wr_is_comment=0 ORDER BY wr_id DESC LIMIT 3", false);
-    if ($res2) while ($r2=sql_fetch_array($res2)) {
-      $_ct_items[] = array('badge'=>'[문의]','txt'=>get_text($r2['wr_subject']).($r2['wr_comment']>0?' · 답변완료':''),'url'=>$_ct_burl('ad_inquiry',$r2['wr_id']));
-    }
-  }
-  $_ct_faq_write = $_ct_pfx . 'write_faq';
-  $chk3 = @sql_query("SHOW TABLES LIKE '{$_ct_faq_write}'", false);
-  if ($chk3 && @sql_num_rows($chk3)) {
-    $res3 = sql_query("SELECT wr_id, wr_subject FROM {$_ct_faq_write} WHERE wr_is_comment=0 ORDER BY wr_num ASC, wr_id DESC LIMIT 3", false);
-    if ($res3) while ($r3=sql_fetch_array($res3)) {
-      $_ct_items[] = array('badge'=>'[FAQ]','txt'=>get_text($r3['wr_subject']),'url'=>$_ct_bbs.'/board.php?bo_table=faq&wr_id='.(int)$r3['wr_id']);
-    }
-  }
-  if (empty($_ct_items)) {
-    $_ct_items[] = array('badge'=>'[공지]','txt'=>'등록된 게시글이 없습니다','url'=>'#');
-  }
-  $_ct_double = array_merge($_ct_items, $_ct_items);
-  foreach ($_ct_double as $_ci) {
-    echo '<span><a href="'.htmlspecialchars($_ci['url'],ENT_QUOTES).'" style="color:inherit;text-decoration:none;"><b>'.htmlspecialchars($_ci['badge'],ENT_QUOTES).'</b> '.htmlspecialchars(mb_strlen($_ci['txt'],'UTF-8')>28?mb_substr($_ci['txt'],0,28,'UTF-8').'…':$_ci['txt'],ENT_QUOTES).'</a></span>';
-  }
-} elseif ($nav_active==='thumb_shop') { ?>
-      <span><b>🛒 썸네일상점</b> 뱃지·테두리·모션 옵션으로 광고를 더 눈에 띄게!</span>
-      <span><b>쿠폰적용</b> 기업회원 매월 썸네일 할인 쿠폰 지급</span>
-      <span><b>🛒 썸네일상점</b> 뱃지·테두리·모션 옵션으로 광고를 더 눈에 띄게!</span>
-<?php } elseif ($nav_active==='sudabang') { ?>
-      <span><b>[베스트]</b> 3부 강한 하퍼 어디예요 💬24</span>
-      <span><b>[밤문화]</b> 하퍼 담당분들은 잘 안... 💬17</span>
-      <span><b>[단짝찾기]</b> 현재 회원님의 헝볼로 같이 일할 단짝찾기 💬8</span>
-      <span><b>[법률자문]</b> 마이킹 관련 · 비밀글 💬3</span>
-      <span><b>[중고거래]</b> 전략 분리리 세로패딩 · 비밀글 💬5</span>
-      <span><b>[베스트]</b> 3부 강한 하퍼 어디예요 💬24</span>
-      <span><b>[밤문화]</b> 하퍼 담당분들은 잘 안... 💬17</span>
-      <span><b>[단짝찾기]</b> 현재 회원님의 헝볼로 같이 일할 단짝찾기 💬8</span>
-<?php } elseif ($nav_active==='used') { ?>
-      <span><b>웃저렴하게팔아용</b> - 의류 · 방금</span>
-      <span><b>유엘핀 수입의류 판매</b> [2] - 의류 · 방금</span>
-      <span><b>정뤌 불가리 세르펜티 투보가스 시계</b> - 시계 · 방금</span>
-      <span><b>라쉘 로쎔제이 수입의류 홀복 미시착 새상품</b> - 의류 · 방금</span>
-      <span><b>루이비통 7.5 미우미우 7.5 버버리 8.5</b> - 신발 · 방금</span>
-      <span><b>베이스 메이크업 화장품 브러쉬세트</b> - 화장품 · 방금</span>
-      <span><b>웃저렴하게팔아용</b> - 의류 · 방금</span>
-      <span><b>유엘핀 수입의류 판매</b> - 의류 · 방금</span>
-<?php } else {
-  $_ticker_urgent = array();
-  if (function_exists('get_jobs_by_type')) {
-      $_ticker_urgent = get_jobs_by_type('급구', 30);
-  }
-  if (!empty($_ticker_urgent)) {
-      $_ticker_spans = '';
-      foreach ($_ticker_urgent as $_tu) {
-          $_tu_data = is_string($_tu['jr_data']) ? @json_decode($_tu['jr_data'], true) : (array)$_tu['jr_data'];
-          $_tu_region = '';
-          if (!empty($_tu_data['desc_location'])) {
-              $_tu_region = trim(explode(' ', trim($_tu_data['desc_location']))[0]);
-          }
-          $_tu_name = htmlspecialchars($_tu['jr_nickname'] ?: $_tu['jr_company']);
-          $_tu_promo = '';
-          if (!empty($_tu_data['desc_promo'])) {
-              $_tu_promo = htmlspecialchars(mb_substr($_tu_data['desc_promo'], 0, 25, 'UTF-8'));
-          } elseif (!empty($_tu['jr_title'])) {
-              $_tu_promo = htmlspecialchars(mb_substr($_tu['jr_title'], 0, 25, 'UTF-8'));
-          }
-          $_tu_text = '<span><b>[' . htmlspecialchars($_tu_region ?: '전국') . '] ' . $_tu_name . '</b>';
-          if ($_tu_promo) $_tu_text .= ' ' . $_tu_promo;
-          $_tu_text .= '</span>';
-          $_ticker_spans .= $_tu_text;
-      }
-      echo $_ticker_spans;
-      echo $_ticker_spans;
-      $_ticker_cnt = count($_ticker_urgent);
-      $_ticker_dur = max(30, $_ticker_cnt * 3);
-      echo '<style>.ticker-inner{animation-duration:'.$_ticker_dur.'s !important;}</style>';
-  } else { ?>
+    echo $_ticker_spans;
+    echo $_ticker_spans;
+    $_ticker_cnt = count($_ticker_urgent);
+    $_ticker_dur = max(30, $_ticker_cnt * 3);
+    echo '<style>.ticker-inner{animation-duration:'.$_ticker_dur.'s !important;}</style>';
+} else { ?>
       <span><b>[강남] 클럽마샤</b> 일급 150만원 · 밀빵OK · 당일면접</span>
       <span><b>[홍대] 하이퍼블릭 이브</b> 시급 15만원 · 초보환영</span>
       <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
@@ -180,7 +110,7 @@ $nav_active = isset($nav_active) ? $nav_active : '';
       <span><b>[신사] 퍼블릭라운지</b> 룸당 10만원 · 즉시출근</span>
       <span><b>[이태원] 이브VIP</b> 하루 100만원 보장</span>
       <span><b>[압구정] 헤라클럽</b> 시급 20만원 · 2시간 40만원</span>
-<?php } } ?>
+<?php } ?>
     </div>
   </div>
 </div>
