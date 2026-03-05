@@ -43,6 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 if (!$msg) {
                     sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$ec_id}', '".sql_escape_string($mb_id)."')", false);
+                    if (!empty($ec['ec_memo_send'])) {
+                        $memo_content = '쿠폰이 도착하였습니다. ' . get_text($ec['ec_name']);
+                        ev_send_memo($mb_id, $memo_content, '');
+                    }
                     $msg = $mb_id . ' 회원에게 발급되었습니다.';
                 }
             }
@@ -50,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'bulk') {
         $target = isset($_POST['bulk_target']) ? trim($_POST['bulk_target']) : 'all_biz';
         $send_memo = isset($_POST['send_memo']) && $_POST['send_memo'] == '1';
+        $use_memo = $send_memo || !empty($ec['ec_memo_send']);
         $mb_list = array();
         if ($target === 'all_biz') {
             $r = sql_query("SELECT mb_id FROM {$g5['member_table']} WHERE mb_1 = 'biz' AND mb_7 = 'approved'");
@@ -74,13 +79,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $issued++;
             $issued_mb_ids[] = $mb_id;
         }
-        if ($send_memo && !empty($issued_mb_ids)) {
-            $memo_content = get_text($ec['ec_name']) . ' 쿠폰이 발급되었습니다. 항상 이브알바를 찾아주셔서 감사합니다.';
+        if ($use_memo && !empty($issued_mb_ids)) {
+            $memo_content = '쿠폰이 도착하였습니다. ' . get_text($ec['ec_name']);
             foreach ($issued_mb_ids as $mb_id) {
                 ev_send_memo($mb_id, $memo_content, '');
             }
         }
-        $msg = '전체 기업회원 중 ' . $issued . '명에게 발급되었습니다.' . ($send_memo && $issued > 0 ? ' (쪽지 발송 완료)' : '');
+        $msg = '전체 기업회원 중 ' . $issued . '명에게 발급되었습니다.' . ($use_memo && $issued > 0 ? ' (쪽지 발송 완료)' : '');
     }
 }
 

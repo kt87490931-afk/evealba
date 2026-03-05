@@ -30,7 +30,8 @@ $row = array(
     'ec_issue_from' => '',
     'ec_issue_to' => '',
     'ec_issue_limit_per_member' => 0,
-    'ec_is_active' => 1
+    'ec_is_active' => 1,
+    'ec_memo_send' => 0
 );
 
 $tb = 'g5_ev_coupon';
@@ -209,6 +210,16 @@ $disc_type_labels = array('percent' => '할인율(%)', 'amount' => '할인금액
             <option value="1" <?php echo ($row['ec_is_active'] ?? 1) ? 'selected' : ''; ?>>활성</option>
             <option value="0" <?php echo empty($row['ec_is_active']) ? 'selected' : ''; ?>>비활성</option>
           </select>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row"><label for="ec_memo_send">쪽지발송하기</label></th>
+        <td>
+          <select name="ec_memo_send" id="ec_memo_send" class="frm_input">
+            <option value="0" <?php echo empty($row['ec_memo_send']) ? 'selected' : ''; ?>>Off</option>
+            <option value="1" <?php echo !empty($row['ec_memo_send']) ? 'selected' : ''; ?>>On</option>
+          </select>
+          <span class="frm_info">On: 발급 시 대상에게 "쿠폰이 도착하였습니다. [쿠폰명]" 쪽지 발송</span>
         </td>
       </tr>
     </tbody>

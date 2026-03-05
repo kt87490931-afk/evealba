@@ -11,6 +11,7 @@ header('Content-Type: application/json; charset=UTF-8');
 $res = array('ok' => 0, 'msg' => '');
 
 auth_check_menu($auth, $sub_menu, 'w');
+include_once G5_LIB_PATH . '/ev_memo.lib.php';
 
 $action = isset($_POST['action']) ? trim($_POST['action']) : '';
 $mb_id = isset($_POST['mb_id']) ? trim($_POST['mb_id']) : '';
@@ -49,23 +50,38 @@ if ($action === 'approve') {
         while ($r = sql_fetch_array($cr)) $cols_check[] = $r['Field'];
         $use_new = in_array('ec_issue_type', $cols_check) && in_array('ec_auto_trigger', $cols_check);
         if ($use_new) {
-            $crs = sql_query("SELECT ec_id, ec_issue_target_scope, ec_issue_target_mb_id FROM {$tb_coupon} WHERE ec_issue_type = 'auto' AND ec_auto_trigger = 'on_approval' AND ec_target = 'biz' AND ec_is_active = 1", false);
+            $cols_sel = "ec_id, ec_issue_target_scope, ec_issue_target_mb_id";
+            if (in_array('ec_memo_send', $cols_check)) $cols_sel .= ", ec_name, ec_memo_send";
+            $crs = sql_query("SELECT {$cols_sel} FROM {$tb_coupon} WHERE ec_issue_type = 'auto' AND ec_auto_trigger = 'on_approval' AND ec_target = 'biz' AND ec_is_active = 1", false);
             if ($crs) while ($c = sql_fetch_array($crs)) {
                 $scope = $c['ec_issue_target_scope'] ?? 'all';
                 $target_mb = trim($c['ec_issue_target_mb_id'] ?? '');
                 if ($scope === 'individual' && $target_mb !== '' && $target_mb !== $mb_id) continue;
                 $eid = (int)$c['ec_id'];
                 $ex = sql_fetch("SELECT eci_id FROM {$tb_issue} WHERE ec_id = '{$eid}' AND mb_id = '{$mb_id_esc}' LIMIT 1");
-                if (!$ex) sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$eid}', '{$mb_id_esc}')", false);
+                if (!$ex) {
+                    sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$eid}', '{$mb_id_esc}')", false);
+                    if (!empty($c['ec_memo_send'])) {
+                        $memo_content = '쿠폰이 도착하였습니다. ' . get_text($c['ec_name'] ?? '');
+                        ev_send_memo($mb_id, $memo_content, '');
+                    }
+                }
             }
         } else {
             $signup_coupons = array('줄광고3달무료', '채용공고30%할인');
+            $cols_sel = in_array('ec_memo_send', $cols_check) ? "ec_id, ec_name, ec_memo_send" : "ec_id";
             foreach ($signup_coupons as $cname) {
-                $c = sql_fetch("SELECT ec_id FROM {$tb_coupon} WHERE ec_name = '".sql_escape_string($cname)."' AND ec_target = 'biz' AND ec_is_active = 1 LIMIT 1");
+                $c = sql_fetch("SELECT {$cols_sel} FROM {$tb_coupon} WHERE ec_name = '".sql_escape_string($cname)."' AND ec_target = 'biz' AND ec_is_active = 1 LIMIT 1");
                 if ($c) {
                     $eid = (int)$c['ec_id'];
                     $ex = sql_fetch("SELECT eci_id FROM {$tb_issue} WHERE ec_id = '{$eid}' AND mb_id = '{$mb_id_esc}' LIMIT 1");
-                    if (!$ex) sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$eid}', '{$mb_id_esc}')", false);
+                    if (!$ex) {
+                        sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$eid}', '{$mb_id_esc}')", false);
+                        if (!empty($c['ec_memo_send'])) {
+                            $memo_content = '쿠폰이 도착하였습니다. ' . get_text($c['ec_name'] ?? '');
+                            ev_send_memo($mb_id, $memo_content, '');
+                        }
+                    }
                 }
             }
         }

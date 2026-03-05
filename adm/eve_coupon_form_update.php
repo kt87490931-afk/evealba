@@ -34,6 +34,7 @@ $ec_issue_to = isset($_POST['ec_issue_to']) ? preg_replace('/[^0-9\-]/', '', $_P
 $ec_use_limit = isset($_POST['ec_use_limit']) ? (int)$_POST['ec_use_limit'] : 0;
 $ec_issue_limit_per_member = isset($_POST['ec_issue_limit_per_member']) ? (int)$_POST['ec_issue_limit_per_member'] : 0;
 $ec_is_active = isset($_POST['ec_is_active']) ? (int)$_POST['ec_is_active'] : 1;
+$ec_memo_send = isset($_POST['ec_memo_send']) ? (int)$_POST['ec_memo_send'] : 0;
 
 $ec_issue_type = isset($_POST['ec_issue_type']) && $_POST['ec_issue_type'] === 'auto' ? 'auto' : 'manual';
 $ec_auto_trigger = ($ec_issue_type === 'auto' && isset($_POST['ec_auto_trigger']) && in_array($_POST['ec_auto_trigger'], array('on_approval','monthly_1st'))) ? $_POST['ec_auto_trigger'] : null;
@@ -76,12 +77,18 @@ if (in_array('ec_issue_type', $check_cols)) {
 if (in_array('ec_line_ad_days', $check_cols)) {
     $set_ext .= ", ec_line_ad_days = ".(int)$ec_line_ad_days;
 }
+if (in_array('ec_memo_send', $check_cols)) {
+    $set_ext .= ", ec_memo_send = ".(int)$ec_memo_send;
+}
 
 if ($w === 'u' && $ec_id) {
     $row = sql_fetch("SELECT ec_id FROM {$tb} WHERE ec_id = '{$ec_id}'");
     if (!$row) alert('쿠폰을 찾을 수 없습니다.', './eve_coupon_list.php');
 
     $set = "ec_name = '{$n}', ec_target = '{$ec_target_esc}', ec_type = '{$ec_type_esc}', ec_discount_type = '{$ec_discount_type}', ec_discount_value = ".(int)$ec_discount_value.", ec_min_amount = ".(int)$ec_min_amount.", ec_max_discount = ".(int)$ec_max_discount.", ec_valid_from = {$vf}, ec_valid_to = {$vt}, ec_use_limit = ".(int)$ec_use_limit.", ec_is_active = ".(int)$ec_is_active;
+    if (in_array('ec_memo_send', $check_cols)) {
+        $set .= ", ec_memo_send = ".(int)$ec_memo_send;
+    }
     if (in_array('ec_issue_from', $check_cols)) {
         $if = $ec_issue_from ? "'".sql_escape_string($ec_issue_from)."'" : 'NULL';
         $it = $ec_issue_to ? "'".sql_escape_string($ec_issue_to)."'" : 'NULL';
@@ -92,6 +99,9 @@ if ($w === 'u' && $ec_id) {
     }
     if (in_array('ec_line_ad_days', $check_cols)) {
         $set .= ", ec_line_ad_days = ".(int)$ec_line_ad_days;
+    }
+    if (in_array('ec_memo_send', $check_cols)) {
+        $set .= ", ec_memo_send = ".(int)$ec_memo_send;
     }
     sql_query("UPDATE {$tb} SET {$set} WHERE ec_id = '{$ec_id}'");
     alert('수정되었습니다.', './eve_coupon_list.php');

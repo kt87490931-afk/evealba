@@ -9,6 +9,7 @@ $_SERVER['REQUEST_URI'] = '/cron/cron_monthly_coupon_issue.php';
 $base = dirname(dirname(__FILE__));
 include_once $base . '/common.php';
 if (!function_exists('sql_query')) { exit("DB 연결 실패\n"); }
+include_once $base . '/lib/ev_memo.lib.php';
 
 $tb = 'g5_ev_coupon';
 $tb_issue = 'g5_ev_coupon_issue';
@@ -37,8 +38,15 @@ if (empty($ec_list)) exit("월간 발급 대상 쿠폰 없음\n");
 $today = date('Y-m-d');
 $total_issued = 0;
 
+$cols_check = array();
+$cr2 = sql_query("SHOW COLUMNS FROM {$tb}", false);
+if ($cr2) while ($r2 = sql_fetch_array($cr2)) $cols_check[] = $r2['Field'];
+$select_memo = in_array('ec_memo_send', $cols_check);
+
 foreach ($ec_list as $ec_id) {
-    $ec_row = sql_fetch("SELECT ec_issue_from, ec_issue_to, ec_issue_limit_per_member, ec_use_limit, ec_issue_target_scope, ec_issue_target_mb_id FROM {$tb} WHERE ec_id = '{$ec_id}'");
+    $sel = "ec_issue_from, ec_issue_to, ec_issue_limit_per_member, ec_use_limit, ec_issue_target_scope, ec_issue_target_mb_id";
+    if ($select_memo) $sel .= ", ec_name, ec_memo_send";
+    $ec_row = sql_fetch("SELECT {$sel} FROM {$tb} WHERE ec_id = '{$ec_id}'");
     if (!$ec_row) continue;
     if (!empty($ec_row['ec_issue_from']) && $today < $ec_row['ec_issue_from']) continue;
     if (!empty($ec_row['ec_issue_to']) && $today > $ec_row['ec_issue_to']) continue;
@@ -71,6 +79,10 @@ foreach ($ec_list as $ec_id) {
         if ($ex) continue;
         sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$ec_id}', '".sql_escape_string($mb_id)."')", false);
         $issued++;
+        if ($select_memo && !empty($ec_row['ec_memo_send'])) {
+            $memo_content = '쿠폰이 도착하였습니다. ' . get_text($ec_row['ec_name'] ?? '');
+            ev_send_memo($mb_id, $memo_content, '');
+        }
     }
     $total_issued += $issued;
     echo date('Y-m-d H:i:s') . " 월간쿠폰 ec_id={$ec_id} 발급 {$issued}건\n";

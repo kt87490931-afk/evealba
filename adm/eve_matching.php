@@ -8,12 +8,17 @@ require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'r');
 
-include_once G5_LIB_PATH . '/ev_matching.lib.php';
-include_once G5_LIB_PATH . '/ev_memo.lib.php';
+if (file_exists(G5_LIB_PATH . '/ev_matching.lib.php')) {
+    include_once G5_LIB_PATH . '/ev_matching.lib.php';
+}
+if (file_exists(G5_LIB_PATH . '/ev_memo.lib.php')) {
+    include_once G5_LIB_PATH . '/ev_memo.lib.php';
+}
 
 $tb_log = 'g5_ev_matching_log';
 $tb_cfg = 'g5_ev_matching_config';
-$tb_exists = sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb_log}'", false)) > 0;
+$tb_check = sql_query("SHOW TABLES LIKE '{$tb_log}'", false);
+$tb_exists = ($tb_check && sql_num_rows($tb_check) > 0);
 
 $msg = '';
 $msg_type = '';
@@ -47,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
         $msg = '설정이 저장되었습니다.';
         $msg_type = 'success';
-    } elseif ($action === 'run_now' && $tb_exists) {
+    } elseif ($action === 'run_now' && $tb_exists && function_exists('ev_matching_run')) {
         $result = ev_matching_run();
         if ($result['ok']) {
             $pairs = isset($result['diag']['pairs']) ? (int)$result['diag']['pairs'] : 0;
@@ -68,28 +73,32 @@ $cfg = array(
     'min_ent_count' => '5',
 );
 if ($tb_exists) {
-    $cfg = ev_matching_config_get();
-    if (!is_array($cfg)) $cfg = array();
-    $cfg['enabled'] = isset($cfg['enabled']) ? $cfg['enabled'] : '0';
-    $cfg['min_rate'] = isset($cfg['min_rate']) ? $cfg['min_rate'] : '70';
-    $cfg['re_match_days'] = isset($cfg['re_match_days']) ? $cfg['re_match_days'] : '7';
-    $cfg['min_eve_count'] = isset($cfg['min_eve_count']) ? $cfg['min_eve_count'] : '10';
-    $cfg['min_ent_count'] = isset($cfg['min_ent_count']) ? $cfg['min_ent_count'] : '5';
+    $r_cfg = @sql_query("SELECT mc_key, mc_value FROM {$tb_cfg}", false);
+    if ($r_cfg && sql_num_rows($r_cfg) > 0) {
+        while ($row = sql_fetch_array($r_cfg)) {
+            $k = isset($row['mc_key']) ? $row['mc_key'] : '';
+            $v = isset($row['mc_value']) ? $row['mc_value'] : '';
+            if (isset($cfg[$k])) {
+                $cfg[$k] = (string)$v;
+            }
+        }
+    }
 }
 
 $today_count = 0;
 $eve_count = 0;
 $ent_count = 0;
 if ($tb_exists) {
-    $row = sql_fetch("SELECT COUNT(*) AS cnt FROM {$tb_log} WHERE DATE(matched_at) = CURDATE()");
-    $today_count = (int)($row['cnt'] ?? 0);
-    $row = sql_fetch("SELECT COUNT(*) AS cnt FROM g5_resume WHERE rs_status='active' AND rs_job1!='' AND rs_job1 IS NOT NULL AND rs_work_region!='' AND rs_work_region IS NOT NULL");
-    $eve_count = (int)($row['cnt'] ?? 0);
-    $row = sql_fetch("SELECT COUNT(*) AS cnt FROM g5_jobs_register WHERE jr_status='ongoing' AND (jr_end_date IS NULL OR jr_end_date >= CURDATE())");
-    $ent_count = (int)($row['cnt'] ?? 0);
+    $row = @sql_fetch("SELECT COUNT(*) AS cnt FROM {$tb_log} WHERE DATE(matched_at) = CURDATE()");
+    $today_count = isset($row['cnt']) ? (int)$row['cnt'] : 0;
+    $row = @sql_fetch("SELECT COUNT(*) AS cnt FROM g5_resume WHERE rs_status='active' AND rs_job1!='' AND rs_job1 IS NOT NULL AND rs_work_region!='' AND rs_work_region IS NOT NULL");
+    $eve_count = isset($row['cnt']) ? (int)$row['cnt'] : 0;
+    $row = @sql_fetch("SELECT COUNT(*) AS cnt FROM g5_jobs_register WHERE jr_status='ongoing' AND (jr_end_date IS NULL OR jr_end_date >= CURDATE())");
+    $ent_count = isset($row['cnt']) ? (int)$row['cnt'] : 0;
 }
 
 $g5['title'] = '매칭시스템';
+$token = get_session('ss_admin_token') ?: get_admin_token();
 require_once G5_ADMIN_PATH . '/admin.head.php';
 ?>
 <div class="local_desc01 local_desc">
@@ -103,72 +112,37 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
 <?php } ?>
 
 <?php if (!$tb_exists) { ?>
-<p style="padding:20px;color:#c00;">g5_ev_matching_log 테이블이 없습니다. <a href="<?php echo G5_URL; ?>/run_migration.php">run_migration.php</a>를 실행해주세요.</p>
-<?php } else { ?>
+<p style="padding:14px;background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;margin-bottom:16px;">
+  <strong>⚠ g5_ev_matching_log 테이블이 없습니다.</strong> <a href="<?php echo G5_URL; ?>/run_migration.php">run_migration.php</a>를 실행해주세요.
+</p>
+<?php } ?>
 
-<div class="tbl_head01 tbl_wrap">
-  <h2 class="h2_frm">현황</h2>
+<form method="post" action="" id="frm_matching_config">
+<input type="hidden" name="action" value="config_save">
+<input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
+<div class="tbl_head01 tbl_wrap" id="ev_matching_main" style="padding:20px;background:#fff;border:1px solid #ddd;border-radius:8px;">
+  <h2 class="h2_frm">현황 · 설정</h2>
   <table>
-    <thead>
-      <tr>
-        <th scope="col">항목</th>
-        <th scope="col">값</th>
-      </tr>
-    </thead>
+    <thead><tr><th scope="col">항목</th><th scope="col">값</th></tr></thead>
     <tbody>
+      <tr><td><strong>매칭 On/Off</strong></td>
+        <td><label><input type="radio" name="mc_enabled" value="1" <?php echo $cfg['enabled'] === '1' ? 'checked' : ''; ?>> 활성</label>
+            <label style="margin-left:12px;"><input type="radio" name="mc_enabled" value="0" <?php echo $cfg['enabled'] !== '1' ? 'checked' : ''; ?>> 비활성</label></td></tr>
       <tr><td>오늘 매칭 건수</td><td><?php echo number_format($today_count); ?>쌍</td></tr>
       <tr><td>이브회원 후보 수</td><td><?php echo number_format($eve_count); ?>명</td></tr>
       <tr><td>기업회원 후보 수</td><td><?php echo number_format($ent_count); ?>건</td></tr>
-      <tr><td>매칭시스템 상태</td><td><?php echo $cfg['enabled'] === '1' ? '<span style="color:green;font-weight:bold;">활성</span>' : '<span style="color:#888;">비활성</span>'; ?></td></tr>
+      <tr><td>최소 일치율 (%)</td><td><input type="number" name="mc_min_rate" value="<?php echo htmlspecialchars($cfg['min_rate']); ?>" min="0" max="100" size="5"></td></tr>
+      <tr><td>재매칭 허용 일수</td><td><input type="number" name="mc_re_match_days" value="<?php echo htmlspecialchars($cfg['re_match_days']); ?>" min="1" max="90" size="5">일</td></tr>
+      <tr><td>최소 이브회원 수</td><td><input type="number" name="mc_min_eve_count" value="<?php echo htmlspecialchars($cfg['min_eve_count']); ?>" min="0" size="5">명</td></tr>
+      <tr><td>최소 기업회원 수</td><td><input type="number" name="mc_min_ent_count" value="<?php echo htmlspecialchars($cfg['min_ent_count']); ?>" min="0" size="5">건</td></tr>
     </tbody>
   </table>
-</div>
-
-<form method="post" action="">
-<input type="hidden" name="action" value="config_save">
-<?php echo get_admin_token_field(); ?>
-<div class="tbl_head01 tbl_wrap" style="margin-top:20px;">
-  <h2 class="h2_frm">설정</h2>
-  <table>
-    <thead>
-      <tr>
-        <th scope="col">항목</th>
-        <th scope="col">값</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>매칭 On/Off</td>
-        <td>
-          <label><input type="radio" name="mc_enabled" value="1" <?php echo $cfg['enabled'] === '1' ? 'checked' : ''; ?>> 활성</label>
-          <label><input type="radio" name="mc_enabled" value="0" <?php echo $cfg['enabled'] !== '1' ? 'checked' : ''; ?>> 비활성</label>
-        </td>
-      </tr>
-      <tr>
-        <td>최소 일치율 (%)</td>
-        <td><input type="number" name="mc_min_rate" value="<?php echo htmlspecialchars($cfg['min_rate']); ?>" min="0" max="100" size="5"></td>
-      </tr>
-      <tr>
-        <td>재매칭 허용 일수</td>
-        <td><input type="number" name="mc_re_match_days" value="<?php echo htmlspecialchars($cfg['re_match_days']); ?>" min="1" max="90" size="5">일</td>
-      </tr>
-      <tr>
-        <td>최소 이브회원 수</td>
-        <td><input type="number" name="mc_min_eve_count" value="<?php echo htmlspecialchars($cfg['min_eve_count']); ?>" min="0" size="5">명</td>
-      </tr>
-      <tr>
-        <td>최소 기업회원 수</td>
-        <td><input type="number" name="mc_min_ent_count" value="<?php echo htmlspecialchars($cfg['min_ent_count']); ?>" min="0" size="5">건</td>
-      </tr>
-    </tbody>
-  </table>
-  <div style="padding:14px;"><button type="submit" class="btn_frmline">설정 저장</button></div>
+  <p style="margin:14px 0 0 0;"><button type="submit" class="btn_frmline">설정 저장</button></p>
 </div>
 </form>
-
-<form method="post" action="" style="margin-top:14px;" onsubmit="return confirm('지금 매칭을 실행하시겠습니까?');">
+<form method="post" action="" style="margin-top:12px;" onsubmit="return confirm('지금 매칭을 실행하시겠습니까?');">
 <input type="hidden" name="action" value="run_now">
-<?php echo get_admin_token_field(); ?>
+<input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
 <button type="submit" class="btn btn_02">지금 매칭 실행</button>
 </form>
 
@@ -186,10 +160,14 @@ require_once G5_ADMIN_PATH . '/admin.head.php';
     <tbody>
 <?php
 $log_rows = array();
-$r = sql_query("SELECT m.mb_id_eve, m.mb_id_ent, m.match_rate, m.matched_at
-    FROM {$tb_log} m ORDER BY m.matched_at DESC LIMIT 30");
-while ($row = sql_fetch_array($r)) {
-    $log_rows[] = $row;
+if ($tb_exists) {
+    $r = @sql_query("SELECT m.mb_id_eve, m.mb_id_ent, m.match_rate, m.matched_at
+        FROM {$tb_log} m ORDER BY m.matched_at DESC LIMIT 30");
+    if ($r) {
+        while ($row = sql_fetch_array($r)) {
+            $log_rows[] = $row;
+        }
+    }
 }
 foreach ($log_rows as $row) {
 ?>
@@ -209,7 +187,5 @@ if (empty($log_rows)) {
 </div>
 
 <p style="margin-top:20px;font-size:12px;color:#888;">Cron 등록 예: <code>0 6 * * * cd /var/www/evealba && php cron_matching.php</code></p>
-
-<?php } ?>
 
 <?php require_once G5_ADMIN_PATH . '/admin.tail.php'; ?>
