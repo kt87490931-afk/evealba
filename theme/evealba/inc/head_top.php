@@ -84,10 +84,13 @@ if (!empty($_ticker_urgent)) {
         }
         $_tu_name = htmlspecialchars($_tu['jr_nickname'] ?: $_tu['jr_company']);
         $_tu_promo = '';
-        if (!empty($_tu_data['desc_promo'])) {
-            $_tu_promo = htmlspecialchars(mb_substr($_tu_data['desc_promo'], 0, 25, 'UTF-8'));
-        } elseif (!empty($_tu['jr_title'])) {
-            $_tu_promo = htmlspecialchars(mb_substr($_tu['jr_title'], 0, 25, 'UTF-8'));
+        $_tu_title = trim($_tu['jr_title'] ?? '');
+        $_tu_employ = isset($_tu_data['employ_type']) ? trim($_tu_data['employ_type']) : '';
+        if ($_tu_title || $_tu_employ) {
+            $_tu_promo = $_tu_employ ? ($_tu_title ? $_tu_title . ' · ' . $_tu_employ : $_tu_employ) : $_tu_title;
+            $_tu_promo = htmlspecialchars(mb_substr($_tu_promo, 0, 30, 'UTF-8'));
+        } elseif (!empty($_tu_data['desc_promo'])) {
+            $_tu_promo = htmlspecialchars(mb_substr($_tu_data['desc_promo'], 0, 30, 'UTF-8'));
         }
         $_tu_text = '<span><b>[' . htmlspecialchars($_tu_region ?: '전국') . '] ' . $_tu_name . '</b>';
         if ($_tu_promo) $_tu_text .= ' ' . $_tu_promo;
