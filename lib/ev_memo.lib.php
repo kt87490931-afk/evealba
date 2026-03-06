@@ -25,7 +25,9 @@ function ev_send_memo($recv_mb_id, $content, $send_mb_id = '')
     }
     $send_mb_id = substr(preg_replace("/[^a-zA-Z0-9_]*/", "", $send_mb_id), 0, 20);
 
-    $content = preg_replace("#[\\\\]+$#", "", substr(trim($content), 0, 65536));
+    $content = substr(trim($content), 0, 65536);
+    $content = str_replace('\\', '', $content); // 백슬래시 제거 (한국어 환경에서 ₩로 표시)
+    $content = preg_replace('/[\x{20A9}\x{FFE6}]/u', '', $content); // 원화기호 제거
     $me_memo = sql_escape_string($content);
     $now = G5_TIME_YMDHIS;
     $send_ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
@@ -50,4 +52,34 @@ function ev_send_memo($recv_mb_id, $content, $send_mb_id = '')
     }
 
     return true;
+}
+
+/**
+ * 쪽지 발송 로그 기록 (어드민 발송 내역용)
+ * @param string $eml_type manual_bulk|join_general|join_biz|monthly_coupon
+ * @param int $eml_count 발송 건수
+ * @param array $recipients 수신자 mb_id 배열 (선택)
+ * @param string $memo_preview 내용 미리보기 (선택)
+ * @param string $target general|biz_approved|all (수동발송 시)
+ * @param string $send_mb_id 발신자 (수동발송 시)
+ * @param int|null $ec_id 쿠폰ID (monthly_coupon 시)
+ */
+function ev_memo_log($eml_type, $eml_count, $recipients = array(), $memo_preview = '', $target = '', $send_mb_id = '', $ec_id = null)
+{
+    global $g5;
+
+    $tb = 'g5_ev_memo_log';
+    if (!sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb}'", false))) {
+        return false;
+    }
+    $type_esc = sql_escape_string($eml_type);
+    $target_esc = $target !== '' ? "'" . sql_escape_string($target) . "'" : 'NULL';
+    $recv_json = !empty($recipients) ? "'" . sql_escape_string(json_encode($recipients, JSON_UNESCAPED_UNICODE)) . "'" : 'NULL';
+    $preview_esc = strlen($memo_preview) > 255 ? substr($memo_preview, 0, 252) . '...' : $memo_preview;
+    $preview_esc = $preview_esc !== '' ? "'" . sql_escape_string($preview_esc) . "'" : 'NULL';
+    $now = G5_TIME_YMDHIS;
+    $send_esc = $send_mb_id !== '' ? "'" . sql_escape_string(substr($send_mb_id, 0, 20)) . "'" : 'NULL';
+    $ec_val = ($ec_id !== null && $ec_id > 0) ? (int)$ec_id : 'NULL';
+    $sql = "INSERT INTO {$tb} (eml_type, eml_target, eml_count, eml_recipients, eml_memo_preview, eml_datetime, eml_send_mb_id, eml_ec_id) VALUES ('{$type_esc}', {$target_esc}, " . (int)$eml_count . ", {$recv_json}, {$preview_esc}, '{$now}', {$send_esc}, {$ec_val})";
+    return (bool)sql_query($sql, false);
 }

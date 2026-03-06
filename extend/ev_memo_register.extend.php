@@ -37,5 +37,10 @@ function ev_memo_on_register_after($mb_id, $w)
         ? (trim($cfg['em_join_memo_biz'] ?? '') ?: '이브알바에 기업회원으로 가입해 주셔서 감사합니다. 승인 후 서비스를 이용하실 수 있습니다.')
         : (trim($cfg['em_join_memo_general'] ?? '') ?: '이브알바에 가입해 주셔서 감사합니다.');
 
-    ev_send_memo($mb_id, $content, '');
+    if (ev_send_memo($mb_id, $content, '')) {
+        if (function_exists('ev_memo_log')) {
+            $preview = function_exists('utf8_strcut') ? utf8_strcut(strip_tags($content), 200, '') : substr(strip_tags($content), 0, 200);
+            ev_memo_log($mb['mb_1'] === 'biz' ? 'join_biz' : 'join_general', 1, array($mb_id), $preview, '', '');
+        }
+    }
 }

@@ -43,6 +43,21 @@ $cr2 = sql_query("SHOW COLUMNS FROM {$tb}", false);
 if ($cr2) while ($r2 = sql_fetch_array($cr2)) $cols_check[] = $r2['Field'];
 $select_memo = in_array('ec_memo_send', $cols_check);
 
+// 매월 1일 쪽지 템플릿 (eve_memo_manage "3. 매월1일 자동 쪽지 설정")
+$memo_monthly_content = '';
+$tb_memo_cfg = 'g5_ev_memo_config';
+if (sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb_memo_cfg}'", false))) {
+    $mc_cols = array();
+    $mcr = sql_query("SHOW COLUMNS FROM {$tb_memo_cfg}", false);
+    if ($mcr) while ($mr = sql_fetch_array($mcr)) $mc_cols[] = $mr['Field'];
+    if (in_array('em_monthly_coupon_memo', $mc_cols)) {
+        $mc_row = sql_fetch("SELECT em_monthly_coupon_memo FROM {$tb_memo_cfg} WHERE emc_id = 1");
+        if ($mc_row && trim($mc_row['em_monthly_coupon_memo'] ?? '') !== '') {
+            $memo_monthly_content = trim($mc_row['em_monthly_coupon_memo']);
+        }
+    }
+}
+
 foreach ($ec_list as $ec_id) {
     $sel = "ec_issue_from, ec_issue_to, ec_issue_limit_per_member, ec_use_limit, ec_issue_target_scope, ec_issue_target_mb_id";
     if ($select_memo) $sel .= ", ec_name, ec_memo_send";
@@ -66,6 +81,7 @@ foreach ($ec_list as $ec_id) {
     }
 
     $issued = 0;
+    $memo_recipients = array();
     foreach ($mb_ids as $mb_id) {
         if ($use_limit > 0) {
             $total = sql_fetch("SELECT COUNT(*) AS c FROM {$tb_issue} WHERE ec_id = '{$ec_id}'");
@@ -80,9 +96,15 @@ foreach ($ec_list as $ec_id) {
         sql_query("INSERT INTO {$tb_issue} (ec_id, mb_id) VALUES ('{$ec_id}', '".sql_escape_string($mb_id)."')", false);
         $issued++;
         if ($select_memo && !empty($ec_row['ec_memo_send'])) {
-            $memo_content = '쿠폰이 도착하였습니다. ' . get_text($ec_row['ec_name'] ?? '');
-            ev_send_memo($mb_id, $memo_content, '');
+            $memo_content = ($memo_monthly_content !== '') ? $memo_monthly_content : ('쿠폰이 도착하였습니다. ' . get_text($ec_row['ec_name'] ?? ''));
+            if (ev_send_memo($mb_id, $memo_content, '')) {
+                $memo_recipients[] = $mb_id;
+            }
         }
+    }
+    if (!empty($memo_recipients) && function_exists('ev_memo_log')) {
+        $preview = ($memo_monthly_content !== '') ? utf8_strcut(strip_tags($memo_monthly_content), 200, '') : ('쿠폰이 도착하였습니다. ' . get_text($ec_row['ec_name'] ?? ''));
+        ev_memo_log('monthly_coupon', count($memo_recipients), $memo_recipients, $preview, '', '', (int)$ec_id);
     }
     $total_issued += $issued;
     echo date('Y-m-d H:i:s') . " 월간쿠폰 ec_id={$ec_id} 발급 {$issued}건\n";

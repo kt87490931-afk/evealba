@@ -7,6 +7,8 @@ $sub_menu = '910940';
 require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'w');
+include_once G5_LIB_PATH . '/ev_memo.lib.php';
+include_once G5_LIB_PATH . '/ev_coupon.lib.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     alert('잘못된 요청입니다.', './eve_coupon_list.php');
@@ -37,7 +39,7 @@ $ec_is_active = isset($_POST['ec_is_active']) ? (int)$_POST['ec_is_active'] : 1;
 $ec_memo_send = isset($_POST['ec_memo_send']) ? (int)$_POST['ec_memo_send'] : 0;
 
 $ec_issue_type = isset($_POST['ec_issue_type']) && $_POST['ec_issue_type'] === 'auto' ? 'auto' : 'manual';
-$ec_auto_trigger = ($ec_issue_type === 'auto' && isset($_POST['ec_auto_trigger']) && in_array($_POST['ec_auto_trigger'], array('on_approval','monthly_1st'))) ? $_POST['ec_auto_trigger'] : null;
+$ec_auto_trigger = ($ec_issue_type === 'auto' && isset($_POST['ec_auto_trigger']) && in_array($_POST['ec_auto_trigger'], array('now','on_approval','monthly_1st'))) ? $_POST['ec_auto_trigger'] : null;
 $ec_issue_target_scope = isset($_POST['ec_issue_target_scope']) && $_POST['ec_issue_target_scope'] === 'individual' ? 'individual' : 'all';
 $ec_issue_target_mb_id = ($ec_issue_target_scope === 'individual' && isset($_POST['ec_issue_target_mb_id'])) ? trim(preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['ec_issue_target_mb_id'])) : '';
 
@@ -104,7 +106,12 @@ if ($w === 'u' && $ec_id) {
         $set .= ", ec_memo_send = ".(int)$ec_memo_send;
     }
     sql_query("UPDATE {$tb} SET {$set} WHERE ec_id = '{$ec_id}'");
-    alert('수정되었습니다.', './eve_coupon_list.php');
+    $msg_base = '수정되었습니다.';
+    if ($ec_auto_trigger === 'now' && $ec_target === 'biz') {
+        $msg_extra = _ev_coupon_issue_now($ec_id, true);
+        if ($msg_extra) $msg_base .= ' ' . $msg_extra;
+    }
+    alert($msg_base, './eve_coupon_list.php');
 } else {
     $ec_code = 'EV' . time() . rand(100, 999);
     sql_query("INSERT INTO {$tb} SET
@@ -127,5 +134,10 @@ if ($w === 'u' && $ec_id) {
         $ec_code = 'EV' . $new_id;
         sql_query("UPDATE {$tb} SET ec_code = '".sql_escape_string($ec_code)."' WHERE ec_id = '{$new_id}'", false);
     }
-    alert('등록되었습니다.', './eve_coupon_list.php');
+    $msg_base = '등록되었습니다.';
+    if ($ec_auto_trigger === 'now' && $ec_target === 'biz' && $new_id) {
+        $msg_extra = _ev_coupon_issue_now($new_id, true);
+        if ($msg_extra) $msg_base .= ' ' . $msg_extra;
+    }
+    alert($msg_base, './eve_coupon_list.php');
 }

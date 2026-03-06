@@ -50,6 +50,7 @@ $exists = sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb}'", false));
         <th scope="col">할인</th>
         <th scope="col">발급수</th>
         <th scope="col">사용수</th>
+        <th scope="col">쪽지</th>
         <th scope="col">자동지급</th>
         <th scope="col">상태</th>
         <th scope="col">관리</th>
@@ -57,9 +58,9 @@ $exists = sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb}'", false));
     </thead>
     <tbody>
       <?php if (empty($list)) { ?>
-      <tr><td colspan="10" class="empty_table">등록된 쿠폰이 없습니다. <a href="./eve_coupon_form.php">쿠폰 추가</a></td></tr>
+      <tr><td colspan="11" class="empty_table">등록된 쿠폰이 없습니다. <a href="./eve_coupon_form.php">쿠폰 추가</a></td></tr>
       <?php } else {
-          $trigger_map = array('on_approval'=>'가입인증 후','monthly_1st'=>'매월 1일');
+          $trigger_map = array('now'=>'지금','on_approval'=>'가입인증 후','monthly_1st'=>'매월 1일');
           foreach ($list as $row) {
               $eid = (int)$row['ec_id'];
               $iss = sql_fetch("SELECT COUNT(*) AS c FROM {$tb_issue} WHERE ec_id = '{$eid}'");
@@ -72,6 +73,7 @@ $exists = sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb}'", false));
               $at = trim($row['ec_auto_trigger'] ?? '');
               $auto_txt = ($it === 'auto' && $at && isset($trigger_map[$at])) ? '<span style="color:#2E7D32;">'.$trigger_map[$at].'</span>' : (($it === 'auto') ? '<span style="color:#888;">자동</span>' : '-');
               $active = !empty($row['ec_is_active']) ? '활성' : '비활성';
+              $memo_txt = !empty($row['ec_memo_send']) ? '<span style="color:#1976d2;">On</span>' : '-';
       ?>
       <tr>
         <td><?php echo $eid; ?></td>
@@ -81,6 +83,7 @@ $exists = sql_num_rows(sql_query("SHOW TABLES LIKE '{$tb}'", false));
         <td><?php echo $disc_txt; ?></td>
         <td><?php echo number_format($iss['c'] ?? 0); ?></td>
         <td><?php echo number_format($used['c'] ?? 0); ?></td>
+        <td><?php echo $memo_txt; ?></td>
         <td><?php echo $auto_txt; ?></td>
         <td><?php echo $active; ?></td>
         <td>

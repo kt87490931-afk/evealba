@@ -180,10 +180,11 @@ $disc_type_labels = array('percent' => '할인율(%)', 'amount' => '할인금액
         <td>
           <select name="ec_auto_trigger" id="ec_auto_trigger" class="frm_input">
             <option value="">선택</option>
+            <option value="now" <?php echo ($row['ec_auto_trigger'] ?? '') === 'now' ? 'selected' : ''; ?>>지금</option>
             <option value="on_approval" <?php echo ($row['ec_auto_trigger'] ?? '') === 'on_approval' ? 'selected' : ''; ?>>가입인증 후</option>
             <option value="monthly_1st" <?php echo ($row['ec_auto_trigger'] ?? '') === 'monthly_1st' ? 'selected' : ''; ?>>매월 1일</option>
           </select>
-          <span class="frm_info">가입인증 후: 기업회원 승인 시 즉시 발급. 매월 1일: 매월 1일 크론 실행 시 전체 기업회원에게 발급</span>
+          <span class="frm_info">지금: 저장 시 즉시 발급(테스트용). 가입인증 후: 기업회원 승인 시 발급. 매월 1일: 크론 실행 시 발급</span>
         </td>
       </tr>
       <tr>
@@ -238,7 +239,7 @@ function frm_check(f) {
   var v = parseInt(f.ec_discount_value.value, 10);
   if (isNaN(v) || v < 0) { alert('할인율/금액을 입력하세요.'); f.ec_discount_value.focus(); return false; }
   if (f.ec_issue_type.value === 'auto' && !f.ec_auto_trigger.value) {
-    alert('자동 발급 선택 시 시점(가입인증 후/매월 1일)을 선택하세요.');
+    alert('자동 발급 선택 시 시점(지금/가입인증 후/매월 1일)을 선택하세요.');
     f.ec_auto_trigger.focus(); return false;
   }
   if (f.ec_issue_target_scope.value === 'individual' && !f.ec_issue_target_mb_id.value.trim()) {
