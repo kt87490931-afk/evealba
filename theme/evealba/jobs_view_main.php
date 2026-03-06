@@ -110,6 +110,7 @@ $_biz_ceo     = isset($_author_mb['mb_4']) ? trim($_author_mb['mb_4']) : '';
 $_biz_addr    = isset($_author_mb['mb_5']) ? trim($_author_mb['mb_5']) : '';
 $_is_biz      = (isset($_author_mb['mb_1']) && $_author_mb['mb_1'] === 'biz');
 $comp = isset($data['job_company']) ? trim($data['job_company']) : $row['jr_company'];
+if (!$comp && $_biz_company) $comp = $_biz_company;
 $title = isset($data['job_title']) ? trim($data['job_title']) : $row['jr_title'];
 $contact = isset($data['job_contact']) ? trim($data['job_contact']) : '';
 $employ_type = isset($data['employ-type']) ? trim($data['employ-type']) : '고용';

@@ -75,24 +75,50 @@ if (function_exists('get_jobs_by_type')) {
     $_ticker_urgent = get_jobs_by_type('급구', 30);
 }
 if (!empty($_ticker_urgent)) {
+    $_aic_intro_map = array();
+    $_jr_ids = array_map(function($r) { return (int)$r['jr_id']; }, $_ticker_urgent);
+    if (!empty($_jr_ids) && sql_num_rows(sql_query("SHOW TABLES LIKE 'g5_jobs_ai_content'", false))) {
+        $_jr_ids_str = implode(',', array_unique($_jr_ids));
+        $_aic_res = sql_query("SELECT jr_id, ai_data FROM g5_jobs_ai_content WHERE jr_id IN ({$_jr_ids_str}) AND is_active = 1 ORDER BY id DESC", false);
+        if ($_aic_res) {
+            $_seen = array();
+            while ($_ar = sql_fetch_array($_aic_res)) {
+                if (isset($_seen[$_ar['jr_id']])) continue;
+                $_seen[$_ar['jr_id']] = 1;
+                $_ad = !empty($_ar['ai_data']) ? @json_decode($_ar['ai_data'], true) : null;
+                if (is_array($_ad) && !empty($_ad['ai_intro'])) {
+                    $_aic_intro_map[(int)$_ar['jr_id']] = trim(preg_replace('/<[^>]+>/', '', $_ad['ai_intro']));
+                }
+            }
+        }
+    }
     $_ticker_spans = '';
     foreach ($_ticker_urgent as $_tu) {
         $_tu_data = is_string($_tu['jr_data']) ? @json_decode($_tu['jr_data'], true) : (array)$_tu['jr_data'];
-        $_tu_region = '';
-        if (!empty($_tu_data['desc_location'])) {
-            $_tu_region = trim(explode(' ', trim($_tu_data['desc_location']))[0]);
+        if (!is_array($_tu_data)) $_tu_data = array();
+        $_tu_company = isset($_tu_data['job_company']) ? trim($_tu_data['job_company']) : trim($_tu['jr_company'] ?? '');
+        if (!$_tu_company && !empty($_tu['mb_id'])) {
+            $_mb = sql_fetch("SELECT mb_3 FROM {$g5['member_table']} WHERE mb_id = '".sql_escape_string($_tu['mb_id'])."' LIMIT 1");
+            $_tu_company = isset($_mb['mb_3']) ? trim($_mb['mb_3']) : '';
         }
-        $_tu_name = htmlspecialchars($_tu['jr_nickname'] ?: $_tu['jr_company']);
+        $_tu_nick = trim($_tu['jr_nickname'] ?? '');
         $_tu_promo = '';
-        $_tu_title = trim($_tu['jr_title'] ?? '');
-        $_tu_employ = isset($_tu_data['employ_type']) ? trim($_tu_data['employ_type']) : '';
-        if ($_tu_title || $_tu_employ) {
-            $_tu_promo = $_tu_employ ? ($_tu_title ? $_tu_title . ' · ' . $_tu_employ : $_tu_employ) : $_tu_title;
-            $_tu_promo = htmlspecialchars(mb_substr($_tu_promo, 0, 30, 'UTF-8'));
-        } elseif (!empty($_tu_data['desc_promo'])) {
-            $_tu_promo = htmlspecialchars(mb_substr($_tu_data['desc_promo'], 0, 30, 'UTF-8'));
+        $_tu_intro = isset($_aic_intro_map[(int)$_tu['jr_id']]) ? $_aic_intro_map[(int)$_tu['jr_id']] : (isset($_tu_data['ai_intro']) ? trim(preg_replace('/<[^>]+>/', '', $_tu_data['ai_intro'])) : '');
+        if ($_tu_intro) {
+            $_tu_promo = htmlspecialchars(mb_substr($_tu_intro, 0, 30, 'UTF-8'));
+        } else {
+            $_tu_title = trim($_tu['jr_title'] ?? '');
+            $_tu_employ = isset($_tu_data['employ_type']) ? trim($_tu_data['employ_type']) : '';
+            if ($_tu_title || $_tu_employ) {
+                $_tu_promo = $_tu_employ ? ($_tu_title ? $_tu_title . ' · ' . $_tu_employ : $_tu_employ) : $_tu_title;
+                $_tu_promo = htmlspecialchars(mb_substr($_tu_promo, 0, 30, 'UTF-8'));
+            } elseif (!empty($_tu_data['desc_promo'])) {
+                $_tu_promo = htmlspecialchars(mb_substr($_tu_data['desc_promo'], 0, 30, 'UTF-8'));
+            }
         }
-        $_tu_text = '<span><b>[' . htmlspecialchars($_tu_region ?: '전국') . '] ' . $_tu_name . '</b>';
+        $_tu_comp_disp = htmlspecialchars($_tu_company ?: '—');
+        $_tu_nick_disp = htmlspecialchars($_tu_nick ?: $_tu_company ?: '—');
+        $_tu_text = '<span><b>[' . $_tu_comp_disp . '] ' . $_tu_nick_disp . '</b>';
         if ($_tu_promo) $_tu_text .= ' ' . $_tu_promo;
         $_tu_text .= '</span>';
         $_ticker_spans .= $_tu_text;
