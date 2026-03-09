@@ -3,6 +3,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
+add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/register_form.css">', 1);
 add_javascript('<script src="'.G5_JS_URL.'/jquery.register_form.js"></script>', 0);
 if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipin'] || $config['cf_cert_hp']))
     add_javascript('<script src="'.G5_JS_URL.'/certify.js?v='.G5_JS_VER.'"></script>', 0);
@@ -18,263 +19,174 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 	<input type="hidden" name="agree2" value="<?php echo $agree2 ?>">
 	<input type="hidden" name="cert_type" value="<?php echo $member['mb_certify']; ?>">
 	<input type="hidden" name="cert_no" value="">
+	<input type="hidden" name="mb_open" value="<?php echo ($w=='' || $member['mb_open'])?'1':'0'; ?>">
+	<input type="hidden" name="mb_open_default" value="<?php echo $member['mb_open']; ?>">
 	<?php if (isset($member['mb_sex'])) {  ?><input type="hidden" name="mb_sex" value="<?php echo $member['mb_sex'] ?>"><?php }  ?>
 	<?php if (isset($member['mb_nick_date']) && $member['mb_nick_date'] > date("Y-m-d", G5_SERVER_TIME - ($config['cf_nick_modify'] * 86400))) { // 닉네임수정일이 지나지 않았다면  ?>
 	<input type="hidden" name="mb_nick_default" value="<?php echo get_text($member['mb_nick']) ?>">
 	<input type="hidden" name="mb_nick" value="<?php echo get_text($member['mb_nick']) ?>">
 	<?php }  ?>
 	
-	<div id="register_form" class="form_01">   
-	    <div class="register_form_inner">
-	        <h2>사이트 이용정보 입력</h2>
-	        <ul>
-	            <li>
-	                <label for="reg_mb_id">
-	                    아이디 (필수)
-	                    <button type="button" class="tooltip_icon"><i class="fa fa-question-circle-o" aria-hidden="true"></i><span class="sound_only">설명보기</span></button>
-	                    <span class="tooltip">영문자, 숫자, _ 만 입력 가능. 최소 3자이상 입력하세요.</span>
-	                </label>
-	                <input type="text" name="mb_id" value="<?php echo $member['mb_id'] ?>" id="reg_mb_id" <?php echo $required ?> <?php echo $readonly ?> class="frm_input full_input <?php echo $required ?> <?php echo $readonly ?>" minlength="3" maxlength="20" placeholder="아이디">
-	                <span id="msg_mb_id"></span>
-	            </li>
-	            <li class="half_input left_input margin_input">
-	                <label for="reg_mb_password">비밀번호 (필수)</label>
-	                <input type="password" name="mb_password" id="reg_mb_password" <?php echo $required ?> class="frm_input full_input <?php echo $required ?>" minlength="3" maxlength="20" placeholder="비밀번호">
-	            </li>
-	            <li class="half_input left_input">
-	                <label for="reg_mb_password_re">비밀번호 확인 (필수)</label>
-	                <input type="password" name="mb_password_re" id="reg_mb_password_re" <?php echo $required ?> class="frm_input full_input <?php echo $required ?>" minlength="3" maxlength="20" placeholder="비밀번호 확인">
-	            </li>
-	        </ul>
-	    </div>
-	
-	    <div class="tbl_frm01 tbl_wrap register_form_inner">
-	        <h2>개인정보 입력</h2>
-	        <ul>
-	            <?php 
-					$desc_name = '';
-					$desc_phone = '';
-	                if ($config['cf_cert_use']) {
-                        $desc_name = '<span class="cert_desc"> 본인확인 시 자동입력</span>';
-                        $desc_phone = '<span class="cert_desc"> 본인확인 시 자동입력</span>';
-
-                        if (!$config['cf_cert_simple'] && !$config['cf_cert_hp'] && $config['cf_cert_ipin']) {
-                            $desc_phone = '';
-                        }
-	            ?>
-	            <li>
-	            <?php
-	                    if ($config['cf_cert_simple']) {
-                            echo '<button type="button" id="win_sa_kakao_cert" class="btn_frmline win_sa_cert" data-type="">간편인증</button>'.PHP_EOL;
-						}
-						if($config['cf_cert_hp'])
-							echo '<button type="button" id="win_hp_cert" class="btn_frmline">휴대폰 본인확인</button>'.PHP_EOL;
-						if ($config['cf_cert_ipin'])
-							echo '<button type="button" id="win_ipin_cert" class="btn_frmline">아이핀 본인확인</button>'.PHP_EOL;
-	
-                        echo '<span class="cert_req">(필수)</span>';
-                        echo '<noscript>본인확인을 위해서는 자바스크립트 사용이 가능해야합니다.</noscript>'.PHP_EOL;
-						?>
-						<?php
-	                if ($member['mb_certify']) {
-                        switch ($member['mb_certify']) {
-							case "simple": 
-								$mb_cert = "간편인증";
-								break;
-							case "ipin": 
-								$mb_cert = "아이핀";
-								break;
-							case "hp": 
-								$mb_cert = "휴대폰";
-								break;
-						}
-	                ?>
-	                <div id="msg_certify">
-	                    <strong><?php echo $mb_cert; ?> 본인확인</strong><?php if ($member['mb_adult']) { ?> 및 <strong>성인인증</strong><?php } ?> 완료
+	<div id="register_form" class="form-wrap">   
+	    <!-- 1. 사이트 이용정보 입력 -->
+	    <div class="form-card sh-pink">
+	        <div class="sec-head">
+	            <span class="sec-head-icon">🔐</span>
+	            <span class="sec-head-title">사이트 이용정보 입력</span>
+	            <span class="sec-head-sub">필수항목(*)을 모두 입력해주세요</span>
+	        </div>
+	        <div class="form-row">
+	            <div class="form-label">아이디 <span class="req">*</span></div>
+	            <div class="form-cell col">
+	                <div style="display:flex;gap:8px;width:100%;max-width:360px;flex-wrap:wrap;">
+	                    <input type="text" name="mb_id" value="<?php echo $member['mb_id'] ?>" id="reg_mb_id" <?php echo $required ?> <?php echo $readonly ?> class="fi fi-md <?php echo $readonly ? 'fi-readonly' : '' ?>" minlength="3" maxlength="20" placeholder="아이디를 입력해주세요">
+	                    <?php if (!$readonly) { ?><span id="msg_mb_id"></span><?php } ?>
 	                </div>
-					<?php } ?>
-				</li>
-				<?php } ?>
-	            <li>
-	                <label for="reg_mb_name">이름 (필수)<?php echo $desc_name ?></label>
-	                <input type="text" id="reg_mb_name" name="mb_name" value="<?php echo get_text($member['mb_name']) ?>" <?php echo $required ?> <?php echo $name_readonly; ?> class="frm_input full_input <?php echo $required ?> <?php echo $name_readonly ?>" size="10" placeholder="이름">
-	            </li>
-	            <?php if ($req_nick) {  ?>
-	            <li>
-	                <label for="reg_mb_nick">
-	                	닉네임 (필수)
-	                	<button type="button" class="tooltip_icon"><i class="fa fa-question-circle-o" aria-hidden="true"></i><span class="sound_only">설명보기</span></button>
-						<span class="tooltip">공백없이 한글,영문,숫자만 입력 가능 (한글2자, 영문4자 이상)<br> 닉네임을 바꾸시면 앞으로 <?php echo (int)$config['cf_nick_modify'] ?>일 이내에는 변경 할 수 없습니다.</span>
-	                </label>
-	                
-                    <input type="hidden" name="mb_nick_default" value="<?php echo isset($member['mb_nick'])?get_text($member['mb_nick']):''; ?>">
-                    <input type="text" name="mb_nick" value="<?php echo isset($member['mb_nick'])?get_text($member['mb_nick']):''; ?>" id="reg_mb_nick" required class="frm_input required nospace full_input" size="10" maxlength="20" placeholder="닉네임">
-                    <span id="msg_mb_nick"></span>	                
-	            </li>
-	            <?php }  ?>
+	                <span class="fi-hint">영문자, 숫자, _ 만 입력 가능. 최소 3자 이상 입력하세요.</span>
+	            </div>
+	        </div>
+	        <?php if ($req_nick) { ?>
+	        <div class="form-row">
+	            <div class="form-label">본인 닉네임 <span class="req">*</span></div>
+	            <div class="form-cell col">
+	                <input type="hidden" name="mb_nick_default" value="<?php echo isset($member['mb_nick'])?get_text($member['mb_nick']):''; ?>">
+	                <input type="text" name="mb_nick" value="<?php echo isset($member['mb_nick'])?get_text($member['mb_nick']):''; ?>" id="reg_mb_nick" required class="fi fi-md nospace" maxlength="20" placeholder="닉네임을 입력해주세요" <?php echo ($w=='u') ? 'readonly' : ''; ?>>
+	                <span id="msg_mb_nick"></span>
+	                <span class="fi-hint">게시판에서 이름을 대신하여 사용됩니다.</span>
+	            </div>
+	        </div>
+	        <?php } ?>
+	        <?php if ($config['cf_use_hp'] || ($config["cf_cert_use"] && ($config['cf_cert_hp'] || $config['cf_cert_simple']))) { ?>
+	        <div class="form-row">
+	            <div class="form-label">연락처<?php if (!empty($hp_required)) { ?> <span class="req">*</span><?php } ?></div>
+	            <div class="form-cell col">
+	                <input type="text" name="mb_hp" value="<?php echo get_text($member['mb_hp']) ?>" id="reg_mb_hp" <?php echo $hp_required; ?> <?php echo $hp_readonly; ?> class="fi fi-md <?php echo $hp_readonly ? 'fi-readonly' : '' ?>" maxlength="20" placeholder="010-0000-0000">
+	                <?php if ($config['cf_cert_use'] && ($config['cf_cert_hp'] || $config['cf_cert_simple'])) { ?><input type="hidden" name="old_mb_hp" value="<?php echo get_text($member['mb_hp']) ?>"><?php } ?>
+	                <span class="fi-hint"><?php echo ($config['cf_cert_use'] && ($config['cf_cert_hp'] || $config['cf_cert_simple'])) ? '본인확인 시 자동입력' : "'-' 없이 숫자만 입력하셔도 됩니다."; ?></span>
+	            </div>
+	        </div>
+	        <?php } ?>
+	        <div class="form-row">
+	            <div class="form-label">비밀번호 <span class="req">*</span></div>
+	            <div class="form-cell col">
+	                <div class="pw-wrap">
+	                    <input type="password" name="mb_password" id="reg_mb_password" <?php echo $required ?> class="fi fi-full" minlength="3" maxlength="20" placeholder="비밀번호 입력">
+	                    <span class="pw-toggle" onclick="var i=document.getElementById('reg_mb_password');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁':'🙈';">👁</span>
+	                </div>
+	                <span class="fi-hint">4자 이상 입력해주세요.</span>
+	            </div>
+	        </div>
+	        <div class="form-row">
+	            <div class="form-label">비밀번호 확인 <span class="req">*</span></div>
+	            <div class="form-cell col">
+	                <div class="pw-wrap">
+	                    <input type="password" name="mb_password_re" id="reg_mb_password_re" <?php echo $required ?> class="fi fi-full" minlength="3" maxlength="20" placeholder="비밀번호를 다시 입력해주세요">
+	                    <span class="pw-toggle" onclick="var i=document.getElementById('reg_mb_password_re');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁':'🙈';">👁</span>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
 	
-	            <li>
-	                <label for="reg_mb_email">E-mail (필수)
-	                
-	                <?php if ($config['cf_use_email_certify']) {  ?>
-	                <button type="button" class="tooltip_icon"><i class="fa fa-question-circle-o" aria-hidden="true"></i><span class="sound_only">설명보기</span></button>
-					<span class="tooltip">
-	                    <?php if ($w=='') { echo "E-mail 로 발송된 내용을 확인한 후 인증하셔야 회원가입이 완료됩니다."; }  ?>
-	                    <?php if ($w=='u') { echo "E-mail 주소를 변경하시면 다시 인증하셔야 합니다."; }  ?>
-	                </span>
-	                <?php }  ?>
-					</label>
-
-	                <input type="hidden" name="old_email" value="<?php echo $member['mb_email'] ?>">
-	                <input type="text" name="mb_email" value="<?php echo isset($member['mb_email'])?$member['mb_email']:''; ?>" id="reg_mb_email" required class="frm_input email full_input required" size="70" maxlength="100" placeholder="E-mail">
-	            </li>
-	
-	            <?php if ($config['cf_use_homepage']) {  ?>
-	            <li>
-	                <label for="reg_mb_homepage">홈페이지<?php if ($config['cf_req_homepage']){ ?> (필수)<?php } ?></label>
-	                <input type="text" name="mb_homepage" value="<?php echo get_text($member['mb_homepage']) ?>" id="reg_mb_homepage" <?php echo $config['cf_req_homepage']?"required":""; ?> class="frm_input full_input <?php echo $config['cf_req_homepage']?"required":""; ?>" size="70" maxlength="255" placeholder="홈페이지">
-	            </li>
-	            <?php }  ?>
-	
-				<?php if ($config['cf_use_tel']) {  ?>
-	            <li>
-	                <label for="reg_mb_tel">전화번호<?php if ($config['cf_req_tel']) { ?> (필수)<?php } ?></label>
-	                <input type="text" name="mb_tel" value="<?php echo get_text($member['mb_tel']) ?>" id="reg_mb_tel" <?php echo $config['cf_req_tel']?"required":""; ?> class="frm_input full_input <?php echo $config['cf_req_tel']?"required":""; ?>" maxlength="20" placeholder="전화번호">
-				</li>
-				<?php }  ?>
-				<li>
-	            <?php if ($config['cf_use_hp'] || ($config["cf_cert_use"] && ($config['cf_cert_hp'] || $config['cf_cert_simple']))) {  ?>
-	                <label for="reg_mb_hp">휴대폰번호<?php if (!empty($hp_required)) { ?> (필수)<?php } ?><?php echo $desc_phone ?></label>
-	                
-	                <input type="text" name="mb_hp" value="<?php echo get_text($member['mb_hp']) ?>" id="reg_mb_hp" <?php echo $hp_required; ?> <?php echo $hp_readonly; ?> class="frm_input full_input <?php echo $hp_required; ?> <?php echo $hp_readonly; ?>" maxlength="20" placeholder="휴대폰번호">
-	                <?php if ($config['cf_cert_use'] && ($config['cf_cert_hp'] || $config['cf_cert_simple'])) { ?>
-	                <input type="hidden" name="old_mb_hp" value="<?php echo get_text($member['mb_hp']) ?>">
+	    <!-- 2. 개인정보 입력 -->
+	    <div class="form-card sh-orange">
+	        <div class="sec-head">
+	            <span class="sec-head-icon">👤</span>
+	            <span class="sec-head-title">개인정보 입력</span>
+	            <span class="sec-head-sub">개인정보는 안전하게 보호됩니다</span>
+	        </div>
+	            <?php if ($config['cf_cert_use']) { ?>
+	        <div class="form-row">
+	            <div class="form-label">본인확인 <span class="req">*</span></div>
+	            <div class="form-cell">
+	                <?php if ($config['cf_cert_simple']) echo '<button type="button" id="win_sa_kakao_cert" class="btn-check win_sa_cert" data-type="">간편인증</button>'; ?>
+	                <?php if ($config['cf_cert_hp']) echo '<button type="button" id="win_hp_cert" class="btn-check">휴대폰 본인확인</button>'; ?>
+	                <?php if ($config['cf_cert_ipin']) echo '<button type="button" id="win_ipin_cert" class="btn-check">아이핀 본인확인</button>'; ?>
+	                <noscript>본인확인을 위해서는 자바스크립트 사용이 가능해야합니다.</noscript>
+	                <?php if ($member['mb_certify']) {
+	                    $mb_cert = ($member['mb_certify']=='simple')?'간편인증':(($member['mb_certify']=='ipin')?'아이핀':'휴대폰'); ?>
+	                <div id="msg_certify"><strong><?php echo $mb_cert; ?> 본인확인</strong><?php if ($member['mb_adult']) { ?> 및 <strong>성인인증</strong><?php } ?> 완료</div>
 	                <?php } ?>
-	            <?php }  ?>
-	            </li>
-	
+	            </div>
+	        </div>
+	            <?php } ?>
+	        <div class="form-row">
+	            <div class="form-label">이름 <span class="req">*</span></div>
+	            <div class="form-cell">
+	                <input type="text" id="reg_mb_name" name="mb_name" value="<?php echo get_text($member['mb_name']) ?>" <?php echo $required ?> <?php echo $name_readonly; ?> class="fi fi-sm <?php echo $name_readonly ? 'fi-readonly' : '' ?>" size="10" placeholder="실명을 입력해주세요">
+	            </div>
+	        </div>
+	        <div class="form-row">
+	            <div class="form-label">E-mail <span class="req">*</span></div>
+	            <div class="form-cell">
+	                <input type="hidden" name="old_email" value="<?php echo $member['mb_email'] ?>">
+	                <input type="text" name="mb_email" value="<?php echo isset($member['mb_email'])?$member['mb_email']:''; ?>" id="reg_mb_email" required class="fi fi-md email" size="70" maxlength="100" placeholder="E-mail" <?php echo ($w=='u') ? 'readonly' : ''; ?>>
+	            </div>
+	        </div>
+	            <?php if ($config['cf_use_homepage']) { ?>
+	        <div class="form-row">
+	            <div class="form-label">홈페이지<?php if ($config['cf_req_homepage']){ ?> <span class="req">*</span><?php } ?></div>
+	            <div class="form-cell">
+	                <input type="text" name="mb_homepage" value="<?php echo get_text($member['mb_homepage']) ?>" id="reg_mb_homepage" <?php echo $config['cf_req_homepage']?"required":""; ?> class="fi fi-full" size="70" maxlength="255" placeholder="홈페이지">
+	            </div>
+	        </div>
+	            <?php } ?>
+	            <?php if ($config['cf_use_tel']) { ?>
+	        <div class="form-row">
+	            <div class="form-label">전화번호<?php if ($config['cf_req_tel']) { ?> <span class="req">*</span><?php } ?></div>
+	            <div class="form-cell">
+	                <input type="text" name="mb_tel" value="<?php echo get_text($member['mb_tel']) ?>" id="reg_mb_tel" <?php echo $config['cf_req_tel']?"required":""; ?> class="fi fi-md" maxlength="20" placeholder="전화번호">
+	            </div>
+	        </div>
+	            <?php } ?>
 	            <?php if ($config['cf_use_addr']) { ?>
-	            <li>
-	            	<label>주소</label>
-					<?php if ($config['cf_req_addr']) { ?> (필수)<?php }  ?>
-	                <label for="reg_mb_zip" class="sound_only">우편번호<?php echo $config['cf_req_addr']?' (필수)':''; ?></label>
-	                <input type="text" name="mb_zip" value="<?php echo $member['mb_zip1'].$member['mb_zip2']; ?>" id="reg_mb_zip" <?php echo $config['cf_req_addr']?"required":""; ?> class="frm_input twopart_input <?php echo $config['cf_req_addr']?"required":""; ?>" size="5" maxlength="6"  placeholder="우편번호">
-	                <button type="button" class="btn_frmline" onclick="win_zip('fregisterform', 'mb_zip', 'mb_addr1', 'mb_addr2', 'mb_addr3', 'mb_addr_jibeon');">주소 검색</button><br>
-	                <input type="text" name="mb_addr1" value="<?php echo get_text($member['mb_addr1']) ?>" id="reg_mb_addr1" <?php echo $config['cf_req_addr']?"required":""; ?> class="frm_input frm_address full_input <?php echo $config['cf_req_addr']?"required":""; ?>" size="50"  placeholder="기본주소">
-	                <label for="reg_mb_addr1" class="sound_only">기본주소<?php echo $config['cf_req_addr']?' (필수)':''; ?></label><br>
-	                <input type="text" name="mb_addr2" value="<?php echo get_text($member['mb_addr2']) ?>" id="reg_mb_addr2" class="frm_input frm_address full_input" size="50" placeholder="상세주소">
-	                <label for="reg_mb_addr2" class="sound_only">상세주소</label>
-	                <br>
-	                <input type="text" name="mb_addr3" value="<?php echo get_text($member['mb_addr3']) ?>" id="reg_mb_addr3" class="frm_input frm_address full_input" size="50" readonly="readonly" placeholder="참고항목">
-	                <label for="reg_mb_addr3" class="sound_only">참고항목</label>
+	        <div class="form-row">
+	            <div class="form-label">주소<?php if ($config['cf_req_addr']) { ?> <span class="req">*</span><?php } ?></div>
+	            <div class="form-cell col">
+	                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+	                    <input type="text" name="mb_zip" value="<?php echo $member['mb_zip1'].$member['mb_zip2']; ?>" id="reg_mb_zip" <?php echo $config['cf_req_addr']?"required":""; ?> class="fi fi-sm" size="5" maxlength="6" placeholder="우편번호">
+	                    <button type="button" class="btn-check" onclick="win_zip('fregisterform', 'mb_zip', 'mb_addr1', 'mb_addr2', 'mb_addr3', 'mb_addr_jibeon');">주소 검색</button>
+	                </div>
+	                <input type="text" name="mb_addr1" value="<?php echo get_text($member['mb_addr1']) ?>" id="reg_mb_addr1" <?php echo $config['cf_req_addr']?"required":""; ?> class="fi fi-full" size="50" placeholder="기본주소">
+	                <input type="text" name="mb_addr2" value="<?php echo get_text($member['mb_addr2']) ?>" id="reg_mb_addr2" class="fi fi-full" size="50" placeholder="상세주소">
+	                <input type="text" name="mb_addr3" value="<?php echo get_text($member['mb_addr3']) ?>" id="reg_mb_addr3" class="fi fi-full" size="50" readonly placeholder="참고항목">
 	                <input type="hidden" name="mb_addr_jibeon" value="<?php echo get_text($member['mb_addr_jibeon']); ?>">
-	            </li>
-	            <?php }  ?>
-	        </ul>
+	            </div>
+	        </div>
+	            <?php } ?>
 	    </div>
 	
-	    <div class="tbl_frm01 tbl_wrap register_form_inner">
-	        <h2>기타 개인설정</h2>
-	        <ul>
-	            <?php if ($config['cf_use_signature']) {  ?>
-	            <li>
-	                <label for="reg_mb_signature">서명<?php if ($config['cf_req_signature']){ ?> (필수)<?php } ?></label>
-	                <textarea name="mb_signature" id="reg_mb_signature" <?php echo $config['cf_req_signature']?"required":""; ?> class="<?php echo $config['cf_req_signature']?"required":""; ?>"   placeholder="서명"><?php echo $member['mb_signature'] ?></textarea>
-	            </li>
-	            <?php }  ?>
-	
-	            <?php if ($config['cf_use_profile']) {  ?>
-	            <li>
-	                <label for="reg_mb_profile">자기소개</label>
-	                <textarea name="mb_profile" id="reg_mb_profile" <?php echo $config['cf_req_profile']?"required":""; ?> class="<?php echo $config['cf_req_profile']?"required":""; ?>" placeholder="자기소개"><?php echo $member['mb_profile'] ?></textarea>
-	            </li>
-	            <?php }  ?>
-	
-	            <?php if ($config['cf_use_member_icon'] && $member['mb_level'] >= $config['cf_icon_level']) {  ?>
-	            <li>
-	                <label for="reg_mb_icon" class="frm_label">
-	                	회원아이콘
-	                	<button type="button" class="tooltip_icon"><i class="fa fa-question-circle-o" aria-hidden="true"></i><span class="sound_only">설명보기</span></button>
-	                	<span class="tooltip">이미지 크기는 가로 <?php echo $config['cf_member_icon_width'] ?>픽셀, 세로 <?php echo $config['cf_member_icon_height'] ?>픽셀 이하로 해주세요.<br>
-gif, jpg, png파일만 가능하며 용량 <?php echo number_format($config['cf_member_icon_size']) ?>바이트 이하만 등록됩니다.</span>
-	                </label>
-	                <input type="file" name="mb_icon" id="reg_mb_icon">
-	
-	                <?php if ($w == 'u' && file_exists($mb_icon_path)) {  ?>
-	                <img src="<?php echo $mb_icon_url ?>" alt="회원아이콘">
-	                <input type="checkbox" name="del_mb_icon" value="1" id="del_mb_icon">
-	                <label for="del_mb_icon" class="inline">삭제</label>
-	                <?php }  ?>
-	            
-	            </li>
-	            <?php }  ?>
-	
-	            <?php if ($member['mb_level'] >= $config['cf_icon_level'] && $config['cf_member_img_size'] && $config['cf_member_img_width'] && $config['cf_member_img_height']) {  ?>
-	            <li class="reg_mb_img_file">
-	                <label for="reg_mb_img" class="frm_label">
-	                	회원이미지
-	                	<button type="button" class="tooltip_icon"><i class="fa fa-question-circle-o" aria-hidden="true"></i><span class="sound_only">설명보기</span></button>
-	                	<span class="tooltip">이미지 크기는 가로 <?php echo $config['cf_member_img_width'] ?>픽셀, 세로 <?php echo $config['cf_member_img_height'] ?>픽셀 이하로 해주세요.<br>
-	                    gif, jpg, png파일만 가능하며 용량 <?php echo number_format($config['cf_member_img_size']) ?>바이트 이하만 등록됩니다.</span>
-	                </label>
-	                <input type="file" name="mb_img" id="reg_mb_img">
-	
-	                <?php if ($w == 'u' && file_exists($mb_img_path)) {  ?>
-	                <img src="<?php echo $mb_img_url ?>" alt="회원이미지">
-	                <input type="checkbox" name="del_mb_img" value="1" id="del_mb_img">
-	                <label for="del_mb_img" class="inline">삭제</label>
-	                <?php }  ?>
-	            
-	            </li>
+	    <!-- 3. 추천인 -->
+	    <div class="form-card sh-dark">
+	        <div class="sec-head">
+	            <span class="sec-head-icon">🎀</span>
+	            <span class="sec-head-title">추천인</span>
+	            <span class="sec-head-sub"><?php echo $w=='u' ? '나를 추천한 회원 목록을 확인하세요' : '추천인 아이디를 입력해주세요 (선택)'; ?></span>
+	        </div>
+	        <div class="referrer-wrap">
+	            <?php if ($w == 'u') { ?>
+	            <button type="button" class="btn-referrer-list" onclick="ev_show_referral_list()">👥 본인을 추천한 회원들 목록보기 <span class="count-badge" id="ev_referral_count_txt">0명</span></button>
+	            <script>
+	            (function(){var x=new XMLHttpRequest();x.open('GET','<?php echo G5_BBS_URL; ?>/eve_referral_list.php?mode=count');x.onload=function(){try{var j=JSON.parse(x.responseText);if(j.cnt!==undefined)document.getElementById('ev_referral_count_txt').textContent=j.cnt+'명';}catch(e){}};x.send();})();
+	            function ev_show_referral_list(){var w=window.open('<?php echo G5_BBS_URL; ?>/eve_referral_list.php','ev_referral','width=400,height=400,scrollbars=yes');if(w)w.focus();}
+	            </script>
+	            <?php } else if ($config['cf_use_recommend']) { ?>
+	            <div class="form-row">
+	                <div class="form-label">추천인 아이디</div>
+	                <div class="form-cell">
+	                    <input type="text" name="mb_recommend" id="reg_mb_recommend" class="fi fi-md" placeholder="추천인 아이디 (선택)">
+	                </div>
+	            </div>
 	            <?php } ?>
-	
-		        <?php if (isset($member['mb_open_date']) && $member['mb_open_date'] <= date("Y-m-d", G5_SERVER_TIME - ($config['cf_open_modify'] * 86400)) || empty($member['mb_open_date'])) { // 정보공개 수정일이 지났다면 수정가능 ?>
-		        <li class="chk_box">
-		            <input type="checkbox" name="mb_open" value="1" id="reg_mb_open" <?php echo ($w=='' || $member['mb_open'])?'checked':''; ?> class="selec_chk">
-		      		<label for="reg_mb_open">
-		      			<span></span>
-		      			<b class="sound_only">정보공개</b>
-		      		</label>      
-		            <span class="chk_li">다른분들이 나의 정보를 볼 수 있도록 합니다.</span>
-		            <button type="button" class="tooltip_icon"><i class="fa fa-question-circle-o" aria-hidden="true"></i><span class="sound_only">설명보기</span></button>
-		            <span class="tooltip">
-		                정보공개를 바꾸시면 앞으로 <?php echo (int)$config['cf_open_modify'] ?>일 이내에는 변경이 안됩니다.
-		            </span>
-		            <input type="hidden" name="mb_open_default" value="<?php echo $member['mb_open'] ?>"> 
-		        </li>		        
-		        <?php } else { ?>
-	            <li>
-	                정보공개
-	                <input type="hidden" name="mb_open" value="<?php echo $member['mb_open'] ?>">
-	                <button type="button" class="tooltip_icon"><i class="fa fa-question-circle-o" aria-hidden="true"></i><span class="sound_only">설명보기</span></button>
-	                <span class="tooltip">
-	                    정보공개는 수정후 <?php echo (int)$config['cf_open_modify'] ?>일 이내, <?php echo date("Y년 m월 j일", isset($member['mb_open_date']) ? strtotime("{$member['mb_open_date']} 00:00:00")+$config['cf_open_modify']*86400:G5_SERVER_TIME+$config['cf_open_modify']*86400); ?> 까지는 변경이 안됩니다.<br>
-	                    이렇게 하는 이유는 잦은 정보공개 수정으로 인하여 쪽지를 보낸 후 받지 않는 경우를 막기 위해서 입니다.
-	                </span>
-	                
-	            </li>
-	            <?php }  ?>
-	
-	            <?php
-	            //회원정보 수정인 경우 소셜 계정 출력
-	            if( $w == 'u' && function_exists('social_member_provider_manage') ){
-	                social_member_provider_manage();
-	            }
-	            ?>
-	            
-	            <?php if ($w == "" && $config['cf_use_recommend']) {  ?>
-	            <li>
-	                <label for="reg_mb_recommend" class="sound_only">추천인아이디</label>
-	                <input type="text" name="mb_recommend" id="reg_mb_recommend" class="frm_input" placeholder="추천인아이디">
-	            </li>
-	            <?php }  ?>
-	        </ul>
+	        </div>
 	    </div>
 
-		<!-- 회원가입 약관 동의에 광고성 정보 수신 동의 표시 여부가 사용시에만 -->
 		<?php if($config['cf_use_promotion'] == 1) { ?>
-		<div class="tbl_frm01 tbl_wrap register_form_inner">
-			<h2>수신설정</h2>
+		<div class="form-card">
+			<div class="sec-head">
+				<span class="sec-head-icon">📢</span>
+				<span class="sec-head-title">수신설정</span>
+			</div>
+			<div style="padding:18px 22px;">
 			<!-- 수신설정만 팝업 및 체크박스 관련 class 적용 -->
 			<ul>
 				<!-- (선택) 마케팅 목적의 개인정보 수집 및 이용 -->
@@ -370,22 +282,28 @@ gif, jpg, png파일만 가능하며 용량 <?php echo number_format($config['cf_
 				</li>
 				<?php } ?>
 			</ul>
+			</div>
 		</div>
 		<?php } ?>
 
-		<div class="tbl_frm01 tbl_wrap register_form_inner">
-			<h2>자동등록방지</h2>
-			<ul>
-				<li class="is_captcha_use">
-					자동등록방지
-					<?php echo captcha_html(); ?>
-				</li>
-			</ul>
+		<!-- 4. 자동등록방지 -->
+		<div class="form-card">
+			<div class="sec-head">
+				<span class="sec-head-icon">🛡</span>
+				<span class="sec-head-title">자동등록방지</span>
+			</div>
+			<div class="captcha-wrap">
+				<?php echo captcha_html(); ?>
+			</div>
 		</div>
-	</div>
-	<div class="btn_confirm">
-	    <a href="<?php echo G5_URL ?>" class="btn_close">취소</a>
-	    <button type="submit" id="btn_submit" class="btn_submit" accesskey="s"><?php echo $w==''?'회원가입':'정보수정'; ?></button>
+
+		<!-- 하단 버튼 -->
+		<div class="form-card">
+			<div class="form-btns">
+				<a href="<?php echo G5_URL ?>" class="btn-cancel">← 취소</a>
+				<button type="submit" id="btn_submit" class="btn-submit" accesskey="s"><?php echo $w==''?'회원가입':'정보수정'; ?></button>
+			</div>
+		</div>
 	</div>
 	</form>
 </div>
