@@ -165,10 +165,6 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 	        <div class="referrer-wrap">
 	            <?php if ($w == 'u') { ?>
 	            <button type="button" class="btn-referrer-list" onclick="ev_show_referral_list()">👥 본인을 추천한 회원들 목록보기 <span class="count-badge" id="ev_referral_count_txt">0명</span></button>
-	            <script>
-	            (function(){var x=new XMLHttpRequest();x.open('GET','<?php echo G5_BBS_URL; ?>/eve_referral_list.php?mode=count');x.onload=function(){try{var j=JSON.parse(x.responseText);if(j.cnt!==undefined)document.getElementById('ev_referral_count_txt').textContent=j.cnt+'명';}catch(e){}};x.send();})();
-	            function ev_show_referral_list(){var w=window.open('<?php echo G5_BBS_URL; ?>/eve_referral_list.php','ev_referral','width=400,height=400,scrollbars=yes');if(w)w.focus();}
-	            </script>
 	            <?php } else if ($config['cf_use_recommend']) { ?>
 	            <div class="form-row">
 	                <div class="form-label">추천인 아이디</div>
@@ -309,6 +305,49 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 </div>
 
 <?php include_once(__DIR__ . '/consent_modal.inc.php'); ?>
+
+<?php if ($w == 'u') { ?>
+<!-- 추천인 모달 -->
+<div class="ev-referral-modal" id="evReferralModal" onclick="if(event.target===this)ev_close_referral_modal()">
+	<div class="ev-referral-modal-box">
+		<div class="ev-referral-modal-head">
+			<span class="ev-referral-modal-head-icon">🎀</span>
+			<span class="ev-referral-modal-head-title">본인을 추천한 회원들</span>
+			<button type="button" class="ev-referral-modal-close" onclick="ev_close_referral_modal()">✕</button>
+		</div>
+		<div class="ev-referral-modal-body" id="evReferralModalBody">
+			<p style="text-align:center;padding:24px;color:#999;">⏳ 로딩중...</p>
+		</div>
+		<div class="ev-referral-modal-foot">
+			<button type="button" class="ev-referral-modal-ok" onclick="ev_close_referral_modal()">확인</button>
+		</div>
+	</div>
+</div>
+<script>
+(function(){
+	var u='<?php echo addslashes(G5_BBS_URL); ?>/eve_referral_list.php';
+	var x=new XMLHttpRequest();
+	x.open('GET',u+'?mode=count');
+	x.onload=function(){try{var j=JSON.parse(x.responseText);if(j.cnt!==undefined){var el=document.getElementById('ev_referral_count_txt');if(el)el.textContent=j.cnt+'명';}}catch(e){}};
+	x.send();
+})();
+function ev_show_referral_list(){
+	var modal=document.getElementById('evReferralModal');
+	var body=document.getElementById('evReferralModalBody');
+	if(!modal||!body)return;
+	body.innerHTML='<p style="text-align:center;padding:24px;color:#999;">⏳ 로딩중...</p>';
+	modal.classList.add('show');
+	fetch('<?php echo G5_BBS_URL; ?>/eve_referral_list.php?mode=body')
+	.then(function(r){return r.text();})
+	.then(function(html){body.innerHTML=html;})
+	.catch(function(){body.innerHTML='<p style="color:#c00;">데이터를 불러올 수 없습니다.</p>';});
+}
+function ev_close_referral_modal(){
+	var m=document.getElementById('evReferralModal');
+	if(m)m.classList.remove('show');
+}
+</script>
+<?php } ?>
 
 <script>
 $(function() {

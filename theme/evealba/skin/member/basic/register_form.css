@@ -67,6 +67,28 @@
 .register .btn-cancel:hover{background:var(--pale-pink);color:var(--hot-pink);}
 .register .btn-submit{padding:12px 40px;background:linear-gradient(135deg,var(--orange),var(--hot-pink));color:#fff;border:none;border-radius:28px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 5px 18px rgba(255,27,107,.35);transition:transform .2s,opacity .2s;}
 .register .btn-submit:hover{transform:scale(1.03);opacity:.95;}
+/* 추천인 모달 */
+.ev-referral-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;padding:16px;}
+.ev-referral-modal.show{display:flex;}
+.ev-referral-modal-box{background:#fff;border-radius:14px;max-width:460px;width:100%;max-height:85vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;}
+.ev-referral-modal-head{background:linear-gradient(135deg,var(--dark2),var(--hot-pink));padding:16px 20px;display:flex;align-items:center;gap:10px;}
+.ev-referral-modal-head-icon{font-size:18px;}
+.ev-referral-modal-head-title{color:#fff;font-size:15px;font-weight:800;flex:1;}
+.ev-referral-modal-close{width:28px;height:28px;background:rgba(255,255,255,.25);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;line-height:1;flex-shrink:0;}
+.ev-referral-modal-close:hover{background:rgba(255,255,255,.4);}
+.ev-referral-modal-body{padding:20px;overflow-y:auto;}
+.ev-referral-summary{margin:0 0 14px;font-size:14px;}
+.ev-referral-list{list-style:none;margin:0;padding:0;border:1px solid #f0e0e8;border-radius:10px;overflow:hidden;}
+.ev-referral-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #fae8f0;font-size:14px;}
+.ev-referral-item:last-child{border-bottom:none;}
+.ev-referral-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--hot-pink),var(--light-pink));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0;}
+.ev-referral-nick{font-weight:500;flex:1;}
+.ev-referral-date{font-size:12px;color:#999;}
+.ev-referral-empty{padding:32px 16px;text-align:center;color:#999;font-size:14px;}
+.ev-referral-modal-foot{padding:14px 20px;background:#fff8fb;border-top:1px solid var(--pale-pink);text-align:right;}
+.ev-referral-modal-ok{padding:10px 24px;background:linear-gradient(135deg,var(--orange),var(--hot-pink));color:#fff;border:none;border-radius:24px;font-size:14px;font-weight:700;cursor:pointer;}
+.ev-referral-modal-ok:hover{opacity:.92;}
+
 @media(max-width:600px){
   .register .form-row{grid-template-columns:100px 1fr;}
   .register .form-label{font-size:12px;padding:11px 10px 11px 14px;}

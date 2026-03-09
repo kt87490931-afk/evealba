@@ -26,11 +26,37 @@ if (isset($_GET['mode']) && $_GET['mode'] === 'count') {
 }
 
 $list = array();
-$res = sql_query("SELECT mb_nick FROM {$g5['member_table']} WHERE mb_recommend = '{$ref_mb_id_esc}' AND (mb_leave_date = '' OR mb_leave_date IS NULL) ORDER BY mb_datetime DESC");
+$res = sql_query("SELECT mb_nick, mb_datetime FROM {$g5['member_table']} WHERE mb_recommend = '{$ref_mb_id_esc}' AND (mb_leave_date = '' OR mb_leave_date IS NULL) ORDER BY mb_datetime DESC");
 while ($row = sql_fetch_array($res)) {
-    $list[] = get_text($row['mb_nick']);
+    $list[] = array('nick' => get_text($row['mb_nick']), 'date' => substr($row['mb_datetime'], 0, 10));
 }
 $cnt = count($list);
+
+// mode=body: 모달용 HTML 조각 반환 (AJAX)
+if (isset($_GET['mode']) && $_GET['mode'] === 'body') {
+    header('Content-Type: text/html; charset=utf-8');
+    ob_start();
+    ?>
+    <div class="ev-referral-modal-body">
+      <p class="ev-referral-summary"><strong><?php echo $cnt; ?>명</strong></p>
+      <?php if ($cnt > 0) { ?>
+      <ul class="ev-referral-list">
+        <?php foreach ($list as $r) { ?>
+        <li class="ev-referral-item">
+          <span class="ev-referral-avatar"><?php echo htmlspecialchars(mb_substr($r['nick'], 0, 1, 'UTF-8')); ?></span>
+          <span class="ev-referral-nick"><?php echo htmlspecialchars($r['nick']); ?></span>
+          <span class="ev-referral-date"><?php echo $r['date']; ?></span>
+        </li>
+        <?php } ?>
+      </ul>
+      <?php } else { ?>
+      <p class="ev-referral-empty">🎀 아직 나를 추천한 회원이 없습니다.</p>
+      <?php } ?>
+    </div>
+    <?php
+    echo ob_get_clean();
+    exit;
+}
 
 include_once('./_head.php');
 ?>
@@ -39,8 +65,8 @@ include_once('./_head.php');
   <p><strong><?php echo $cnt; ?>명</strong></p>
   <?php if ($cnt > 0) { ?>
   <ul style="margin:0;padding-left:20px;">
-    <?php foreach ($list as $nick) { ?>
-    <li><?php echo htmlspecialchars($nick); ?></li>
+    <?php foreach ($list as $r) { ?>
+    <li><?php echo htmlspecialchars($r['nick']); ?></li>
     <?php } ?>
   </ul>
   <?php } else { ?>
