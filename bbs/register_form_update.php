@@ -419,6 +419,15 @@ if ($w == '') {
         $sql_agree_log .= " , mb_agree_log = CONCAT('{$agree_log}', IFNULL(mb_agree_log, ''))";
     }
 
+    // 이브알바: 아이디, 닉네임, 이메일, 이름 변경불가
+    if ($w == 'u') {
+        $mb_nick = $member['mb_nick'];
+        $mb_email = $member['mb_email'];
+        $mb_name = $member['mb_name'];
+    }
+    $mb_nick = sql_real_escape_string($mb_nick);
+    $mb_email = sql_real_escape_string($mb_email);
+
     $sql = " update {$g5['member_table']}
                 set mb_nick = '{$mb_nick}',
                     mb_mailling = '{$mb_mailling}',

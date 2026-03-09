@@ -149,6 +149,8 @@ $hp_readonly = (($config['cf_cert_use'] && $config['cf_cert_req']) && ($config['
 
 $agree  = isset($_REQUEST['agree']) ? preg_replace('#[^0-9]#', '', $_REQUEST['agree']) : '';
 $agree2 = isset($_REQUEST['agree2']) ? preg_replace('#[^0-9]#', '', $_REQUEST['agree2']) : '';
+$ev_fixed_fields = ($w == 'u'); // 아이디, 닉네임, 이메일, 이름 변경불가
+$ev_hp_changeable = ($w == 'u' && ($config['cf_cert_use'] && ($config['cf_cert_hp'] || $config['cf_cert_simple']))); // 휴대폰 인증 후 변경가능
 
 // add_javascript('js 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 if ($config['cf_use_addr'])

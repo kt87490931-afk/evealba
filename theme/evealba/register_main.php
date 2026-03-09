@@ -306,6 +306,15 @@
         </div>
       </div>
 
+      <!-- 추천인 (닉네임) - 선택 -->
+      <div class="form-row">
+        <div class="form-label">추천인 (선택)</div>
+        <div class="form-cell col">
+          <input class="fi fi-md" id="inp-referral" name="mb_referral_nick" type="text" placeholder="추천인 닉네임 입력" maxlength="20">
+          <span class="fi-hint" id="referral-hint">추천인의 닉네임을 입력해 주세요. 기프티콘 발급 기준에 활용됩니다.</span>
+        </div>
+      </div>
+
       <!-- ============================================================
            기업회원 전용 섹션
       ============================================================ -->
@@ -712,6 +721,8 @@ function doJoin() {
   fd.append('mb_sms', document.getElementById('sms-agree').checked ? '1' : '0');
   fd.append('mb_1', currentMemberType);
   fd.append('mb_9', jobType);
+  var refNick = document.getElementById('inp-referral').value.trim();
+  if (refNick) fd.append('mb_referral_nick', refNick);
 
   if(currentMemberType === 'biz') {
     fd.append('mb_2', document.getElementById('inp-biz-num').value);

@@ -28,6 +28,7 @@ $mb_3           = isset($_POST['mb_3']) ? trim($_POST['mb_3']) : '';
 $mb_4           = isset($_POST['mb_4']) ? trim($_POST['mb_4']) : '';
 $mb_5           = isset($_POST['mb_5']) ? trim($_POST['mb_5']) : '';
 $mb_9           = isset($_POST['mb_9']) ? trim($_POST['mb_9']) : '';
+$mb_referral_nick = isset($_POST['mb_referral_nick']) ? trim($_POST['mb_referral_nick']) : '';
 
 $mb_name  = clean_xss_tags($mb_name, 1, 1);
 $mb_nick  = clean_xss_tags($mb_nick, 1, 1);
@@ -109,6 +110,14 @@ if (!$mb_9) {
 $mb_6 = '';
 $mb_7 = '';
 $mb_8 = '';
+$mb_recommend = '';
+if ($mb_referral_nick) {
+    $ref_nick_esc = sql_escape_string($mb_referral_nick);
+    $ref_row = sql_fetch("SELECT mb_id FROM {$g5['member_table']} WHERE mb_nick = '{$ref_nick_esc}' AND (mb_leave_date = '' OR mb_leave_date IS NULL) AND (mb_intercept_date = '' OR mb_intercept_date IS NULL) LIMIT 1");
+    if ($ref_row && $ref_row['mb_id'] && strtolower($ref_row['mb_id']) !== strtolower($mb_id)) {
+        $mb_recommend = $ref_row['mb_id'];
+    }
+}
 
 if ($mb_1 === 'biz') {
     if (!$mb_2 || strlen($mb_2) !== 10) {
@@ -240,7 +249,8 @@ $sql = "INSERT INTO {$g5['member_table']} SET
     mb_7 = '{$mb_7_esc}',
     mb_8 = '{$mb_8_esc}',
     mb_9 = '{$mb_9_esc}',
-    mb_10 = ''
+    mb_10 = '',
+    mb_recommend = '".sql_escape_string($mb_recommend)."'
 ";
 
 $result = sql_query($sql, false);

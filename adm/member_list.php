@@ -67,7 +67,7 @@ require_once './admin.head.php';
 $sql = " select * {$sql_common} {$sql_search} {$sql_order} limit {$from_record}, {$rows} ";
 $result = sql_query($sql);
 
-$colspan = 16;
+$colspan = 18;
 ?>
 
 <div class="local_ov01 local_ov">
@@ -132,6 +132,8 @@ $colspan = 16;
                     <th scope="col" id="mb_list_mobile">휴대폰</th>
                     <th scope="col" id="mb_list_lastcall"><?php echo subject_sort_link('mb_today_login', '', 'desc') ?>최종접속</a></th>
                     <th scope="col" id="mb_list_grp">접근그룹</th>
+                    <th scope="col" rowspan="2" id="mb_list_ref">추천인</th>
+                    <th scope="col" rowspan="2" id="mb_list_rs">이력서</th>
                     <th scope="col" rowspan="2" id="mb_list_mng">관리</th>
                 </tr>
                 <tr>
@@ -168,6 +170,13 @@ $colspan = 16;
                     $intercept_date = $row['mb_intercept_date'] ? $row['mb_intercept_date'] : date('Ymd', G5_SERVER_TIME);
 
                     $mb_nick = get_sideview($row['mb_id'], get_text($row['mb_nick']), $row['mb_email'], $row['mb_homepage']);
+
+                    $ref_id_esc = sql_real_escape_string($row['mb_id']);
+                    $ref_cnt = (int)sql_fetch("SELECT COUNT(*) AS c FROM {$g5['member_table']} WHERE mb_recommend = '{$ref_id_esc}' AND (mb_leave_date = '' OR mb_leave_date IS NULL)")['c'];
+                    $res_cnt = 0;
+                    if (sql_num_rows(sql_query("SHOW TABLES LIKE 'g5_resume'", false))) {
+                        $res_cnt = (int)sql_fetch("SELECT COUNT(DISTINCT m.mb_id) AS c FROM {$g5['member_table']} m INNER JOIN g5_resume r ON m.mb_id = r.mb_id WHERE m.mb_recommend = '{$ref_id_esc}' AND (m.mb_leave_date = '' OR m.mb_leave_date IS NULL)")['c'];
+                    }
 
                     $mb_id = $row['mb_id'];
                     $leave_msg = '';
@@ -274,6 +283,8 @@ $colspan = 16;
                         <td headers="mb_list_mobile" class="td_tel"><?php echo get_text($row['mb_hp']); ?></td>
                         <td headers="mb_list_lastcall" class="td_date"><?php echo substr($row['mb_today_login'], 2, 8); ?></td>
                         <td headers="mb_list_grp" class="td_numsmall"><?php echo $group ?></td>
+                        <td headers="mb_list_ref" rowspan="2" class="td_num"><?php echo $ref_cnt; ?></td>
+                        <td headers="mb_list_rs" rowspan="2" class="td_num"><?php echo $res_cnt; ?></td>
                         <td headers="mb_list_mng" rowspan="2" class="td_mng td_mng_s"><?php echo $s_mod ?><?php echo $s_grp ?></td>
                     </tr>
                     <tr class="<?php echo $bg; ?>">

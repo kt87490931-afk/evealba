@@ -18,4 +18,5 @@ $menu['menu910'] = array(
     array('910940', '쿠폰 관리', G5_ADMIN_URL . '/eve_coupon_list.php', 'evealba_coupon'),
     array('910950', '쪽지관리', G5_ADMIN_URL . '/eve_memo_manage.php', 'evealba_memo'),
     array('910960', '매칭시스템', G5_ADMIN_URL . '/eve_matching.php', 'evealba_matching'),
+    array('910970', '추천인·이력서 관리', G5_ADMIN_URL . '/eve_referral_manage.php', 'evealba_referral'),
 );
