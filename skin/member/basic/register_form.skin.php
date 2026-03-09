@@ -164,7 +164,7 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 	        </div>
 	        <div class="referrer-wrap">
 	            <?php if ($w == 'u') { ?>
-	            <button type="button" class="btn-referrer-list" onclick="ev_show_referral_list()">👥 본인을 추천한 회원들 목록보기 <span class="count-badge" id="ev_referral_count_txt">0명</span></button>
+	            <button type="button" class="btn-referrer-list" onclick="ev_show_referral_list(); return false;">👥 본인을 추천한 회원들 목록보기 <span class="count-badge" id="ev_referral_count_txt">0명</span></button>
 	            <?php } else if ($config['cf_use_recommend']) { ?>
 	            <div class="form-row">
 	                <div class="form-label">추천인 아이디</div>
@@ -334,7 +334,7 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 function ev_show_referral_list(){
 	var modal=document.getElementById('evReferralModal');
 	var body=document.getElementById('evReferralModalBody');
-	if(!modal||!body)return;
+	if(!modal||!body){alert('모달을 불러올 수 없습니다. 새로고침 후 다시 시도해 주세요.');return;}
 	if(!modal.parentNode||modal.parentNode!==document.body){document.body.appendChild(modal);}
 	body.innerHTML='<p style="text-align:center;padding:24px;color:#999;">⏳ 로딩중...</p>';
 	modal.classList.add('show');
