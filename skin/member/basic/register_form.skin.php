@@ -307,7 +307,22 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 <?php include_once(__DIR__ . '/consent_modal.inc.php'); ?>
 
 <?php if ($w == 'u') { ?>
-<!-- 추천인 모달 (기업정보 모달과 동일 방식: inline display 제어) -->
+<!-- 추천인 모달 (인라인 스타일로 디자인 보장) -->
+<style id="ev-referral-modal-styles">
+#evReferralModal.ev-referral-modal{display:none;position:fixed;inset:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;}
+#evReferralModal.ev-referral-modal .ev-referral-modal-box{background:#fff;border-radius:14px;max-width:460px;width:100%;max-height:85vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;}
+#evReferralModal.ev-referral-modal .ev-referral-modal-head{background:linear-gradient(135deg,#2D0020,#FF1B6B);padding:16px 20px;display:flex;align-items:center;gap:10px;}
+#evReferralModal.ev-referral-modal .ev-referral-modal-head-icon{font-size:18px;}
+#evReferralModal.ev-referral-modal .ev-referral-modal-head-title{color:#fff;font-size:15px;font-weight:800;flex:1;}
+#evReferralModal.ev-referral-modal .ev-referral-modal-close{width:28px;height:28px;background:rgba(255,255,255,.25);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;line-height:1;flex-shrink:0;}
+#evReferralModal.ev-referral-modal .ev-referral-modal-close:hover{background:rgba(255,255,255,.4);}
+#evReferralModal.ev-referral-modal .ev-referral-modal-body{padding:20px;overflow-y:auto;flex:1;min-height:80px;}
+#evReferralModal.ev-referral-modal .ev-referral-summary{margin:0 0 14px;font-size:14px;font-weight:700;color:#333;}
+#evReferralModal.ev-referral-modal .ev-referral-empty{padding:32px 16px;text-align:center;color:#999;font-size:14px;}
+#evReferralModal.ev-referral-modal .ev-referral-modal-foot{padding:14px 20px;background:#fff8fb;border-top:1px solid #FFD6E7;text-align:right;}
+#evReferralModal.ev-referral-modal .ev-referral-modal-ok{padding:10px 24px;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;border:none;border-radius:24px;font-size:14px;font-weight:700;cursor:pointer;}
+#evReferralModal.ev-referral-modal .ev-referral-modal-ok:hover{opacity:.92;}
+</style>
 <div id="evReferralModal" class="ev-referral-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;" onclick="if(event.target===this)ev_close_referral_modal()">
 	<div class="ev-referral-modal-box" onclick="event.stopPropagation()">
 		<div class="ev-referral-modal-head">
