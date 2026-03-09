@@ -307,9 +307,9 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 <?php include_once(__DIR__ . '/consent_modal.inc.php'); ?>
 
 <?php if ($w == 'u') { ?>
-<!-- 추천인 모달 -->
+<!-- 추천인 모달 (body로 이동하여 기업정보 모달처럼 깔끔하게 표시) -->
 <div class="ev-referral-modal" id="evReferralModal" onclick="if(event.target===this)ev_close_referral_modal()">
-	<div class="ev-referral-modal-box">
+	<div class="ev-referral-modal-box" onclick="event.stopPropagation()">
 		<div class="ev-referral-modal-head">
 			<span class="ev-referral-modal-head-icon">🎀</span>
 			<span class="ev-referral-modal-head-title">본인을 추천한 회원들</span>
@@ -335,8 +335,10 @@ function ev_show_referral_list(){
 	var modal=document.getElementById('evReferralModal');
 	var body=document.getElementById('evReferralModalBody');
 	if(!modal||!body)return;
+	if(!modal.parentNode||modal.parentNode!==document.body){document.body.appendChild(modal);}
 	body.innerHTML='<p style="text-align:center;padding:24px;color:#999;">⏳ 로딩중...</p>';
 	modal.classList.add('show');
+	document.body.style.overflow='hidden';
 	fetch('<?php echo G5_BBS_URL; ?>/eve_referral_list.php?mode=body')
 	.then(function(r){return r.text();})
 	.then(function(html){body.innerHTML=html;})
@@ -344,8 +346,12 @@ function ev_show_referral_list(){
 }
 function ev_close_referral_modal(){
 	var m=document.getElementById('evReferralModal');
-	if(m)m.classList.remove('show');
+	if(m){m.classList.remove('show');document.body.style.overflow='';}
 }
+document.addEventListener('DOMContentLoaded',function(){
+	var modal=document.getElementById('evReferralModal');
+	if(modal&&modal.parentNode&&modal.parentNode!==document.body){document.body.appendChild(modal);}
+});
 </script>
 <?php } ?>
 
