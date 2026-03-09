@@ -307,8 +307,8 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 <?php include_once(__DIR__ . '/consent_modal.inc.php'); ?>
 
 <?php if ($w == 'u') { ?>
-<!-- 추천인 모달 (body로 이동하여 기업정보 모달처럼 깔끔하게 표시) -->
-<div class="ev-referral-modal" id="evReferralModal" onclick="if(event.target===this)ev_close_referral_modal()">
+<!-- 추천인 모달 (기업정보 모달과 동일 방식: inline display 제어) -->
+<div id="evReferralModal" class="ev-referral-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;" onclick="if(event.target===this)ev_close_referral_modal()">
 	<div class="ev-referral-modal-box" onclick="event.stopPropagation()">
 		<div class="ev-referral-modal-head">
 			<span class="ev-referral-modal-head-icon">🎀</span>
@@ -337,7 +337,7 @@ function ev_show_referral_list(){
 	if(!modal||!body){alert('모달을 불러올 수 없습니다. 새로고침 후 다시 시도해 주세요.');return;}
 	if(!modal.parentNode||modal.parentNode!==document.body){document.body.appendChild(modal);}
 	body.innerHTML='<p style="text-align:center;padding:24px;color:#999;">⏳ 로딩중...</p>';
-	modal.classList.add('show');
+	modal.style.display='flex';
 	document.body.style.overflow='hidden';
 	fetch('<?php echo G5_BBS_URL; ?>/eve_referral_list.php?mode=body')
 	.then(function(r){return r.text();})
@@ -346,7 +346,7 @@ function ev_show_referral_list(){
 }
 function ev_close_referral_modal(){
 	var m=document.getElementById('evReferralModal');
-	if(m){m.classList.remove('show');document.body.style.overflow='';}
+	if(m){m.style.display='none';document.body.style.overflow='';}
 }
 function ev_init_referral(){
 	var modal=document.getElementById('evReferralModal');
