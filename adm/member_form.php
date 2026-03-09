@@ -26,6 +26,7 @@ $mb = array(
     'mb_signature' => null,
     'mb_profile' => null,
     'mb_memo' => null,
+    'mb_recommend' => null,
     'mb_leave_date' => null,
     'mb_1' => null,
     'mb_2' => null,
@@ -286,8 +287,8 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
                 <tr>
                     <th scope="row"><label for="mb_email">E-mail<strong class="sound_only">필수</strong></label></th>
                     <td><input type="text" name="mb_email" value="<?php echo $mb['mb_email'] ?>" id="mb_email" maxlength="100" required class="required frm_input email" size="30"></td>
-                    <th scope="row"><label for="mb_homepage">홈페이지</label></th>
-                    <td><input type="text" name="mb_homepage" value="<?php echo $mb['mb_homepage'] ?>" id="mb_homepage" class="frm_input" maxlength="255" size="15"></td>
+                    <th scope="row"><label for="mb_recommend">추천인</label></th>
+                    <td><input type="text" name="mb_recommend" value="<?php echo $mb['mb_recommend'] ?>" id="mb_recommend" class="frm_input" maxlength="20" size="15" placeholder="추천인 아이디 (mb_id)"> <span class="frm_info">추천한 회원의 아이디를 입력하세요.</span></td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="mb_hp">휴대폰번호</label></th>
@@ -536,12 +537,6 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
                     <?php } ?>
                 <?php } ?>
 
-                <?php if ($config['cf_use_recommend']) { // 추천인 사용 ?>
-                    <tr>
-                        <th scope="row">추천인</th>
-                        <td colspan="3"><?php echo ((isset($mb['mb_recommend']) && $mb['mb_recommend']) ? get_text($mb['mb_recommend']) : '없음'); // 081022 : CSRF 보안 결함으로 인한 코드 수정 ?></td>
-                    </tr>
-                <?php } ?>
 
                 <tr>
                     <th scope="row"><label for="mb_leave_date">탈퇴일자</label></th>

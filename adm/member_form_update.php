@@ -62,7 +62,6 @@ if ($msg = valid_mb_nick($mb_nick)) {
 $posts = array();
 $check_keys = array(
     'mb_name',
-    'mb_homepage',
     'mb_tel',
     'mb_addr1',
     'mb_addr2',
@@ -91,12 +90,14 @@ foreach ($check_keys as $key) {
 }
 
 $mb_sex = isset($_POST['mb_sex']) ? preg_replace('/[^MF]/', '', $_POST['mb_sex']) : '';
+$mb_recommend = isset($_POST['mb_recommend']) ? preg_replace('/[^a-zA-Z0-9_]/', '', trim($_POST['mb_recommend'])) : '';
+$mb_recommend_esc = sql_escape_string($mb_recommend);
 
 $sql_common = "  mb_sex = '{$mb_sex}',
                  mb_name = '{$posts['mb_name']}',
                  mb_nick = '{$mb_nick}',
                  mb_email = '{$mb_email}',
-                 mb_homepage = '{$posts['mb_homepage']}',
+                 mb_recommend = '{$mb_recommend_esc}',
                  mb_tel = '{$posts['mb_tel']}',
                  mb_hp = '{$mb_hp}',
                  mb_certify = '{$mb_certify}',
