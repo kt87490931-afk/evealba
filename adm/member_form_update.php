@@ -90,7 +90,19 @@ foreach ($check_keys as $key) {
 }
 
 $mb_sex = isset($_POST['mb_sex']) ? preg_replace('/[^MF]/', '', $_POST['mb_sex']) : '';
-$mb_recommend = isset($_POST['mb_recommend']) ? preg_replace('/[^a-zA-Z0-9_]/', '', trim($_POST['mb_recommend'])) : '';
+// 추천인: 쉼표 구분 닉네임 → mb_id 변환 후 저장
+$mb_recommend_raw = isset($_POST['mb_recommend']) ? trim($_POST['mb_recommend']) : '';
+$mb_recommend_ids = array();
+if ($mb_recommend_raw !== '') {
+    $nicks = array_map('trim', array_filter(preg_split('/[,，\s]+/u', $mb_recommend_raw)));
+    foreach ($nicks as $nick) {
+        if ($nick === '') continue;
+        $nick_esc = sql_escape_string($nick);
+        $r = sql_fetch("SELECT mb_id FROM {$g5['member_table']} WHERE mb_nick = '{$nick_esc}' AND (mb_leave_date = '' OR mb_leave_date IS NULL)");
+        if ($r) $mb_recommend_ids[] = $r['mb_id'];
+    }
+}
+$mb_recommend = implode(',', $mb_recommend_ids);
 $mb_recommend_esc = sql_escape_string($mb_recommend);
 
 $sql_common = "  mb_sex = '{$mb_sex}',

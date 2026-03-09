@@ -56,8 +56,13 @@ $token = get_session('ss_admin_token') ?: get_admin_token();
           foreach ($resume_list as $row) {
               $ref_nick = '';
               if (!empty($row['mb_recommend'])) {
-                  $rr = sql_fetch("SELECT mb_nick FROM {$tb_mb} WHERE mb_id = '".sql_real_escape_string($row['mb_recommend'])."'");
-                  $ref_nick = $rr ? get_text($rr['mb_nick']) : $row['mb_recommend'];
+                  $ids = array_map('trim', array_filter(explode(',', str_replace(['，', ' '], ',', $row['mb_recommend']))));
+                  $nicks = array();
+                  foreach ($ids as $id) {
+                      $rr = sql_fetch("SELECT mb_nick FROM {$tb_mb} WHERE mb_id = '".sql_real_escape_string($id)."'");
+                      $nicks[] = $rr ? get_text($rr['mb_nick']) : $id;
+                  }
+                  $ref_nick = implode(', ', $nicks);
               }
       ?>
       <tr>

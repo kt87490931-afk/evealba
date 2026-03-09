@@ -172,10 +172,11 @@ $colspan = 18;
                     $mb_nick = get_sideview($row['mb_id'], get_text($row['mb_nick']), $row['mb_email'], $row['mb_homepage']);
 
                     $ref_id_esc = sql_real_escape_string($row['mb_id']);
-                    $ref_cnt = (int)sql_fetch("SELECT COUNT(*) AS c FROM {$g5['member_table']} WHERE mb_recommend = '{$ref_id_esc}' AND (mb_leave_date = '' OR mb_leave_date IS NULL)")['c'];
+                    $ref_cond = "(mb_recommend = '{$ref_id_esc}' OR FIND_IN_SET('{$ref_id_esc}', REPLACE(REPLACE(mb_recommend, ' ', ''), '，', ',')) > 0)";
+                    $ref_cnt = (int)sql_fetch("SELECT COUNT(*) AS c FROM {$g5['member_table']} WHERE {$ref_cond} AND (mb_leave_date = '' OR mb_leave_date IS NULL)")['c'];
                     $res_cnt = 0;
                     if (sql_num_rows(sql_query("SHOW TABLES LIKE 'g5_resume'", false))) {
-                        $res_cnt = (int)sql_fetch("SELECT COUNT(DISTINCT m.mb_id) AS c FROM {$g5['member_table']} m INNER JOIN g5_resume r ON m.mb_id = r.mb_id WHERE m.mb_recommend = '{$ref_id_esc}' AND (m.mb_leave_date = '' OR m.mb_leave_date IS NULL)")['c'];
+                        $res_cnt = (int)sql_fetch("SELECT COUNT(DISTINCT m.mb_id) AS c FROM {$g5['member_table']} m INNER JOIN g5_resume r ON m.mb_id = r.mb_id WHERE {$ref_cond} AND (m.mb_leave_date = '' OR m.mb_leave_date IS NULL)")['c'];
                     }
 
                     $mb_id = $row['mb_id'];

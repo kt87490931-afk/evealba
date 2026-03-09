@@ -20,13 +20,13 @@ $ref_mb_id_esc = sql_escape_string($ref_mb_id);
 
 if (isset($_GET['mode']) && $_GET['mode'] === 'count') {
     header('Content-Type: application/json; charset=utf-8');
-    $r = sql_fetch("SELECT COUNT(*) AS cnt FROM {$g5['member_table']} WHERE mb_recommend = '{$ref_mb_id_esc}' AND (mb_leave_date = '' OR mb_leave_date IS NULL)");
+    $r = sql_fetch("SELECT COUNT(*) AS cnt FROM {$g5['member_table']} WHERE (mb_recommend = '{$ref_mb_id_esc}' OR FIND_IN_SET('{$ref_mb_id_esc}', REPLACE(REPLACE(mb_recommend, ' ', ''), '，', ',')) > 0) AND (mb_leave_date = '' OR mb_leave_date IS NULL)");
     echo json_encode(array('cnt' => (int)($r['cnt'] ?? 0)), JSON_UNESCAPED_UNICODE);
     exit;
 }
 
 $list = array();
-$res = sql_query("SELECT mb_nick, mb_datetime FROM {$g5['member_table']} WHERE mb_recommend = '{$ref_mb_id_esc}' AND (mb_leave_date = '' OR mb_leave_date IS NULL) ORDER BY mb_datetime DESC");
+$res = sql_query("SELECT mb_nick, mb_datetime FROM {$g5['member_table']} WHERE (mb_recommend = '{$ref_mb_id_esc}' OR FIND_IN_SET('{$ref_mb_id_esc}', REPLACE(REPLACE(mb_recommend, ' ', ''), '，', ',')) > 0) AND (mb_leave_date = '' OR mb_leave_date IS NULL) ORDER BY mb_datetime DESC");
 while ($row = sql_fetch_array($res)) {
     $list[] = array('nick' => get_text($row['mb_nick']), 'date' => substr($row['mb_datetime'], 0, 10));
 }

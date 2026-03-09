@@ -59,6 +59,7 @@ if ($w == '') {
     $mb['mb_marketing_agree'] = 0;
     $mb['mb_thirdparty_agree'] = 0;
     $html_title = '추가';
+    $mb_recommend_display = '';
 } elseif ($w == 'u') {
     $mb = get_member($mb_id);
     if (!$mb['mb_id']) {
@@ -83,7 +84,20 @@ if ($w == '') {
     $mb['mb_addr2'] = get_text($mb['mb_addr2']);
     $mb['mb_addr3'] = get_text($mb['mb_addr3']);
     $mb['mb_signature'] = get_text($mb['mb_signature']);
-    $mb['mb_recommend'] = get_text($mb['mb_recommend']);
+    $mb['mb_recommend'] = get_text($mb['mb_recommend'] ?? '');
+    // mb_recommend(mb_id들) → 닉네임 표시용 (쉼표 구분)
+    $mb_recommend_display = '';
+    if (!empty($mb['mb_recommend'])) {
+        $ids = array_map('trim', array_filter(explode(',', str_replace(['，', ' ', '　'], ',', $mb['mb_recommend']))));
+        $nicks = array();
+        foreach ($ids as $id) {
+            if ($id === '') continue;
+            $id_esc = sql_escape_string($id);
+            $r = sql_fetch("SELECT mb_nick FROM {$g5['member_table']} WHERE mb_id = '{$id_esc}'");
+            $nicks[] = $r ? get_text($r['mb_nick']) : $id;
+        }
+        $mb_recommend_display = implode(', ', $nicks);
+    }
     $mb['mb_profile'] = get_text($mb['mb_profile']);
     $mb['mb_1'] = get_text($mb['mb_1']);
     $mb['mb_2'] = get_text($mb['mb_2']);
@@ -288,7 +302,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
                     <th scope="row"><label for="mb_email">E-mail<strong class="sound_only">필수</strong></label></th>
                     <td><input type="text" name="mb_email" value="<?php echo $mb['mb_email'] ?>" id="mb_email" maxlength="100" required class="required frm_input email" size="30"></td>
                     <th scope="row"><label for="mb_recommend">추천인</label></th>
-                    <td><input type="text" name="mb_recommend" value="<?php echo $mb['mb_recommend'] ?>" id="mb_recommend" class="frm_input" maxlength="20" size="15" placeholder="추천인 아이디 (mb_id)"> <span class="frm_info">추천한 회원의 아이디를 입력하세요.</span></td>
+                    <td><input type="text" name="mb_recommend" value="<?php echo isset($mb_recommend_display) ? htmlspecialchars($mb_recommend_display) : htmlspecialchars($mb['mb_recommend']); ?>" id="mb_recommend" class="frm_input" maxlength="500" size="40" placeholder="닉네임1, 닉네임2, 닉네임3"> <span class="frm_info">쉼표(,)로 구분하여 여러 닉네임을 입력할 수 있습니다.</span></td>
                 </tr>
                 <tr>
                     <th scope="row"><label for="mb_hp">휴대폰번호</label></th>
