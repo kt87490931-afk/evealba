@@ -164,7 +164,7 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 	        </div>
 	        <div class="referrer-wrap">
 	            <?php if ($w == 'u') { ?>
-	            <button type="button" class="btn-referrer-list" onclick="ev_show_referral_list(); return false;">👥 본인을 추천한 회원들 목록보기 <span class="count-badge" id="ev_referral_count_txt">0명</span></button>
+	            <button type="button" id="evBtnReferralList" class="btn-referrer-list">👥 본인을 추천한 회원들 목록보기 <span class="count-badge" id="ev_referral_count_txt">0명</span></button>
 	            <?php } else if ($config['cf_use_recommend']) { ?>
 	            <div class="form-row">
 	                <div class="form-label">추천인 아이디</div>
@@ -348,10 +348,15 @@ function ev_close_referral_modal(){
 	var m=document.getElementById('evReferralModal');
 	if(m){m.classList.remove('show');document.body.style.overflow='';}
 }
-document.addEventListener('DOMContentLoaded',function(){
+function ev_init_referral(){
 	var modal=document.getElementById('evReferralModal');
 	if(modal&&modal.parentNode&&modal.parentNode!==document.body){document.body.appendChild(modal);}
-});
+	var btn=document.getElementById('evBtnReferralList');
+	if(btn){btn.removeEventListener('click',ev_referral_click);btn.addEventListener('click',ev_referral_click);}
+}
+function ev_referral_click(e){e.preventDefault();e.stopPropagation();ev_show_referral_list();}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',ev_init_referral);}
+else{ev_init_referral();}
 </script>
 <?php } ?>
 
