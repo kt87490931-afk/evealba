@@ -27,7 +27,8 @@ body.eve-renewal-active.eve-renewal-mobile { padding-bottom: 60px; }
 /* ===== 구 UI 숨김 ===== */
 body.eve-renewal-active .top-bar,
 body.eve-renewal-active header:not(.renewal-header-mobile),
-body.eve-renewal-active nav,
+body.eve-renewal-active nav:not(.sidebar-nav-renewal):not(.mobile-tabbar),
+body.eve-renewal-active .nav-scroll-wrap { display: none !important; }
 body.eve-renewal-active .ticker-wrap,
 body.eve-renewal-active .hero-section,
 body.eve-renewal-active .quick-stats,
@@ -103,26 +104,41 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
   flex-direction: column;
   gap: 4px;
   flex: 1;
+  margin-top: 8px;
 }
 .sidebar-nav-renewal .nav-item {
-  display: flex;
+  display: flex !important;
+  flex: none !important;
+  flex-direction: row !important;
   align-items: center;
   gap: 16px;
   padding: 12px 16px;
-  color: var(--gray-900);
+  color: var(--gray-900) !important;
   font-size: 16px;
   font-weight: 500;
   border-radius: 8px;
   text-decoration: none;
   transition: background .15s;
+  text-align: left;
+  min-width: 0;
+  white-space: nowrap;
+  position: relative;
 }
-.sidebar-nav-renewal .nav-item:hover { background: var(--gray-50); }
-.sidebar-nav-renewal .nav-item.active { font-weight: 700; }
+.sidebar-nav-renewal .nav-item::after { display: none !important; }
+.sidebar-nav-renewal .nav-item:hover {
+  background: var(--gray-50) !important;
+}
+.sidebar-nav-renewal .nav-item.active {
+  font-weight: 700;
+  background: transparent !important;
+}
 .sidebar-nav-renewal .nav-icon {
+  display: inline-block !important;
   font-size: 22px;
   width: 24px;
   text-align: center;
   color: var(--gray-900);
+  flex-shrink: 0;
 }
 
 .sidebar-login-renewal {
@@ -561,9 +577,12 @@ body.eve-renewal-active.eve-panel-right-on .float-recommend { display: none !imp
   grid-template-columns: repeat(4, 1fr);
   z-index: 9999;
 }
+body.eve-renewal-active.eve-renewal-mobile .mobile-tabbar {
+  display: grid !important;
+}
 .mobile-tabbar .tab-item {
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
   align-items: center;
   justify-content: center;
   color: var(--gray-400);
@@ -571,9 +590,18 @@ body.eve-renewal-active.eve-panel-right-on .float-recommend { display: none !imp
   gap: 2px;
   text-decoration: none;
   position: relative;
+  flex: none !important;
+  min-width: 0;
+  padding: 0;
+  text-align: center;
 }
-.mobile-tabbar .tab-item.active { color: var(--gray-900); font-weight: 700; }
-.mobile-tabbar .tab-icon { font-size: 22px; line-height: 1; }
+.mobile-tabbar .tab-item::after { display: none !important; }
+.mobile-tabbar .tab-item.active { color: var(--gray-900); font-weight: 700; background: transparent !important; }
+.mobile-tabbar .tab-icon {
+  display: inline-block !important;
+  font-size: 22px;
+  line-height: 1;
+}
 .mobile-tabbar .badge-count {
   position: absolute;
   top: 4px;
@@ -598,7 +626,6 @@ body.eve-renewal-active.eve-panel-right-on .float-recommend { display: none !imp
   .renewal-main-area { padding: 16px 16px 24px; }
 }
 @media (max-width: 768px) {
-  body.eve-renewal-active.eve-renewal-mobile .mobile-tabbar { display: grid; }
   .recruit-container.view-grid { grid-template-columns: 1fr; }
   .renewal-card-thumb { max-height: 400px; }
   .feed-filter-bar { flex-direction: column; align-items: stretch; }
@@ -608,4 +635,3 @@ body.eve-renewal-active.eve-panel-right-on .float-recommend { display: none !imp
 /* 서브 페이지 */
 body.eve-renewal-active .jobs-register-page .main-area,
 body.eve-renewal-active .resume-register-page .main-area { background: transparent; }
-body.eve-renewal-active nav > .nav-scroll { display: none !important; }

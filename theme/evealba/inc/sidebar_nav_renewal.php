@@ -25,7 +25,7 @@ function _ev_nav_is_active($item, $active) {
 <div class="sidebar-logo-renewal">
   <a href="<?php echo G5_URL; ?>" class="sidebar-brand">EVE <span>ALBA</span></a>
 </div>
-<nav class="sidebar-nav-renewal" aria-label="메인 메뉴">
+<div class="sidebar-nav-renewal" role="navigation" aria-label="메인 메뉴">
 <?php foreach ($_nav_items as $_ni) {
     $_is_active = _ev_nav_is_active($_ni, $_nav_active);
 ?>
@@ -34,7 +34,7 @@ function _ev_nav_is_active($item, $active) {
     <span><?php echo htmlspecialchars($_ni['label']); ?></span>
   </a>
 <?php } ?>
-</nav>
+</div>
 <div class="sidebar-login-renewal">
 <?php if ($is_member) { ?>
   <div class="sidebar-user-renewal">
