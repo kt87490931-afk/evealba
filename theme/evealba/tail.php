@@ -20,8 +20,9 @@ if(G5_COMMUNITY_USE === false) {
 </div><!-- /page-layout -->
 
 <!-- FOOTER -->
-<footer>
+<footer class="<?php echo $_ev_renewal_tail ? 'renewal-site-footer' : ''; ?>">
   <div class="footer-inner">
+<?php if (!$_ev_renewal_tail) { ?>
     <div class="footer-logo"><em>eve</em>·<span>알바</span></div>
     <div class="footer-links">
       <a href="<?php echo get_pretty_url('content', 'provision'); ?>">이용약관</a>
@@ -38,6 +39,9 @@ if(G5_COMMUNITY_USE === false) {
       <span>본 사이트는 성인 유흥알바 구인구직 정보 사이트로, 만 18세 미만은 이용하실 수 없습니다.</span><br>
       © 2026 이브알바(EVE ALBA) All Rights Reserved.
     </div>
+<?php } else { ?>
+    <p class="renewal-footer-minimal">© 2026 이브알바</p>
+<?php } ?>
   </div>
 </footer>
 

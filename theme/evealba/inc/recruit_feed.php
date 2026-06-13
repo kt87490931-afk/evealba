@@ -20,7 +20,7 @@ if (empty($_feed_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
 ?>
 <div class="renewal-feed-zone">
   <div class="feed-filter-bar">
-    <h2 class="feed-zone-title">채용정보</h2>
+    <h3 class="feed-zone-title">채용정보</h3>
     <form method="get" action="<?php echo $_feed_base; ?>/jobs.php" class="feed-filter-form">
       <select name="er_id" aria-label="지역">
         <option value="">지역 전체</option>

@@ -46,9 +46,12 @@ if ($_sb_check && sql_num_rows($_sb_check) > 0) {
 <?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { ?>
 <?php include G5_THEME_PATH.'/inc/story_slider.php'; ?>
 <?php include G5_THEME_PATH.'/inc/recruit_feed.php'; ?>
-<div class="renewal-hide-legacy">
-<?php } else { ?>
-<!-- 빠른 통계 (데스크톱) -->
+<?php if (G5_IS_MOBILE) { include G5_THEME_PATH.'/inc/panel_mobile_below.php'; } ?>
+<script src="<?php echo G5_THEME_URL; ?>/js/lazy_anim.js?v=<?php echo G5_CSS_VER; ?>"></script>
+<?php return; }
+
+// ===== 구 메인 (renewal OFF) =====
+?>
 <div class="quick-stats">
   <div class="stat-card">
     <div class="stat-icon">💼</div>
@@ -76,7 +79,6 @@ if ($_sb_check && sql_num_rows($_sb_check) > 0) {
     <div class="stat-value">1,203</div>
   </div>
 </div>
-<?php } ?>
 
 <!-- 빠른 메뉴 (모바일) -->
 <?php
@@ -389,7 +391,6 @@ $_tab_keys = array_keys($_tab_data);
     </div>
   </div>
 </div>
-<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { ?></div><!-- /.renewal-hide-legacy --><?php } ?>
 <script>
 function switchCommTab(btn, idx) {
   btn.closest('.tab-section').querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });

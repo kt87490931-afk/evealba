@@ -12,7 +12,6 @@ $_ev_pl_extra = isset($ev_page_layout_class) ? trim($ev_page_layout_class) : '';
 <?php if ($_ev_renewal_layout) { ?>
   <aside class="sidebar-left-renewal">
     <?php include G5_THEME_PATH.'/inc/sidebar_nav_renewal.php'; ?>
-    <?php include G5_THEME_PATH.'/inc/sidebar_region_renewal.php'; ?>
   </aside>
 <?php } elseif (!empty($ev_sidebar_legacy_inc) && is_file($ev_sidebar_legacy_inc)) { ?>
   <?php include $ev_sidebar_legacy_inc; ?>

@@ -119,6 +119,8 @@ echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba.css?ver='.$_evea
 if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH.'/css/evealba_renewal.css')) {
     $_renewal_css_ver = filemtime(G5_THEME_PATH.'/css/evealba_renewal.css');
     echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba_renewal.css?ver='.$_renewal_css_ver.'">'.PHP_EOL;
+    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css">'.PHP_EOL;
+    echo '<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">'.PHP_EOL;
 }
 ?>
 <!--[if lte IE 8]>

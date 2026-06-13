@@ -66,8 +66,9 @@ if ($_jrec_chk && sql_num_rows($_jrec_chk) > 0) {
 <?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && empty($_atf)) { ?>
 <?php include G5_THEME_PATH.'/inc/story_slider.php'; ?>
 <?php include G5_THEME_PATH.'/inc/recruit_feed.php'; ?>
-<div class="renewal-hide-legacy">
-<?php } ?>
+<?php if (G5_IS_MOBILE) { include G5_THEME_PATH.'/inc/panel_mobile_below.php'; } ?>
+<script src="<?php echo G5_THEME_URL; ?>/js/lazy_anim.js?v=<?php echo G5_CSS_VER; ?>"></script>
+<?php return; } ?>
     <!-- 검색 필터 박스 -->
     <?php
     $jf = isset($job_filters) ? $job_filters : array('er_id'=>0,'erd_id'=>0,'ei_id'=>0,'ej_id'=>0,'ec_id'=>0,'stx'=>'');
@@ -947,5 +948,4 @@ if ($_jrec_chk && sql_num_rows($_jrec_chk) > 0) {
       <button type="button" class="btn-bottom-search">🔍 검색</button>
     </div>
 <?php } ?>
-<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && empty($_atf)) { ?></div><!-- /.renewal-hide-legacy --><?php } ?>
 <script src="<?php echo G5_THEME_URL; ?>/js/lazy_anim.js?v=<?php echo G5_CSS_VER; ?>"></script>

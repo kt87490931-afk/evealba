@@ -1,6 +1,6 @@
 <?php
 /**
- * 모바일 하단 탭바 (4탭)
+ * 모바일 하단 탭바 (Readdy 4탭)
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -14,10 +14,10 @@ if (!empty($is_member) && !empty($member['mb_id']) && function_exists('get_memo_
 }
 
 $_tb_tabs = array(
-    array('key' => 'jobs', 'icon' => '🏠', 'label' => '홈', 'href' => G5_URL, 'match' => array('jobs', '')),
-    array('key' => 'community', 'icon' => '💬', 'label' => '커뮤니티', 'href' => $_tb_base . '/sudabang.php', 'match' => array('sudabang', 'used')),
-    array('key' => 'notify', 'icon' => '🔔', 'label' => '알림', 'href' => $_tb_base . '/memo_full.php', 'match' => array('memo'), 'badge' => $_tb_memo_badge),
-    array('key' => 'mypage', 'icon' => '👤', 'label' => '마이', 'href' => $is_member
+    array('key' => 'jobs', 'icon' => 'ri-home-5-line', 'label' => '홈', 'href' => G5_URL, 'match' => array('jobs', '')),
+    array('key' => 'community', 'icon' => 'ri-chat-3-line', 'label' => '커뮤니티', 'href' => $_tb_base . '/sudabang.php', 'match' => array('sudabang', 'used')),
+    array('key' => 'notify', 'icon' => 'ri-notification-3-line', 'label' => '알림', 'href' => $_tb_base . '/memo_full.php', 'match' => array('memo'), 'badge' => $_tb_memo_badge),
+    array('key' => 'mypage', 'icon' => 'ri-user-line', 'label' => '마이', 'href' => $is_member
         ? G5_BBS_URL . '/member_confirm.php?url=' . urlencode(G5_BBS_URL . '/register_form.php')
         : G5_BBS_URL . '/login.php', 'match' => array('mypage')),
 );
@@ -27,7 +27,7 @@ $_tb_tabs = array(
     $_tb_on = ($_tb_active === '' && in_array('jobs', $_tb['match'], true)) || in_array($_tb_active, $_tb['match'], true);
 ?>
   <a href="<?php echo htmlspecialchars($_tb['href']); ?>" class="tab-item<?php echo $_tb_on ? ' active' : ''; ?>">
-    <span class="tab-icon"><?php echo $_tb['icon']; ?></span>
+    <i class="<?php echo $_tb['icon']; ?> tab-icon" aria-hidden="true"></i>
     <span><?php echo htmlspecialchars($_tb['label']); ?></span>
 <?php if (!empty($_tb['badge'])) { ?>
     <span class="badge-count"><?php echo (int)$_tb['badge']; ?></span>

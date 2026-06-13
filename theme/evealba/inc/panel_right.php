@@ -41,7 +41,7 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
 ?>
 <aside class="panel-right" aria-label="우측 패널">
   <div class="panel-section">
-    <h4>📋 채용정보</h4>
+    <h4>채용정보</h4>
     <form method="get" action="<?php echo $_pr_base; ?>/jobs.php">
       <select name="er_id" aria-label="지역">
         <option value="">지역 전체</option>
@@ -60,7 +60,7 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
   </div>
 
   <div class="panel-section">
-    <h4>💖 추천 구인</h4>
+    <h4>추천 구인</h4>
 <?php if (!empty($_pr_rows)) {
     foreach ($_pr_rows as $_pr_row) {
         $_pr_link = function_exists('_jlh_clean_url') ? _jlh_clean_url($_pr_row) : $_pr_base . '/jobs_view.php?jr_id=' . (int)$_pr_row['jr_id'];
@@ -69,9 +69,9 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
 ?>
     <a href="<?php echo htmlspecialchars($_pr_link); ?>" class="panel-recommend-item">
       <div class="panel-recommend-thumb"><?php echo htmlspecialchars(mb_substr($_pr_name, 0, 4, 'UTF-8')); ?></div>
-      <div>
-        <div style="font-size:12px;font-weight:700;"><?php echo htmlspecialchars(mb_substr($_pr_name, 0, 12, 'UTF-8')); ?></div>
-        <div style="font-size:11px;color:#888;"><?php echo htmlspecialchars(mb_substr($_pr_title, 0, 20, 'UTF-8')); ?></div>
+      <div class="panel-recommend-info">
+        <div class="panel-recommend-name"><?php echo htmlspecialchars(mb_substr($_pr_name, 0, 14, 'UTF-8')); ?></div>
+        <div class="panel-recommend-meta"><?php echo htmlspecialchars(mb_substr($_pr_title, 0, 24, 'UTF-8')); ?></div>
       </div>
     </a>
 <?php }
@@ -81,7 +81,7 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
   </div>
 
   <div class="panel-section">
-    <h4>🔔 새로운 알림</h4>
+    <h4>새로운 알림</h4>
 <?php if ($is_member) { ?>
     <p style="font-size:12px;color:#555;">
       읽지 않은 쪽지
@@ -94,7 +94,7 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
   </div>
 
   <div class="panel-section">
-    <h4>💬 새로운 1:1 채팅</h4>
+    <h4>새로운 1:1 채팅</h4>
 <?php if ($is_member) { ?>
     <button type="button" class="panel-chat-btn" onclick="if(typeof toggleEveChat==='function')toggleEveChat();else{var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';window.open(u,'eveChatPopup','width=420,height=720');}">채팅 열기</button>
 <?php } else { ?>
