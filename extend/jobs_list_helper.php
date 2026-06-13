@@ -563,26 +563,45 @@ function _jlh_feed_placeholder_img($jr_id, $w = 630, $h = 788) {
 }
 
 /**
- * 리뉴얼 피드형 카드 (Readdy/인스타)
+ * 광고 등급 → 시안 배지/스토리 링 클래스
+ */
+function _jlh_grade_info($ad_labels) {
+    $map = array(
+        'VIP' => array('class' => 'vip', 'ring' => 'grade-vip'),
+        '우대' => array('class' => 'top', 'ring' => 'grade-top'),
+        '프리미엄' => array('class' => 'premium', 'ring' => 'grade-premium'),
+        '스페셜' => array('class' => 'special', 'ring' => 'grade-special'),
+        '급구' => array('class' => 'urgent', 'ring' => 'grade-urgent'),
+        '추천' => array('class' => 'recommend', 'ring' => 'grade-recommend'),
+    );
+    foreach ($map as $label => $info) {
+        if (strpos((string)$ad_labels, $label) !== false) {
+            return array('label' => $label, 'badge_class' => $info['class'], 'ring_class' => $info['ring']);
+        }
+    }
+    return array('label' => '', 'badge_class' => '', 'ring_class' => 'grade-recommend');
+}
+
+/**
+ * 리뉴얼 피드형 카드 — 시안 recruit-card
  */
 function render_job_card_feed($row) {
     $f = _jlh_extract_fields($row);
-    $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
-    $nick = $f['nickname'];
     $jr_good = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
     $jr_comment = max(0, (int)($row['jr_comment'] ?? 0));
+    $grade = _jlh_grade_info($f['ad_labels']);
 
     $days = 0;
     if (!empty($row['jr_datetime'])) {
         $days = max(0, (int)floor((time() - strtotime($row['jr_datetime'])) / 86400));
     }
     if ($days > 0) {
-        $meta_date = $days . '일째 광고중';
+        $post_days = '· ' . $days . '일째 광고중';
     } else {
         $ts = strtotime($row['jr_datetime'] ?? 'now');
         $hour = (int)date('G', $ts);
         $h12 = $hour % 12 ?: 12;
-        $meta_date = ($hour < 12 ? '오전' : '오후') . ' ' . $h12 . ':' . date('i', $ts);
+        $post_days = '· ' . ($hour < 12 ? '오전' : '오후') . ' ' . $h12 . ':' . date('i', $ts);
     }
 
     $region_parts = array_filter(array($f['region'], $f['subregion']));
@@ -604,38 +623,49 @@ function render_job_card_feed($row) {
     }
     $sal_txt = implode(' ', $sal_parts);
 
-    $card_title = $f['title'] ?: htmlspecialchars(mb_substr($jr_data['thumb_title'] ?? strip_tags($nick), 0, 60, 'UTF-8'));
+    $card_title = $f['title'] ?: htmlspecialchars(mb_substr(strip_tags($f['nickname']), 0, 60, 'UTF-8'));
 
+    $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
     $thumb_file = isset($jr_data['thumb_file']) ? trim($jr_data['thumb_file']) : '';
     if ($thumb_file && defined('G5_DATA_URL')) {
         $thumb_url = G5_DATA_URL . '/jobs/' . $thumb_file;
     } else {
-        $thumb_url = _jlh_feed_placeholder_img($f['jr_id']);
+        $thumb_url = _jlh_feed_placeholder_img($f['jr_id'], 200, 200);
     }
-    $avatar_html = '<img src="' . htmlspecialchars($thumb_url) . '" alt="" class="renewal-avatar-img" loading="lazy">';
-    $thumb_inner = '<img src="' . htmlspecialchars($thumb_url) . '" alt="" class="renewal-thumb-img" loading="lazy">';
 
-    $meta_line = htmlspecialchars($sal_txt);
-    if ($region_txt) $meta_line .= '·' . htmlspecialchars($region_txt);
-    if ($detail_txt) $meta_line .= '·' . $detail_txt;
+    $shop_name = strip_tags($f['nickname']);
+    $is_hot = ($f['jump_count'] >= 3 || strpos($f['ad_labels'], '급구') !== false);
+    $is_new = ($days <= 3);
 
-    echo '<article class="renewal-feed-card">';
-    echo '<a href="' . $f['link'] . '" class="renewal-feed-link">';
-    echo '<header class="renewal-card-profile">';
-    echo '<div class="renewal-profile-avatar">' . $avatar_html . '</div>';
-    echo '<div class="renewal-profile-text"><strong>' . $nick . '</strong><span class="renewal-post-meta">· ' . htmlspecialchars($meta_date) . '</span></div>';
-    echo '</header>';
-    echo '<div class="renewal-card-thumb">';
-    echo $thumb_inner;
+    echo '<a href="' . $f['link'] . '" class="recruit-card">';
+    echo '<div class="card-thumb">';
+    echo '<img src="' . htmlspecialchars($thumb_url) . '" alt="" loading="lazy">';
+    if ($grade['badge_class']) {
+        echo '<span class="grade-badge ' . htmlspecialchars($grade['badge_class']) . '">' . htmlspecialchars($grade['label']) . '</span>';
+    }
+    if ($is_hot) echo '<span class="badge-hot">HOT</span>';
+    if ($is_new) echo '<span class="badge-new">NEW</span>';
     echo '</div>';
-    echo '<div class="renewal-card-body">';
-    echo '<h3 class="renewal-card-title">' . $card_title . '</h3>';
-    echo '<p class="renewal-card-meta-line">' . $meta_line . '</p>';
+    echo '<div class="card-body">';
+    echo '<div class="shop-row">';
+    echo '<span class="shop-name">' . htmlspecialchars($shop_name) . '</span>';
+    echo '<span class="post-days">' . htmlspecialchars($post_days) . '</span>';
+    echo '</div>';
+    echo '<h3 class="card-title">' . $card_title . '</h3>';
+    echo '<div class="card-meta">';
+    echo '<span class="card-salary">' . htmlspecialchars($sal_txt) . '</span>';
+    if ($region_txt) {
+        echo '<span class="card-dot">·</span><span class="card-region">' . htmlspecialchars($region_txt) . '</span>';
+    }
+    if ($detail_txt) {
+        echo '<span class="card-dot">·</span><span class="card-job">' . $detail_txt . '</span>';
+    }
+    echo '</div>';
+    echo '<div class="card-actions">';
+    echo '<span>❤ ' . number_format($jr_good) . '</span>';
+    echo '<span>💬 ' . number_format($jr_comment) . '</span>';
+    echo '<span>↗ 공유</span>';
+    echo '</div>';
     echo '</div>';
     echo '</a>';
-    echo '<footer class="renewal-card-actions">';
-    echo '<button type="button" class="renewal-stat-btn" tabindex="-1" aria-hidden="true"><i class="ri-heart-line"></i><span>' . number_format($jr_good) . '</span></button>';
-    echo '<button type="button" class="renewal-stat-btn" tabindex="-1" aria-hidden="true"><i class="ri-chat-3-line"></i><span>' . number_format($jr_comment) . '</span></button>';
-    echo '</footer>';
-    echo '</article>';
 }

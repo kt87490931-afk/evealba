@@ -1,6 +1,6 @@
 <?php
 /**
- * 우측 패널 — 검색·추천·알림·채팅 (float_banners 쿼리 재사용)
+ * 시안 우측 패널 — 검색·추천·알림·채팅
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -22,10 +22,6 @@ if ($_pr_tb_check && sql_num_rows($_pr_tb_check) > 0) {
     }
 }
 
-if (!function_exists('render_premium_card') && is_file(G5_PATH . '/extend/jobs_list_helper.php')) {
-    include_once(G5_PATH . '/extend/jobs_list_helper.php');
-}
-
 $_pr_memo_badge = 0;
 if (!empty($is_member) && !empty($member['mb_id']) && function_exists('get_memo_not_read')) {
     $_pr_memo_badge = (int)get_memo_not_read($member['mb_id']);
@@ -40,27 +36,36 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
 }
 ?>
 <aside class="panel-right" aria-label="우측 패널">
-  <div class="panel-section">
-    <h4>채용정보</h4>
-    <form method="get" action="<?php echo $_pr_base; ?>/jobs.php">
-      <select name="er_id" aria-label="지역">
-        <option value="">지역 전체</option>
+
+  <div class="panel-card">
+    <div class="panel-card-head">채용정보</div>
+    <div class="search-panel">
+      <form method="get" action="<?php echo $_pr_base; ?>/jobs.php">
+        <div class="select-row">
+          <select name="er_id" aria-label="지역">
+            <option value="">지역 전체</option>
 <?php foreach ($_pr_regions as $_pr) { ?>
-        <option value="<?php echo (int)$_pr['er_id']; ?>"><?php echo htmlspecialchars($_pr['er_name']); ?></option>
+            <option value="<?php echo (int)$_pr['er_id']; ?>"><?php echo htmlspecialchars($_pr['er_name']); ?></option>
 <?php } ?>
-      </select>
-      <select name="ej_id" aria-label="직종">
-        <option value="">직종 전체</option>
+          </select>
+          <select name="ej_id" aria-label="직종">
+            <option value="">직종 전체</option>
 <?php foreach ($_pr_jobs as $_pj) { ?>
-        <option value="<?php echo (int)$_pj['ej_id']; ?>"><?php echo htmlspecialchars($_pj['ej_name']); ?></option>
+            <option value="<?php echo (int)$_pj['ej_id']; ?>"><?php echo htmlspecialchars($_pj['ej_name']); ?></option>
 <?php } ?>
-      </select>
-      <input type="text" name="stx" placeholder="🔍 채용정보 검색" maxlength="50">
-    </form>
+          </select>
+        </div>
+        <div class="search-input-row">
+          <input type="text" name="stx" placeholder="🔍 채용정보 검색" maxlength="50">
+          <button type="submit">검색</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <div class="panel-section">
-    <h4>추천 구인</h4>
+  <div class="panel-card">
+    <div class="panel-card-head">💖 추천 구인</div>
+    <div class="recommend-list">
 <?php if (!empty($_pr_rows)) {
     foreach ($_pr_rows as $_pr_row) {
         $_pr_link = function_exists('_jlh_clean_url') ? _jlh_clean_url($_pr_row) : $_pr_base . '/jobs_view.php?jr_id=' . (int)$_pr_row['jr_id'];
@@ -71,43 +76,60 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
         if ($_pr_thumb && defined('G5_DATA_URL')) {
             $_pr_img = G5_DATA_URL . '/jobs/' . $_pr_thumb;
         } elseif (function_exists('_jlh_feed_placeholder_img')) {
-            $_pr_img = _jlh_feed_placeholder_img((int)$_pr_row['jr_id'], 96, 96);
+            $_pr_img = _jlh_feed_placeholder_img((int)$_pr_row['jr_id'], 100, 100);
         } else {
             $_pr_img = '';
         }
+        $_pr_sal = '';
+        if (!empty($_pr_jd['job_salary_type']) && !empty($_pr_jd['job_salary_amt'])) {
+            $_pr_sal = htmlspecialchars($_pr_jd['job_salary_type'] . ' ' . number_format((int)$_pr_jd['job_salary_amt']) . '원');
+        } elseif (!empty($_pr_jd['job_salary_type'])) {
+            $_pr_sal = htmlspecialchars($_pr_jd['job_salary_type']);
+        }
+        $_pr_loc = function_exists('_jlh_region_name') ? _jlh_region_name($_pr_jd['job_work_region_1'] ?? '') : '';
+        if ($_pr_loc && !empty($_pr_jd['job_work_region_detail_1']) && function_exists('_jlh_region_detail_name')) {
+            $_pr_loc .= ' ' . _jlh_region_detail_name($_pr_jd['job_work_region_detail_1']);
+        }
 ?>
-    <a href="<?php echo htmlspecialchars($_pr_link); ?>" class="panel-recommend-item">
-      <div class="panel-recommend-thumb"><?php if ($_pr_img) { ?><img src="<?php echo htmlspecialchars($_pr_img); ?>" alt="" loading="lazy"><?php } else { echo htmlspecialchars(mb_substr($_pr_name, 0, 2, 'UTF-8')); } ?></div>
-      <div class="panel-recommend-info">
-        <div class="panel-recommend-name"><?php echo htmlspecialchars(mb_substr($_pr_name, 0, 14, 'UTF-8')); ?></div>
-        <div class="panel-recommend-meta"><?php echo htmlspecialchars(mb_substr($_pr_title, 0, 24, 'UTF-8')); ?></div>
-      </div>
-    </a>
+      <a href="<?php echo htmlspecialchars($_pr_link); ?>" class="recommend-item">
+        <div class="recommend-thumb">
+          <img src="<?php echo htmlspecialchars($_pr_img); ?>" alt="" loading="lazy">
+        </div>
+        <div class="recommend-info">
+          <div class="rec-name"><?php echo htmlspecialchars(mb_substr($_pr_name, 0, 16, 'UTF-8')); ?></div>
+          <div class="rec-salary"><?php echo $_pr_sal ?: htmlspecialchars(mb_substr($_pr_title, 0, 20, 'UTF-8')); ?></div>
+          <div class="rec-loc"><?php echo htmlspecialchars(mb_substr($_pr_loc ?: $_pr_title, 0, 18, 'UTF-8')); ?> ›</div>
+        </div>
+      </a>
 <?php }
 } else { ?>
-    <p class="panel-notice-empty">등록된 추천 구인이 없습니다.</p>
+      <p class="panel-empty">등록된 추천 구인이 없습니다.</p>
 <?php } ?>
+    </div>
   </div>
 
-  <div class="panel-section">
-    <h4>새로운 알림</h4>
+  <div class="panel-card">
+    <div class="panel-card-head">🔔 새로운 알림</div>
 <?php if ($is_member) { ?>
-    <p style="font-size:12px;color:#555;">
-      읽지 않은 쪽지
-      <?php if ($_pr_memo_badge > 0) { ?><strong style="color:var(--pink-main);"><?php echo $_pr_memo_badge; ?></strong>건<?php } else { ?>없음<?php } ?>
+    <p class="panel-empty" style="color:#555;">
+      읽지 않은 쪽지 <?php echo $_pr_memo_badge > 0 ? '<strong style="color:var(--pink);">' . $_pr_memo_badge . '건</strong>' : '없음'; ?>
     </p>
-    <a href="<?php echo $_pr_base; ?>/memo_full.php" class="panel-chat-btn" style="margin-top:8px;text-align:center;text-decoration:none;">쪽지함 열기</a>
+    <a class="btn-panel-login" href="<?php echo $_pr_base; ?>/memo_full.php">쪽지함 열기</a>
 <?php } else { ?>
-    <p class="panel-notice-empty">로그인 후 확인해보세요.</p>
+    <p class="panel-empty">로그인 후 확인해보세요.</p>
+    <a class="btn-panel-login" href="<?php echo G5_BBS_URL; ?>/login.php">로그인하기</a>
 <?php } ?>
   </div>
 
-  <div class="panel-section">
-    <h4>새로운 1:1 채팅</h4>
+  <div class="panel-card">
+    <div class="panel-card-head">💬 새로운 1:1 채팅</div>
 <?php if ($is_member) { ?>
-    <button type="button" class="panel-chat-btn" onclick="if(typeof toggleEveChat==='function')toggleEveChat();else{var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';window.open(u,'eveChatPopup','width=420,height=720');}">채팅 열기</button>
+    <p class="panel-empty">채팅을 시작해보세요.</p>
+    <button type="button" class="btn-panel-login" onclick="if(typeof toggleEveChat==='function')toggleEveChat();">채팅 열기</button>
 <?php } else { ?>
-    <p class="panel-notice-empty">로그인 후 확인해보세요.</p>
+    <p class="panel-empty">로그인 후 확인해보세요.</p>
+    <a class="btn-panel-login" href="<?php echo G5_BBS_URL; ?>/login.php">로그인하기</a>
 <?php } ?>
   </div>
+
 </aside>

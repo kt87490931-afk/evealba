@@ -1,58 +1,8 @@
 /**
- * 이브알바 UI 리뉴얼 JS — 뷰 전환, 스토리 슬라이더
+ * 이브알바 UI 리뉴얼 JS — 시안 (evealba_main.html)
  */
 (function () {
   'use strict';
-
-  function initViewToggle() {
-    var container = document.getElementById('recruitContainer');
-    if (!container) return;
-
-    var buttons = document.querySelectorAll('.view-toggle .view-btn');
-    if (!buttons.length) return;
-
-    function applyView(view) {
-      container.className = 'recruit-container view-' + view;
-      buttons.forEach(function (btn) {
-        btn.classList.toggle('active', btn.getAttribute('data-view') === view);
-      });
-      try {
-        localStorage.setItem('evealba_preferredView', view);
-      } catch (e) {}
-    }
-
-    buttons.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        applyView(btn.getAttribute('data-view') || 'feed');
-      });
-    });
-
-    var saved = 'feed';
-    try {
-      saved = localStorage.getItem('evealba_preferredView') || 'feed';
-    } catch (e) {}
-    applyView(saved);
-  }
-
-  function initStorySlider() {
-    var slider = document.querySelector('.story-slider');
-    if (!slider) return;
-
-    var prev = document.querySelector('.story-prev');
-    var next = document.querySelector('.story-next');
-    var step = 200;
-
-    if (prev) {
-      prev.addEventListener('click', function () {
-        slider.scrollBy({ left: -step, behavior: 'smooth' });
-      });
-    }
-    if (next) {
-      next.addEventListener('click', function () {
-        slider.scrollBy({ left: step, behavior: 'smooth' });
-      });
-    }
-  }
 
   function initRenewalBodyClass() {
     if (document.querySelector('.panel-right')) {
@@ -60,15 +10,110 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      initRenewalBodyClass();
-      initViewToggle();
-      initStorySlider();
+  function initViewTabs() {
+    var viewTabs = document.querySelectorAll('.view-tab');
+    var feedContainer = document.getElementById('feedContainer');
+    if (!viewTabs.length || !feedContainer) return;
+
+    function applyView(view) {
+      viewTabs.forEach(function (t) {
+        t.classList.toggle('active', t.getAttribute('data-view') === view);
+      });
+
+      feedContainer.className = 'feed-container view-' + view;
+
+      var cards = feedContainer.querySelectorAll('.recruit-card');
+      if (view === 'list') {
+        feedContainer.style.display = 'block';
+        feedContainer.style.gridTemplateColumns = '';
+        feedContainer.style.gap = '';
+        feedContainer.style.background = '';
+      } else if (view === 'feed') {
+        feedContainer.style.display = 'block';
+        feedContainer.style.gridTemplateColumns = '';
+        feedContainer.style.gap = '';
+        feedContainer.style.background = '';
+      } else if (view === 'grid') {
+        feedContainer.style.display = 'grid';
+        feedContainer.style.gridTemplateColumns = 'repeat(2,1fr)';
+        feedContainer.style.gap = '1px';
+        feedContainer.style.background = 'var(--border)';
+      }
+
+      cards.forEach(function (card) {
+        var thumb = card.querySelector('.card-thumb');
+        if (view === 'list') {
+          card.style.cssText = '';
+          if (thumb) thumb.style.cssText = '';
+        } else if (view === 'feed') {
+          card.style.cssText = 'border-bottom:8px solid #F5F5F5;';
+          if (thumb) {
+            thumb.style.width = '100%';
+            thumb.style.height = '240px';
+          }
+        } else if (view === 'grid') {
+          card.style.cssText = 'background:#fff;';
+          if (thumb) {
+            thumb.style.width = '100%';
+            thumb.style.height = '140px';
+          }
+        }
+      });
+
+      try {
+        localStorage.setItem('eveView', view);
+      } catch (e) {}
+    }
+
+    viewTabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        applyView(tab.getAttribute('data-view') || 'list');
+      });
     });
-  } else {
+
+    var saved = 'list';
+    try {
+      saved = localStorage.getItem('eveView') || 'list';
+    } catch (e) {}
+    applyView(saved);
+  }
+
+  function initStoryDrag() {
+    var storyRow = document.getElementById('storyRow');
+    if (!storyRow) return;
+
+    var isDown = false;
+    var startX = 0;
+    var scrollLeft = 0;
+
+    storyRow.addEventListener('mousedown', function (e) {
+      isDown = true;
+      startX = e.pageX - storyRow.offsetLeft;
+      scrollLeft = storyRow.scrollLeft;
+    });
+    storyRow.addEventListener('mouseleave', function () {
+      isDown = false;
+    });
+    storyRow.addEventListener('mouseup', function () {
+      isDown = false;
+    });
+    storyRow.addEventListener('mousemove', function (e) {
+      if (!isDown) return;
+      e.preventDefault();
+      var x = e.pageX - storyRow.offsetLeft;
+      storyRow.scrollLeft = scrollLeft - (x - startX) * 1.5;
+    });
+  }
+
+  function boot() {
     initRenewalBodyClass();
-    initViewToggle();
-    initStorySlider();
+    initViewTabs();
+    initStoryDrag();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
   }
 })();

@@ -66,7 +66,6 @@ if ($_jrec_chk && sql_num_rows($_jrec_chk) > 0) {
 <?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && empty($_atf)) { ?>
 <?php include G5_THEME_PATH.'/inc/story_slider.php'; ?>
 <?php include G5_THEME_PATH.'/inc/recruit_feed.php'; ?>
-<?php if (G5_IS_MOBILE) { include G5_THEME_PATH.'/inc/panel_mobile_below.php'; } ?>
 <script src="<?php echo G5_THEME_URL; ?>/js/lazy_anim.js?v=<?php echo G5_CSS_VER; ?>"></script>
 <?php return; } ?>
     <!-- 검색 필터 박스 -->
