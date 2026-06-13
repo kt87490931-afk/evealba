@@ -66,9 +66,18 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
         $_pr_link = function_exists('_jlh_clean_url') ? _jlh_clean_url($_pr_row) : $_pr_base . '/jobs_view.php?jr_id=' . (int)$_pr_row['jr_id'];
         $_pr_name = $_pr_row['jr_nickname'] ?: ($_pr_row['jr_company'] ?: '업소');
         $_pr_title = $_pr_row['jr_title'] ?: '';
+        $_pr_jd = is_string($_pr_row['jr_data']) ? json_decode($_pr_row['jr_data'], true) : (array)$_pr_row['jr_data'];
+        $_pr_thumb = isset($_pr_jd['thumb_file']) ? trim($_pr_jd['thumb_file']) : '';
+        if ($_pr_thumb && defined('G5_DATA_URL')) {
+            $_pr_img = G5_DATA_URL . '/jobs/' . $_pr_thumb;
+        } elseif (function_exists('_jlh_feed_placeholder_img')) {
+            $_pr_img = _jlh_feed_placeholder_img((int)$_pr_row['jr_id'], 96, 96);
+        } else {
+            $_pr_img = '';
+        }
 ?>
     <a href="<?php echo htmlspecialchars($_pr_link); ?>" class="panel-recommend-item">
-      <div class="panel-recommend-thumb"><?php echo htmlspecialchars(mb_substr($_pr_name, 0, 4, 'UTF-8')); ?></div>
+      <div class="panel-recommend-thumb"><?php if ($_pr_img) { ?><img src="<?php echo htmlspecialchars($_pr_img); ?>" alt="" loading="lazy"><?php } else { echo htmlspecialchars(mb_substr($_pr_name, 0, 2, 'UTF-8')); } ?></div>
       <div class="panel-recommend-info">
         <div class="panel-recommend-name"><?php echo htmlspecialchars(mb_substr($_pr_name, 0, 14, 'UTF-8')); ?></div>
         <div class="panel-recommend-meta"><?php echo htmlspecialchars(mb_substr($_pr_title, 0, 24, 'UTF-8')); ?></div>

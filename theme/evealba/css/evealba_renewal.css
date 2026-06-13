@@ -40,6 +40,25 @@ body.eve-renewal-active .section-wrap,
 body.eve-renewal-active .community-resume-row,
 body.eve-renewal-active .urgency-recommend-row { display: none !important; }
 body.eve-renewal-home .breadcrumb-bar { display: none !important; }
+body.eve-renewal-active:not(.eve-renewal-mobile) #mobileSlideMenu { display: none !important; }
+
+/* evealba.css .page-layout 그리드 충돌 제거 */
+body.eve-renewal-active .page-layout.page-layout-renewal {
+  display: block !important;
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  grid-template-columns: unset !important;
+  gap: 0 !important;
+}
+body.eve-renewal-active footer.renewal-site-footer {
+  background: transparent !important;
+  margin-top: 0 !important;
+  padding: 16px !important;
+  color: var(--gray-400) !important;
+  border: none !important;
+}
 
 /* 모바일 헤더 */
 body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
@@ -63,29 +82,68 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
 .renewal-mobile-logo em { color: var(--pink-accent); font-style: normal; }
 .renewal-mobile-search { font-size: 22px; color: #111; text-decoration: none; }
 
-/* ===== 3컬럼 레이아웃 (Readdy: 260 + 630 + 320) ===== */
+/* ===== 인스타형 고정 3컬럼 (Readdy) ===== */
 .page-layout-renewal {
-  max-width: var(--layout-max);
-  margin: 0 auto;
+  position: relative;
   min-height: 100vh;
-  display: flex;
-  align-items: flex-start;
-  gap: 0;
-  padding: 0;
 }
 
 .sidebar-left-renewal {
-  width: var(--sidebar-w);
-  flex-shrink: 0;
-  position: sticky;
+  position: fixed;
+  left: 0;
   top: 0;
+  width: var(--sidebar-w);
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 24px 16px 20px;
+  padding: 24px 12px 20px;
   border-right: 1px solid var(--gray-200);
   background: #fff;
   overflow-y: auto;
+  z-index: 50;
+}
+
+.renewal-center-wrap {
+  margin-left: var(--sidebar-w);
+  margin-right: var(--panel-w);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.renewal-main-area {
+  width: 100%;
+  max-width: var(--feed-max);
+  min-width: 0;
+  padding: 28px 20px 48px;
+}
+
+.panel-right {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: var(--panel-w);
+  height: 100vh;
+  overflow-y: auto;
+  padding: 28px 20px 40px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 50;
+}
+
+/* 넓은 화면 — 3컬럼 묶음을 화면 중앙에 */
+@media (min-width: 1280px) {
+  .sidebar-left-renewal {
+    left: calc((100vw - var(--layout-max)) / 2);
+  }
+  .renewal-center-wrap {
+    margin-left: calc(var(--sidebar-w) + max(0px, (100vw - var(--layout-max)) / 2));
+    margin-right: calc(var(--panel-w) + max(0px, (100vw - var(--layout-max)) / 2));
+  }
+  .panel-right {
+    right: calc((100vw - var(--layout-max)) / 2);
+  }
 }
 
 .sidebar-brand {
@@ -102,9 +160,9 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
 .sidebar-nav-renewal {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  margin-top: 8px;
+  gap: 2px;
+  margin-top: 4px;
+  margin-bottom: 24px;
 }
 .sidebar-nav-renewal .nav-item {
   display: flex !important;
@@ -142,7 +200,7 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
 }
 
 .sidebar-login-renewal {
-  padding: 16px 8px;
+  padding: 8px;
   margin-top: auto;
 }
 .sidebar-login-renewal .btn-login {
@@ -186,37 +244,16 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
 .sidebar-footer-renewal span { margin: 0 4px; }
 .sidebar-copyright { margin: 8px 0 0; font-size: 11px; }
 
-/* 중앙 메인 */
-.renewal-main-area {
-  flex: 1;
-  min-width: 0;
-  padding: 24px 20px 40px;
-  display: flex;
-  justify-content: center;
-}
+/* 중앙 메인 — .renewal-main-area 규칙은 위 고정 레이아웃에 포함 */
 .renewal-feed-zone {
   width: 100%;
-  max-width: var(--feed-max);
-}
-
-/* 우측 패널 */
-.panel-right {
-  width: var(--panel-w);
-  flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  padding: 24px 16px 40px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 .panel-section {
   background: #fff;
-  border: 1px solid var(--gray-100);
+  border: 1px solid var(--gray-200);
   border-radius: 12px;
   padding: 16px;
+  box-shadow: none;
 }
 .panel-section h4 {
   font-size: 14px;
@@ -264,7 +301,12 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
   font-weight: 700;
   overflow: hidden;
 }
-.panel-recommend-name { font-size: 13px; font-weight: 700; color: var(--gray-900); }
+.panel-recommend-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .panel-recommend-meta { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
 .panel-notice-empty { font-size: 12px; color: var(--gray-400); margin: 0; }
 .panel-notice-text { font-size: 12px; color: var(--gray-600); margin: 0 0 8px; }
@@ -343,26 +385,25 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
   text-overflow: ellipsis;
 }
 
-/* 피드 필터바 */
+/* 피드 필터바 — Readdy 2행 */
 .feed-filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 12px;
   margin-bottom: 20px;
+  align-items: center;
 }
 .feed-zone-title {
   font-size: 16px;
   font-weight: 800;
   color: var(--gray-900);
   margin: 0;
-  width: 100%;
+  grid-column: 1 / -1;
 }
 .feed-filter-form {
   display: flex;
   gap: 8px;
-  flex: 1;
-  min-width: 180px;
+  min-width: 0;
 }
 .feed-filter-form select {
   flex: 1;
@@ -406,13 +447,13 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
 }
 .feed-empty a { color: var(--pink-accent); font-weight: 700; }
 
-/* 피드 카드 */
+/* 피드 카드 — 인스타 포스트 */
 .recruit-container { width: 100%; }
 .renewal-feed-card {
   background: #fff;
-  border: 1px solid var(--gray-100);
+  border: 1px solid var(--gray-200);
   border-radius: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   overflow: hidden;
 }
 .renewal-feed-link { text-decoration: none; color: inherit; display: block; }
@@ -453,10 +494,8 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
 .renewal-card-thumb {
   width: 100%;
   aspect-ratio: 4 / 5;
-  max-height: 480px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  max-height: 520px;
+  display: block;
   overflow: hidden;
   background: var(--gray-100);
 }
@@ -464,23 +503,16 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.renewal-thumb-text {
-  color: #fff;
-  font-size: 18px;
-  font-weight: 800;
-  text-align: center;
-  padding: 24px;
-  text-shadow: 0 1px 4px rgba(0,0,0,.25);
+  display: block;
 }
 
-.renewal-card-body { padding: 12px 14px 4px; }
+.renewal-card-body { padding: 12px 14px 6px; }
 .renewal-card-title {
   font-size: 15px;
   font-weight: 800;
   color: var(--gray-900);
-  line-height: 1.4;
-  margin: 0 0 6px;
+  line-height: 1.45;
+  margin: 0 0 4px;
 }
 .renewal-card-meta-line {
   font-size: 13px;
@@ -492,19 +524,22 @@ body.eve-renewal-mobile .renewal-header-mobile { display: flex; }
 .renewal-card-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 8px 14px 14px;
-  font-size: 14px;
-  color: var(--gray-900);
+  gap: 14px;
+  padding: 4px 14px 12px;
 }
-.renewal-stat {
+.renewal-stat-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 14px;
   font-weight: 600;
-  font-size: 13px;
+  color: var(--gray-900);
+  cursor: default;
 }
-.renewal-stat i { font-size: 18px; color: var(--gray-900); }
+.renewal-stat-btn i { font-size: 22px; line-height: 1; }
 
 /* 리스트/그리드 뷰 */
 .recruit-container.view-list .renewal-feed-card {
@@ -620,10 +655,13 @@ body.eve-renewal-active.eve-renewal-mobile .mobile-tabbar {
 
 /* 반응형 */
 @media (max-width: 1023px) {
-  .page-layout-renewal { flex-direction: column; max-width: 100%; }
   .sidebar-left-renewal,
-  .panel-right { display: none; }
-  .renewal-main-area { padding: 16px 16px 24px; }
+  .panel-right { display: none !important; }
+  .renewal-center-wrap {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .renewal-main-area { padding: 16px 16px 24px; max-width: 100%; }
 }
 @media (max-width: 768px) {
   .recruit-container.view-grid { grid-template-columns: 1fr; }

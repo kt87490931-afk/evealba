@@ -557,13 +557,17 @@ function render_job_list_mobile($row) {
     echo '</a>';
 }
 
+function _jlh_feed_placeholder_img($jr_id, $w = 630, $h = 788) {
+    $seed = (int)$jr_id;
+    return 'https://picsum.photos/seed/evealba' . $seed . '/' . (int)$w . '/' . (int)$h;
+}
+
 /**
- * 리뉴얼 피드형 카드 (render_job_card 데이터 파싱 재사용)
+ * 리뉴얼 피드형 카드 (Readdy/인스타)
  */
 function render_job_card_feed($row) {
     $f = _jlh_extract_fields($row);
     $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
-    $grad = _jlh_get_gradient($f['grad_key']);
     $nick = $f['nickname'];
     $jr_good = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
     $jr_comment = max(0, (int)($row['jr_comment'] ?? 0));
@@ -603,15 +607,17 @@ function render_job_card_feed($row) {
     $card_title = $f['title'] ?: htmlspecialchars(mb_substr($jr_data['thumb_title'] ?? strip_tags($nick), 0, 60, 'UTF-8'));
 
     $thumb_file = isset($jr_data['thumb_file']) ? trim($jr_data['thumb_file']) : '';
-    $avatar_html = '';
     if ($thumb_file && defined('G5_DATA_URL')) {
         $thumb_url = G5_DATA_URL . '/jobs/' . $thumb_file;
-        $avatar_html = '<img src="' . htmlspecialchars($thumb_url) . '" alt="" class="renewal-avatar-img">';
-        $thumb_inner = '<img src="' . htmlspecialchars($thumb_url) . '" alt="" class="renewal-thumb-img">';
     } else {
-        $avatar_html = htmlspecialchars(mb_substr(strip_tags($nick), 0, 1, 'UTF-8'));
-        $thumb_inner = '<span class="renewal-thumb-text">' . htmlspecialchars(mb_substr($jr_data['thumb_title'] ?? strip_tags($nick), 0, 24, 'UTF-8')) . '</span>';
+        $thumb_url = _jlh_feed_placeholder_img($f['jr_id']);
     }
+    $avatar_html = '<img src="' . htmlspecialchars($thumb_url) . '" alt="" class="renewal-avatar-img" loading="lazy">';
+    $thumb_inner = '<img src="' . htmlspecialchars($thumb_url) . '" alt="" class="renewal-thumb-img" loading="lazy">';
+
+    $meta_line = htmlspecialchars($sal_txt);
+    if ($region_txt) $meta_line .= '·' . htmlspecialchars($region_txt);
+    if ($detail_txt) $meta_line .= '·' . $detail_txt;
 
     echo '<article class="renewal-feed-card">';
     echo '<a href="' . $f['link'] . '" class="renewal-feed-link">';
@@ -619,20 +625,17 @@ function render_job_card_feed($row) {
     echo '<div class="renewal-profile-avatar">' . $avatar_html . '</div>';
     echo '<div class="renewal-profile-text"><strong>' . $nick . '</strong><span class="renewal-post-meta">· ' . htmlspecialchars($meta_date) . '</span></div>';
     echo '</header>';
-    echo '<div class="renewal-card-thumb" style="background:' . $grad . '">';
+    echo '<div class="renewal-card-thumb">';
     echo $thumb_inner;
     echo '</div>';
     echo '<div class="renewal-card-body">';
     echo '<h3 class="renewal-card-title">' . $card_title . '</h3>';
-    echo '<p class="renewal-card-meta-line">';
-    echo htmlspecialchars($sal_txt);
-    if ($region_txt) echo ' · ' . htmlspecialchars($region_txt);
-    if ($detail_txt) echo ' · ' . $detail_txt;
-    echo '</p></div>';
+    echo '<p class="renewal-card-meta-line">' . $meta_line . '</p>';
+    echo '</div>';
     echo '</a>';
     echo '<footer class="renewal-card-actions">';
-    echo '<span class="renewal-stat"><i class="ri-heart-line"></i> ' . number_format($jr_good) . '</span>';
-    echo '<span class="renewal-stat"><i class="ri-chat-3-line"></i> ' . number_format($jr_comment) . '</span>';
+    echo '<button type="button" class="renewal-stat-btn" tabindex="-1" aria-hidden="true"><i class="ri-heart-line"></i><span>' . number_format($jr_good) . '</span></button>';
+    echo '<button type="button" class="renewal-stat-btn" tabindex="-1" aria-hidden="true"><i class="ri-chat-3-line"></i><span>' . number_format($jr_comment) . '</span></button>';
     echo '</footer>';
     echo '</article>';
 }

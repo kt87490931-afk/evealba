@@ -16,6 +16,7 @@ if(G5_COMMUNITY_USE === false) {
 ?>
 
   </div><!-- /main-area -->
+<?php if ($_ev_renewal_tail) { ?></div><!-- /renewal-center-wrap --><?php } ?>
 <?php if ($_ev_renewal_tail && !G5_IS_MOBILE) { include G5_THEME_PATH.'/inc/panel_right.php'; } ?>
 </div><!-- /page-layout -->
 
