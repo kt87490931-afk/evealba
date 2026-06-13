@@ -52,12 +52,12 @@ function _ev_story_ring_class($ad_labels) {
     $_st_thumb = _ev_story_thumb_url($_st);
     $_st_ring = _ev_story_ring_class($_st['jr_ad_labels'] ?? '');
 ?>
-    <a href="<?php echo htmlspecialchars($_st_link); ?>" class="story-item">
+    <div class="story-item" data-href="<?php echo htmlspecialchars($_st_link, ENT_QUOTES, 'UTF-8'); ?>" role="link" tabindex="0">
       <div class="story-ring <?php echo htmlspecialchars($_st_ring); ?>">
         <img src="<?php echo htmlspecialchars($_st_thumb); ?>" alt="" loading="lazy">
       </div>
       <span class="story-name"><?php echo htmlspecialchars(mb_substr($_st_nick, 0, 8, 'UTF-8')); ?></span>
-    </a>
+    </div>
 <?php } ?>
   </div>
 </div>

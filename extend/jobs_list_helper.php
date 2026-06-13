@@ -635,9 +635,9 @@ function render_job_card_feed($row) {
 
     $shop_name = strip_tags($f['nickname']);
     $is_hot = ($f['jump_count'] >= 3 || strpos($f['ad_labels'], '급구') !== false);
-    $is_new = ($days <= 3);
+    $is_new = ($days <= 3 && $days >= 0);
 
-    echo '<a href="' . $f['link'] . '" class="recruit-card">';
+    echo '<div class="recruit-card" data-href="' . htmlspecialchars($f['link'], ENT_QUOTES, 'UTF-8') . '" role="link" tabindex="0">';
     echo '<div class="card-thumb">';
     echo '<img src="' . htmlspecialchars($thumb_url) . '" alt="" loading="lazy">';
     if ($grade['badge_class']) {
@@ -662,10 +662,10 @@ function render_job_card_feed($row) {
     }
     echo '</div>';
     echo '<div class="card-actions">';
-    echo '<span>❤ ' . number_format($jr_good) . '</span>';
-    echo '<span>💬 ' . number_format($jr_comment) . '</span>';
-    echo '<span>↗ 공유</span>';
+    echo '<button type="button" tabindex="-1">❤ ' . number_format($jr_good) . '</button>';
+    echo '<button type="button" tabindex="-1">💬 ' . number_format($jr_comment) . '</button>';
+    echo '<button type="button" tabindex="-1">↗ 공유</button>';
     echo '</div>';
     echo '</div>';
-    echo '</a>';
+    echo '</div>';
 }

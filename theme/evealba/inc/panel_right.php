@@ -125,7 +125,7 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
     <div class="panel-card-head">💬 새로운 1:1 채팅</div>
 <?php if ($is_member) { ?>
     <p class="panel-empty">채팅을 시작해보세요.</p>
-    <button type="button" class="btn-panel-login" onclick="if(typeof toggleEveChat==='function')toggleEveChat();">채팅 열기</button>
+    <a class="btn-panel-login" href="#" onclick="if(typeof toggleEveChat==='function'){toggleEveChat();}return false;">채팅 열기</a>
 <?php } else { ?>
     <p class="panel-empty">로그인 후 확인해보세요.</p>
     <a class="btn-panel-login" href="<?php echo G5_BBS_URL; ?>/login.php">로그인하기</a>

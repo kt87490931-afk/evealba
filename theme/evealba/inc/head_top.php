@@ -150,6 +150,7 @@ if (!empty($_ticker_urgent)) {
 </div>
 <?php } /* end legacy top */ ?>
 
+<?php if (!$_ev_renewal_top) { ?>
 <!-- MOBILE SLIDE MENU -->
 <?php
 $_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/') : '';
@@ -229,3 +230,4 @@ $_jobs_base = $_base;
     </div>
   </div>
 </div>
+<?php } /* end mobile slide menu (legacy only) */ ?>

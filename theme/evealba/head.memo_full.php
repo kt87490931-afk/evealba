@@ -22,8 +22,10 @@ $nav_active = 'memo';
 <title><?php echo isset($g5_head_title) ? $g5_head_title : '쪽지함'; ?></title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/default.css?ver=<?php echo G5_CSS_VER ?>">
+<?php if (!(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI)) { ?>
 <?php $_ev_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/evealba.css')) ? filemtime(G5_THEME_PATH.'/css/evealba.css') : G5_CSS_VER; ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/evealba.css?ver=<?php echo $_ev_css_ver ?>">
+<?php } ?>
 <?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH.'/css/evealba_renewal.css')) { ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/evealba_renewal.css?ver=<?php echo filemtime(G5_THEME_PATH.'/css/evealba_renewal.css'); ?>">
 <?php } ?>

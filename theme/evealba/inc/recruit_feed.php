@@ -11,18 +11,11 @@ if (!function_exists('get_jobs_feed_list')) {
 $_feed_merged = function_exists('get_jobs_feed_list') ? get_jobs_feed_list(0, 50) : array();
 $_feed_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL, '/') : '';
 
-$_jr_table = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'jobs_register';
 $_stat_today_jobs = 3427;
 $_stat_resumes = 12841;
 $_stat_shops = 8920;
 $_stat_visitors = 24153;
 $_stat_matches = 1203;
-if (sql_num_rows(sql_query("SHOW TABLES LIKE '{$_jr_table}'", false))) {
-    $_st_r = sql_fetch("SELECT COUNT(*) AS cnt FROM {$_jr_table} WHERE DATE(jr_datetime) = CURDATE() AND jr_status = 'ongoing'");
-    if ($_st_r && (int)$_st_r['cnt'] > 0) $_stat_today_jobs = (int)$_st_r['cnt'];
-    $_st_all = sql_fetch("SELECT COUNT(*) AS cnt FROM {$_jr_table} WHERE jr_status = 'ongoing'");
-    if ($_st_all && (int)$_st_all['cnt'] > 0) $_stat_shops = (int)$_st_all['cnt'];
-}
 ?>
 <div class="view-tabs" role="tablist">
   <button type="button" class="view-tab active" data-view="list" role="tab">≡ 리스트</button>
@@ -44,7 +37,7 @@ if (sql_num_rows(sql_query("SHOW TABLES LIKE '{$_jr_table}'", false))) {
     <div class="stat-val"><?php echo number_format($_stat_shops); ?></div>
   </div>
   <div class="stat-item">
-    <div class="stat-label">오늘 접속자</div>
+    <div class="stat-label">오늘 업구자</div>
     <div class="stat-val"><?php echo number_format($_stat_visitors); ?></div>
   </div>
   <div class="stat-item">

@@ -114,13 +114,14 @@ if (!empty($_ev_seo['sp_schema_organization'])) {
 $shop_css = '';
 if (defined('_SHOP_')) $shop_css = '_shop';
 echo '<link rel="stylesheet" href="'.run_replace('head_css_url', G5_THEME_CSS_URL.'/'.(G5_IS_MOBILE?'mobile':'default').$shop_css.'.css?ver='.G5_CSS_VER, G5_THEME_URL).'">'.PHP_EOL;
-$_evealba_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/evealba.css')) ? filemtime(G5_THEME_PATH.'/css/evealba.css') : G5_CSS_VER;
-echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba.css?ver='.$_evealba_css_ver.'">'.PHP_EOL;
-if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH.'/css/evealba_renewal.css')) {
+$_ev_renewal_ui_on = defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI;
+if (!$_ev_renewal_ui_on) {
+    $_evealba_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/evealba.css')) ? filemtime(G5_THEME_PATH.'/css/evealba.css') : G5_CSS_VER;
+    echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba.css?ver='.$_evealba_css_ver.'">'.PHP_EOL;
+}
+if ($_ev_renewal_ui_on && is_file(G5_THEME_PATH.'/css/evealba_renewal.css')) {
     $_renewal_css_ver = filemtime(G5_THEME_PATH.'/css/evealba_renewal.css');
     echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba_renewal.css?ver='.$_renewal_css_ver.'">'.PHP_EOL;
-    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css">'.PHP_EOL;
-    echo '<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">'.PHP_EOL;
 }
 ?>
 <!--[if lte IE 8]>

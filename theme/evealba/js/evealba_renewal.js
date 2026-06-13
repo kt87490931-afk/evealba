@@ -1,5 +1,5 @@
 /**
- * 이브알바 UI 리뉴얼 JS — 시안 (evealba_main.html)
+ * 이브알바 UI 리뉴얼 JS — 시안 (evealba_main.html) 1:1
  */
 (function () {
   'use strict';
@@ -8,6 +8,30 @@
     if (document.querySelector('.panel-right')) {
       document.body.classList.add('eve-panel-right-on');
     }
+  }
+
+  function initCardLinks() {
+    document.querySelectorAll('.recruit-card[data-href]').forEach(function (card) {
+      card.addEventListener('click', function (e) {
+        if (e.target.closest('button')) return;
+        var href = card.getAttribute('data-href');
+        if (href) window.location.href = href;
+      });
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          var href = card.getAttribute('data-href');
+          if (href) window.location.href = href;
+        }
+      });
+    });
+
+    document.querySelectorAll('.story-item[data-href]').forEach(function (item) {
+      item.addEventListener('click', function () {
+        var href = item.getAttribute('data-href');
+        if (href) window.location.href = href;
+      });
+    });
   }
 
   function initViewTabs() {
@@ -103,10 +127,25 @@
       var x = e.pageX - storyRow.offsetLeft;
       storyRow.scrollLeft = scrollLeft - (x - startX) * 1.5;
     });
+
+    storyRow.addEventListener('touchstart', function (e) {
+      isDown = true;
+      startX = e.touches[0].pageX - storyRow.offsetLeft;
+      scrollLeft = storyRow.scrollLeft;
+    }, { passive: true });
+    storyRow.addEventListener('touchend', function () {
+      isDown = false;
+    });
+    storyRow.addEventListener('touchmove', function (e) {
+      if (!isDown) return;
+      var x = e.touches[0].pageX - storyRow.offsetLeft;
+      storyRow.scrollLeft = scrollLeft - (x - startX) * 1.5;
+    }, { passive: true });
   }
 
   function boot() {
     initRenewalBodyClass();
+    initCardLinks();
     initViewTabs();
     initStoryDrag();
   }

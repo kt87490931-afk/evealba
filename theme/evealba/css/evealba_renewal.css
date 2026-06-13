@@ -1,16 +1,42 @@
-﻿/* 이브알바 메인 시안 (evealba_main.html) — renewal 전용 */
-body.eve-renewal-active .top-bar,
-body.eve-renewal-active header:not(.renewal-header-mobile),
-body.eve-renewal-active nav:not(.sidebar-nav):not(.mobile-tabbar),
-body.eve-renewal-active .ticker-wrap,
-body.eve-renewal-active .hero-section,
-body.eve-renewal-active .quick-stats,
-body.eve-renewal-active .notice-bar,
-body.eve-renewal-active .mobile-quick-menu,
-body.eve-renewal-active .mobile-recommend,
-body.eve-renewal-active .page-layout:not(.page-layout-renewal) { display: none !important; }
-body.eve-renewal-active.eve-panel-right-on .float-recommend { display: none !important; }
-body.eve-renewal-active #hd_login_msg { display: none !important; }
+﻿/* 이브알바 메인 시안 (evealba_main.html) — renewal 전용, evealba.css 미로드 */
+body.eve-renewal-active,
+body.eve-renewal-active * ,
+body.eve-renewal-active *::before,
+body.eve-renewal-active *::after {
+  box-sizing: border-box;
+}
+body.eve-renewal-active #hd_pop,
+body.eve-renewal-active #hd_login_msg,
+body.eve-renewal-active #mobileSlideMenu,
+body.eve-renewal-active .float-recommend,
+body.eve-renewal-active .float-cta-wrap,
+body.eve-renewal-active .float-banners,
+body.eve-renewal-active #eveChatFrame {
+  display: none !important;
+}
+body.eve-renewal-active .top-notice { flex-wrap: wrap; gap: 4px; }
+@media (max-width: 640px) {
+  body.eve-renewal-active .top-notice { font-size: 11px; padding: 6px 12px; }
+  body.eve-renewal-active .top-notice a { margin-left: 10px; }
+}
+body.eve-renewal-active .btn-login-full { display: block; width: 100%; text-align: center; border: none; }
+body.eve-renewal-active a.btn-login-full { line-height: 1.2; padding: 11px; }
+body.eve-renewal-active a.recommend-item { display: flex; text-decoration: none; color: inherit; }
+body.eve-renewal-active a.tab-btn { text-decoration: none; color: #aaa; position: relative; }
+body.eve-renewal-active a.tab-btn.active { color: var(--pink); }
+body.eve-renewal-active .story-item[role="link"] { cursor: pointer; }
+body.eve-renewal-active .recruit-card[role="link"] { cursor: pointer; }
+body.eve-renewal-active .recruit-card .card-title { margin: 0 0 6px; font-weight: 700; line-height: 1.4; color: var(--dark); }
+body.eve-renewal-active .view-list .recruit-card .card-title { font-size: 15px; }
+body.eve-renewal-active .view-grid .recruit-card .card-title { font-size: 13px; margin-bottom: 4px; }
+body.eve-renewal-active .btn-panel-login { border: none; width: calc(100% - 28px); cursor: pointer; font-family: var(--font); }
+/* 서브페이지(등록/수다방 등) 최소 타이포 */
+body.eve-renewal-active .feed-main input,
+body.eve-renewal-active .feed-main select,
+body.eve-renewal-active .feed-main textarea,
+body.eve-renewal-active .feed-main table { font-family: var(--font); font-size: 14px; }
+body.eve-renewal-active .feed-main table { width: 100%; border-collapse: collapse; }
+body.eve-renewal-active .feed-main a { color: var(--pink); }
 
 /* ═══════════════════════════════════════════
    CSS 변수 / 리셋
@@ -41,9 +67,9 @@ body.eve-renewal-active #hd_login_msg { display: none !important; }
   --font: 'Noto Sans KR', -apple-system, sans-serif;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 html { scroll-behavior: smooth; }
-body {
+body.eve-renewal-active {
   font-family: var(--font);
   background: #FAF5F8;
   color: var(--dark);
@@ -491,9 +517,15 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 .view-grid .card-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
 .view-grid .card-meta { flex-wrap: wrap; }
 
-/* ── 기본 숨김 ── */
-.view-feed, .view-grid { display: none; }
-.view-list { display: block; }
+/* ── 피드 컨테이너 뷰 모드 ── */
+.feed-container.view-list { display: block; }
+.feed-container.view-feed { display: block; }
+.feed-container.view-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
 
 /* ═══════════════════════════════════════════
    우측 패널
@@ -692,58 +724,8 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
   .sidebar { display: none; }
   .mobile-tabbar { display: grid; }
   .feed-main { border-right: none; }
-  body { padding-bottom: 58px; }
+  body.eve-renewal-active { padding-bottom: 58px; }
   .stats-bar { grid-template-columns: repeat(3, 1fr); }
   .stats-bar .stat-item:nth-child(4),
   .stats-bar .stat-item:nth-child(5) { display: none; }
 }
-
-/* ── Gnuboard 레거시 충돌 보정 ── */
-body.eve-renewal-active {
-  background: #FAF5F8;
-  font-family: var(--font);
-}
-body.eve-renewal-active .sidebar .sidebar-nav .nav-item {
-  display: flex !important;
-  flex: none !important;
-  min-width: auto !important;
-  padding: 13px 20px !important;
-  color: #555 !important;
-  background: transparent !important;
-  border-radius: 0 24px 24px 0 !important;
-}
-body.eve-renewal-active .sidebar .sidebar-nav .nav-item::after { display: none !important; }
-body.eve-renewal-active .sidebar .sidebar-nav .nav-item:hover,
-body.eve-renewal-active .sidebar .sidebar-nav .nav-item.active {
-  background: var(--pink-pale) !important;
-  color: var(--pink) !important;
-}
-body.eve-renewal-active .recruit-card { text-decoration: none; color: inherit; }
-body.eve-renewal-active .view-list .recruit-card { display: flex; }
-body.eve-renewal-active .card-actions span {
-  font-size: 12px;
-  color: var(--gray);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-body.eve-renewal-active a.recommend-item {
-  display: flex;
-  text-decoration: none;
-  color: inherit;
-}
-body.eve-renewal-active a.story-item {
-  text-decoration: none;
-  color: inherit;
-  flex-shrink: 0;
-}
-body.eve-renewal-active a.tab-btn {
-  text-decoration: none;
-  color: #aaa;
-  position: relative;
-}
-body.eve-renewal-active a.tab-btn.active { color: var(--pink); }
-body.eve-renewal-active:not(.eve-renewal-mobile) #mobileSlideMenu { display: none !important; }
-body.eve-renewal-active.eve-renewal-mobile { padding-bottom: 58px; }
-body.eve-renewal-active .footer .footer-inner { max-width: none; padding: 0; }
-
