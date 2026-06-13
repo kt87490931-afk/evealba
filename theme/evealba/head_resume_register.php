@@ -83,13 +83,4 @@ $mypage_url = G5_BBS_URL.'/member_confirm.php?url='.urlencode(G5_BBS_URL.'/regis
 </div>
 
 <!-- PAGE LAYOUT -->
-<div class="page-layout resume-register-page">
-
-  <!-- 좌측 사이드바 (이력서 등록용) -->
-  <aside class="left-sidebar">
-    <?php include G5_THEME_PATH.'/inc/sidebar_resume_register.php'; ?>
-  </aside>
-
-  <!-- 메인 영역 -->
-  <div class="main-area">
-    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+<?php $ev_page_layout_class = 'resume-register-page'; $ev_sidebar_legacy_inc = G5_THEME_PATH.'/inc/sidebar_resume_register.php'; include G5_THEME_PATH.'/inc/page_layout_open.php'; ?>

@@ -3,7 +3,8 @@ if (!defined('_GNUBOARD_')) exit;
 
 /* 채용정보/인재정보 등 반응형 레이아웃 페이지: 메인과 동일한 tail 사용 (추천업소 플로팅배너 포함) */
 $_ev_use_pc_tail = defined('_JOBS_') || defined('_JOBS_REGION_') || defined('_JOBS_VIEW_') || defined('_JOBS_REGISTER_') || defined('_JOBS_ONGOING_') || defined('_JOBS_ENDED_') || defined('_JOBS_JUMP_SHOP_') || defined('_TALENT_') || defined('_TALENT_VIEW_');
-if (G5_IS_MOBILE && !$_ev_use_pc_tail) {
+$_ev_renewal_tail = defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI;
+if (G5_IS_MOBILE && !$_ev_use_pc_tail && !$_ev_renewal_tail) {
     include_once(G5_THEME_MOBILE_PATH.'/tail.php');
     return;
 }
@@ -15,6 +16,7 @@ if(G5_COMMUNITY_USE === false) {
 ?>
 
   </div><!-- /main-area -->
+<?php if ($_ev_renewal_tail && !G5_IS_MOBILE) { include G5_THEME_PATH.'/inc/panel_right.php'; } ?>
 </div><!-- /page-layout -->
 
 <!-- FOOTER -->
@@ -68,7 +70,9 @@ if(G5_COMMUNITY_USE === false) {
 </script>
 
 <!-- FLOATING RECOMMEND + CTA (썸네일상점은 jobs_thumb_shop_main에서 출력) -->
-<?php if (!defined('_THUMB_SHOP_FLOATS_DONE_')) { include_once(G5_THEME_PATH . '/inc/float_banners.php'); } ?>
+<?php if (!defined('_THUMB_SHOP_FLOATS_DONE_') && !(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && !G5_IS_MOBILE)) { include_once(G5_THEME_PATH . '/inc/float_banners.php'); } ?>
+
+<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { include G5_THEME_PATH.'/inc/mobile_tabbar.php'; } ?>
 
 <script>
 document.querySelectorAll('.tab-btn').forEach(function(btn) {

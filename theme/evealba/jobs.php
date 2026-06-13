@@ -5,6 +5,7 @@
  */
 if (!defined('_JOBS_')) define('_JOBS_', true);
 if (!defined('_GNUBOARD_')) exit;
+if (!defined('EVEALBA_RENEWAL_UI')) define('EVEALBA_RENEWAL_UI', true);
 
 $g5['title'] = '채용정보 - '.$config['cf_title'];
 include_once(G5_THEME_PATH.'/head_jobs.php');

@@ -116,6 +116,10 @@ if (defined('_SHOP_')) $shop_css = '_shop';
 echo '<link rel="stylesheet" href="'.run_replace('head_css_url', G5_THEME_CSS_URL.'/'.(G5_IS_MOBILE?'mobile':'default').$shop_css.'.css?ver='.G5_CSS_VER, G5_THEME_URL).'">'.PHP_EOL;
 $_evealba_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/evealba.css')) ? filemtime(G5_THEME_PATH.'/css/evealba.css') : G5_CSS_VER;
 echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba.css?ver='.$_evealba_css_ver.'">'.PHP_EOL;
+if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH.'/css/evealba_renewal.css')) {
+    $_renewal_css_ver = filemtime(G5_THEME_PATH.'/css/evealba_renewal.css');
+    echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba_renewal.css?ver='.$_renewal_css_ver.'">'.PHP_EOL;
+}
 ?>
 <!--[if lte IE 8]>
 <script src="<?php echo G5_JS_URL ?>/html5.js"></script>
@@ -159,6 +163,10 @@ if(G5_IS_MOBILE) {
 }
 if(!defined('G5_IS_ADMIN'))
     echo $config['cf_add_script'];
+if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH.'/js/evealba_renewal.js')) {
+    $_renewal_js_ver = filemtime(G5_THEME_PATH.'/js/evealba_renewal.js');
+    echo '<script src="'.G5_THEME_URL.'/js/evealba_renewal.js?ver='.$_renewal_js_ver.'" defer></script>'.PHP_EOL;
+}
 ?>
 </head>
 <body<?php echo isset($g5['body_script']) ? $g5['body_script'] : ''; ?>>

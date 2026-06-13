@@ -1,7 +1,7 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
 
-if (G5_IS_MOBILE) {
+if (G5_IS_MOBILE && !(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI)) {
     include_once(G5_THEME_MOBILE_PATH.'/head.php');
     return;
 }
@@ -25,8 +25,4 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
 <?php include G5_THEME_PATH.'/inc/head_top.php'; ?>
 
 <!-- PAGE LAYOUT -->
-<div class="page-layout">
-  <?php include G5_THEME_PATH.'/inc/sidebar_main.php'; ?>
-  <!-- 메인 영역 (index.php에서 채움) -->
-  <div class="main-area">
-    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+<?php $ev_sidebar_legacy_inc = G5_THEME_PATH.'/inc/sidebar_main.php'; include G5_THEME_PATH.'/inc/page_layout_open.php'; ?>

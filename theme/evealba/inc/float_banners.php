@@ -34,7 +34,7 @@ if (!function_exists('render_premium_card') && is_file(G5_PATH . '/extend/jobs_l
 }
 ?>
 <?php /* 모바일에서는 추천업소를 메인 영역 썸네일로 표시하므로 플로팅배너 미출력 */ ?>
-<?php if (!G5_IS_MOBILE) : ?>
+<?php if (!G5_IS_MOBILE && !(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && defined('_PANEL_RIGHT_DONE_'))) : ?>
 <!-- FLOATING RECOMMEND (PC 전용) -->
 <div class="float-recommend" id="floatRecommend">
   <button type="button" class="fr-tab" id="frTab" onclick="toggleFloatRecommend()">

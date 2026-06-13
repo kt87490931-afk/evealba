@@ -58,13 +58,4 @@ include G5_THEME_PATH.'/inc/head_top.php';
 </div>
 
 <!-- PAGE LAYOUT -->
-<div class="page-layout">
-
-  <!-- 좌측 사이드바 (인재정보용) -->
-  <aside class="left-sidebar">
-    <?php include G5_THEME_PATH.'/inc/sidebar_talent.php'; ?>
-  </aside>
-
-  <!-- 메인 영역 -->
-  <div class="main-area">
-    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+<?php $ev_sidebar_legacy_inc = G5_THEME_PATH.'/inc/sidebar_talent.php'; include G5_THEME_PATH.'/inc/page_layout_open.php'; ?>

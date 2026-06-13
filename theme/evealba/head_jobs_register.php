@@ -59,13 +59,4 @@ include G5_THEME_PATH.'/inc/head_top.php';
 
 <link rel="stylesheet" href="<?php echo G5_THEME_URL; ?>/css/resume_register.css?v=<?php echo @filemtime(G5_THEME_PATH.'/css/resume_register.css'); ?>">
 <!-- PAGE LAYOUT -->
-<div class="page-layout jobs-register-page">
-
-  <!-- 좌측 사이드바 (채용공고 등록용) -->
-  <aside class="left-sidebar">
-    <?php include G5_THEME_PATH.'/inc/sidebar_jobs_register.php'; ?>
-  </aside>
-
-  <!-- 메인 영역 -->
-  <div class="main-area">
-    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+<?php $ev_page_layout_class = 'jobs-register-page'; $ev_sidebar_legacy_inc = G5_THEME_PATH.'/inc/sidebar_jobs_register.php'; include G5_THEME_PATH.'/inc/page_layout_open.php'; ?>

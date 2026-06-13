@@ -72,6 +72,12 @@ if ($_sb_check && sql_num_rows($_sb_check) > 0) {
   </div>
 </div>
 
+<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { ?>
+<?php include G5_THEME_PATH.'/inc/story_slider.php'; ?>
+<?php include G5_THEME_PATH.'/inc/recruit_feed.php'; ?>
+<div class="renewal-hide-legacy">
+<?php } ?>
+
 <!-- 빠른 메뉴 (모바일) -->
 <?php
 $_qm_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL, '/') : '';
@@ -383,6 +389,7 @@ $_tab_keys = array_keys($_tab_data);
     </div>
   </div>
 </div>
+<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { ?></div><!-- /.renewal-hide-legacy --><?php } ?>
 <script>
 function switchCommTab(btn, idx) {
   btn.closest('.tab-section').querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });

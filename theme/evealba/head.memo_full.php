@@ -11,7 +11,7 @@ $memo_current_tab = isset($memo_current_tab) ? $memo_current_tab : 'recv';
 $member_name = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
 $member_id = isset($member['mb_id']) ? $member['mb_id'] : '';
 $role_icon = (isset($member_type) && strpos($member_type, '기업') !== false) ? '🏢' : '👤';
-$nav_active = '';
+$nav_active = 'memo';
 ?>
 <!doctype html>
 <html lang="ko">
@@ -24,6 +24,9 @@ $nav_active = '';
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/default.css?ver=<?php echo G5_CSS_VER ?>">
 <?php $_ev_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/evealba.css')) ? filemtime(G5_THEME_PATH.'/css/evealba.css') : G5_CSS_VER; ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/evealba.css?ver=<?php echo $_ev_css_ver ?>">
+<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH.'/css/evealba_renewal.css')) { ?>
+<link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/evealba_renewal.css?ver=<?php echo filemtime(G5_THEME_PATH.'/css/evealba_renewal.css'); ?>">
+<?php } ?>
 <?php $_memo_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/memo_popup.css')) ? filemtime(G5_THEME_PATH.'/css/memo_popup.css') : G5_CSS_VER; ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_popup.css?ver=<?php echo $_memo_css_ver ?>">
 <link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_full.css?ver=<?php echo G5_CSS_VER ?>">
@@ -31,9 +34,12 @@ $nav_active = '';
 <script src="<?php echo G5_JS_URL ?>/jquery-1.12.4.min.js"></script>
 <script src="<?php echo G5_JS_URL ?>/jquery-migrate-1.4.1.min.js"></script>
 <script src="<?php echo G5_JS_URL ?>/common.js?ver=<?php echo G5_JS_VER ?>"></script>
-<script>var g5_url="<?php echo G5_URL ?>"; var g5_bbs_url="<?php echo G5_BBS_URL ?>";</script>
+<script>var g5_url="<?php echo G5_URL ?>"; var g5_bbs_url="<?php echo G5_BBS_URL ?>"; var g5_is_mobile="<?php echo G5_IS_MOBILE ? '1' : ''; ?>";</script>
+<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH.'/js/evealba_renewal.js')) { ?>
+<script src="<?php echo G5_THEME_URL ?>/js/evealba_renewal.js?ver=<?php echo filemtime(G5_THEME_PATH.'/js/evealba_renewal.js'); ?>" defer></script>
+<?php } ?>
 </head>
-<body class="memo-page-body">
+<body class="memo-page-body<?php echo (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) ? ' eve-renewal-active' : ''; ?>">
 <?php include G5_THEME_PATH.'/inc/head_top.php'; ?>
 
 <!-- BREADCRUMB: 급구(ticker) 바로 아래, 채용정보 페이지와 동일 위치 -->
@@ -46,10 +52,7 @@ $nav_active = '';
 </div>
 
 <!-- PAGE LAYOUT: 메인과 동일 (좌측 사이드바 + 메인) -->
-<div class="page-layout">
-  <?php include G5_THEME_PATH.'/inc/sidebar_main.php'; ?>
-  <div class="main-area">
-    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+<?php $ev_sidebar_legacy_inc = G5_THEME_PATH.'/inc/sidebar_main.php'; include G5_THEME_PATH.'/inc/page_layout_open.php'; ?>
     <div class="memo-page-layout">
 
       <!-- memo-top-widget: 4칸 각 225px (회원유형 | 받은쪽지 | 미확인 | 보낸쪽지) -->

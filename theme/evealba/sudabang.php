@@ -4,6 +4,7 @@
  */
 if (!defined('_SUDABANG_')) define('_SUDABANG_', true);
 if (!defined('_GNUBOARD_')) exit;
+if (!defined('EVEALBA_RENEWAL_UI')) define('EVEALBA_RENEWAL_UI', true);
 
 $g5['title'] = '이브수다방 - '.$config['cf_title'];
 include_once(G5_THEME_PATH.'/head_sudabang.php');

@@ -4,7 +4,10 @@ if (!defined('_GNUBOARD_')) exit;
   </div><!-- /main-area.memo-main -->
     </div><!-- /memo-page-layout -->
   </div><!-- /main-area -->
+<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && !G5_IS_MOBILE) { include G5_THEME_PATH.'/inc/panel_right.php'; } ?>
 </div><!-- /page-layout -->
+
+<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { include G5_THEME_PATH.'/inc/mobile_tabbar.php'; } ?>
 
 <footer>
   <div class="footer-inner">
@@ -53,7 +56,13 @@ if (!defined('_GNUBOARD_')) exit;
 </script>
 
 <!-- FLOATING RECOMMEND + CTA (메인/채용정보 등과 동일 - float_banners.php) -->
-<?php include_once(G5_THEME_PATH . '/inc/float_banners.php'); ?>
+<?php if (!(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && !G5_IS_MOBILE)) { include_once(G5_THEME_PATH . '/inc/float_banners.php'); } else { ?>
+<div class="floating-cta">
+  <a href="#" class="float-btn float-kakao" title="카카오톡 문의"><img src="<?php echo G5_THEME_URL; ?>/img/logo_kakao.svg" alt="카카오톡" style="width:26px;height:26px;"></a>
+  <button type="button" class="float-btn float-chat" title="실시간 채팅" onclick="if(typeof toggleEveChat==='function')toggleEveChat();return false;">💬</button>
+  <a href="#" class="float-btn float-top" title="맨 위로" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">▲</a>
+</div>
+<?php } ?>
 
 </body>
 </html>

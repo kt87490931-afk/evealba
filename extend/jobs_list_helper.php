@@ -489,3 +489,58 @@ function render_job_list_mobile($row) {
     echo '</span></div>';
     echo '</a>';
 }
+
+/**
+ * 리뉴얼 피드형 카드 (render_job_card 데이터 파싱 재사용)
+ */
+function render_job_card_feed($row) {
+    $f = _jlh_extract_fields($row);
+    $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
+    $grad = _jlh_get_gradient($f['grad_key']);
+    $thumb_title = htmlspecialchars(mb_substr($jr_data['thumb_title'] ?? $row['jr_nickname'] ?? $row['jr_company'] ?? '', 0, 20, 'UTF-8'));
+    $nick = $f['nickname'];
+    $jr_good = isset($row['jr_good']) ? (int)$row['jr_good'] : 0;
+
+    $grade_label = '';
+    $grade_class = '';
+    $labels = $row['jr_ad_labels'] ?? '';
+    if (strpos($labels, '우대') !== false) { $grade_label = '우대'; $grade_class = 'grade-udae'; }
+    elseif (strpos($labels, '프리미엄') !== false) { $grade_label = '프리미엄'; $grade_class = 'grade-premium'; }
+    elseif (strpos($labels, '스페셜') !== false) { $grade_label = '스페셜'; $grade_class = 'grade-special'; }
+    elseif (strpos($labels, '급구') !== false) { $grade_label = '급구'; $grade_class = 'grade-urgent'; }
+    elseif (strpos($labels, '추천') !== false) { $grade_label = '추천'; $grade_class = 'grade-recommend'; }
+
+    $days = 0;
+    if (!empty($row['jr_datetime'])) {
+        $days = max(0, (int)floor((time() - strtotime($row['jr_datetime'])) / 86400));
+    }
+    $meta_date = $days > 0 ? $days . '일째 광고중' : substr($row['jr_datetime'] ?? '', 5, 11);
+
+    $region_txt = trim($f['region'] . ($f['subregion'] ? ' ' . $f['subregion'] : ''));
+    $sal_txt = $f['wage_badge_label'] . ' ' . $f['wage_display'];
+
+    echo '<article class="renewal-feed-card">';
+    echo '<a href="' . $f['link'] . '">';
+    echo '<div class="renewal-card-profile">';
+    echo '<div class="renewal-profile-avatar">' . htmlspecialchars(mb_substr(strip_tags($nick), 0, 1, 'UTF-8')) . '</div>';
+    echo '<div><div class="renewal-shop-name">' . $nick . '</div>';
+    echo '<div class="renewal-post-meta">' . htmlspecialchars($meta_date) . '</div></div>';
+    echo '</div>';
+    echo '<div class="renewal-card-thumb" style="background:' . $grad . '">';
+    if ($grade_label) echo '<span class="renewal-grade-badge ' . $grade_class . '">' . $grade_label . '</span>';
+    echo '<span>' . $thumb_title . '</span>';
+    echo '</div>';
+    echo '<div class="renewal-card-body">';
+    echo '<h3 class="renewal-card-title">' . $f['title_short'] . '</h3>';
+    echo '<div class="renewal-card-meta">';
+    echo '<span>' . htmlspecialchars($sal_txt) . '</span>';
+    if ($region_txt) echo '<span>' . htmlspecialchars($region_txt) . '</span>';
+    if ($f['job1']) echo '<span>' . $f['job1'] . '</span>';
+    echo '</div></div>';
+    echo '</a>';
+    echo '<div class="renewal-card-actions">';
+    echo '<span>❤ ' . number_format($jr_good) . '</span>';
+    echo '<span>👁 조회</span>';
+    echo '</div>';
+    echo '</article>';
+}

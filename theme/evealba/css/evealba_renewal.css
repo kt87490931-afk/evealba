@@ -1,0 +1,517 @@
+/* 이브알바 UI 리뉴얼 — Readdy/인스타 스타일 (evealba.css 병행) */
+:root {
+  --pink-main: #FF1B6B;
+  --pink-light: #FF6FA8;
+  --pink-pale: #FFF0F6;
+  --purple-main: #8B2FC9;
+  --grade-udae: #E65100;
+  --grade-premium: #FF1B6B;
+  --grade-special: #FF6B35;
+  --grade-urgent: #D32F2F;
+  --grade-recommend: #AD1457;
+  --renewal-border: #FFE0ED;
+  --sidebar-w: 220px;
+  --panel-w: 270px;
+}
+
+body.eve-renewal-active { background: var(--pink-pale); }
+body.eve-renewal-active.eve-renewal-mobile { padding-bottom: 70px; }
+
+/* renewal 시 상단 가로 nav 숨김 */
+body.eve-renewal-active nav.nav-scroll-wrap,
+body.eve-renewal-active nav .nav-scroll { display: none !important; }
+body.eve-renewal-active header .header-actions .kakao-btn { display: none; }
+
+/* 3컬럼 레이아웃 */
+.page-layout-renewal {
+  max-width: 1280px;
+  margin: 14px auto 0;
+  padding: 0 14px;
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--panel-w);
+  gap: 16px;
+  align-items: start;
+}
+
+.sidebar-left-renewal {
+  position: sticky;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-logo-renewal {
+  padding: 8px 12px 4px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+}
+.sidebar-logo-renewal a { color: #111; }
+.sidebar-logo-renewal em { color: var(--pink-main); font-style: italic; }
+
+.sidebar-nav-renewal { display: flex; flex-direction: column; gap: 2px; }
+.sidebar-nav-renewal .nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 20px;
+  color: #555;
+  font-size: 15px;
+  border-radius: 0 12px 12px 0;
+  transition: all 0.2s;
+}
+.sidebar-nav-renewal .nav-item:hover,
+.sidebar-nav-renewal .nav-item.active {
+  background: var(--pink-pale);
+  color: var(--pink-main);
+  font-weight: 700;
+}
+.sidebar-nav-renewal .nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 36px;
+  background: var(--pink-main);
+  border-radius: 0 4px 4px 0;
+}
+.sidebar-nav-renewal .nav-icon { font-size: 18px; width: 24px; text-align: center; }
+
+.sidebar-login-renewal {
+  padding: 12px 16px;
+  border-top: 1px solid var(--renewal-border);
+  margin-top: 4px;
+}
+.sidebar-login-renewal .btn-login {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  background: var(--pink-main);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.sidebar-login-renewal .btn-join {
+  display: block;
+  text-align: center;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #888;
+}
+.sidebar-user-renewal { font-size: 13px; color: #444; }
+.sidebar-user-renewal strong { color: var(--pink-main); }
+
+.sidebar-region-renewal .widget-title,
+.panel-section h4 {
+  font-size: 13px;
+  font-weight: 800;
+  color: #444;
+  margin-bottom: 8px;
+}
+.sidebar-region-renewal .region-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.sidebar-region-renewal .region-btn {
+  display: block;
+  text-align: center;
+  padding: 6px 4px;
+  font-size: 11px;
+  background: #fff;
+  border: 1px solid var(--renewal-border);
+  border-radius: 8px;
+  color: #555;
+}
+.sidebar-region-renewal .region-btn:hover {
+  border-color: var(--pink-main);
+  color: var(--pink-main);
+}
+
+/* 우측 패널 */
+.panel-right {
+  position: sticky;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.panel-section {
+  background: #fff;
+  border: 1px solid var(--renewal-border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.panel-section select,
+.panel-section input[type="text"] {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.panel-recommend-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+  text-decoration: none;
+  color: inherit;
+}
+.panel-recommend-item:last-child { border-bottom: none; }
+.panel-recommend-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--pink-main), var(--pink-light));
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  overflow: hidden;
+}
+.panel-notice-empty {
+  font-size: 12px;
+  color: #999;
+  padding: 8px 0;
+}
+.panel-chat-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: var(--pink-pale);
+  border: 1px solid var(--renewal-border);
+  border-radius: 10px;
+  color: var(--pink-main);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* 스토리 슬라이더 */
+.story-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 0 16px;
+  border-bottom: 1px solid var(--renewal-border);
+  margin-bottom: 12px;
+}
+.story-prev, .story-next {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--renewal-border);
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--pink-main);
+  font-size: 18px;
+  line-height: 1;
+}
+.story-slider {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  flex: 1;
+  padding: 4px 2px;
+}
+.story-slider::-webkit-scrollbar { display: none; }
+.story-item {
+  flex-shrink: 0;
+  width: 72px;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+.story-ring {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  padding: 3px;
+  margin: 0 auto;
+}
+.story-ring.grade-udae { background: linear-gradient(135deg, #E65100, #FF6B35); }
+.story-ring.grade-premium { background: linear-gradient(135deg, #FF1B6B, #FF6FA8); }
+.story-ring.grade-special { background: linear-gradient(135deg, #FF6B35, #FFAB00); }
+.story-ring.grade-default { background: linear-gradient(135deg, #ccc, #999); }
+.story-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  overflow: hidden;
+  background: var(--pink-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.story-ring-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.story-name {
+  display: block;
+  font-size: 11px;
+  color: #555;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 뷰 토글 */
+.feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.feed-header h2 {
+  font-size: 17px;
+  font-weight: 900;
+  color: #222;
+}
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid var(--renewal-border);
+  border-radius: 10px;
+  padding: 3px;
+}
+.view-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #888;
+  font-weight: 600;
+}
+.view-btn.active {
+  background: var(--pink-main);
+  color: #fff;
+}
+
+/* 피드 카드 */
+.recruit-container { width: 100%; }
+.recruit-container.view-feed .renewal-feed-card { margin-bottom: 20px; }
+.recruit-container.view-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.recruit-container.view-list .renewal-feed-card {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  padding: 12px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--renewal-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+.recruit-container.view-list .renewal-card-thumb { width: 100px; height: 100px; flex-shrink: 0; border-radius: 10px; }
+.recruit-container.view-list .renewal-card-body { flex: 1; min-width: 0; }
+
+.renewal-feed-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(255, 27, 107, 0.08);
+  border: 1px solid var(--renewal-border);
+}
+.renewal-feed-card a { text-decoration: none; color: inherit; display: block; }
+.renewal-card-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 8px;
+}
+.renewal-profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-main), var(--purple-main));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.renewal-shop-name { font-size: 13px; font-weight: 800; color: #222; }
+.renewal-post-meta { font-size: 11px; color: #999; }
+.renewal-card-thumb {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, var(--pink-main), var(--pink-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  text-align: center;
+  padding: 16px;
+  position: relative;
+}
+.recruit-container.view-feed .renewal-card-thumb { height: 260px; }
+.renewal-grade-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  color: #fff;
+  background: var(--pink-main);
+}
+.renewal-grade-badge.grade-udae { background: var(--grade-udae); }
+.renewal-grade-badge.grade-premium { background: var(--grade-premium); }
+.renewal-grade-badge.grade-special { background: var(--grade-special); }
+.renewal-grade-badge.grade-urgent { background: var(--grade-urgent); }
+.renewal-grade-badge.grade-recommend { background: var(--grade-recommend); }
+
+.renewal-card-body { padding: 10px 14px 14px; }
+.renewal-card-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #222;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.renewal-card-meta {
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.renewal-card-meta span::after { content: '·'; margin-left: 6px; color: #ccc; }
+.renewal-card-meta span:last-child::after { display: none; }
+.renewal-card-actions {
+  display: flex;
+  gap: 16px;
+  padding: 8px 14px 12px;
+  font-size: 13px;
+  color: #666;
+  border-top: 1px solid #fafafa;
+}
+
+/* 통계 카드 renewal */
+body.eve-renewal-active .quick-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+body.eve-renewal-active .stat-card {
+  background: #fff;
+  border: 1px solid var(--renewal-border);
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+/* legacy 섹션 숨김 (renewal 메인) */
+body.eve-renewal-active .renewal-hide-legacy { display: none !important; }
+
+/* 플로팅 추천 숨김 (panel_right 사용 시) */
+body.eve-renewal-active.eve-panel-right-on .float-recommend { display: none !important; }
+
+/* 모바일 하단 탭 */
+.mobile-tabbar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #fff;
+  border-top: 1px solid var(--renewal-border);
+  grid-template-columns: repeat(4, 1fr);
+  z-index: 9999;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+}
+.mobile-tabbar .tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 10px;
+  gap: 2px;
+  text-decoration: none;
+  position: relative;
+}
+.mobile-tabbar .tab-item.active { color: var(--pink-main); font-weight: 700; }
+.mobile-tabbar .tab-icon { font-size: 20px; line-height: 1; }
+.mobile-tabbar .badge-count {
+  position: absolute;
+  top: 6px;
+  right: calc(50% - 22px);
+  background: var(--pink-main);
+  color: #fff;
+  font-size: 9px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  font-weight: 700;
+}
+
+/* 반응형 */
+@media (max-width: 1023px) {
+  .page-layout-renewal {
+    grid-template-columns: 1fr;
+  }
+  .sidebar-left-renewal,
+  .panel-right { display: none; }
+  body.eve-renewal-active .quick-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  body.eve-renewal-active.eve-renewal-mobile .mobile-tabbar { display: grid; }
+  body.eve-renewal-active .mobile-quick-menu { display: none; }
+  .recruit-container.view-grid { grid-template-columns: 1fr; }
+  body.eve-renewal-active .quick-stats { grid-template-columns: repeat(2, 1fr); }
+  body.eve-renewal-active header .search-box { max-width: none; flex: 1; }
+}
+
+/* 상세·등록 페이지 renewal 톤 */
+body.eve-renewal-active .jobs-register-page .main-area,
+body.eve-renewal-active .resume-register-page .main-area {
+  background: transparent;
+}
+body.eve-renewal-active .breadcrumb-bar {
+  margin-bottom: 8px;
+}
+body.eve-renewal-active nav > .nav-scroll {
+  display: none !important;
+}
