@@ -5,6 +5,11 @@
  */
 if (!defined('_GNUBOARD_')) exit;
 $nav_active = isset($nav_active) ? $nav_active : '';
+
+$_ev_renewal_top = defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI;
+if ($_ev_renewal_top) {
+    include G5_THEME_PATH . '/inc/head_top_renewal.php';
+} else {
 ?>
 <!-- TOP BAR -->
 <div class="top-bar">
@@ -143,6 +148,7 @@ if (!empty($_ticker_urgent)) {
     </div>
   </div>
 </div>
+<?php } /* end legacy top */ ?>
 
 <!-- MOBILE SLIDE MENU -->
 <?php

@@ -11,6 +11,9 @@ if (!function_exists('get_jobs_by_type')) {
 $_story_udae = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 8) : array();
 $_story_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 7) : array();
 $_story_items = array_merge($_story_udae, $_story_premium);
+if (empty($_story_items) && function_exists('get_jobs_feed_list')) {
+    $_story_items = array_slice(get_jobs_feed_list(0, 20), 0, 15);
+}
 
 function _ev_story_grade_class($labels) {
     if (strpos($labels, '우대') !== false) return 'grade-udae';

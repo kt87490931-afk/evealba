@@ -17,5 +17,10 @@ $_ev_pl_extra = isset($ev_page_layout_class) ? trim($ev_page_layout_class) : '';
 <?php } elseif (!empty($ev_sidebar_legacy_inc) && is_file($ev_sidebar_legacy_inc)) { ?>
   <?php include $ev_sidebar_legacy_inc; ?>
 <?php } ?>
-  <div class="main-area">
-    <?php if (empty($ev_skip_ads_banner)) include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+  <div class="main-area renewal-main-area">
+<?php
+$_ev_skip_hero = (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && (defined('_INDEX_') || (isset($nav_active) && $nav_active === 'jobs')));
+if (empty($ev_skip_ads_banner) && !$_ev_skip_hero) {
+    include G5_THEME_PATH.'/inc/ads_main_banner.php';
+}
+?>

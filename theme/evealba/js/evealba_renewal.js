@@ -55,10 +55,6 @@
   }
 
   function initRenewalBodyClass() {
-    document.body.classList.add('eve-renewal-active');
-    if (window.g5_is_mobile === '1' || window.innerWidth <= 768) {
-      document.body.classList.add('eve-renewal-mobile');
-    }
     if (document.querySelector('.panel-right')) {
       document.body.classList.add('eve-panel-right-on');
     }

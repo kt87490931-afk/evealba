@@ -43,6 +43,11 @@ if ($_sb_check && sql_num_rows($_sb_check) > 0) {
     }
 }
 ?>
+<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { ?>
+<?php include G5_THEME_PATH.'/inc/story_slider.php'; ?>
+<?php include G5_THEME_PATH.'/inc/recruit_feed.php'; ?>
+<div class="renewal-hide-legacy">
+<?php } else { ?>
 <!-- 빠른 통계 (데스크톱) -->
 <div class="quick-stats">
   <div class="stat-card">
@@ -71,11 +76,6 @@ if ($_sb_check && sql_num_rows($_sb_check) > 0) {
     <div class="stat-value">1,203</div>
   </div>
 </div>
-
-<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { ?>
-<?php include G5_THEME_PATH.'/inc/story_slider.php'; ?>
-<?php include G5_THEME_PATH.'/inc/recruit_feed.php'; ?>
-<div class="renewal-hide-legacy">
 <?php } ?>
 
 <!-- 빠른 메뉴 (모바일) -->

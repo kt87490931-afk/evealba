@@ -169,7 +169,15 @@ if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH
 }
 ?>
 </head>
-<body<?php echo isset($g5['body_script']) ? $g5['body_script'] : ''; ?>>
+<?php
+$_ev_renewal_body_cls = '';
+if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) {
+    $_ev_renewal_body_cls .= ' eve-renewal-active';
+    if (defined('_INDEX_')) $_ev_renewal_body_cls .= ' eve-renewal-home';
+    if (G5_IS_MOBILE) $_ev_renewal_body_cls .= ' eve-renewal-mobile';
+}
+?>
+<body class="<?php echo trim($_ev_renewal_body_cls); ?>"<?php echo isset($g5['body_script']) ? $g5['body_script'] : ''; ?>>
 <?php
 if ($is_member) { // 회원이라면 로그인 중이라는 메세지를 출력해준다.
     $sr_admin_msg = '';

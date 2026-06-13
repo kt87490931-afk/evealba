@@ -97,6 +97,73 @@ function get_jobs_by_type($ad_type, $limit = 20, $region = '') {
 }
 
 /**
+ * 진행중 채용 전체 (피드 fallback)
+ */
+function get_all_ongoing_jobs($limit = 40) {
+    $limit = max(1, (int)$limit);
+    $sql = "SELECT * FROM g5_jobs_register
+        WHERE (jr_status = 'ongoing' OR jr_status = '' OR jr_status IS NULL)
+        AND (jr_end_date >= CURDATE() OR jr_end_date IS NULL OR jr_end_date = '0000-00-00' OR jr_end_date = '')
+        ORDER BY IFNULL(jr_jump_datetime, jr_datetime) DESC, jr_id DESC
+        LIMIT {$limit}";
+    $result = sql_query($sql, false);
+    $rows = array();
+    if ($result) {
+        while ($row = sql_fetch_array($result)) {
+            $rows[] = $row;
+        }
+    }
+    return $rows;
+}
+
+/**
+ * 피드용 채용 목록 — 등급 순 + 중복 제거 + fallback
+ */
+function get_jobs_feed_list($limit_per_type = 0, $fallback_limit = 40) {
+    $merged = array();
+    $seen = array();
+
+    /* 추천업소 — 피드 상단 우선 */
+    $sb_table = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'special_banner';
+    $jr_table = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'jobs_register';
+    $chk = sql_query("SHOW TABLES LIKE '{$sb_table}'", false);
+    if ($chk && sql_num_rows($chk) > 0) {
+        $res = sql_query("SELECT jr.* FROM {$sb_table} sb
+            INNER JOIN {$jr_table} jr ON sb.sb_jr_id = jr.jr_id
+            WHERE sb.sb_type = 'recommend' AND sb.sb_status = 'active'
+            ORDER BY sb.sb_position ASC LIMIT 15", false);
+        if ($res) {
+            while ($row = sql_fetch_array($res)) {
+                $id = (int)$row['jr_id'];
+                if (isset($seen[$id])) continue;
+                $seen[$id] = 1;
+                $merged[] = $row;
+            }
+        }
+    }
+
+    $types = array('우대', '프리미엄', '스페셜', '급구', '추천', '줄광고');
+    foreach ($types as $type) {
+        $rows = get_jobs_by_type($type, $limit_per_type);
+        foreach ($rows as $row) {
+            $id = (int)$row['jr_id'];
+            if (isset($seen[$id])) continue;
+            $seen[$id] = 1;
+            $merged[] = $row;
+        }
+    }
+    if (empty($merged)) {
+        foreach (get_all_ongoing_jobs($fallback_limit) as $row) {
+            $id = (int)$row['jr_id'];
+            if (isset($seen[$id])) continue;
+            $seen[$id] = 1;
+            $merged[] = $row;
+        }
+    }
+    return $merged;
+}
+
+/**
  * 우대 카드형 썸네일 렌더링 - 에디터 미리보기와 동일하게
  */
 function render_job_card($row) {
@@ -516,31 +583,39 @@ function render_job_card_feed($row) {
     }
     $meta_date = $days > 0 ? $days . '일째 광고중' : substr($row['jr_datetime'] ?? '', 5, 11);
 
-    $region_txt = trim($f['region'] . ($f['subregion'] ? ' ' . $f['subregion'] : ''));
-    $sal_txt = $f['wage_badge_label'] . ' ' . $f['wage_display'];
+    $region_txt = trim($f['region'] . ($f['subregion'] ? ' · ' . $f['subregion'] : ''));
+    $sal_txt = trim($f['wage_badge_label'] . ' ' . $f['wage_display']);
+    $thumb_file = isset($jr_data['thumb_file']) ? trim($jr_data['thumb_file']) : '';
+    $thumb_inner = '';
+    if ($thumb_file && defined('G5_DATA_URL')) {
+        $thumb_inner = '<img src="' . htmlspecialchars(G5_DATA_URL . '/jobs/' . $thumb_file) . '" alt="" class="renewal-thumb-img">';
+    } else {
+        $thumb_inner = '<span class="renewal-thumb-text">' . $thumb_title . '</span>';
+    }
+    $view_cnt = isset($row['jr_hit']) ? (int)$row['jr_hit'] : max($jr_good * 3, 0);
 
     echo '<article class="renewal-feed-card">';
-    echo '<a href="' . $f['link'] . '">';
-    echo '<div class="renewal-card-profile">';
+    echo '<a href="' . $f['link'] . '" class="renewal-feed-link">';
+    echo '<header class="renewal-card-profile">';
     echo '<div class="renewal-profile-avatar">' . htmlspecialchars(mb_substr(strip_tags($nick), 0, 1, 'UTF-8')) . '</div>';
-    echo '<div><div class="renewal-shop-name">' . $nick . '</div>';
-    echo '<div class="renewal-post-meta">' . htmlspecialchars($meta_date) . '</div></div>';
-    echo '</div>';
+    echo '<div class="renewal-profile-text"><strong>' . $nick . '</strong>';
+    echo '<span class="renewal-post-meta"> · ' . htmlspecialchars($meta_date) . '</span></div>';
+    echo '</header>';
     echo '<div class="renewal-card-thumb" style="background:' . $grad . '">';
     if ($grade_label) echo '<span class="renewal-grade-badge ' . $grade_class . '">' . $grade_label . '</span>';
-    echo '<span>' . $thumb_title . '</span>';
+    echo $thumb_inner;
     echo '</div>';
     echo '<div class="renewal-card-body">';
     echo '<h3 class="renewal-card-title">' . $f['title_short'] . '</h3>';
-    echo '<div class="renewal-card-meta">';
-    echo '<span>' . htmlspecialchars($sal_txt) . '</span>';
-    if ($region_txt) echo '<span>' . htmlspecialchars($region_txt) . '</span>';
-    if ($f['job1']) echo '<span>' . $f['job1'] . '</span>';
-    echo '</div></div>';
+    echo '<p class="renewal-card-meta-line">' . htmlspecialchars($sal_txt);
+    if ($region_txt) echo ' · ' . htmlspecialchars($region_txt);
+    if ($f['job1']) echo ' · ' . $f['job1'];
+    echo '</p></div>';
     echo '</a>';
-    echo '<div class="renewal-card-actions">';
-    echo '<span>❤ ' . number_format($jr_good) . '</span>';
-    echo '<span>👁 조회</span>';
-    echo '</div>';
+    echo '<footer class="renewal-card-actions">';
+    echo '<span class="renewal-stat">❤ ' . number_format($jr_good) . '</span>';
+    echo '<span class="renewal-stat">💬 ' . number_format(max(0, (int)($row['jr_comment'] ?? 0))) . '</span>';
+    echo '<span class="renewal-stat renewal-stat-views">' . number_format($view_cnt) . '</span>';
+    echo '</footer>';
     echo '</article>';
 }
