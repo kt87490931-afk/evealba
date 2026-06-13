@@ -586,13 +586,15 @@ function render_job_card_feed($row) {
     $detail_txt = trim($f['job1']);
 
     $sal_parts = array();
-    if ($f['wage_badge_label'] && $f['wage_badge_label'] !== '협의') {
-        $sal_parts[] = $f['wage_badge_label'];
-    }
     if (!empty($f['salary_amt']) && (int)$f['salary_amt'] > 0) {
+        if ($f['wage_badge_label'] && !in_array($f['wage_badge_label'], array('급여협의', '협의'), true)) {
+            $sal_parts[] = $f['wage_badge_label'];
+        }
         $sal_parts[] = number_format((int)$f['salary_amt']) . '원';
     } elseif ($f['wage_display'] && $f['wage_display'] !== '면접 후 협의') {
         $sal_parts[] = $f['wage_display'];
+    } elseif ($f['wage_badge_label'] && !in_array($f['wage_badge_label'], array('급여협의', '협의'), true)) {
+        $sal_parts[] = $f['wage_badge_label'];
     } else {
         $sal_parts[] = '협의';
     }
@@ -624,8 +626,8 @@ function render_job_card_feed($row) {
     echo '<h3 class="renewal-card-title">' . $card_title . '</h3>';
     echo '<p class="renewal-card-meta-line">';
     echo htmlspecialchars($sal_txt);
-    if ($region_txt) echo '·' . htmlspecialchars($region_txt);
-    if ($detail_txt) echo '·' . $detail_txt;
+    if ($region_txt) echo ' · ' . htmlspecialchars($region_txt);
+    if ($detail_txt) echo ' · ' . $detail_txt;
     echo '</p></div>';
     echo '</a>';
     echo '<footer class="renewal-card-actions">';
