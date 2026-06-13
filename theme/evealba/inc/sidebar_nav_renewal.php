@@ -14,7 +14,7 @@ if (!empty($is_member) && !empty($member['mb_id']) && function_exists('get_memo_
 }
 
 $_nav_items = array(
-    array('key' => 'jobs', 'icon' => '🏠', 'label' => '구인구직', 'href' => $_nav_base . '/jobs.php', 'match' => array('jobs', '')),
+    array('key' => 'jobs', 'icon' => '🏠', 'label' => '구인구직', 'href' => G5_URL, 'match' => array('jobs', '')),
     array('key' => 'community', 'icon' => '💬', 'label' => '커뮤니티', 'href' => $_nav_base . '/sudabang.php', 'match' => array('sudabang', 'used')),
     array('key' => 'notify', 'icon' => '🔔', 'label' => '알림 & 채팅', 'href' => $_nav_base . '/memo_full.php', 'match' => array('memo'), 'badge' => $_nav_memo_badge),
     array('key' => 'mypage', 'icon' => '👤', 'label' => '마이페이지', 'href' => $is_member

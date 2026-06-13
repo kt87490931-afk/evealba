@@ -20,7 +20,7 @@ include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 ?>
 
-<?php if(defined('_INDEX_')) { include G5_BBS_PATH.'/newwin.inc.php'; } ?>
+<?php if(defined('_INDEX_') && !(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI)) { include G5_BBS_PATH.'/newwin.inc.php'; } ?>
 
 <?php include G5_THEME_PATH.'/inc/head_top.php'; ?>
 

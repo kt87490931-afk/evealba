@@ -1,6 +1,6 @@
 <?php
 /**
- * 시안 스토리 슬라이더
+ * 시안 스토리 슬라이더 — 10개 고정
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -8,15 +8,25 @@ if (!function_exists('get_jobs_by_type')) {
     @include_once(G5_PATH . '/extend/jobs_list_helper.php');
 }
 
-$_story_udae = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 5) : array();
-$_story_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 5) : array();
-$_story_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 3) : array();
-$_story_urgent = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', 3) : array();
-$_story_recomm = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', 4) : array();
-$_story_items = array_merge($_story_udae, $_story_premium, $_story_special, $_story_urgent, $_story_recomm);
-if (empty($_story_items) && function_exists('get_jobs_feed_list')) {
-    $_story_items = array_slice(get_jobs_feed_list(0, 20), 0, 15);
+$_story_udae = function_exists('get_jobs_by_type') ? get_jobs_by_type('우대', 4) : array();
+$_story_premium = function_exists('get_jobs_by_type') ? get_jobs_by_type('프리미엄', 3) : array();
+$_story_special = function_exists('get_jobs_by_type') ? get_jobs_by_type('스페셜', 2) : array();
+$_story_urgent = function_exists('get_jobs_by_type') ? get_jobs_by_type('급구', 1) : array();
+$_story_recomm = function_exists('get_jobs_by_type') ? get_jobs_by_type('추천', 2) : array();
+$_story_vip = function_exists('get_jobs_by_type') ? get_jobs_by_type('VIP', 2) : array();
+$_story_items = array_merge($_story_vip, $_story_udae, $_story_premium, $_story_special, $_story_urgent, $_story_recomm);
+if (count($_story_items) < 10 && function_exists('get_jobs_feed_list')) {
+    $_story_fill = get_jobs_feed_list(0, 20);
+    foreach ($_story_fill as $_sf) {
+        if (count($_story_items) >= 10) break;
+        $_dup = false;
+        foreach ($_story_items as $_ex) {
+            if ((int)$_ex['jr_id'] === (int)$_sf['jr_id']) { $_dup = true; break; }
+        }
+        if (!$_dup) $_story_items[] = $_sf;
+    }
 }
+$_story_items = array_slice($_story_items, 0, 10);
 
 function _ev_story_thumb_url($row) {
     $jr_data = is_string($row['jr_data']) ? json_decode($row['jr_data'], true) : (array)$row['jr_data'];
@@ -35,15 +45,9 @@ function _ev_story_ring_class($ad_labels) {
         $g = _jlh_grade_info($ad_labels);
         return $g['ring_class'] ?: 'grade-recommend';
     }
-    if (strpos($ad_labels, '우대') !== false) return 'grade-top';
-    if (strpos($ad_labels, '프리미엄') !== false) return 'grade-premium';
-    if (strpos($ad_labels, '스페셜') !== false) return 'grade-special';
-    if (strpos($ad_labels, '급구') !== false) return 'grade-urgent';
-    if (strpos($ad_labels, '추천') !== false) return 'grade-recommend';
     return 'grade-recommend';
 }
 ?>
-<?php if (!empty($_story_items)) { ?>
 <div class="story-wrap">
   <div class="story-row" id="storyRow">
 <?php foreach ($_story_items as $_st) {
@@ -52,13 +56,12 @@ function _ev_story_ring_class($ad_labels) {
     $_st_thumb = _ev_story_thumb_url($_st);
     $_st_ring = _ev_story_ring_class($_st['jr_ad_labels'] ?? '');
 ?>
-    <div class="story-item" data-href="<?php echo htmlspecialchars($_st_link, ENT_QUOTES, 'UTF-8'); ?>" role="link" tabindex="0">
+    <div class="story-item" data-href="<?php echo htmlspecialchars($_st_link, ENT_QUOTES, 'UTF-8'); ?>">
       <div class="story-ring <?php echo htmlspecialchars($_st_ring); ?>">
-        <img src="<?php echo htmlspecialchars($_st_thumb); ?>" alt="" loading="lazy">
+        <img src="<?php echo htmlspecialchars($_st_thumb); ?>" alt="">
       </div>
       <span class="story-name"><?php echo htmlspecialchars(mb_substr($_st_nick, 0, 8, 'UTF-8')); ?></span>
     </div>
 <?php } ?>
   </div>
 </div>
-<?php } ?>

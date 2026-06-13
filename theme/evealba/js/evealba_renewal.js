@@ -17,18 +17,25 @@
         var href = card.getAttribute('data-href');
         if (href) window.location.href = href;
       });
-      card.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          var href = card.getAttribute('data-href');
-          if (href) window.location.href = href;
-        }
-      });
     });
 
     document.querySelectorAll('.story-item[data-href]').forEach(function (item) {
       item.addEventListener('click', function () {
         var href = item.getAttribute('data-href');
+        if (href) window.location.href = href;
+      });
+    });
+
+    document.querySelectorAll('.recommend-item[data-href]').forEach(function (item) {
+      item.addEventListener('click', function () {
+        var href = item.getAttribute('data-href');
+        if (href) window.location.href = href;
+      });
+    });
+
+    document.querySelectorAll('.tab-btn[data-href]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var href = btn.getAttribute('data-href');
         if (href) window.location.href = href;
       });
     });

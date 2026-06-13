@@ -583,6 +583,27 @@ function _jlh_grade_info($ad_labels) {
 }
 
 /**
+ * 시안 급여 표기 (시급 14만원 / 시급 12,000원)
+ */
+function _jlh_format_salary_mockup($sal_type, $sal_amt) {
+    $sal_type = trim((string)$sal_type);
+    $amt = (int)$sal_amt;
+    if ($amt > 0) {
+        $type = ($sal_type && !in_array($sal_type, array('급여협의', '협의'), true)) ? $sal_type : '';
+        if ($amt >= 10000 && $amt % 10000 === 0) {
+            $amt_str = ($amt / 10000) . '만원';
+        } else {
+            $amt_str = number_format($amt) . '원';
+        }
+        return trim($type . ' ' . $amt_str);
+    }
+    if ($sal_type && !in_array($sal_type, array('급여협의', '협의'), true)) {
+        return $sal_type;
+    }
+    return '협의';
+}
+
+/**
  * 리뉴얼 피드형 카드 — 시안 recruit-card
  */
 function render_job_card_feed($row) {
@@ -608,20 +629,7 @@ function render_job_card_feed($row) {
     $region_txt = implode(' ', $region_parts);
     $detail_txt = trim($f['job1']);
 
-    $sal_parts = array();
-    if (!empty($f['salary_amt']) && (int)$f['salary_amt'] > 0) {
-        if ($f['wage_badge_label'] && !in_array($f['wage_badge_label'], array('급여협의', '협의'), true)) {
-            $sal_parts[] = $f['wage_badge_label'];
-        }
-        $sal_parts[] = number_format((int)$f['salary_amt']) . '원';
-    } elseif ($f['wage_display'] && $f['wage_display'] !== '면접 후 협의') {
-        $sal_parts[] = $f['wage_display'];
-    } elseif ($f['wage_badge_label'] && !in_array($f['wage_badge_label'], array('급여협의', '협의'), true)) {
-        $sal_parts[] = $f['wage_badge_label'];
-    } else {
-        $sal_parts[] = '협의';
-    }
-    $sal_txt = implode(' ', $sal_parts);
+    $sal_txt = _jlh_format_salary_mockup($f['salary_type'], $f['salary_amt']);
 
     $card_title = $f['title'] ?: htmlspecialchars(mb_substr(strip_tags($f['nickname']), 0, 60, 'UTF-8'));
 
@@ -634,10 +642,10 @@ function render_job_card_feed($row) {
     }
 
     $shop_name = strip_tags($f['nickname']);
-    $is_hot = ($f['jump_count'] >= 3 || strpos($f['ad_labels'], '급구') !== false);
-    $is_new = ($days <= 3 && $days >= 0);
+    $is_hot = ($jr_good >= 10 || $f['jump_count'] >= 3 || strpos($f['ad_labels'], '급구') !== false);
+    $is_new = ($days <= 3 && $days > 0);
 
-    echo '<div class="recruit-card" data-href="' . htmlspecialchars($f['link'], ENT_QUOTES, 'UTF-8') . '" role="link" tabindex="0">';
+    echo '<div class="recruit-card" data-href="' . htmlspecialchars($f['link'], ENT_QUOTES, 'UTF-8') . '">';
     echo '<div class="card-thumb">';
     echo '<img src="' . htmlspecialchars($thumb_url) . '" alt="" loading="lazy">';
     if ($grade['badge_class']) {

@@ -44,13 +44,17 @@ if (!empty($_mq_urgent)) {
         $_mq_spans .= '<span class="urgent-tag">' . htmlspecialchars(mb_substr($_mq_region, 0, 6, 'UTF-8')) . '</span>'
             . $_mq_promo . '&nbsp;&nbsp;';
     }
+    if ($_mq_spans !== '') {
+        $_mq_spans = '<span class="urgent-tag">급구</span>' . $_mq_spans;
+    }
 } else {
     $_mq_dummy = array(
-        array('강남', '클럽마샤 일급 150만원 · 밀빵OK · 당일면접'),
-        array('홍대', '하이퍼블릭 이브 시급 15만원 · 초보환영'),
-        array('신사', '퍼블릭라운지 룸당 10만원 · 즉시출근'),
+        array('급구', '관련OK·밀빵OK·당일면접'),
+        array('홍대', '하이퍼블릭 이브 시급 15만원·초보환영'),
+        array('신사', '퍼블릭라운지 꼼당 10만원·즉시출근'),
         array('이태원', '이브VIP 하루 100만원 보장'),
-        array('압구정', '헤라클럽 시급 20만원 · 2시간 40만원'),
+        array('압구정', '헤라클럽 시급 20만원·2시간 40만원'),
+        array('강남', '클럽마샤 일급 150만원·밀빵OK·당일면접'),
     );
     foreach ($_mq_dummy as $_mq_d) {
         $_mq_spans .= '<span class="urgent-tag">' . htmlspecialchars($_mq_d[0]) . '</span>'

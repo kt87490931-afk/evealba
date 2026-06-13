@@ -20,8 +20,12 @@ $nav_active = 'memo';
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title><?php echo isset($g5_head_title) ? $g5_head_title : '쪽지함'; ?></title>
+<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { ?>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<?php } else { ?>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/default.css?ver=<?php echo G5_CSS_VER ?>">
+<?php } ?>
 <?php if (!(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI)) { ?>
 <?php $_ev_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/evealba.css')) ? filemtime(G5_THEME_PATH.'/css/evealba.css') : G5_CSS_VER; ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/evealba.css?ver=<?php echo $_ev_css_ver ?>">
@@ -32,7 +36,9 @@ $nav_active = 'memo';
 <?php $_memo_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/memo_popup.css')) ? filemtime(G5_THEME_PATH.'/css/memo_popup.css') : G5_CSS_VER; ?>
 <link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_popup.css?ver=<?php echo $_memo_css_ver ?>">
 <link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_full.css?ver=<?php echo G5_CSS_VER ?>">
+<?php if (!(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI)) { ?>
 <link rel="stylesheet" href="<?php echo G5_JS_URL ?>/font-awesome/css/font-awesome.min.css">
+<?php } ?>
 <script src="<?php echo G5_JS_URL ?>/jquery-1.12.4.min.js"></script>
 <script src="<?php echo G5_JS_URL ?>/jquery-migrate-1.4.1.min.js"></script>
 <script src="<?php echo G5_JS_URL ?>/common.js?ver=<?php echo G5_JS_VER ?>"></script>

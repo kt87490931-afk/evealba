@@ -91,7 +91,7 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
             $_pr_loc .= ' ' . _jlh_region_detail_name($_pr_jd['job_work_region_detail_1']);
         }
 ?>
-      <a href="<?php echo htmlspecialchars($_pr_link); ?>" class="recommend-item">
+      <div class="recommend-item" data-href="<?php echo htmlspecialchars($_pr_link, ENT_QUOTES, 'UTF-8'); ?>">
         <div class="recommend-thumb">
           <img src="<?php echo htmlspecialchars($_pr_img); ?>" alt="" loading="lazy">
         </div>
@@ -100,7 +100,7 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
           <div class="rec-salary"><?php echo $_pr_sal ?: htmlspecialchars(mb_substr($_pr_title, 0, 20, 'UTF-8')); ?></div>
           <div class="rec-loc"><?php echo htmlspecialchars(mb_substr($_pr_loc ?: $_pr_title, 0, 18, 'UTF-8')); ?> ›</div>
         </div>
-      </a>
+      </div>
 <?php }
 } else { ?>
       <p class="panel-empty">등록된 추천 구인이 없습니다.</p>
@@ -111,9 +111,7 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
   <div class="panel-card">
     <div class="panel-card-head">🔔 새로운 알림</div>
 <?php if ($is_member) { ?>
-    <p class="panel-empty" style="color:#555;">
-      읽지 않은 쪽지 <?php echo $_pr_memo_badge > 0 ? '<strong style="color:var(--pink);">' . $_pr_memo_badge . '건</strong>' : '없음'; ?>
-    </p>
+    <p class="panel-empty">새 알림을 확인해보세요.</p>
     <a class="btn-panel-login" href="<?php echo $_pr_base; ?>/memo_full.php">쪽지함 열기</a>
 <?php } else { ?>
     <p class="panel-empty">로그인 후 확인해보세요.</p>

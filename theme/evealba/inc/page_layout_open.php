@@ -9,7 +9,7 @@ $_ev_renewal_layout = defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI;
 $_ev_pl_extra = isset($ev_page_layout_class) ? trim($ev_page_layout_class) : '';
 ?>
 <?php if ($_ev_renewal_layout) { ?>
-<div class="app-wrap page-layout page-layout-renewal<?php echo $_ev_pl_extra ? ' ' . htmlspecialchars($_ev_pl_extra) : ''; ?>">
+<div class="app-wrap<?php echo $_ev_pl_extra ? ' ' . htmlspecialchars($_ev_pl_extra) : ''; ?>">
   <aside class="sidebar">
     <?php include G5_THEME_PATH . '/inc/sidebar_nav_renewal.php'; ?>
   </aside>

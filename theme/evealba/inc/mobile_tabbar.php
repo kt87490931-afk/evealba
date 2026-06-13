@@ -1,6 +1,6 @@
 <?php
 /**
- * 모바일 하단 탭바 (시안 4탭)
+ * 모바일 하단 탭바 (시안 4탭 — div.tab-btn)
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -26,12 +26,12 @@ $_tb_tabs = array(
 <?php foreach ($_tb_tabs as $_tb) {
     $_tb_on = ($_tb_active === '' && in_array('jobs', $_tb['match'], true)) || in_array($_tb_active, $_tb['match'], true);
 ?>
-  <a href="<?php echo htmlspecialchars($_tb['href']); ?>" class="tab-btn<?php echo $_tb_on ? ' active' : ''; ?>"<?php echo !empty($_tb['badge']) ? ' style="position:relative;"' : ''; ?>>
+  <div class="tab-btn<?php echo $_tb_on ? ' active' : ''; ?>" data-href="<?php echo htmlspecialchars($_tb['href']); ?>"<?php echo !empty($_tb['badge']) ? ' style="position:relative;"' : ''; ?>>
     <span class="tab-icon"><?php echo $_tb['icon']; ?></span>
 <?php if (!empty($_tb['badge'])) { ?>
     <span class="tab-badge"><?php echo (int)$_tb['badge']; ?></span>
 <?php } ?>
     <span><?php echo htmlspecialchars($_tb['label']); ?></span>
-  </a>
+  </div>
 <?php } ?>
 </nav>

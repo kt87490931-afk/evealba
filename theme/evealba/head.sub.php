@@ -109,13 +109,16 @@ if (!empty($_ev_seo['sp_schema_organization'])) {
 }
 ?>
 <title><?php echo $g5_head_title; ?></title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 <?php
-$shop_css = '';
-if (defined('_SHOP_')) $shop_css = '_shop';
-echo '<link rel="stylesheet" href="'.run_replace('head_css_url', G5_THEME_CSS_URL.'/'.(G5_IS_MOBILE?'mobile':'default').$shop_css.'.css?ver='.G5_CSS_VER, G5_THEME_URL).'">'.PHP_EOL;
 $_ev_renewal_ui_on = defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI;
-if (!$_ev_renewal_ui_on) {
+if ($_ev_renewal_ui_on) {
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com">'.PHP_EOL;
+    echo '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">'.PHP_EOL;
+} else {
+    echo '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">'.PHP_EOL;
+    $shop_css = '';
+    if (defined('_SHOP_')) $shop_css = '_shop';
+    echo '<link rel="stylesheet" href="'.run_replace('head_css_url', G5_THEME_CSS_URL.'/'.(G5_IS_MOBILE?'mobile':'default').$shop_css.'.css?ver='.G5_CSS_VER, G5_THEME_URL).'">'.PHP_EOL;
     $_evealba_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/evealba.css')) ? filemtime(G5_THEME_PATH.'/css/evealba.css') : G5_CSS_VER;
     echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba.css?ver='.$_evealba_css_ver.'">'.PHP_EOL;
 }
@@ -159,7 +162,9 @@ if (defined('_SHOP_')) {
 add_javascript('<script src="'.G5_JS_URL.'/common.js?ver='.G5_JS_VER.'"></script>', 0);
 add_javascript('<script src="'.G5_JS_URL.'/wrest.js?ver='.G5_JS_VER.'"></script>', 0);
 add_javascript('<script src="'.G5_JS_URL.'/placeholders.min.js"></script>', 0);
-add_stylesheet('<link rel="stylesheet" href="'.G5_JS_URL.'/font-awesome/css/font-awesome.min.css">', 0);
+if (!$_ev_renewal_ui_on) {
+    add_stylesheet('<link rel="stylesheet" href="'.G5_JS_URL.'/font-awesome/css/font-awesome.min.css">', 0);
+}
 
 if(G5_IS_MOBILE) {
     add_javascript('<script src="'.G5_JS_URL.'/modernizr.custom.70111.js"></script>', 1); // overflow scroll 감지
