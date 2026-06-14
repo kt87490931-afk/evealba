@@ -78,39 +78,8 @@ jQuery(function($) {
 });
 </script>
 
-<!-- 추천업소 + 카카오톡/채팅/맨위로 플로팅 (썸네일상점은 jobs_thumb_shop_main에서 출력) -->
+<!-- 추천업소 + 카카오톡/맨위로 플로팅 (썸네일상점은 jobs_thumb_shop_main에서 출력) -->
 <?php if (!defined('_THUMB_SHOP_FLOATS_DONE_')) { include_once(G5_THEME_PATH . '/inc/float_banners.php'); } ?>
-
-<!-- EVE CHAT 모바일 전체화면 -->
-<iframe id="eveChatFrame"
-  src="<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php"
-  style="position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;border:none;border-radius:0;box-shadow:none;z-index:9999;display:none;background:#fff;overflow:hidden;"
-  allow="autoplay"
-  loading="lazy"></iframe>
-
-<button type="button" id="eveChatOpenMobile"
-  style="position:fixed;bottom:16px;right:16px;z-index:9998;width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,#FF6B35,#FF1B6B);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,27,107,.4);cursor:pointer;"
-  onclick="toggleEveChatMobile()">💭</button>
-
-<script>
-(function(){
-  var frame = document.getElementById('eveChatFrame');
-  var btn = document.getElementById('eveChatOpenMobile');
-  var isOpen = false;
-  window.toggleEveChatMobile = function(){
-    isOpen = !isOpen;
-    frame.style.display = isOpen ? 'block' : 'none';
-    btn.style.display = isOpen ? 'none' : 'flex';
-  };
-  window.addEventListener('message', function(e){
-    if(e.data && e.data.type === 'eve-chat-close'){
-      isOpen = false;
-      frame.style.display = 'none';
-      btn.style.display = 'flex';
-    }
-  });
-})();
-</script>
 
 <?php
 include_once(G5_THEME_PATH."/tail.sub.php");

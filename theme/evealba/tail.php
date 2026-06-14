@@ -70,34 +70,6 @@ include $_pr_inc;
 </footer>
 <?php } /* skip outer footer when rendered inside main */ ?>
 
-<!-- EVE CHAT (iframe 격리) -->
-<iframe id="eveChatFrame"
-  src="<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php"
-  style="position:fixed;bottom:90px;right:28px;width:390px;height:calc(100vh - 110px);max-height:750px;border:1.5px solid #F0E0E8;border-radius:16px;box-shadow:0 8px 32px rgba(255,27,107,.15);z-index:1100;display:none;background:#fff;overflow:hidden;"
-  allow="autoplay"
-  loading="lazy"></iframe>
-<style>
-@media(max-width:768px){
-  #eveChatFrame{top:0!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;height:100%!important;max-height:none!important;border:none!important;border-radius:0!important;box-shadow:none!important;z-index:9999!important;}
-}
-</style>
-<script>
-(function(){
-  var frame=document.getElementById('eveChatFrame');
-  var isOpen=false;
-  window.toggleEveChat=function(){
-    isOpen=!isOpen;
-    frame.style.display=isOpen?'block':'none';
-  };
-  window.addEventListener('message',function(e){
-    if(e.data&&e.data.type==='eve-chat-close'){
-      isOpen=false;
-      frame.style.display='none';
-    }
-  });
-})();
-</script>
-
 <!-- FLOATING RECOMMEND + CTA (썸네일상점은 jobs_thumb_shop_main에서 출력) -->
 <?php if (!defined('_THUMB_SHOP_FLOATS_DONE_') && !(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && !G5_IS_MOBILE)) { include_once(G5_THEME_PATH . '/inc/float_banners.php'); } ?>
 

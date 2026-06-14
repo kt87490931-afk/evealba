@@ -23,8 +23,11 @@ if ($_pr_tb_check && sql_num_rows($_pr_tb_check) > 0) {
 }
 
 $_pr_memo_badge = 0;
-if (!empty($is_member) && !empty($member['mb_id']) && function_exists('get_memo_not_read')) {
-    $_pr_memo_badge = (int)get_memo_not_read($member['mb_id']);
+if (!empty($is_member) && !empty($member['mb_id'])) {
+    if (is_file(G5_LIB_PATH . '/eve_chat_dm.lib.php')) {
+        include_once(G5_LIB_PATH . '/eve_chat_dm.lib.php');
+        $_pr_memo_badge = (int)eve_chat_dm_unread_count($member['mb_id']);
+    }
 }
 
 $_pr_regions = isset($ev_regions) ? $ev_regions : array();
@@ -111,8 +114,8 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
   <div class="panel-card">
     <div class="panel-card-head">🔔 새로운 알림</div>
 <?php if ($is_member) { ?>
-    <p class="panel-empty">새 알림을 확인해보세요.</p>
-    <a class="btn-panel-login" href="<?php echo $_pr_base; ?>/memo_full.php">쪽지함 열기</a>
+    <p class="panel-empty"><?php echo $_pr_memo_badge ? '읽지 않은 알림 ' . (int)$_pr_memo_badge . '건' : '새 알림을 확인해보세요.'; ?></p>
+    <a class="btn-panel-login" href="<?php echo $_pr_base; ?>/memo_full.php">알림 &amp; 채팅 열기</a>
 <?php } else { ?>
     <p class="panel-empty">로그인 후 확인해보세요.</p>
     <a class="btn-panel-login" href="<?php echo G5_BBS_URL; ?>/login.php">로그인하기</a>
@@ -122,8 +125,8 @@ if (empty($_pr_regions) && file_exists(G5_LIB_PATH . '/ev_master.lib.php')) {
   <div class="panel-card">
     <div class="panel-card-head">💬 새로운 1:1 채팅</div>
 <?php if ($is_member) { ?>
-    <p class="panel-empty">채팅을 시작해보세요.</p>
-    <a class="btn-panel-login" href="#" onclick="if(typeof toggleEveChat==='function'){toggleEveChat();}return false;">채팅 열기</a>
+    <p class="panel-empty">채용공고 상세에서 1:1 채팅을 시작할 수 있습니다.</p>
+    <a class="btn-panel-login" href="<?php echo $_pr_base; ?>/memo_full.php?tab=chat">1:1 채팅 열기</a>
 <?php } else { ?>
     <p class="panel-empty">로그인 후 확인해보세요.</p>
     <a class="btn-panel-login" href="<?php echo G5_BBS_URL; ?>/login.php">로그인하기</a>

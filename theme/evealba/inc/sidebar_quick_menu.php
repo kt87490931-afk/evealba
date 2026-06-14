@@ -5,11 +5,13 @@
 if (!defined('_GNUBOARD_')) exit;
 
 $_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL, '/') : '';
-$memo_unread = 0;
-if (!empty($is_member) && !empty($member['mb_id']) && function_exists('get_memo_not_read')) {
-  $memo_unread = (int)get_memo_not_read($member['mb_id']);
+$memo_badge = 0;
+if (!empty($is_member) && !empty($member['mb_id'])) {
+  if (is_file(G5_LIB_PATH . '/eve_chat_dm.lib.php')) {
+    include_once(G5_LIB_PATH . '/eve_chat_dm.lib.php');
+    $memo_badge = min(99, (int)eve_chat_dm_unread_count($member['mb_id']));
+  }
 }
-$memo_badge = ($memo_unread > 0) ? min(99, $memo_unread) : 0;
 ?>
 <div class="sidebar-widget">
   <div class="widget-title">⚡ 빠른 메뉴</div>
@@ -19,8 +21,7 @@ $memo_badge = ($memo_unread > 0) ? min(99, $memo_unread) : 0;
       <a href="<?php echo $_base; ?>/resume_register.php" class="quick-link-btn"><span class="ql-icon">👩</span>이력서 등록</a>
       <a href="<?php echo $_base; ?>/jobs.php" class="quick-link-btn"><span class="ql-icon">📍</span>지역별 채용</a>
       <a href="<?php echo $_base; ?>/sudabang.php" class="quick-link-btn"><span class="ql-icon">💬</span>수다방</a>
-      <a href="javascript:void(0);" class="quick-link-btn" onclick="var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';var w=Math.min(420,screen.availWidth),h=Math.min(720,screen.availHeight),l=Math.round((screen.availWidth-w)/2),t=Math.round((screen.availHeight-h)/2);window.open(u,'eveChatPopup','width='+w+',height='+h+',left='+l+',top='+t+',scrollbars=no,resizable=yes');"><span class="ql-icon">💬</span>채팅</a>
-      <a href="<?php echo G5_BBS_URL; ?>/memo_form.php" class="quick-link-btn ql-memo"><span class="ql-icon">📩</span><span class="ql-memo-label">쪽지<?php if ($memo_badge > 0) { ?> <span class="ql-memo-badge">+<?php echo $memo_badge; ?></span><?php } ?></span></a>
+      <a href="<?php echo $_base; ?>/memo_full.php" class="quick-link-btn ql-memo"><span class="ql-icon">🔔</span><span class="ql-memo-label">알림·채팅<?php if ($memo_badge > 0) { ?> <span class="ql-memo-badge">+<?php echo $memo_badge; ?></span><?php } ?></span></a>
     </div>
   </div>
 </div>

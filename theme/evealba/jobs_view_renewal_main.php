@@ -7,10 +7,14 @@ if (!defined('_GNUBOARD_')) exit;
 
 @include_once(G5_PATH . '/extend/jobs_list_helper.php');
 
+@include_once(G5_LIB_PATH . '/eve_chat_dm.lib.php');
+
 $_jvr_base = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL, '/') : '';
 $_jvr_jobs_url = $_jvr_base ? $_jvr_base . '/jobs.php' : '/jobs.php';
 $_jvr_login_url = G5_BBS_URL . '/login.php';
-$_jvr_memo_url = $_jvr_base ? $_jvr_base . '/memo_full.php' : '/memo_full.php';
+$_jvr_chat_hub = $_jvr_base ? $_jvr_base . '/memo_full.php' : '/memo_full.php';
+$_jvr_can_start_chat = $is_member && function_exists('eve_member_is_female_normal') && eve_member_is_female_normal($member);
+$_jvr_is_biz_member = $is_member && function_exists('eve_member_is_biz') && eve_member_is_biz($member);
 
 if (!isset($amenity_arr)) {
     $amenity_arr = is_array($data['amenity'] ?? null)
@@ -328,7 +332,15 @@ if ($_jvr_next_link) { ?>
 <div class="cta-spacer"></div>
 
 <div class="cta-fixed">
-  <button type="button" class="btn-contact chat" onclick="if(typeof toggleEveChat==='function'){toggleEveChat();return false;}location.href='<?php echo htmlspecialchars($_jvr_memo_url, ENT_QUOTES); ?>';">💬 1:1 채팅</button>
+<?php if ($_jvr_can_start_chat) { ?>
+  <button type="button" class="btn-contact chat" onclick="eveStartJobChat(<?php echo (int)$jr_id; ?>);return false;">💬 1:1 채팅</button>
+<?php } elseif ($_jvr_is_biz_member) { ?>
+  <button type="button" class="btn-contact chat" onclick="alert('기업회원은 먼저 메시지를 보낼 수 없습니다.\n일반회원이 먼저 채팅을 시작하면 답장할 수 있습니다.');return false;">💬 1:1 채팅</button>
+<?php } elseif ($is_member) { ?>
+  <button type="button" class="btn-contact chat" onclick="alert('1:1 채팅은 일반회원(여성)만 시작할 수 있습니다.');return false;">💬 1:1 채팅</button>
+<?php } else { ?>
+  <a class="btn-contact chat" href="<?php echo htmlspecialchars($_jvr_login_url . '?url=' . urlencode($_jvr_chat_hub . '?tab=chat&open_jr=' . (int)$jr_id)); ?>">💬 로그인 후 채팅</a>
+<?php } ?>
 <?php if ($is_member && $_jvr_contact_href) { ?>
   <a class="btn-contact" href="<?php echo htmlspecialchars($_jvr_contact_href); ?>">📞 연락하기</a>
 <?php } elseif ($is_member && !empty($contact)) { ?>
@@ -343,6 +355,10 @@ if ($_jvr_next_link) { ?>
 
 <script>
 (function(){
+  window.eveStartJobChat = function(jrId) {
+    location.href = '<?php echo addslashes($_jvr_chat_hub); ?>?tab=chat&open_jr=' + encodeURIComponent(jrId);
+  };
+
   window.toggleLike = function(btn) {
     if (!btn) return;
     var liked = btn.classList.toggle('liked');

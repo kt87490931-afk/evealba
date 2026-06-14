@@ -9,8 +9,11 @@ $_nav_active = isset($nav_active) ? $nav_active : '';
 if (defined('_INDEX_')) $_nav_active = 'jobs';
 
 $_nav_memo_badge = 0;
-if (!empty($is_member) && !empty($member['mb_id']) && function_exists('get_memo_not_read')) {
-    $_nav_memo_badge = min(99, (int)get_memo_not_read($member['mb_id']));
+if (!empty($is_member) && !empty($member['mb_id'])) {
+    if (is_file(G5_LIB_PATH . '/eve_chat_dm.lib.php')) {
+        include_once(G5_LIB_PATH . '/eve_chat_dm.lib.php');
+        $_nav_memo_badge = min(99, (int)eve_chat_dm_unread_count($member['mb_id']));
+    }
 }
 
 $_nav_items = array(

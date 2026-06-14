@@ -57,7 +57,7 @@ if (!empty($is_member) && !empty($member['mb_id']) && function_exists('get_memo_
     <h4>새로운 알림</h4>
 <?php if ($is_member) { ?>
     <p class="panel-notice-text">읽지 않은 쪽지 <?php echo $_mb_memo > 0 ? '<strong>' . $_mb_memo . '건</strong>' : '없음'; ?></p>
-    <a href="<?php echo $_mb_base; ?>/memo_full.php" class="panel-chat-btn">쪽지함 열기</a>
+    <a href="<?php echo $_mb_base; ?>/memo_full.php" class="panel-chat-btn">알림 &amp; 채팅 열기</a>
 <?php } else { ?>
     <p class="panel-notice-empty">로그인 후 확인해보세요.</p>
 <?php } ?>
@@ -66,7 +66,7 @@ if (!empty($is_member) && !empty($member['mb_id']) && function_exists('get_memo_
   <section class="panel-section panel-mobile-block">
     <h4>새로운 1:1 채팅</h4>
 <?php if ($is_member) { ?>
-    <button type="button" class="panel-chat-btn" onclick="if(typeof toggleEveChat==='function')toggleEveChat();else{var u='<?php echo G5_PLUGIN_URL; ?>/chat/eve_chat_frame.php';window.open(u,'eveChatPopup','width=420,height=720');}">채팅 열기</button>
+    <a href="<?php echo $_mb_base; ?>/memo_full.php?tab=chat" class="panel-chat-btn">1:1 채팅 열기</a>
 <?php } else { ?>
     <p class="panel-notice-empty">로그인 후 확인해보세요.</p>
 <?php } ?>

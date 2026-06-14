@@ -216,7 +216,7 @@ $_jobs_base = $_base;
       <div class="msm-section">
         <div class="msm-section-title">💬 커뮤니티</div>
         <a href="javascript:void(0);" onclick="if(typeof openChatWidget==='function')openChatWidget();document.getElementById('mobileSlideMenu').classList.remove('open');document.body.style.overflow='';" class="msm-link">💬 채팅</a>
-        <a href="<?php echo $_base; ?>/memo_full.php" class="msm-link">📩 쪽지</a>
+        <a href="<?php echo $_base; ?>/memo_full.php" class="msm-link">🔔 알림·채팅</a>
       </div>
 
 <?php if ($is_member) { ?>

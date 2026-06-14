@@ -1,75 +1,80 @@
 <?php
 /**
- * 쪽지함 전체 레이아웃 - 메인과 동일(급구·좌측사이드바·히어로배너) + breadcrumb + 단순화 상단바(유저+통계) + 탭 + 본문
- * 필요 변수(선행 설정): $memo_recv_count, $memo_unread_count, $memo_send_count, $memo_current_tab, $member_type, $member (mb_nick, mb_id)
+ * 알림 & 채팅 페이지 head — 리뉴얼 3컬럼 (evealba_chat.html)
  */
 if (!defined('_GNUBOARD_')) exit;
-$memo_recv_count = isset($memo_recv_count) ? (int)$memo_recv_count : 0;
-$memo_unread_count = isset($memo_unread_count) ? (int)$memo_unread_count : 0;
-$memo_send_count = isset($memo_send_count) ? (int)$memo_send_count : 0;
-$memo_current_tab = isset($memo_current_tab) ? $memo_current_tab : 'recv';
-$member_name = isset($member['mb_nick']) ? get_text($member['mb_nick']) : '';
-$member_id = isset($member['mb_id']) ? $member['mb_id'] : '';
-$role_icon = (isset($member_type) && strpos($member_type, '기업') !== false) ? '🏢' : '👤';
-$nav_active = 'memo';
+
+if (G5_COMMUNITY_USE === false) {
+    define('G5_IS_COMMUNITY_PAGE', true);
+    include_once(G5_THEME_SHOP_PATH . '/shop.head.php');
+    return;
+}
+
+$g5_debug['php']['begin_time'] = $begin_time = get_microtime();
+
+if (!isset($g5['title'])) {
+    $g5['title'] = $config['cf_title'];
+    $g5_head_title = $g5['title'];
+} else {
+    $g5_head_title = implode(' | ', array_filter(array($g5['title'], $config['cf_title'])));
+}
+$g5['title'] = strip_tags($g5['title']);
+$g5_head_title = strip_tags($g5_head_title);
+
+$g5['lo_location'] = addslashes($g5['title']);
+if (!$g5['lo_location']) {
+    $g5['lo_location'] = addslashes(clean_xss_tags($_SERVER['REQUEST_URI']));
+}
+$g5['lo_url'] = addslashes(clean_xss_tags($_SERVER['REQUEST_URI']));
+if (strstr($g5['lo_url'], '/' . G5_ADMIN_DIR . '/') || $is_admin == 'super') {
+    $g5['lo_url'] = '';
+}
 ?>
 <!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=10">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title><?php echo isset($g5_head_title) ? $g5_head_title : '쪽지함'; ?></title>
-<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) { ?>
+<title><?php echo $g5_head_title; ?></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
-<?php } else { ?>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/default.css?ver=<?php echo G5_CSS_VER ?>">
-<?php } ?>
-<?php if (!(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI)) { ?>
-<?php $_ev_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/evealba.css')) ? filemtime(G5_THEME_PATH.'/css/evealba.css') : G5_CSS_VER; ?>
-<link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/evealba.css?ver=<?php echo $_ev_css_ver ?>">
-<?php } ?>
-<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH.'/css/evealba_renewal.css')) { ?>
-<link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL ?>/evealba_renewal.css?ver=<?php echo filemtime(G5_THEME_PATH.'/css/evealba_renewal.css'); ?>">
-<?php } ?>
-<?php $_memo_css_ver = (defined('G5_THEME_PATH') && is_file(G5_THEME_PATH.'/css/memo_popup.css')) ? filemtime(G5_THEME_PATH.'/css/memo_popup.css') : G5_CSS_VER; ?>
-<link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_popup.css?ver=<?php echo $_memo_css_ver ?>">
-<link rel="stylesheet" href="<?php echo G5_THEME_URL ?>/css/memo_full.css?ver=<?php echo G5_CSS_VER ?>">
-<?php if (!(defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI)) { ?>
-<link rel="stylesheet" href="<?php echo G5_JS_URL ?>/font-awesome/css/font-awesome.min.css">
-<?php } ?>
-<script src="<?php echo G5_JS_URL ?>/jquery-1.12.4.min.js"></script>
-<script src="<?php echo G5_JS_URL ?>/jquery-migrate-1.4.1.min.js"></script>
-<script src="<?php echo G5_JS_URL ?>/common.js?ver=<?php echo G5_JS_VER ?>"></script>
-<script>var g5_url="<?php echo G5_URL ?>"; var g5_bbs_url="<?php echo G5_BBS_URL ?>"; var g5_is_mobile="<?php echo G5_IS_MOBILE ? '1' : ''; ?>";</script>
-<?php if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && is_file(G5_THEME_PATH.'/js/evealba_renewal.js')) { ?>
-<script src="<?php echo G5_THEME_URL ?>/js/evealba_renewal.js?ver=<?php echo filemtime(G5_THEME_PATH.'/js/evealba_renewal.js'); ?>" defer></script>
+<?php
+$_renewal_ver = is_file(G5_THEME_PATH . '/css/evealba_renewal.css') ? filemtime(G5_THEME_PATH . '/css/evealba_renewal.css') : G5_CSS_VER;
+$_pages_ver = is_file(G5_THEME_PATH . '/css/evealba_renewal_pages.css') ? filemtime(G5_THEME_PATH . '/css/evealba_renewal_pages.css') : G5_CSS_VER;
+$_hub_ver = is_file(G5_THEME_PATH . '/css/evealba_chat_hub.css') ? filemtime(G5_THEME_PATH . '/css/evealba_chat_hub.css') : G5_CSS_VER;
+?>
+<link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL; ?>/evealba_renewal.css?ver=<?php echo $_renewal_ver; ?>">
+<link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL; ?>/evealba_renewal_pages.css?ver=<?php echo $_pages_ver; ?>">
+<link rel="stylesheet" href="<?php echo G5_THEME_CSS_URL; ?>/evealba_chat_hub.css?ver=<?php echo $_hub_ver; ?>">
+<script src="<?php echo G5_JS_URL; ?>/jquery-1.12.4.min.js"></script>
+<script src="<?php echo G5_JS_URL; ?>/jquery-migrate-1.4.1.min.js"></script>
+<script src="<?php echo G5_JS_URL; ?>/common.js?ver=<?php echo G5_JS_VER; ?>"></script>
+<script>
+var g5_url = "<?php echo G5_URL; ?>";
+var g5_bbs_url = "<?php echo G5_BBS_URL; ?>";
+var g5_is_mobile = "<?php echo G5_IS_MOBILE ? '1' : ''; ?>";
+</script>
+<?php if (is_file(G5_THEME_PATH . '/js/evealba_renewal.js')) { ?>
+<script src="<?php echo G5_THEME_URL; ?>/js/evealba_renewal.js?ver=<?php echo filemtime(G5_THEME_PATH . '/js/evealba_renewal.js'); ?>" defer></script>
 <?php } ?>
 </head>
-<body class="memo-page-body<?php echo (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI) ? ' eve-renewal-active' : ''; ?>">
-<?php include G5_THEME_PATH.'/inc/head_top.php'; ?>
+<body class="eve-renewal-active chat-hub-page">
+<?php
+if (!defined('EVEALBA_RENEWAL_UI')) {
+    define('EVEALBA_RENEWAL_UI', true);
+}
 
-<!-- BREADCRUMB: 급구(ticker) 바로 아래, 채용정보 페이지와 동일 위치 -->
-<div class="breadcrumb-bar">
-  <div class="breadcrumb-inner">
-    <a href="<?php echo G5_URL ?>">🏠 메인</a><span class="sep">›</span>
-    <a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=<?php echo urlencode(G5_BBS_URL.'/memo.php'); ?>">마이페이지</a><span class="sep">›</span>
-    <span class="current"><?php echo ($memo_current_tab==='recv') ? '📥 받은 쪽지함' : (($memo_current_tab==='unread') ? '🔔 미열람 목록' : (($memo_current_tab==='send') ? '📤 보낸 쪽지함' : '✉️ 쪽지 보내기')); ?></span>
-  </div>
-</div>
+include_once(G5_LIB_PATH . '/latest.lib.php');
+include_once(G5_LIB_PATH . '/outlogin.lib.php');
+include_once(G5_LIB_PATH . '/poll.lib.php');
+include_once(G5_LIB_PATH . '/visit.lib.php');
+include_once(G5_LIB_PATH . '/connect.lib.php');
+include_once(G5_LIB_PATH . '/popular.lib.php');
 
-<!-- PAGE LAYOUT: 메인과 동일 (좌측 사이드바 + 메인) -->
-<?php $ev_sidebar_legacy_inc = G5_THEME_PATH.'/inc/sidebar_main.php'; include G5_THEME_PATH.'/inc/page_layout_open.php'; ?>
-    <div class="memo-page-layout">
-
-      <!-- memo-top-widget: 4칸 각 225px (회원유형 | 받은쪽지 | 미확인 | 보낸쪽지) -->
-      <div class="memo-top-widget">
-        <div class="memo-tw-cell memo-tw-role-cell">
-          <span class="memo-tw-role"><?php echo (isset($member_type) && strpos($member_type, '기업') !== false) ? '🏢기업회원' : '👩이브회원'; ?></span>
-        </div>
-        <div class="memo-tw-cell memo-tw-stat"><span class="memo-tw-num"><?php echo $memo_recv_count; ?></span><span class="memo-tw-label">받은쪽지</span></div>
-        <div class="memo-tw-cell memo-tw-stat"><span class="memo-tw-num orange"><?php echo $memo_unread_count; ?></span><span class="memo-tw-label">미확인</span></div>
-        <div class="memo-tw-cell memo-tw-stat"><span class="memo-tw-num dark"><?php echo $memo_send_count; ?></span><span class="memo-tw-label">보낸쪽지</span></div>
-      </div>
-  <div class="main-area memo-main">
+$nav_active = 'memo';
+$ev_renewal_main_class = 'feed-main chat-hub-feed';
+$ev_panel_right_inc = G5_THEME_PATH . '/inc/panel_right.php';
+include G5_THEME_PATH . '/inc/head_top.php';
+$ev_sidebar_legacy_inc = '';
+include G5_THEME_PATH . '/inc/page_layout_open.php';

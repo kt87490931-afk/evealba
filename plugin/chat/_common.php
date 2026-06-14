@@ -7,3 +7,5 @@ $g5['chat_config_table'] = G5_TABLE_PREFIX.'chat_config';
 $g5['chat_ban_table']    = G5_TABLE_PREFIX.'chat_ban';
 $g5['chat_online_table'] = G5_TABLE_PREFIX.'chat_online';
 $g5['chat_report_table'] = G5_TABLE_PREFIX.'chat_report';
+$g5['chat_dm_room_table'] = G5_TABLE_PREFIX.'chat_dm_room';
+$g5['chat_dm_msg_table']  = G5_TABLE_PREFIX.'chat_dm_msg';

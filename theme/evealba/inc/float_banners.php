@@ -96,6 +96,5 @@ function toggleFloatRecommend(){var el=document.getElementById('floatRecommend')
 <?php endif; ?>
 <div class="floating-cta">
   <a href="#" class="float-btn float-kakao" title="카카오톡 문의"><img src="<?php echo G5_THEME_URL; ?>/img/logo_kakao.svg" alt="카카오톡" style="width:26px;height:26px;"></a>
-  <button type="button" class="float-btn float-chat" id="chatOpen" title="실시간 채팅" onclick="if(typeof toggleEveChat==='function')toggleEveChat();else if(typeof toggleEveChatMobile==='function')toggleEveChatMobile();return false;">💬</button>
   <a href="#" class="float-btn float-top" title="맨 위로" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">▲</a>
 </div>
