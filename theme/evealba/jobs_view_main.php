@@ -209,6 +209,12 @@ $title_employ = $title ? $title . ' · ' . $employ_type : $employ_type;
 $amenity_arr = is_array($data['amenity'] ?? null) ? array_map('trim', $data['amenity']) : (trim($amenity ?? '') ? explode(',', $amenity) : array());
 ?>
 <?php
+if (defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI && !$can_edit) {
+    include G5_THEME_PATH . '/jobs_view_renewal_main.php';
+    return;
+}
+?>
+<?php
 $sns_kakao = !empty($data['job_kakao']) ? trim($data['job_kakao']) : '';
 $sns_line = !empty($data['job_line']) ? trim($data['job_line']) : '';
 $sns_telegram = !empty($data['job_telegram']) ? trim($data['job_telegram']) : '';

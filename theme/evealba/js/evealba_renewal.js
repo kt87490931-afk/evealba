@@ -39,6 +39,14 @@
         if (href) window.location.href = href;
       });
     });
+
+    document.querySelectorAll('.similar-item[data-href], .panel-hot-item[data-href]').forEach(function (item) {
+      item.addEventListener('click', function (e) {
+        if (e.target.closest('button')) return;
+        var href = item.getAttribute('data-href');
+        if (href) window.location.href = href;
+      });
+    });
   }
 
   function initViewTabs() {

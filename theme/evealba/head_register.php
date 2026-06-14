@@ -1,7 +1,6 @@
 <?php
 /**
- * 회원가입 페이지 전용 head
- * - head_top, breadcrumb, page-layout (단일컬럼, 사이드바 없음)
+ * 회원가입 페이지 전용 head — 리뉴얼 3컬럼 레이아웃
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -17,21 +16,13 @@ include_once(G5_LIB_PATH.'/visit.lib.php');
 include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 
-$nav_active = '';
+if (!defined('EVEALBA_RENEWAL_UI')) define('EVEALBA_RENEWAL_UI', true);
+
+$nav_active = 'register';
 $g5['title'] = '회원가입 - '.$config['cf_title'];
+$ev_renewal_main_class = 'feed-main';
+$ev_renewal_footer_in_main = true;
+
 include G5_THEME_PATH.'/inc/head_top.php';
-?>
-
-<!-- BREADCRUMB -->
-<div class="breadcrumb-bar">
-  <div class="breadcrumb-inner" id="breadcrumb">
-    <a href="<?php echo G5_URL ?>">🏠 메인</a>
-    <span class="sep">›</span>
-    <span class="current">📝 회원가입</span>
-  </div>
-</div>
-
-<!-- PAGE LAYOUT (단일 컬럼, 사이드바 없음) -->
-<div class="page-layout layout-register">
-  <div class="main-area">
-    <?php include G5_THEME_PATH.'/inc/ads_main_banner.php'; ?>
+$ev_sidebar_legacy_inc = '';
+include G5_THEME_PATH.'/inc/page_layout_open.php';

@@ -1,6 +1,6 @@
 <?php
 /**
- * 이브수다방 페이지 전용 head (eve_alba_sudabang_1.html 100% 동일)
+ * 이브수다방 페이지 전용 head — 리뉴얼 3컬럼
  */
 if (!defined('_GNUBOARD_')) exit;
 
@@ -17,18 +17,10 @@ include_once(G5_LIB_PATH.'/visit.lib.php');
 include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 
+if (!defined('EVEALBA_RENEWAL_UI')) define('EVEALBA_RENEWAL_UI', true);
+
 $nav_active = 'sudabang';
+$ev_panel_right_inc = G5_THEME_PATH.'/inc/panel_right_sudabang.php';
 include G5_THEME_PATH.'/inc/head_top.php';
-?>
-
-<!-- BREADCRUMB -->
-<div class="breadcrumb-bar">
-  <div class="breadcrumb-inner">
-    <a href="<?php echo G5_URL ?>">🏠 메인</a>
-    <span>›</span>
-    <span class="current">😆 이브수다방</span>
-  </div>
-</div>
-
-<!-- PAGE LAYOUT -->
-<?php $ev_sidebar_legacy_inc = G5_THEME_PATH.'/inc/sidebar_sudabang.php'; include G5_THEME_PATH.'/inc/page_layout_open.php'; ?>
+$ev_sidebar_legacy_inc = '';
+include G5_THEME_PATH.'/inc/page_layout_open.php';

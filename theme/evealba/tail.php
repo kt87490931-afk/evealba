@@ -16,8 +16,13 @@ if(G5_COMMUNITY_USE === false) {
 ?>
 
 <?php if ($_ev_renewal_tail) { ?>
-  </main><!-- /feed-main -->
-<?php include G5_THEME_PATH.'/inc/panel_right.php'; ?>
+  </main><!-- /feed-main or detail-main -->
+<?php
+$_pr_inc = !empty($ev_panel_right_inc) && is_file($ev_panel_right_inc)
+    ? $ev_panel_right_inc
+    : G5_THEME_PATH.'/inc/panel_right.php';
+include $_pr_inc;
+?>
 </div><!-- /app-wrap -->
 <?php } else { ?>
   </div><!-- /main-area -->
@@ -26,6 +31,7 @@ if(G5_COMMUNITY_USE === false) {
 
 <!-- FOOTER -->
 <?php $_ev_cs_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/cs.php' : '/cs.php'; ?>
+<?php if (!($_ev_renewal_tail && !empty($ev_renewal_footer_in_main))) { ?>
 <footer class="<?php echo $_ev_renewal_tail ? 'footer' : ''; ?>">
 <?php if ($_ev_renewal_tail) { ?>
     <div class="logo-footer">eve'알바</div>
@@ -62,6 +68,7 @@ if(G5_COMMUNITY_USE === false) {
   </div>
 <?php } ?>
 </footer>
+<?php } /* skip outer footer when rendered inside main */ ?>
 
 <!-- EVE CHAT (iframe 격리) -->
 <iframe id="eveChatFrame"

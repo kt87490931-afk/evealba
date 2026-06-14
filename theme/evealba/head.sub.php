@@ -126,6 +126,10 @@ if ($_ev_renewal_ui_on && is_file(G5_THEME_PATH.'/css/evealba_renewal.css')) {
     $_renewal_css_ver = filemtime(G5_THEME_PATH.'/css/evealba_renewal.css');
     echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba_renewal.css?ver='.$_renewal_css_ver.'">'.PHP_EOL;
 }
+if ($_ev_renewal_ui_on && is_file(G5_THEME_PATH.'/css/evealba_renewal_pages.css')) {
+    $_renewal_pages_css_ver = filemtime(G5_THEME_PATH.'/css/evealba_renewal_pages.css');
+    echo '<link rel="stylesheet" href="'.G5_THEME_CSS_URL.'/evealba_renewal_pages.css?ver='.$_renewal_pages_css_ver.'">'.PHP_EOL;
+}
 ?>
 <!--[if lte IE 8]>
 <script src="<?php echo G5_JS_URL ?>/html5.js"></script>

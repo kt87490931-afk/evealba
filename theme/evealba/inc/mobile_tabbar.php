@@ -17,9 +17,9 @@ $_tb_tabs = array(
     array('key' => 'jobs', 'icon' => '🏠', 'label' => '홈', 'href' => G5_URL, 'match' => array('jobs', '')),
     array('key' => 'community', 'icon' => '💬', 'label' => '커뮤니티', 'href' => $_tb_base . '/sudabang.php', 'match' => array('sudabang', 'used')),
     array('key' => 'notify', 'icon' => '🔔', 'label' => '알림', 'href' => $_tb_base . '/memo_full.php', 'match' => array('memo'), 'badge' => $_tb_memo_badge),
-    array('key' => 'mypage', 'icon' => '👤', 'label' => '마이', 'href' => $is_member
+    array('key' => 'mypage', 'icon' => '👤', 'label' => defined('_EVE_REGISTER_') ? '가입' : '마이', 'href' => defined('_EVE_REGISTER_') ? $_tb_base . '/eve_register.php' : ($is_member
         ? G5_BBS_URL . '/member_confirm.php?url=' . urlencode(G5_BBS_URL . '/register_form.php')
-        : G5_BBS_URL . '/login.php', 'match' => array('mypage')),
+        : G5_BBS_URL . '/login.php'), 'match' => array('mypage', 'register')),
 );
 ?>
 <nav class="mobile-tabbar" aria-label="하단 메뉴">

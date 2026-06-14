@@ -67,8 +67,13 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
 
 $nav_active = 'jobs';
 include G5_THEME_PATH.'/inc/head_top.php';
-?>
 
+$_ev_jobs_renewal_view = defined('_JOBS_VIEW_')
+    && defined('EVEALBA_RENEWAL_UI') && EVEALBA_RENEWAL_UI
+    && (!isset($_GET['mode']) || $_GET['mode'] !== 'edit');
+
+if (!$_ev_jobs_renewal_view) {
+?>
 <!-- BREADCRUMB -->
 <div class="breadcrumb-bar">
   <div class="breadcrumb-inner">
@@ -77,6 +82,18 @@ include G5_THEME_PATH.'/inc/head_top.php';
     <span class="current">📋 채용정보 리스트 (전체)</span>
   </div>
 </div>
+<?php
+}
+
+if ($_ev_jobs_renewal_view) {
+    $ev_renewal_main_class = 'detail-main';
+    $ev_renewal_footer_in_main = true;
+    $ev_panel_right_inc = G5_THEME_PATH.'/inc/panel_right_jobs_view.php';
+}
+?>
 
 <!-- PAGE LAYOUT -->
-<?php $ev_sidebar_legacy_inc = G5_THEME_PATH.'/inc/sidebar_jobs.php'; include G5_THEME_PATH.'/inc/page_layout_open.php'; ?>
+<?php
+$ev_sidebar_legacy_inc = $_ev_jobs_renewal_view ? '' : G5_THEME_PATH.'/inc/sidebar_jobs.php';
+include G5_THEME_PATH.'/inc/page_layout_open.php';
+?>
