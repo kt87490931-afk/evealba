@@ -5,6 +5,10 @@ if (defined('G5_IS_MEMO_PAGE') && G5_IS_MEMO_PAGE && is_file(G5_THEME_PATH.'/tai
     require_once(G5_THEME_PATH.'/tail.memo_full.php');
     return;
 }
+if ((defined('G5_IS_LOGIN_PAGE') && G5_IS_LOGIN_PAGE || defined('G5_IS_MEMBER_CONFIRM_PAGE') && G5_IS_MEMBER_CONFIRM_PAGE) && is_file(G5_THEME_PATH.'/tail_login.php')) {
+    require_once(G5_THEME_PATH.'/tail_login.php');
+    return;
+}
 if (defined('G5_MEMO_POPUP') && G5_MEMO_POPUP && is_file(G5_THEME_PATH.'/tail.memo.php')) {
     require_once(G5_THEME_PATH.'/tail.memo.php');
     return;
