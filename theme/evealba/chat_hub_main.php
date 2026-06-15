@@ -63,9 +63,11 @@ $_ch_jobs_url = $_ch_base ? $_ch_base . '/jobs_view.php' : '/jobs_view.php';
           일반회원이 먼저 채팅을 시작한 경우에만 답장 가능합니다.
         </div>
 <?php } ?>
-        <div class="chat-search">
-          <span>🔍</span>
-          <input type="text" id="chatSearchInput" placeholder="채팅방 검색" autocomplete="off">
+        <div class="chat-list-head">
+          <div class="chat-search">
+            <span>🔍</span>
+            <input type="text" id="chatSearchInput" placeholder="채팅방 검색" autocomplete="off">
+          </div>
         </div>
         <div class="chat-room-list" id="chatRoomList">
           <div class="chat-list-empty"><span class="e-icon">💬</span><p>대화 목록을 불러오는 중...</p></div>
