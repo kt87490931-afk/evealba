@@ -156,7 +156,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
         <div class="form-row">
           <div class="form-label">마감일</div>
           <div class="form-cell">
-            <p class="hint" style="margin:0;">마감일은 결제일로부터 필수결제사항인 줄광고(채용정보보리스트)의 입수만을 합산된 날짜입니다.</p>
+            <p class="hint" style="margin:0;">마감일은 결제일로부터 선택한 본문 광고(일반/프리미엄) 기간이 적용됩니다.</p>
           </div>
         </div>
 
@@ -653,171 +653,86 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
               </tr>
             </thead>
             <tbody>
-              <!-- 줄광고 필수영역 (핑크테두리) -->
-              <tbody class="ad-line-ad-required">
               <tr class="ad-tr-highlight">
                 <td class="ad-td td-svc" colspan="5">
-                  <span style="font-size:13px;font-weight:700;color:var(--hot-pink);">줄광고는 필수결제 사항 입니다. 박스광고와 함께 적용 시 노출기간을 동일하게 해주세요</span>
+                  <span style="font-size:13px;font-weight:700;color:var(--hot-pink);">필수: 「일반광고」 또는 「프리미엄광고」 중 1개를 선택해 주세요.</span>
                 </td>
               </tr>
-              <!-- 7. 줄광고 -->
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
-                  <div class="ad-svc-name">7. 줄광고 (채용정보보리스트)</div>
-                  <div class="ad-svc-desc">채용정보보리스트에 배치됩니다.<br>(지역 1개 노출/자동점프 일 10회 설정 제공)</div>
+                  <div class="ad-svc-name">📋 일반광고</div>
+                  <div class="ad-svc-desc">메인·채용정보 리스트/피드/그리드에 노출됩니다.<br>(자동점프 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
                 <td class="ad-td ad-price">70,000 원<br>125,000 원<br>170,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="70000" data-label="줄광고 30일" data-period="30" data-line-ad="1" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="125000" data-label="줄광고 60일" data-period="60" data-line-ad="1" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="170000" data-label="줄광고 90일" data-period="90" data-line-ad="1" onchange="onAdCheckChange(this)">
+                    <label><input type="radio" name="ad_main_option" data-price="70000" data-label="일반광고 30일" data-period="30" data-ad-grade="normal" onchange="onAdMainChange(this)"> 30일</label>
+                    <label><input type="radio" name="ad_main_option" data-price="125000" data-label="일반광고 60일" data-period="60" data-ad-grade="normal" onchange="onAdMainChange(this)"> 60일</label>
+                    <label><input type="radio" name="ad_main_option" data-price="170000" data-label="일반광고 90일" data-period="90" data-ad-grade="normal" onchange="onAdMainChange(this)"> 90일</label>
                   </div>
                 </td>
               </tr>
-              </tbody>
-              <tbody>
-              <!-- 1. 특수배너 -->
-              <tr class="ad-tr" style="background:#fff8fb;">
-                <td class="ad-td td-svc">
-                  <div class="ad-svc-name" style="color:#C850C0;">1. 특수배너</div>
-                  <div class="ad-svc-desc">모든 페이지 최상단에 특수배너형으로<br>사이트 최상단 or 좌·우측플로팅배너에 배치됩니다.</div>
-                </td>
-                <td class="ad-td ad-type">—</td>
-                <td class="ad-td ad-period" style="color:#C850C0;font-weight:700;">고객센터문의</td>
-                <td class="ad-td ad-price">—</td>
-                <td class="ad-td ad-chk">—</td>
-              </tr>
-
-              <!-- 2. 우대 -->
               <tr class="ad-tr">
                 <td class="ad-td td-svc">
-                  <div class="ad-svc-name">2. 우대</div>
-                  <div class="ad-svc-desc">메인 상단의 가장 눈에 띄는 위치에 배치됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공)</div>
-                </td>
-                <td class="ad-td ad-type">기간별</td>
-                <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
-                <td class="ad-td ad-price">230,000 원<br>415,000 원<br>550,000 원</td>
-                <td class="ad-td ad-chk">
-                  <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="230000" data-label="우대 30일" data-period="30" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="415000" data-label="우대 60일" data-period="60" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="550000" data-label="우대 90일" data-period="90" onchange="onAdCheckChange(this)">
-                  </div>
-                </td>
-              </tr>
-
-              <!-- 3. 프리미엄 -->
-              <tr class="ad-tr">
-                <td class="ad-td td-svc">
-                  <div class="ad-svc-name">3. 프리미엄</div>
-                  <div class="ad-svc-desc">메인페이지와 채용정보 중단의 위치에 배치됩니다.<br>(지역 3개 노출/자동점프 일 30회 설정 제공)</div>
+                  <div class="ad-svc-name" style="color:#C850C0;">⭐ 프리미엄광고</div>
+                  <div class="ad-svc-desc">일반광고보다 상단에 우선 노출됩니다.<br>(리스트·그리드 프리미엄 블록 / 자동점프 추가 제공)</div>
                 </td>
                 <td class="ad-td ad-type">기간별</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
                 <td class="ad-td ad-price">180,000 원<br>325,000 원<br>430,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="180000" data-label="프리미엄 30일" data-period="30" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="325000" data-label="프리미엄 60일" data-period="60" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="430000" data-label="프리미엄 90일" data-period="90" onchange="onAdCheckChange(this)">
+                    <label><input type="radio" name="ad_main_option" data-price="180000" data-label="프리미엄광고 30일" data-period="30" data-ad-grade="premium" onchange="onAdMainChange(this)"> 30일</label>
+                    <label><input type="radio" name="ad_main_option" data-price="325000" data-label="프리미엄광고 60일" data-period="60" data-ad-grade="premium" onchange="onAdMainChange(this)"> 60일</label>
+                    <label><input type="radio" name="ad_main_option" data-price="430000" data-label="프리미엄광고 90일" data-period="90" data-ad-grade="premium" onchange="onAdMainChange(this)"> 90일</label>
                   </div>
                 </td>
               </tr>
-
-              <!-- 4. 스페셜 -->
-              <tr class="ad-tr">
+              <tr class="ad-tr" style="background:#fff8fb;">
                 <td class="ad-td td-svc">
-                  <div class="ad-svc-name">4. 스페셜</div>
-                  <div class="ad-svc-desc">메인페이지와 채용정보 중단에 배치됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
+                  <div class="ad-svc-name">〰️ 흘러가는 줄광고 <span style="font-size:11px;color:#888;font-weight:500;">(선택)</span></div>
+                  <div class="ad-svc-desc">사이트 상단 텍스트 줄에 지역·업체명·제목·급여가 노출됩니다.<br>점프 시 줄광고도 맨 앞으로 이동합니다. (본문 광고와 동일 기간)</div>
                 </td>
-                <td class="ad-td ad-type">기간별</td>
+                <td class="ad-td ad-type">선택</td>
                 <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
-                <td class="ad-td ad-price">130,000 원<br>235,000 원<br>310,000 원</td>
+                <td class="ad-td ad-price">50,000 원<br>90,000 원<br>130,000 원</td>
                 <td class="ad-td ad-chk">
                   <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="130000" data-label="스페셜 30일" data-period="30" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="235000" data-label="스페셜 60일" data-period="60" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="310000" data-label="스페셜 90일" data-period="90" onchange="onAdCheckChange(this)">
+                    <label><input type="checkbox" data-price="50000" data-label="흘러가는줄광고 30일" data-period="30" data-line-scroll="1" onchange="onLineScrollChange(this)"> 30일</label>
+                    <label><input type="checkbox" data-price="90000" data-label="흘러가는줄광고 60일" data-period="60" data-line-scroll="1" onchange="onLineScrollChange(this)"> 60일</label>
+                    <label><input type="checkbox" data-price="130000" data-label="흘러가는줄광고 90일" data-period="90" data-line-scroll="1" onchange="onLineScrollChange(this)"> 90일</label>
                   </div>
                 </td>
               </tr>
-
-              <!-- 5. 급구 -->
-              <tr class="ad-tr">
-                <td class="ad-td td-svc">
-                  <div class="ad-svc-name">5. 급구</div>
-                  <div class="ad-svc-desc">최상단 "급구"영역에 1줄노출, 하단 급구란에 배치됩니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
-                </td>
-                <td class="ad-td ad-type">기간별</td>
-                <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
-                <td class="ad-td ad-price">150,000 원<br>285,000 원<br>420,000 원</td>
-                <td class="ad-td ad-chk">
-                  <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="150000" data-label="급구 30일" data-period="30" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="285000" data-label="급구 60일" data-period="60" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="420000" data-label="급구 90일" data-period="90" onchange="onAdCheckChange(this)">
-                  </div>
-                </td>
-              </tr>
-
-              <!-- 6. 추천 -->
-              <tr class="ad-tr">
-                <td class="ad-td td-svc">
-                  <div class="ad-svc-name">6. 추천</div>
-                  <div class="ad-svc-desc">메인 급구채용정보 우측에 위치하며 비교적 진한 노출모양을 가지고 있습니다.<br>(지역 2개 노출/자동점프 일 20회 설정 제공)</div>
-                </td>
-                <td class="ad-td ad-type">기간별</td>
-                <td class="ad-td ad-period">30 일<br>60 일<br>90 일</td>
-                <td class="ad-td ad-price">100,000 원<br>185,000 원<br>240,000 원</td>
-                <td class="ad-td ad-chk">
-                  <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
-                    <input type="checkbox" data-price="100000" data-label="추천 30일" data-period="30" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="185000" data-label="추천 60일" data-period="60" onchange="onAdCheckChange(this)">
-                    <input type="checkbox" data-price="240000" data-label="추천 90일" data-period="90" onchange="onAdCheckChange(this)">
-                  </div>
-                </td>
-              </tr>
-
-              <!-- 음선상중 안내 -->
               <tr class="ad-tr">
                 <td colspan="5" class="ad-td" style="background:#e8f5e9;color:#2E7D32;font-weight:700;font-size:12px;text-align:left;">
-                  💡 옵션만 결제하실 경우 광고노출이 되지않습니다.
+                  💡 본문 광고(일반/프리미엄)는 필수입니다. 흘러가는 줄광고만 단독 결제 시 노출되지 않습니다.
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- 특수배너 & 점프옵션 안내 박스 -->
         <div class="notice-box">
-          <div class="nb-title">🌟 특수배너</div>
-          <div class="nb-body">
-            특수배너 광고등록은 고객센터와 일정 협의 후 진행 가능합니다<br>
-            특수배너 광고시 모든 광고옵션이 적용되며 모바일상단에 노출됩니다.<br><br>
-            *모든 특수배너는 우대채용정보, 프리미엄채용정보, 줄광고가 함께 등록됩니다.
-          </div>
-          <hr class="nb-divider">
           <div class="nb-title">⚡ 점프옵션 서비스제공 안내</div>
           <div class="nb-body">
-            이브알바 광고 결제시 점프옵션이 서비스로 재공됩니다.<br><br>
+            광고 결제 시 점프 횟수가 제공됩니다. 점프 시 리스트·피드·그리드 순서와 흘러가는 줄광고(선택 시)가 함께 상단으로 이동합니다.<br><br>
             <div class="jump-grid">
               <div class="jump-box">
-                <div class="jump-box-title">📦 줄광고 결제시</div>
-                <div class="jump-box-line"><span>30일:</span><span>점프 300회 (15,000원) 제공</span></div>
-                <div class="jump-box-line"><span>60일:</span><span>점프 700회 (30,000원) 제공</span></div>
-                <div class="jump-box-line"><span>90일:</span><span>점프 1200회 (50,000원) 제공</span></div>
+                <div class="jump-box-title">📋 일반광고</div>
+                <div class="jump-box-line"><span>30일:</span><span>점프 300회 제공</span></div>
+                <div class="jump-box-line"><span>60일:</span><span>점프 700회 제공</span></div>
+                <div class="jump-box-line"><span>90일:</span><span>점프 1200회 제공</span></div>
               </div>
               <div class="jump-box">
-                <div class="jump-box-title">🏆 줄광고 초과 결제시</div>
-                <div class="jump-box-line"><span>30일:</span><span>점프 900회 (40,000원) 제공</span></div>
-                <div class="jump-box-line"><span>60일:</span><span>점프 1900회 (75,000원) 제공</span></div>
-                <div class="jump-box-line"><span>90일:</span><span>점프 3200회 (130,000원) 제공</span></div>
+                <div class="jump-box-title">⭐ 프리미엄광고</div>
+                <div class="jump-box-line"><span>30일:</span><span>점프 900회 제공</span></div>
+                <div class="jump-box-line"><span>60일:</span><span>점프 1900회 제공</span></div>
+                <div class="jump-box-line"><span>90일:</span><span>점프 3200회 제공</span></div>
               </div>
             </div>
-            <br>* 우대등록, 프리미엄, 스페셜, 급구, 추천 등 줄광고 외 유료광고 초과 결제시
           </div>
         </div>
 
@@ -829,7 +744,7 @@ $jobs_update_url = (defined('G5_URL') && G5_URL) ? rtrim(G5_URL,'/').'/jobs_regi
               <span class="tcb-amount" id="totalAmount">0 원</span>
             </div>
             <div class="tcb-coupon-row">
-              <label class="tcb-coupon-label">줄광고 할인쿠폰</label>
+              <label class="tcb-coupon-label">흘러가는줄광고 할인쿠폰</label>
               <select id="couponLineAdSelect" class="tcb-coupon-select" onchange="onCouponChange()">
                 <option value="">▼ 선택</option>
               </select>
@@ -1081,42 +996,59 @@ function clearFile(inputId, spanId) {
 })();
 
 /* 광고 금액 계산 (줄광고/박스 분리, 쿠폰 반영) */
-var _lineAdPrice = {30:70000, 60:125000, 90:170000};
+var _lineScrollPrice = {30:50000, 60:90000, 90:130000};
 var _availableCoupons = [];
 var _selectedLineAd = null;
 var _selectedAd = null;
-var _LINE_AD_ERR_MSG = '줄광고는 필수입니다. 줄광고와 동일한 기간을 선택해주세요.';
+var _AD_MAIN_ERR = '일반광고 또는 프리미엄광고 중 1개를 선택해 주세요.';
+var _LINE_PERIOD_ERR = '흘러가는 줄광고는 본문 광고와 동일한 기간만 선택할 수 있습니다.';
 
-/** 줄광고 필수·기간일치 검증. 오류 시 메시지 반환, 정상 시 null */
-function validateLineAdAndPeriod() {
-  var linePeriod = null;
-  var boxPeriods = [];
-  document.querySelectorAll('.ad-table input[type="checkbox"][data-price][data-period]:checked').forEach(function(cb){
-    var p = parseInt(cb.dataset.period, 10);
-    if (cb.dataset.lineAd === '1') linePeriod = p;
-    else boxPeriods.push(p);
-  });
-  if (boxPeriods.length > 0 && !linePeriod) return _LINE_AD_ERR_MSG;
-  if (linePeriod && boxPeriods.length > 0) {
-    for (var i = 0; i < boxPeriods.length; i++) { if (boxPeriods[i] !== linePeriod) return _LINE_AD_ERR_MSG; }
+function getSelectedMainAd() {
+  return document.querySelector('input[name="ad_main_option"]:checked');
+}
+
+function validateAdSelection() {
+  var main = getSelectedMainAd();
+  if (!main) return _AD_MAIN_ERR;
+  var mainPeriod = parseInt(main.dataset.period, 10);
+  var lineChecked = document.querySelector('.ad-table input[data-line-scroll="1"]:checked');
+  if (lineChecked) {
+    var lp = parseInt(lineChecked.dataset.period, 10);
+    if (lp !== mainPeriod) return _LINE_PERIOD_ERR;
   }
   return null;
 }
 
-/** 광고 체크박스 변경 시 검증 → 위반 시 되돌리고 경고 */
-function onAdCheckChange(cb) {
-  var err = validateLineAdAndPeriod();
-  if (err) { cb.checked = !cb.checked; alert(err); }
+function onAdMainChange() {
+  var err = validateAdSelection();
+  if (err) {
+    document.querySelectorAll('.ad-table input[data-line-scroll="1"]:checked').forEach(function (cb) {
+      cb.checked = false;
+    });
+  }
+  if (typeof calcTotal === 'function') calcTotal();
+}
+
+function onLineScrollChange(cb) {
+  if (cb.checked) {
+    document.querySelectorAll('.ad-table input[data-line-scroll="1"]').forEach(function (el) {
+      if (el !== cb) el.checked = false;
+    });
+  }
+  var err = validateAdSelection();
+  if (err) {
+    cb.checked = false;
+    alert(err);
+  }
   if (typeof calcTotal === 'function') calcTotal();
 }
 
 function getLineAndBoxAmounts() {
   var line = 0, box = 0;
-  document.querySelectorAll('.ad-table input[type="checkbox"][data-price]:checked').forEach(function(cb){
-    var p = parseInt(cb.dataset.price||0);
-    var lb = (cb.dataset.label||'');
-    if(/줄광고\s*\d+/.test(lb)) line += p;
-    else box += p;
+  var main = getSelectedMainAd();
+  if (main) box += parseInt(main.dataset.price || 0, 10);
+  document.querySelectorAll('.ad-table input[data-line-scroll="1"]:checked').forEach(function (cb) {
+    line += parseInt(cb.dataset.price || 0, 10);
   });
   return {line: line, box: box};
 }
@@ -1180,7 +1112,7 @@ function calcCouponDiscount() {
   var amounts = getLineAndBoxAmounts();
   var disc = 0;
   if(_selectedLineAd && _selectedLineAd.ec_type === 'line_ad_free') {
-    var req = _lineAdPrice[parseInt(_selectedLineAd.ec_line_ad_days||90)] || 170000;
+    var req = _lineScrollPrice[parseInt(_selectedLineAd.ec_line_ad_days||90)] || 130000;
     if(amounts.line >= req) disc += (req);
   }
   if(_selectedAd && _selectedAd.ec_type === 'ad') {
@@ -1298,18 +1230,23 @@ function checkPayment() {
   var total = 0;
   var adPeriod = 30;
   var adLabels = [];
-  document.querySelectorAll('.ad-table input[type="checkbox"][data-price]:checked').forEach(function(cb){
-    total += parseInt(cb.dataset.price||0);
+  var mainAd = getSelectedMainAd();
+  if (!mainAd) {
+    alert(_AD_MAIN_ERR);
+    return;
+  }
+  var adErr = validateAdSelection();
+  if (adErr) { alert(adErr); return; }
+  total += parseInt(mainAd.dataset.price || 0, 10);
+  adLabels.push(mainAd.dataset.label || '');
+  adPeriod = parseInt(mainAd.dataset.period || 30, 10);
+  document.querySelectorAll('.ad-table input[data-line-scroll="1"]:checked').forEach(function(cb){
+    total += parseInt(cb.dataset.price||0, 10);
     var lb = cb.dataset.label||'';
-    if(lb) adLabels.push(lb);
-    if(/줄광고\s*30/.test(lb)) adPeriod=30;
-    if(/줄광고\s*60/.test(lb)) adPeriod=60;
-    if(/줄광고\s*90/.test(lb)) adPeriod=90;
+    if (lb) adLabels.push(lb);
   });
-  var lineAdErr = validateLineAdAndPeriod();
-  if (lineAdErr) { alert(lineAdErr); return; }
   if (total === 0){
-    alert(_LINE_AD_ERR_MSG);
+    alert(_AD_MAIN_ERR);
     return;
   }
   var finalAmount = parseInt(document.getElementById('total_amount_hidden').value) || total;

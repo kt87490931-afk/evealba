@@ -64,13 +64,13 @@ foreach ($jr_ids as $k => $v) {
         $row2 = sql_fetch("SELECT jr_ad_labels FROM g5_jobs_register WHERE jr_id = '{$id}'");
         $ad_labels = $row2 ? trim($row2['jr_ad_labels']) : '';
     }
-    $has_extra_ad = false;
-    $extra_types = array('우대', '프리미엄', '스페셜', '급구', '추천');
-    foreach ($extra_types as $_etype) {
-        if (strpos($ad_labels, $_etype) !== false) { $has_extra_ad = true; break; }
+    $has_premium_ad = false;
+    $premium_types = array('프리미엄광고', '프리미엄', '우대', '스페셜', '추천', '특수배너');
+    foreach ($premium_types as $_etype) {
+        if (strpos($ad_labels, $_etype) !== false) { $has_premium_ad = true; break; }
     }
     $jump_alloc = 0;
-    if ($has_extra_ad) {
+    if ($has_premium_ad) {
         if ($ad_period >= 90) $jump_alloc = 3200;
         elseif ($ad_period >= 60) $jump_alloc = 1900;
         else $jump_alloc = 900;

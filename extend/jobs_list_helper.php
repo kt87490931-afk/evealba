@@ -117,50 +117,159 @@ function get_all_ongoing_jobs($limit = 40) {
 }
 
 /**
- * 피드용 채용 목록 — 등급 순 + 중복 제거 + fallback
+ * 광고 등급 — 프리미엄광고 (구 라벨 호환)
  */
-function get_jobs_feed_list($limit_per_type = 0, $fallback_limit = 40) {
-    $merged = array();
-    $seen = array();
+function _jlh_is_premium_ad($row) {
+    $labels = isset($row['jr_ad_labels']) ? (string)$row['jr_ad_labels'] : '';
+    if ($labels === '') return false;
+    $premium_keys = array('프리미엄광고', '프리미엄', '우대', '스페셜', '추천', '특수배너');
+    foreach ($premium_keys as $k) {
+        if (strpos($labels, $k) !== false) return true;
+    }
+    return false;
+}
 
-    /* 추천업소 — 피드 상단 우선 */
-    $sb_table = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'special_banner';
-    $jr_table = (defined('G5_TABLE_PREFIX') ? G5_TABLE_PREFIX : 'g5_') . 'jobs_register';
-    $chk = sql_query("SHOW TABLES LIKE '{$sb_table}'", false);
-    if ($chk && sql_num_rows($chk) > 0) {
-        $res = sql_query("SELECT jr.* FROM {$sb_table} sb
-            INNER JOIN {$jr_table} jr ON sb.sb_jr_id = jr.jr_id
-            WHERE sb.sb_type = 'recommend' AND sb.sb_status = 'active'
-            ORDER BY sb.sb_position ASC LIMIT 15", false);
-        if ($res) {
-            while ($row = sql_fetch_array($res)) {
-                $id = (int)$row['jr_id'];
-                if (isset($seen[$id])) continue;
-                $seen[$id] = 1;
-                $merged[] = $row;
-            }
+/**
+ * 흘러가는 줄광고 옵션 (구 급구 라벨 호환)
+ */
+function _jlh_has_line_ad($row) {
+    $labels = isset($row['jr_ad_labels']) ? (string)$row['jr_ad_labels'] : '';
+    if ($labels === '') return false;
+    if (strpos($labels, '흘러가는줄광고') !== false) return true;
+    if (strpos($labels, '급구') !== false) return true;
+    return false;
+}
+
+function _jlh_jump_sort_ts($row) {
+    $dt = !empty($row['jr_jump_datetime']) ? $row['jr_jump_datetime'] : ($row['jr_datetime'] ?? '');
+    $ts = $dt ? strtotime($dt) : 0;
+    return $ts > 0 ? $ts : 0;
+}
+
+function _jlh_sort_rows_by_jump(array $rows) {
+    usort($rows, function ($a, $b) {
+        $ta = _jlh_jump_sort_ts($a);
+        $tb = _jlh_jump_sort_ts($b);
+        if ($ta !== $tb) return $tb - $ta;
+        return (int)($b['jr_id'] ?? 0) - (int)($a['jr_id'] ?? 0);
+    });
+    return $rows;
+}
+
+/**
+ * 진행중·승인된 채용 전체
+ */
+function get_ongoing_jobs_all($limit = 0) {
+    $limit = (int)$limit;
+    $limit_sql = $limit > 0 ? " LIMIT {$limit}" : '';
+    $sql = "SELECT * FROM g5_jobs_register
+        WHERE jr_status = 'ongoing' AND jr_approved = 1 AND jr_end_date >= CURDATE()
+        ORDER BY IFNULL(jr_jump_datetime, jr_datetime) DESC, jr_id DESC{$limit_sql}";
+    $result = sql_query($sql, false);
+    $rows = array();
+    if ($result) {
+        while ($row = sql_fetch_array($result)) {
+            $rows[] = $row;
         }
     }
+    if (empty($rows)) {
+        return get_all_ongoing_jobs($limit > 0 ? $limit : 40);
+    }
+    return $rows;
+}
 
-    $types = array('우대', '프리미엄', '스페셜', '급구', '추천', '줄광고');
-    foreach ($types as $type) {
-        $rows = get_jobs_by_type($type, $limit_per_type);
-        foreach ($rows as $row) {
-            $id = (int)$row['jr_id'];
-            if (isset($seen[$id])) continue;
-            $seen[$id] = 1;
-            $merged[] = $row;
+/**
+ * 리스트·그리드 — 프리미엄(점프순) → 일반(점프순)
+ */
+function get_jobs_feed_list_tier($limit = 50) {
+    $rows = get_ongoing_jobs_all(0);
+    $premium = array();
+    $normal = array();
+    foreach ($rows as $row) {
+        if (_jlh_is_premium_ad($row)) {
+            $premium[] = $row;
+        } else {
+            $normal[] = $row;
         }
     }
-    if (empty($merged)) {
-        foreach (get_all_ongoing_jobs($fallback_limit) as $row) {
-            $id = (int)$row['jr_id'];
-            if (isset($seen[$id])) continue;
-            $seen[$id] = 1;
-            $merged[] = $row;
-        }
+    $merged = array_merge(_jlh_sort_rows_by_jump($premium), _jlh_sort_rows_by_jump($normal));
+    $limit = (int)$limit;
+    if ($limit > 0) {
+        $merged = array_slice($merged, 0, $limit);
     }
     return $merged;
+}
+
+/**
+ * 피드 — 등급 무시, 전체 점프순
+ */
+function get_jobs_feed_list_jump($limit = 50) {
+    $rows = _jlh_sort_rows_by_jump(get_ongoing_jobs_all(0));
+    $limit = (int)$limit;
+    if ($limit > 0) {
+        $rows = array_slice($rows, 0, $limit);
+    }
+    return $rows;
+}
+
+/**
+ * 흘러가는 줄광고(마퀴) — 옵션 구매 + 점프순
+ */
+function get_jobs_line_ad_list($limit = 30) {
+    $rows = get_ongoing_jobs_all(0);
+    $line = array();
+    foreach ($rows as $row) {
+        if (_jlh_has_line_ad($row)) {
+            $line[] = $row;
+        }
+    }
+    $line = _jlh_sort_rows_by_jump($line);
+    $limit = (int)$limit;
+    if ($limit > 0) {
+        $line = array_slice($line, 0, $limit);
+    }
+    return $line;
+}
+
+/**
+ * 마퀴 한 줄 텍스트 — 지역·업체명·제목·급여
+ */
+function _jlh_marquee_line_parts($row) {
+    $f = _jlh_extract_fields($row);
+    $region = trim($f['region'] ?: '전국');
+    $shop = trim(strip_tags($row['jr_nickname'] ?: ($row['jr_company'] ?: '')));
+    $title = trim(strip_tags($row['jr_title'] ?: ''));
+    $salary = _jlh_format_salary_mockup($f['salary_type'], (int)preg_replace('/[^0-9]/', '', (string)($f['salary_amt'] ?? '')));
+    return array(
+        'region' => $region,
+        'shop' => $shop,
+        'title' => $title,
+        'salary' => $salary,
+    );
+}
+
+function _jlh_marquee_line_html($row) {
+    $p = _jlh_marquee_line_parts($row);
+    $region = htmlspecialchars(mb_substr($p['region'], 0, 8, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+    $shop = htmlspecialchars(mb_substr($p['shop'], 0, 20, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+    $title = htmlspecialchars(mb_substr($p['title'], 0, 36, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+    $salary = htmlspecialchars($p['salary'], ENT_QUOTES, 'UTF-8');
+    $txt = $shop;
+    if ($salary) $txt .= ' · ' . $salary;
+    if ($title) $txt .= ' · ' . $title;
+    return '<span class="urgent-tag">' . $region . '</span>' . $txt . '&nbsp;&nbsp;';
+}
+
+/**
+ * 피드용 채용 목록 — 기본: 리스트·그리드(프리미엄→일반, 각 점프순)
+ */
+function get_jobs_feed_list($limit_per_type = 0, $fallback_limit = 50) {
+    $limit = (int)$fallback_limit;
+    if ($limit <= 0) $limit = 50;
+    if ((int)$limit_per_type > 0 && (int)$limit_per_type > $limit) {
+        $limit = (int)$limit_per_type;
+    }
+    return get_jobs_feed_list_tier($limit);
 }
 
 /**
@@ -645,7 +754,9 @@ function render_job_card_feed($row) {
     $is_hot = ($jr_good >= 10 || $f['jump_count'] >= 3 || strpos($f['ad_labels'], '급구') !== false);
     $is_new = ($days <= 3 && $days > 0);
 
-    echo '<div class="recruit-card" data-href="' . htmlspecialchars($f['link'], ENT_QUOTES, 'UTF-8') . '">';
+    $jump_ts = _jlh_jump_sort_ts($row);
+    $ad_grade = _jlh_is_premium_ad($row) ? 'premium' : 'normal';
+    echo '<div class="recruit-card" data-href="' . htmlspecialchars($f['link'], ENT_QUOTES, 'UTF-8') . '" data-jump-ts="' . (int)$jump_ts . '" data-ad-grade="' . $ad_grade . '">';
     echo '<div class="card-thumb">';
     echo '<img src="' . htmlspecialchars($thumb_url) . '" alt="" loading="lazy">';
     if ($grade['badge_class']) {

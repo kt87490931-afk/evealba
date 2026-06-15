@@ -410,13 +410,15 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 }
 .feed-container.view-list .recruit-card:hover { background: var(--pink-pale); }
 .feed-container.view-list .card-thumb {
-  width: 92px; height: 92px;
+  width: 92px;
+  aspect-ratio: 1 / 1;
+  height: auto;
   border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
   position: relative;
 }
-.feed-container.view-list .card-thumb img { width: 100%; height: 100%; }
+.feed-container.view-list .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .feed-container.view-list .card-body { flex: 1; min-width: 0; }
 .feed-container.view-list .shop-row {
   display: flex;
@@ -489,7 +491,9 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
   cursor: pointer;
 }
 .feed-container.view-feed .card-thumb {
-  width: 100%; height: 260px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
   overflow: hidden;
   position: relative;
 }
@@ -514,11 +518,13 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 /* ── 그리드 뷰 (카드 내부) ── */
 .feed-container.feed-container.view-grid .recruit-card { background: #fff; cursor: pointer; }
 .feed-container.view-grid .card-thumb {
-  width: 100%; height: 150px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
   overflow: hidden;
   position: relative;
 }
-.feed-container.view-grid .card-thumb img { width: 100%; height: 100%; }
+.feed-container.view-grid .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .feed-container.view-grid .card-body { padding: 10px; }
 .feed-container.view-grid .card-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
 .feed-container.view-grid .card-meta { flex-wrap: wrap; }
@@ -528,7 +534,7 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 .feed-container.view-feed { display: block; }
 .feed-container.view-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--border);
 }
@@ -725,6 +731,9 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
   .sidebar-region,
   .sidebar-cs,
   .sidebar-join { display: none; }
+  .feed-container.view-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 @media (max-width: 640px) {
   .sidebar { display: none; }

@@ -63,9 +63,16 @@ if ($ad_period > 0) {
 }
 
 $jump_count = 0;
-if (preg_match('/30일/', $ad_labels)) $jump_count = 300;
-elseif (preg_match('/60일/', $ad_labels)) $jump_count = 700;
-elseif (preg_match('/90일/', $ad_labels)) $jump_count = 1200;
+$is_premium = (bool)preg_match('/프리미엄/', $ad_labels);
+if ($is_premium) {
+    if (preg_match('/90/', $ad_labels)) $jump_count = 3200;
+    elseif (preg_match('/60/', $ad_labels)) $jump_count = 1900;
+    else $jump_count = 900;
+} else {
+    if (preg_match('/90/', $ad_labels)) $jump_count = 1200;
+    elseif (preg_match('/60/', $ad_labels)) $jump_count = 700;
+    else $jump_count = 300;
+}
 
 $jr_table = 'g5_jobs_register';
 $tb_check = sql_query("SHOW TABLES LIKE 'g5_jobs_register'", false);

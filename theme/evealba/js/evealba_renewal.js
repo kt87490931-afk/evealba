@@ -1,5 +1,5 @@
 /**
- * 이브알바 UI 리뉴얼 JS — 시안 (evealba_main.html) 1:1
+ * 이브알바 UI 리뉴얼 JS — 리스트/피드/그리드 + 점프순 정렬
  */
 (function () {
   'use strict';
@@ -49,6 +49,32 @@
     });
   }
 
+  function cardJumpTs(card) {
+    return parseInt(card.getAttribute('data-jump-ts') || '0', 10) || 0;
+  }
+
+  function reorderCards(container, mode) {
+    var cards = Array.from(container.querySelectorAll('.recruit-card'));
+    if (!cards.length) return;
+
+    if (mode === 'feed') {
+      cards.sort(function (a, b) {
+        return cardJumpTs(b) - cardJumpTs(a);
+      });
+    } else {
+      cards.sort(function (a, b) {
+        var ga = a.getAttribute('data-ad-grade') === 'premium' ? 0 : 1;
+        var gb = b.getAttribute('data-ad-grade') === 'premium' ? 0 : 1;
+        if (ga !== gb) return ga - gb;
+        return cardJumpTs(b) - cardJumpTs(a);
+      });
+    }
+
+    cards.forEach(function (c) {
+      container.appendChild(c);
+    });
+  }
+
   function initViewTabs() {
     var viewTabs = document.querySelectorAll('.view-tab');
     var feedContainer = document.getElementById('feedContainer');
@@ -61,43 +87,19 @@
 
       feedContainer.className = 'feed-container view-' + view;
 
-      var cards = feedContainer.querySelectorAll('.recruit-card');
-      if (view === 'list') {
-        feedContainer.style.display = 'block';
-        feedContainer.style.gridTemplateColumns = '';
-        feedContainer.style.gap = '';
-        feedContainer.style.background = '';
-      } else if (view === 'feed') {
-        feedContainer.style.display = 'block';
-        feedContainer.style.gridTemplateColumns = '';
-        feedContainer.style.gap = '';
-        feedContainer.style.background = '';
-      } else if (view === 'grid') {
+      if (view === 'grid') {
         feedContainer.style.display = 'grid';
-        feedContainer.style.gridTemplateColumns = 'repeat(2,1fr)';
-        feedContainer.style.gap = '1px';
-        feedContainer.style.background = 'var(--border)';
+        feedContainer.style.gridTemplateColumns = '';
+        feedContainer.style.gap = '';
+        feedContainer.style.background = '';
+      } else {
+        feedContainer.style.display = 'block';
+        feedContainer.style.gridTemplateColumns = '';
+        feedContainer.style.gap = '';
+        feedContainer.style.background = '';
       }
 
-      cards.forEach(function (card) {
-        var thumb = card.querySelector('.card-thumb');
-        if (view === 'list') {
-          card.style.cssText = '';
-          if (thumb) thumb.style.cssText = '';
-        } else if (view === 'feed') {
-          card.style.cssText = 'border-bottom:8px solid #F5F5F5;';
-          if (thumb) {
-            thumb.style.width = '100%';
-            thumb.style.height = '240px';
-          }
-        } else if (view === 'grid') {
-          card.style.cssText = 'background:#fff;';
-          if (thumb) {
-            thumb.style.width = '100%';
-            thumb.style.height = '140px';
-          }
-        }
-      });
+      reorderCards(feedContainer, view === 'feed' ? 'feed' : 'tier');
 
       try {
         localStorage.setItem('eveView', view);
